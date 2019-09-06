@@ -1,19 +1,30 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { Text, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { AppLoading } from "expo";
+import * as Font from "expo-font";
+import { Asset } from "expo-asset";
 
 export default function App() {
-  return (
-    <View style={styles.container}>
+  const [loaded, setLoaded] = useState(false);
+  const preLoad = async () => {
+    try {
+      await Font.loadAsync;
+      ({ ...Ionicons.font });
+      setLoaded(true);
+      await Asset.loadAsync(require("./assets/logo.png"));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    preLoad();
+  }, []);
+  return loaded ? (
+    <View>
       <Text>Open up App.tsx to start working on your app!</Text>
     </View>
+  ) : (
+    <AppLoading />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
