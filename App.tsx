@@ -12,15 +12,15 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import { AppLoading } from "expo";
 import { ApolloProvider as ApolloHooksProvider } from "react-apollo-hooks";
 import { ApolloProvider } from "react-apollo";
-import { ThemeProvider } from "styled-components";
-import { theme } from "./Styles/theme";
-import { AuthProvider } from "./AuthContext";
-import NavController from "./components/NavController";
+import { ThemeProvider } from "./Context/ThemeContext";
+import { AuthProvider } from "./Context/AuthContext";
+import NavController from "./Components/NavController";
 
 export default function App() {
-  const [loaded, setLoaded] = useState(false);
-  const [client, setClient] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(null);
+  const [client, setClient] = useState<any>(null);
+  const [loaded, setLoaded] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(null);
+  const [isDarkMode, setDarkMode] = useState<boolean>(null);
   const preLoad = async () => {
     try {
       await Font.loadAsync({ ...Ionicons.font });
@@ -34,6 +34,9 @@ export default function App() {
         cache,
         ...apolloClientOptions
       });
+      const isDarkMode = (await AsyncStorage.getItem("isDarkMode"))
+        ? localStorage.getItem("isDarkMode") === "true"
+        : true;
       const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
       if (isLoggedIn === null || isLoggedIn === "false") {
         setIsLoggedIn(false);
@@ -42,6 +45,7 @@ export default function App() {
       }
       setClient(client);
       setLoaded(true);
+      setDarkMode(isDarkMode);
     } catch (e) {
       console.log(e);
     }
@@ -49,26 +53,10 @@ export default function App() {
   useEffect(() => {
     preLoad();
   }, []);
-  const logUserIn = async () => {
-    try {
-      await AsyncStorage.setItem("isLoggedIn", "true");
-      setIsLoggedIn(true);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  const logUserOut = async () => {
-    try {
-      await AsyncStorage.setItem("isLoggedIn", "false");
-      setIsLoggedIn(false);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  return loaded && client && isLoggedIn !== null ? (
+  return loaded && client && isLoggedIn !== null && isDarkMode !== null ? (
     <ApolloHooksProvider client={client}>
       <ApolloProvider client={client}>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider isDarkMode={isDarkMode}>
           <AuthProvider isLoggedIn={isLoggedIn}>
             <NavController />
           </AuthProvider>
