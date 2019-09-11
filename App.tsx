@@ -14,6 +14,8 @@ import { ApolloProvider as ApolloHooksProvider } from "react-apollo-hooks";
 import { ApolloProvider } from "react-apollo";
 import { ThemeProvider } from "styled-components";
 import { theme } from "./Styles/theme";
+import { AuthProvider } from "./AuthContext";
+import NavController from "./components/NavController";
 
 export default function App() {
   const [loaded, setLoaded] = useState(false);
@@ -47,7 +49,6 @@ export default function App() {
   useEffect(() => {
     preLoad();
   }, []);
-
   const logUserIn = async () => {
     try {
       await AsyncStorage.setItem("isLoggedIn", "true");
@@ -56,7 +57,6 @@ export default function App() {
       console.log(e);
     }
   };
-
   const logUserOut = async () => {
     try {
       await AsyncStorage.setItem("isLoggedIn", "false");
@@ -69,19 +69,9 @@ export default function App() {
     <ApolloHooksProvider client={client}>
       <ApolloProvider client={client}>
         <ThemeProvider theme={theme}>
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            {isLoggedIn === true ? (
-              <TouchableOpacity onPress={logUserOut}>
-                <Text>Log Out</Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity onPress={logUserIn}>
-                <Text>Log In</Text>
-              </TouchableOpacity>
-            )}
-          </View>
+          <AuthProvider isLoggedIn={isLoggedIn}>
+            <NavController />
+          </AuthProvider>
         </ThemeProvider>
       </ApolloProvider>
     </ApolloHooksProvider>
