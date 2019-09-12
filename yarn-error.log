@@ -1,8 +1,8 @@
 Arguments: 
-  /usr/local/Cellar/node/12.9.0/bin/node /usr/local/bin/yarn add @types/apollo-cache-persist
+  /usr/local/Cellar/node/12.9.0/bin/node /usr/local/bin/yarn add @types/react-native-gesture-handler
 
 PATH: 
-  /usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Frameworks/Mono.framework/Versions/Current/Commands
+  /Users/plusbeauxjours/.local/share/virtualenvs/backend-uIfu7iCn/bin:/usr/local/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Frameworks/Mono.framework/Versions/Current/Commands
 
 Yarn version: 
   1.9.4
@@ -14,7 +14,7 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2fapollo-cache-persist: Not found
+  Error: https://registry.yarnpkg.com/@types%2freact-native-gesture-handler: Not found
       at Request.params.callback [as _callback] (/usr/local/lib/node_modules/yarn/lib/cli.js:64202:18)
       at Request.self.callback (/usr/local/lib/node_modules/yarn/lib/cli.js:137468:22)
       at Request.emit (events.js:209:13)
@@ -37,8 +37,6 @@ npm manifest:
       "eject": "expo eject"
     },
     "dependencies": {
-      "@expo/vector-icons": "^10.0.5",
-      "@types/expo": "^32.0.13",
       "apollo-boost": "^0.4.4",
       "apollo-cache-inmemory": "^1.6.3",
       "apollo-cache-persist": "^0.1.1",
@@ -51,13 +49,18 @@ npm manifest:
       "react-apollo-hooks": "^0.5.0",
       "react-dom": "^16.8.6",
       "react-native": "https://github.com/expo/react-native/archive/sdk-34.0.0.tar.gz",
+      "react-native-gesture-handler": "^1.4.1",
       "react-native-web": "^0.11.4",
       "react-navigation": "^4.0.0",
+      "react-navigation-stack": "^1.5.5",
       "styled-components": "^4.3.2"
     },
     "devDependencies": {
+      "@expo/vector-icons": "^10.0.5",
+      "@types/expo": "^32.0.13",
       "@types/react": "^16.8.23",
       "@types/react-native": "^0.57.65",
+      "@types/react-navigation": "^3.0.8",
       "babel-preset-expo": "^6.0.0",
       "typescript": "^3.4.5"
     },
@@ -996,6 +999,13 @@ Lockfile:
     dependencies:
       "@types/prop-types" "*"
       "@types/react" "*"
+  
+  "@types/react-navigation@^3.0.8":
+    version "3.0.8"
+    resolved "https://registry.yarnpkg.com/@types/react-navigation/-/react-navigation-3.0.8.tgz#770d5217a4795fe8526e2a69cc6ccb8600c911e4"
+    dependencies:
+      "@types/react" "*"
+      "@types/react-native" "*"
   
   "@types/react@*", "@types/react@^16.8.23":
     version "16.9.2"
@@ -2454,6 +2464,10 @@ Lockfile:
   growly@^1.3.0:
     version "1.3.0"
     resolved "https://registry.yarnpkg.com/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
+  
+  hammerjs@^2.0.8:
+    version "2.0.8"
+    resolved "https://registry.yarnpkg.com/hammerjs/-/hammerjs-2.0.8.tgz#04ef77862cff2bb79d30f7692095930222bf60f1"
   
   has-ansi@^2.0.0:
     version "2.0.0"
@@ -3992,6 +4006,15 @@ Lockfile:
     version "3.0.1"
     resolved "https://registry.yarnpkg.com/react-native-branch/-/react-native-branch-3.0.1.tgz#5b07b61cbd290168cd3c3662e017ebe0f356d2ca"
   
+  react-native-gesture-handler@^1.4.1:
+    version "1.4.1"
+    resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.4.1.tgz#c38d9e57637b95e221722a79f2bafac62e3aeb21"
+    dependencies:
+      hammerjs "^2.0.8"
+      hoist-non-react-statics "^2.3.1"
+      invariant "^2.2.4"
+      prop-types "^15.7.2"
+  
   react-native-maps@*:
     version "0.25.0"
     resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.25.0.tgz#81bc51eb50e33811a9e1c345cc48869413ead67d"
@@ -4085,6 +4108,12 @@ Lockfile:
       ws "^1.1.5"
       xmldoc "^0.4.0"
       yargs "^9.0.0"
+  
+  react-navigation-stack@^1.5.5:
+    version "1.5.5"
+    resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-1.5.5.tgz#0b3cd98b7845a51d9ce9d7d678e9e3b9ed010bc3"
+    dependencies:
+      prop-types "^15.7.2"
   
   react-navigation@^4.0.0:
     version "4.0.0"
