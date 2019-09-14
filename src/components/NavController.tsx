@@ -1,8 +1,8 @@
 import React from "react";
 import { View } from "react-native";
-import { useIsLoggedIn } from "../src/context/AuthContext";
-import AuthNavigation from "../src/navigation/AuthNavigation";
-import MainNavigation from "../src/navigation/MainNavigation";
+import { useIsLoggedIn } from "../context/AuthContext";
+import AuthNavigation from "../navigation/AuthNavigation";
+import MainNavigation from "../navigation/MainNavigation";
 
 export default () => {
   const isLoggedIn = useIsLoggedIn();

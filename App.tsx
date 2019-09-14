@@ -12,9 +12,9 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import { AppLoading } from "expo";
 import { ApolloProvider as ApolloHooksProvider } from "react-apollo-hooks";
 import { ApolloProvider } from "react-apollo";
-import { ThemeProvider } from "./context/ThemeContext";
-import { AuthProvider } from "./context/AuthContext";
-import NavController from "./components/NavController";
+import { ThemeProvider } from "./src/context/ThemeContext";
+import { AuthProvider } from "./src/context/AuthContext";
+import NavController from "./src/components/NavController";
 
 export default function App() {
   const [client, setClient] = useState<any>(null);
