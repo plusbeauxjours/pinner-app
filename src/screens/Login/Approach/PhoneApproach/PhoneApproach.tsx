@@ -37,7 +37,8 @@ export default ({ navigation }) => {
   });
   const handleLogin = async () => {
     const { value: phoneNumber } = phoneNumberInput;
-    const { value: countryNumber } = countryNumberInput;
+    const [countryCode, setCountryCode] = useState("KR");
+    const [countryNumber, setCountryNumber] = useState("+82");
     const phone = `${countryNumber}${
       phoneNumber.startsWith("0") ? phoneNumber.substring(1) : phoneNumber
     }`;
@@ -57,7 +58,13 @@ export default ({ navigation }) => {
       if (startPhoneVerification) {
         Alert.alert("SMS Sent! ");
         console.log(phone);
-        navigation.navigate("PhoneVerification");
+        navigation.navigate("PhoneVerification", {
+          countryCode,
+          countryNumber,
+          phoneNumber: phoneNumber.startsWith("0")
+            ? phoneNumber.substring(1)
+            : phoneNumber
+        });
         return;
       } else {
         Alert.alert("Please write a valid phone number");
