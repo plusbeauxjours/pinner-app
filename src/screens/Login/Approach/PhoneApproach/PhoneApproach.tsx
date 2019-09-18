@@ -22,6 +22,8 @@ const Text = styled.Text``;
 export default ({ navigation }) => {
   const phoneNumberInput = useInput("");
   const countryNumberInput = useInput("");
+  const [countryCode, setCountryCode] = useState("KR");
+  const [countryNumber, setCountryNumber] = useState("+82");
   const [loading, setLoading] = useState(false);
   const [phoneSignInFn] = useMutation<
     StartPhoneVerification,
@@ -35,10 +37,9 @@ export default ({ navigation }) => {
       }`
     }
   });
-  const handleLogin = async () => {
+  const handleApproach = async () => {
     const { value: phoneNumber } = phoneNumberInput;
-    const [countryCode, setCountryCode] = useState("KR");
-    const [countryNumber, setCountryNumber] = useState("+82");
+
     const phone = `${countryNumber}${
       phoneNumber.startsWith("0") ? phoneNumber.substring(1) : phoneNumber
     }`;
@@ -81,7 +82,7 @@ export default ({ navigation }) => {
           placeholder="countryNumberInput"
           keyboardType="phone-pad"
           returnKeyType="send"
-          onSubmitEditing={handleLogin}
+          onSubmitEditing={handleApproach}
           autoCorrect={false}
         />
         <AuthInput
@@ -89,10 +90,14 @@ export default ({ navigation }) => {
           placeholder="phoneNumberInput"
           keyboardType="phone-pad"
           returnKeyType="send"
-          onSubmitEditing={handleLogin}
+          onSubmitEditing={handleApproach}
           autoCorrect={false}
         />
-        <AuthButton loading={loading} onPress={handleLogin} text="Send SMS" />
+        <AuthButton
+          loading={loading}
+          onPress={handleApproach}
+          text="Send SMS"
+        />
       </View>
     </TouchableWithoutFeedback>
   );
