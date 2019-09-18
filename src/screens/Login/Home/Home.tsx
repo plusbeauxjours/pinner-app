@@ -26,15 +26,20 @@ export default ({ navigation }) => (
   <View>
     <Image
       resizeMode={"contain"}
-      source={require("../../../assets/logo.png")}
+      source={require("../../../../assets/logo.png")}
     />
     <AuthButton
       text={"Create New Account"}
       onPress={() => navigation.navigate("Signup")}
     />
-    <Touchable onPress={() => navigation.navigate("Login")}>
+    <Touchable onPress={() => navigation.navigate("PhoneApproach")}>
       <LoginLink>
-        <LoginLinkText>Log in</LoginLinkText>
+        <LoginLinkText>LOG IN WITH PHONE NUMBER</LoginLinkText>
+      </LoginLink>
+    </Touchable>
+    <Touchable onPress={() => navigation.navigate("Facebook")}>
+      <LoginLink>
+        <LoginLinkText>LOG IN WITH FACEBOOK</LoginLinkText>
       </LoginLink>
     </Touchable>
   </View>

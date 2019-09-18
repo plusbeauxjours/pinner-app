@@ -56,10 +56,11 @@ export default ({ navigation }) => {
       } = await phoneSignInFn();
       if (startPhoneVerification) {
         Alert.alert("SMS Sent! ");
+        console.log(phone);
         navigation.navigate("PhoneVerification");
         return;
       } else {
-        Alert.alert("Can't log in now");
+        Alert.alert("Please write a valid phone number");
       }
     } finally {
       setLoading(false);
@@ -84,7 +85,6 @@ export default ({ navigation }) => {
           onSubmitEditing={handleLogin}
           autoCorrect={false}
         />
-
         <AuthButton loading={loading} onPress={handleLogin} text="Send SMS" />
       </View>
     </TouchableWithoutFeedback>
