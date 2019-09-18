@@ -22,7 +22,7 @@ interface IProps {
   autoCapitalize?: string;
   onChange: (text: any) => void;
   returnKeyType?: string;
-  onEndEditing?: () => void;
+  onSubmitEditing?: () => void;
   autoCorrect?: boolean;
 }
 
@@ -33,7 +33,7 @@ const AuthInput: React.FC<IProps> = ({
   autoCapitalize = "none",
   returnKeyType = "done",
   onChange,
-  onEndEditing = () => null,
+  onSubmitEditing = () => null,
   autoCorrect = true
 }) => (
   <Container>
@@ -43,7 +43,7 @@ const AuthInput: React.FC<IProps> = ({
       returnKeyType={returnKeyType}
       placeholder={placeholder}
       autoCapitalize={autoCapitalize}
-      onEndEditing={onEndEditing}
+      onSubmitEditing={onSubmitEditing}
       autoCorrect={autoCorrect}
       value={value}
     />

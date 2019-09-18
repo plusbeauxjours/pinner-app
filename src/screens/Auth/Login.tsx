@@ -40,11 +40,17 @@ export default ({ navigation }) => {
     }
     try {
       setLoading(true);
-      await emailSignInFn();
-      Alert.alert("Check your email");
-      navigation.navigate("Confirm");
-    } catch (e) {
-      Alert.alert("Can't log in now");
+      const {
+        data: { startEmailVerification }
+      } = await emailSignInFn();
+      if (startEmailVerification) {
+        Alert.alert("Check your email");
+        navigation.navigate("Confirm");
+        return;
+      } else {
+        console.log(e);
+        Alert.alert("Can't log in now");
+      }
     } finally {
       setLoading(false);
     }
@@ -57,7 +63,7 @@ export default ({ navigation }) => {
           placeholder="Email"
           keyboardType="email-address"
           returnKeyType="send"
-          onEndEditing={handleLogin}
+          onSubmitEditing={handleLogin}
           autoCorrect={false}
         />
         <AuthButton loading={loading} onPress={handleLogin} text="Log In" />

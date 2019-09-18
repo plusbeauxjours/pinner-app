@@ -1,5 +1,5 @@
 const apolloClientOptions = {
-  uri: "http://localhost:8000/graphql"
+  uri: "https://pinner-backend.herokuapp.com/graphql"
 };
 
 export default apolloClientOptions;
