@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import AuthButton from "../../components/AuthButton";
-import AuthInput from "../../components/AuthInput";
-import useInput from "../../hooks/useInput";
+import AuthButton from "../../../../components/AuthButton";
+import AuthInput from "../../../../components/AuthInput";
+import useInput from "../../../../hooks/useInput";
 import { TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
-import { EMAIL_SIGN_IN } from "./AuthQueries";
+import { EMAIL_SIGN_IN } from "./EmailApproachQueries";
 import { useMutation } from "react-apollo-hooks";
 import {
   StartEmailVerification,
   StartEmailVerificationVariables
-} from "../../types/api";
+} from "../../../../types/api";
 
 const View = styled.View`
   justify-content: center;
@@ -45,10 +45,9 @@ export default ({ navigation }) => {
       } = await emailSignInFn();
       if (startEmailVerification) {
         Alert.alert("Check your email");
-        navigation.navigate("Confirm");
+        navigation.navigate("EmailVerification");
         return;
       } else {
-        console.log(e);
         Alert.alert("Can't log in now");
       }
     } finally {

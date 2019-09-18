@@ -1,8 +1,8 @@
 import React from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import styled from "styled-components";
-import constants from "../../../constants";
-import AuthButton from "../../components/AuthButton";
+import constants from "../../../../constants";
+import AuthButton from "../../../components/AuthButton";
 
 const View = styled.View`
   justify-content: center;

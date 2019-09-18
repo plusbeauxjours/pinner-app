@@ -22,7 +22,7 @@ const Text = styled.Text`
 interface IProps {
   text: string;
   onPress: () => void;
-  loading: boolean;
+  loading?: boolean;
 }
 
 const AuthButton: React.FC<IProps> = ({ text, onPress, loading = false }) => (
