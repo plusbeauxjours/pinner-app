@@ -6,13 +6,18 @@ interface IProps {
   name: string;
   color?: string;
   size?: number;
+  focused?: boolean;
 }
 
-const NavIcon: React.FC<IProps> = ({ name, color, size = 26 }) => (
+const NavIcon: React.FC<IProps> = ({
+  name,
+  color,
+  size = 26,
+  focused = true
+}) => (
   <Ionicons
-    style={{ backgroundColor: "transparent" }}
     name={name}
-    color={color}
+    color={focused ? color : theme.darkGreyColor}
     size={size}
   />
 );
