@@ -24,6 +24,33 @@ export interface StartEmailVerificationVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: FacebookConnect
+// ====================================================
+
+export interface FacebookConnect_facebookConnect {
+  __typename: "FacebookConnectResponse";
+  token: string | null;
+}
+
+export interface FacebookConnect {
+  facebookConnect: FacebookConnect_facebookConnect;
+}
+
+export interface FacebookConnectVariables {
+  firstName?: string | null;
+  lastName?: string | null;
+  email?: string | null;
+  gender?: string | null;
+  cityId: string;
+  countryCode: string;
+  fbId: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: StartPhoneVerification
 // ====================================================
 
