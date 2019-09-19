@@ -12,7 +12,7 @@ import MessagesLink from "../components/MessagesLink";
 import { View } from "react-native";
 import { Platform } from "react-native";
 import NavIcon from "../components/NavIcon";
-import { theme } from "../styles/theme";
+import { stackStyles } from "./config";
 
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator({
@@ -20,7 +20,7 @@ const stackFactory = (initialRoute, customConfig) =>
       screen: initialRoute,
       navigationOptions: {
         ...customConfig,
-        headerStyle: { backgroundColor: "#EFEEEF" }
+        headerStyle: { ...stackStyles }
       }
     }
   });
@@ -94,7 +94,10 @@ export default createMaterialTopTabNavigator(
       }),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
-          <NavIcon name={Platform.OS === "ios" ? "ios-person" : "md-person"} />
+          <NavIcon
+            focused={focused}
+            name={Platform.OS === "ios" ? "ios-person" : "md-person"}
+          />
         )
       }
     }
@@ -105,11 +108,7 @@ export default createMaterialTopTabNavigator(
     tabBarPosition: "bottom",
     tabBarOptions: {
       style: {
-        ...Platform.select({
-          ios: {
-            backgroundColor: "white"
-          }
-        })
+        backgroundColor: "white"
       },
       activeTintColor: "#000",
       inactiveTintColor: "#d1cece",

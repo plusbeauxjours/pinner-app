@@ -17,7 +17,7 @@ const NavIcon: React.FC<IProps> = ({
 }) => (
   <Ionicons
     name={name}
-    color={focused ? color : theme.darkGreyColor}
+    color={focused ? color : theme.lightGreyColor}
     size={size}
   />
 );
