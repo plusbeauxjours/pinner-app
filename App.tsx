@@ -22,6 +22,7 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(null);
   const [isDarkMode, setDarkMode] = useState<boolean>(null);
   const preLoad = async () => {
+    await AsyncStorage.clear();
     try {
       await Font.loadAsync({ ...Ionicons.font });
       await Asset.loadAsync(require("./assets/logo.png"));

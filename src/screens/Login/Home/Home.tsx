@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import constants from "../../../../constants";
 import AuthButton from "../../../components/AuthButton";
+import Facebook from "../Approach/Facebook";
 
 const View = styled.View`
   justify-content: center;
@@ -36,10 +37,6 @@ export default ({ navigation }) => (
         <LoginLinkText>LOG IN WITH PHONE NUMBER</LoginLinkText>
       </LoginLink>
     </Touchable>
-    <Touchable onPress={() => navigation.navigate("Facebook")}>
-      <LoginLink>
-        <LoginLinkText>LOG IN WITH FACEBOOK</LoginLinkText>
-      </LoginLink>
-    </Touchable>
+    <Facebook />
   </View>
 );
