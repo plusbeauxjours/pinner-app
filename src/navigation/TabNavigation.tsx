@@ -10,6 +10,9 @@ import Notifications from "../screens/Tabs/Notifications";
 import Profile from "../screens/Tabs/Profile";
 import MessagesLink from "../components/MessagesLink";
 import { View } from "react-native";
+import { Platform } from "react-native";
+import NavIcon from "../components/NavIcon";
+import { theme } from "../styles/theme";
 
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator({
@@ -23,28 +26,73 @@ export default createMaterialTopTabNavigator(
   {
     Home: {
       screen: stackFactory(Home, {
-        title: "Home",
-        headerRight: <MessagesLink />
-      })
+        headerRight: <MessagesLink />,
+        headerTitle: <NavIcon name="logo-instagram" size={36} />
+      }),
+      navigationOptions: {
+        tabBarIcon: (
+          <NavIcon name={Platform.OS === "ios" ? "ios-home" : "md-home"} />
+        )
+      }
     },
     Search: {
       screen: stackFactory(Search, {
         title: "Search"
-      })
+      }),
+      navigationOptions: {
+        tabBarIcon: (
+          <NavIcon name={Platform.OS === "ios" ? "ios-search" : "md-search"} />
+        )
+      }
     },
     Add: {
       screen: View,
       navigationOptions: {
         tabBarOnPress: ({ navigation }) =>
-          navigation.navigate("PhotoNavigation")
+          navigation.navigate("PhotoNavigation"),
+        tabBarIcon: (
+          <NavIcon name={Platform.OS === "ios" ? "ios-add" : "md-add"} />
+        )
       }
     },
     Notifications: {
-      screen: stackFactory(Notifications, { title: "Notifications" })
+      screen: stackFactory(Notifications, {
+        title: "Notifications"
+      }),
+      navigationOptions: {
+        tabBarIcon: (
+          <NavIcon name={Platform.OS === "ios" ? "ios-heart" : "md-heart"} />
+        )
+      }
     },
     Profile: {
-      screen: stackFactory(Profile, { title: "Profile" })
+      screen: stackFactory(Profile, {
+        title: "Profile"
+      }),
+      navigationOptions: {
+        tabBarIcon: (
+          <NavIcon name={Platform.OS === "ios" ? "ios-person" : "md-person"} />
+        )
+      }
     }
   },
-  { tabBarPosition: "bottom" }
+  {
+    animationEnabled: true,
+    swipeEnabled: true,
+    tabBarPosition: "bottom",
+    tabBarOptions: {
+      style: {
+        ...Platform.select({
+          ios: {
+            backgroundColor: "white"
+          }
+        })
+      },
+      activeTintColor: "#000",
+      inactiveTintColor: "#d1cece",
+      upperCaseLabel: false,
+      showLabel: false,
+      showIcon: true
+    }
+  }
 );
