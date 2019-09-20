@@ -5,7 +5,7 @@ import { AppLoading } from "expo";
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ isLoggedIn: isLoggedInProp, children }) => {
-  // AsyncStorage.clear();
+  AsyncStorage.clear();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(isLoggedInProp);
   const logUserIn = async token => {
     try {

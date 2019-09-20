@@ -5,7 +5,7 @@ import * as Font from "expo-font";
 import { Asset } from "expo-asset";
 
 import { persistCache } from "apollo-cache-persist";
-import ApolloClient from "apollo-boost";
+import { ApolloClient } from "apollo-boost";
 import apolloClientOptions from "./apollo";
 import { InMemoryCache } from "apollo-cache-inmemory";
 
@@ -15,6 +15,8 @@ import { ApolloProvider } from "react-apollo";
 import { ThemeProvider } from "./src/context/ThemeContext";
 import { AuthProvider } from "./src/context/AuthContext";
 import NavController from "./src/components/NavController";
+import { createUploadLink } from "apollo-upload-client";
+import { ApolloLink, Observable } from "apollo-link";
 
 export default function App() {
   const [client, setClient] = useState<any>(null);
@@ -32,12 +34,17 @@ export default function App() {
       });
       const request = async operation => {
         const token = await AsyncStorage.getItem("jwt");
-        console.log(token);
         return operation.setContext({
-          headers: { Authorization: `JWT ${token}` || "" }
+          headers: { Authorization: `JWT ${token}` }
         });
       };
+      const API_SERVER = "https://pinner-backend.herokuapp.com/graphql";
+      const uploadLink = createUploadLink({
+        uri: API_SERVER,
+        fetch
+      });
       const client = new ApolloClient({
+        link: ApolloLink.from([uploadLink]),
         cache,
         request,
         ...apolloClientOptions

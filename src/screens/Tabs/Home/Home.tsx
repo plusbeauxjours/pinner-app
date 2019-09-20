@@ -16,7 +16,5 @@ const Text = styled.Text``;
 
 export default () => {
   const { loading, data } = useQuery<GetMatches>(GET_MATCHES);
-  const { loading: meloading, data: medata } = useQuery<Me>(ME);
-  console.log(loading, medata);
   return <View>{loading ? <Loader /> : null}</View>;
 };
