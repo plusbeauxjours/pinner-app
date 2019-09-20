@@ -22,7 +22,6 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(null);
   const [isDarkMode, setDarkMode] = useState<boolean>(null);
   const preLoad = async () => {
-    // await AsyncStorage.clear();
     try {
       await Font.loadAsync({ ...Ionicons.font });
       await Asset.loadAsync(require("./assets/logo.png"));
@@ -31,8 +30,16 @@ export default function App() {
         cache,
         storage: AsyncStorage
       });
+      const request = async operation => {
+        const token = await AsyncStorage.getItem("jwt");
+        console.log(token);
+        return operation.setContext({
+          headers: { Authorization: `JWT ${token}` || "" }
+        });
+      };
       const client = new ApolloClient({
         cache,
+        request,
         ...apolloClientOptions
       });
       const isDarkMode = (await AsyncStorage.getItem("isDarkMode"))

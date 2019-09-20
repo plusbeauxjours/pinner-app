@@ -58,7 +58,6 @@ export default ({ navigation }) => {
       } = await phoneSignInFn();
       if (startPhoneVerification) {
         Alert.alert("SMS Sent! ");
-        console.log(phone);
         navigation.navigate("PhoneVerification", {
           countryCode,
           countryNumber,

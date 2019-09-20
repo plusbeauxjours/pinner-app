@@ -5,9 +5,9 @@ import { AppLoading } from "expo";
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ isLoggedIn: isLoggedInProp, children }) => {
+  // AsyncStorage.clear();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(isLoggedInProp);
   const logUserIn = async token => {
-    console.log(token);
     try {
       await AsyncStorage.setItem("isLoggedIn", "true");
       await AsyncStorage.setItem("jwt", token.token);
@@ -38,7 +38,8 @@ export const useIsLoggedIn = () => {
   return isLoggedIn;
 };
 export const useLogIn = () => {
-  const { logUserIn } = useContext(AuthContext);
+  const { logUserIn, isLoggedIn } = useContext(AuthContext);
+  console.log("isLoggedIn:", isLoggedIn);
   return logUserIn;
 };
 export const useLogOut = () => {

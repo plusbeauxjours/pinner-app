@@ -12,7 +12,8 @@ import MessagesLink from "../components/MessagesLink";
 import { View } from "react-native";
 import { Platform } from "react-native";
 import NavIcon from "../components/NavIcon";
-import { stackStyles } from "./config";
+import { stackStyles } from "./Config";
+import PhotoNavigation from "./PhotoNavigation";
 
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator({
@@ -55,7 +56,9 @@ export default createMaterialTopTabNavigator(
       }
     },
     Add: {
-      screen: View,
+      screen: stackFactory(PhotoNavigation, {
+        title: "PhotoNavigation"
+      }),
       navigationOptions: {
         tabBarOnPress: ({ navigation }) =>
           navigation.navigate("PhotoNavigation"),

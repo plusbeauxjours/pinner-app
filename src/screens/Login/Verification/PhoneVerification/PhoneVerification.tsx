@@ -45,7 +45,6 @@ export default ({ navigation }) => {
         data: { completePhoneVerification }
       } = await completePhoneVerificationFn();
       if (completePhoneVerification.ok) {
-        console.log(completePhoneVerification);
         logIn(completePhoneVerification);
       } else {
         Alert.alert("Wrong Key");
