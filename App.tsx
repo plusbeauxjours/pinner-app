@@ -38,11 +38,11 @@ export default function App() {
         fetch
       });
       const authLink = setContext(async (_, { headers }) => {
-        const token = await AsyncStorage.getItem("token");
-        console.log("kokoko");
+        const token = await AsyncStorage.getItem("jwt");
+        console.log("token::::::::::::::::", token);
         return {
           headers: {
-            authorization: token ? `JWT ${token}` : ""
+            authorization: `JWT ${token || ""}`
           }
         };
       });
