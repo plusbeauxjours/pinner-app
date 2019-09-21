@@ -39,7 +39,6 @@ export const useIsLoggedIn = () => {
 };
 export const useLogIn = () => {
   const { logUserIn, isLoggedIn } = useContext(AuthContext);
-  console.log("isLoggedIn:", isLoggedIn);
   return logUserIn;
 };
 export const useLogOut = () => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, AsyncStorage, TouchableOpacity } from "react-native";
+import { AsyncStorage } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as Font from "expo-font";
 import { Asset } from "expo-asset";
@@ -16,7 +16,7 @@ import { ThemeProvider } from "./src/context/ThemeContext";
 import { AuthProvider } from "./src/context/AuthContext";
 import NavController from "./src/components/NavController";
 import { createUploadLink } from "apollo-upload-client";
-import { ApolloLink, Observable } from "apollo-link";
+import { setContext } from "apollo-link-context";
 
 export default function App() {
   const [client, setClient] = useState<any>(null);
@@ -32,21 +32,23 @@ export default function App() {
         cache,
         storage: AsyncStorage
       });
-      const request = async operation => {
-        const token = await AsyncStorage.getItem("jwt");
-        return operation.setContext({
-          headers: { Authorization: `JWT ${token}` }
-        });
-      };
       const API_SERVER = "https://pinner-backend.herokuapp.com/graphql";
-      const uploadLink = createUploadLink({
+      const httpLink = createUploadLink({
         uri: API_SERVER,
         fetch
       });
+      const authLink = setContext(async (_, { headers }) => {
+        const token = await AsyncStorage.getItem("token");
+        console.log("kokoko");
+        return {
+          headers: {
+            authorization: token ? `JWT ${token}` : ""
+          }
+        };
+      });
       const client = new ApolloClient({
-        link: ApolloLink.from([uploadLink]),
+        link: authLink.concat(httpLink),
         cache,
-        request,
         ...apolloClientOptions
       });
       const isDarkMode = (await AsyncStorage.getItem("isDarkMode"))
