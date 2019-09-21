@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { COUNTRY_FRAGMENT } from "../../sharedQueries";
+import { COUNTRY_FRAGMENT } from "../../fragmentQueries";
 
 export const GET_USER = gql`
   query UserProfile($username: String!) {

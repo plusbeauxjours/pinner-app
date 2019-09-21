@@ -4,7 +4,7 @@ import Loader from "../../../components/Loader";
 import { useQuery } from "react-apollo-hooks";
 import { GET_MATCHES } from "./HomeQueries";
 import { GetMatches, Me } from "../../../types/api";
-import { MeContext } from "../../../context/MeContext";
+import { useMe } from "../../../context/MeContext";
 
 const View = styled.View`
   justify-content: center;
@@ -16,12 +16,10 @@ const Text = styled.Text``;
 
 export default () => {
   const { loading, data } = useQuery<GetMatches>(GET_MATCHES);
-  const me = useContext(MeContext);
+  const me = useMe();
   console.log(me);
 
   return (
-    <View>
-      {loading ? <Loader /> : <Text>{me && me.me.user.username}</Text>}
-    </View>
+    <View>{loading ? <Loader /> : <Text>{me && me.user.username}</Text>}</View>
   );
 };

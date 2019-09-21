@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { MATCH_FRAGMENT, COFFEE_FRAGMENT } from "../../..//sharedQueries";
+import { MATCH_FRAGMENT, COFFEE_FRAGMENT } from "../../..//fragmentQueries";
 
 export const GET_MATCHES = gql`
   query GetMatches($matchPage: Int) {
