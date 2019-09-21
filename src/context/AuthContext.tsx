@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
 import { AsyncStorage } from "react-native";
-import { AppLoading } from "expo";
 
 export const AuthContext = createContext(null);
 

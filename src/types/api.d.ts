@@ -3,6 +3,311 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: CityProfile
+// ====================================================
+
+export interface CityProfile_cityProfile_usersNow_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface CityProfile_cityProfile_usersNow_currentCity {
+  __typename: "CityType";
+  cityName: string | null;
+  country: CityProfile_cityProfile_usersNow_currentCity_country;
+}
+
+export interface CityProfile_cityProfile_usersNow {
+  __typename: "ProfileType";
+  id: string;
+  username: string | null;
+  avatarUrl: string | null;
+  isSelf: boolean | null;
+  currentCity: CityProfile_cityProfile_usersNow_currentCity | null;
+}
+
+export interface CityProfile_cityProfile_usersBefore_actor_profile_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface CityProfile_cityProfile_usersBefore_actor_profile_currentCity {
+  __typename: "CityType";
+  cityName: string | null;
+  country: CityProfile_cityProfile_usersBefore_actor_profile_currentCity_country;
+}
+
+export interface CityProfile_cityProfile_usersBefore_actor_profile {
+  __typename: "ProfileType";
+  id: string;
+  username: string | null;
+  avatarUrl: string | null;
+  isSelf: boolean | null;
+  currentCity: CityProfile_cityProfile_usersBefore_actor_profile_currentCity | null;
+}
+
+export interface CityProfile_cityProfile_usersBefore_actor {
+  __typename: "UserType";
+  profile: CityProfile_cityProfile_usersBefore_actor_profile | null;
+}
+
+export interface CityProfile_cityProfile_usersBefore {
+  __typename: "MoveNotificationType";
+  actor: CityProfile_cityProfile_usersBefore_actor;
+}
+
+export interface CityProfile_cityProfile_city_country_continent {
+  __typename: "ContinentType";
+  id: string;
+  continentName: string | null;
+  continentCode: string | null;
+  continentPhoto: string | null;
+}
+
+export interface CityProfile_cityProfile_city_country {
+  __typename: "CountryType";
+  countryName: string | null;
+  countryPhoto: string | null;
+  countryCode: string | null;
+  continent: CityProfile_cityProfile_city_country_continent | null;
+}
+
+export interface CityProfile_cityProfile_city {
+  __typename: "CityType";
+  id: string;
+  latitude: number | null;
+  longitude: number | null;
+  cityId: string | null;
+  cityName: string | null;
+  cityPhoto: string | null;
+  country: CityProfile_cityProfile_city_country;
+  likeCount: number | null;
+  isLiked: boolean | null;
+  userCount: number | null;
+  userLogCount: number | null;
+  count: number | null;
+  diff: number | null;
+}
+
+export interface CityProfile_cityProfile {
+  __typename: "CityProfileResponse";
+  count: number | null;
+  hasNextPage: boolean | null;
+  usersNow: (CityProfile_cityProfile_usersNow | null)[] | null;
+  usersBefore: (CityProfile_cityProfile_usersBefore | null)[] | null;
+  city: CityProfile_cityProfile_city | null;
+}
+
+export interface CityProfile {
+  cityProfile: CityProfile_cityProfile;
+}
+
+export interface CityProfileVariables {
+  page?: number | null;
+  cityId: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GetSamenameCities
+// ====================================================
+
+export interface GetSamenameCities_getSamenameCities_cities_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface GetSamenameCities_getSamenameCities_cities {
+  __typename: "CityType";
+  id: string;
+  latitude: number | null;
+  longitude: number | null;
+  cityName: string | null;
+  cityId: string | null;
+  cityPhoto: string | null;
+  distance: number | null;
+  country: GetSamenameCities_getSamenameCities_cities_country;
+  likeCount: number | null;
+  isLiked: boolean | null;
+}
+
+export interface GetSamenameCities_getSamenameCities {
+  __typename: "CitiesResponse";
+  cities: (GetSamenameCities_getSamenameCities_cities | null)[] | null;
+}
+
+export interface GetSamenameCities {
+  getSamenameCities: GetSamenameCities_getSamenameCities;
+}
+
+export interface GetSamenameCitiesVariables {
+  cityId: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: CountryProfile
+// ====================================================
+
+export interface CountryProfile_countryProfile_country_continent {
+  __typename: "ContinentType";
+  id: string;
+  continentName: string | null;
+  continentCode: string | null;
+  continentPhoto: string | null;
+}
+
+export interface CountryProfile_countryProfile_country {
+  __typename: "CountryType";
+  latitude: number | null;
+  longitude: number | null;
+  countryName: string | null;
+  countryCode: string | null;
+  countryPhoto: string | null;
+  countryCapital: string | null;
+  countryCurrency: string | null;
+  countryEmoji: string | null;
+  totalLikeCount: number | null;
+  cityCount: number | null;
+  continent: CountryProfile_countryProfile_country_continent | null;
+}
+
+export interface CountryProfile_countryProfile_usersNow_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface CountryProfile_countryProfile_usersNow_currentCity {
+  __typename: "CityType";
+  cityName: string | null;
+  country: CountryProfile_countryProfile_usersNow_currentCity_country;
+}
+
+export interface CountryProfile_countryProfile_usersNow {
+  __typename: "ProfileType";
+  id: string;
+  username: string | null;
+  avatarUrl: string | null;
+  isSelf: boolean | null;
+  currentCity: CountryProfile_countryProfile_usersNow_currentCity | null;
+}
+
+export interface CountryProfile_countryProfile_usersBefore_actor_profile_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface CountryProfile_countryProfile_usersBefore_actor_profile_currentCity {
+  __typename: "CityType";
+  cityName: string | null;
+  country: CountryProfile_countryProfile_usersBefore_actor_profile_currentCity_country;
+}
+
+export interface CountryProfile_countryProfile_usersBefore_actor_profile {
+  __typename: "ProfileType";
+  id: string;
+  username: string | null;
+  avatarUrl: string | null;
+  isSelf: boolean | null;
+  currentCity: CountryProfile_countryProfile_usersBefore_actor_profile_currentCity | null;
+}
+
+export interface CountryProfile_countryProfile_usersBefore_actor {
+  __typename: "UserType";
+  profile: CountryProfile_countryProfile_usersBefore_actor_profile | null;
+}
+
+export interface CountryProfile_countryProfile_usersBefore {
+  __typename: "MoveNotificationType";
+  actor: CountryProfile_countryProfile_usersBefore_actor;
+}
+
+export interface CountryProfile_countryProfile_cities_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface CountryProfile_countryProfile_cities {
+  __typename: "CityType";
+  id: string;
+  latitude: number | null;
+  longitude: number | null;
+  cityName: string | null;
+  cityId: string | null;
+  cityPhoto: string | null;
+  distance: number | null;
+  country: CountryProfile_countryProfile_cities_country;
+  likeCount: number | null;
+  isLiked: boolean | null;
+}
+
+export interface CountryProfile_countryProfile {
+  __typename: "CountryProfileResponse";
+  count: number | null;
+  hasNextPage: boolean | null;
+  country: CountryProfile_countryProfile_country | null;
+  usersNow: (CountryProfile_countryProfile_usersNow | null)[] | null;
+  usersBefore: (CountryProfile_countryProfile_usersBefore | null)[] | null;
+  cities: (CountryProfile_countryProfile_cities | null)[] | null;
+}
+
+export interface CountryProfile {
+  countryProfile: CountryProfile_countryProfile;
+}
+
+export interface CountryProfileVariables {
+  page?: number | null;
+  countryCode: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GetCountries
+// ====================================================
+
+export interface GetCountries_getCountries_countries_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
+export interface GetCountries_getCountries_countries {
+  __typename: "CountryType";
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryPhoto: string | null;
+  cityCount: number | null;
+  continent: GetCountries_getCountries_countries_continent | null;
+}
+
+export interface GetCountries_getCountries {
+  __typename: "CountriesResponse";
+  countries: (GetCountries_getCountries_countries | null)[] | null;
+}
+
+export interface GetCountries {
+  getCountries: GetCountries_getCountries;
+}
+
+export interface GetCountriesVariables {
+  countryCode: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: StartEmailVerification
 // ====================================================
 
@@ -356,6 +661,447 @@ export interface MarkAsReadMatch {
 
 export interface MarkAsReadMatchVariables {
   matchId: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: UserProfile
+// ====================================================
+
+export interface UserProfile_userProfile_user_profile_nationality_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
+export interface UserProfile_userProfile_user_profile_nationality {
+  __typename: "CountryType";
+  countryEmoji: string | null;
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryPhoto: string | null;
+  cityCount: number | null;
+  continent: UserProfile_userProfile_user_profile_nationality_continent | null;
+}
+
+export interface UserProfile_userProfile_user_profile_residence_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
+export interface UserProfile_userProfile_user_profile_residence {
+  __typename: "CountryType";
+  countryEmoji: string | null;
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryPhoto: string | null;
+  cityCount: number | null;
+  continent: UserProfile_userProfile_user_profile_residence_continent | null;
+}
+
+export interface UserProfile_userProfile_user_profile_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+  countryCode: string | null;
+}
+
+export interface UserProfile_userProfile_user_profile_currentCity {
+  __typename: "CityType";
+  latitude: number | null;
+  longitude: number | null;
+  cityName: string | null;
+  cityId: string | null;
+  cityPhoto: string | null;
+  country: UserProfile_userProfile_user_profile_currentCity_country;
+}
+
+export interface UserProfile_userProfile_user_profile {
+  __typename: "ProfileType";
+  bio: string | null;
+  gender: ProfileGender | null;
+  avatarUrl: string | null;
+  website: string | null;
+  distance: number | null;
+  countryPhoneNumber: string | null;
+  countryPhoneCode: string | null;
+  phoneNumber: string | null;
+  emailAddress: string | null;
+  isVerifiedPhoneNumber: boolean;
+  isVerifiedEmailAddress: boolean;
+  nationality: UserProfile_userProfile_user_profile_nationality | null;
+  residence: UserProfile_userProfile_user_profile_residence | null;
+  postCount: number | null;
+  tripCount: number | null;
+  coffeeCount: number | null;
+  cityCount: number | null;
+  countryCount: number | null;
+  continentCount: number | null;
+  isSelf: boolean | null;
+  isDarkMode: boolean;
+  isHideTrips: boolean;
+  isHideCoffees: boolean;
+  isHideCities: boolean;
+  isHideCountries: boolean;
+  isHideContinents: boolean;
+  isAutoLocationReport: boolean;
+  currentCity: UserProfile_userProfile_user_profile_currentCity | null;
+}
+
+export interface UserProfile_userProfile_user {
+  __typename: "UserType";
+  id: string;
+  /**
+   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+   */
+  username: string;
+  firstName: string;
+  lastName: string;
+  profile: UserProfile_userProfile_user_profile | null;
+}
+
+export interface UserProfile_userProfile {
+  __typename: "UserProfileResponse";
+  user: UserProfile_userProfile_user | null;
+}
+
+export interface UserProfile {
+  userProfile: UserProfile_userProfile;
+}
+
+export interface UserProfileVariables {
+  username: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GetTrips
+// ====================================================
+
+export interface GetTrips_getTrips_trip_city_country {
+  __typename: "CountryType";
+  countryName: string | null;
+  countryCode: string | null;
+}
+
+export interface GetTrips_getTrips_trip_city {
+  __typename: "CityType";
+  cityId: string | null;
+  cityName: string | null;
+  cityPhoto: string | null;
+  country: GetTrips_getTrips_trip_city_country;
+}
+
+export interface GetTrips_getTrips_trip {
+  __typename: "MoveNotificationType";
+  id: string;
+  city: GetTrips_getTrips_trip_city | null;
+  startDate: any | null;
+  endDate: any | null;
+  naturalTime: string | null;
+  diffDays: number | null;
+}
+
+export interface GetTrips_getTrips {
+  __typename: "TripResponse";
+  page: number | null;
+  hasNextPage: boolean | null;
+  trip: (GetTrips_getTrips_trip | null)[] | null;
+}
+
+export interface GetTrips {
+  getTrips: GetTrips_getTrips;
+}
+
+export interface GetTripsVariables {
+  username: string;
+  page?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: AddTrip
+// ====================================================
+
+export interface AddTrip_addTrip_moveNotification_city_country {
+  __typename: "CountryType";
+  countryName: string | null;
+  countryCode: string | null;
+}
+
+export interface AddTrip_addTrip_moveNotification_city {
+  __typename: "CityType";
+  cityId: string | null;
+  cityName: string | null;
+  cityPhoto: string | null;
+  country: AddTrip_addTrip_moveNotification_city_country;
+}
+
+export interface AddTrip_addTrip_moveNotification {
+  __typename: "MoveNotificationType";
+  startDate: any | null;
+  endDate: any | null;
+  city: AddTrip_addTrip_moveNotification_city | null;
+}
+
+export interface AddTrip_addTrip {
+  __typename: "AddTripResponse";
+  ok: boolean | null;
+  distance: number | null;
+  moveNotification: AddTrip_addTrip_moveNotification | null;
+}
+
+export interface AddTrip {
+  addTrip: AddTrip_addTrip;
+}
+
+export interface AddTripVariables {
+  cityId: string;
+  startDate: any;
+  endDate: any;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: EditTrip
+// ====================================================
+
+export interface EditTrip_editTrip_moveNotification_city_country {
+  __typename: "CountryType";
+  countryName: string | null;
+  countryCode: string | null;
+}
+
+export interface EditTrip_editTrip_moveNotification_city {
+  __typename: "CityType";
+  cityId: string | null;
+  cityName: string | null;
+  cityPhoto: string | null;
+  country: EditTrip_editTrip_moveNotification_city_country;
+}
+
+export interface EditTrip_editTrip_moveNotification {
+  __typename: "MoveNotificationType";
+  id: string;
+  city: EditTrip_editTrip_moveNotification_city | null;
+  startDate: any | null;
+  endDate: any | null;
+  naturalTime: string | null;
+}
+
+export interface EditTrip_editTrip {
+  __typename: "EditTripResponse";
+  ok: boolean | null;
+  distance: number | null;
+  moveNotification: EditTrip_editTrip_moveNotification | null;
+}
+
+export interface EditTrip {
+  editTrip: EditTrip_editTrip;
+}
+
+export interface EditTripVariables {
+  moveNotificationId: number;
+  cityId?: string | null;
+  startDate?: any | null;
+  endDate?: any | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: DeleteTrip
+// ====================================================
+
+export interface DeleteTrip_deleteTrip {
+  __typename: "DeleteTripResponse";
+  ok: boolean | null;
+  distance: number | null;
+  tripId: number | null;
+}
+
+export interface DeleteTrip {
+  deleteTrip: DeleteTrip_deleteTrip;
+}
+
+export interface DeleteTripVariables {
+  moveNotificationId: number;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GetAvatars
+// ====================================================
+
+export interface GetAvatars_getAvatars_avatars {
+  __typename: "AvatarType";
+  id: string;
+  uuid: any | null;
+  image: string | null;
+  isMain: boolean;
+  likeCount: number | null;
+  thumbnail: string | null;
+}
+
+export interface GetAvatars_getAvatars {
+  __typename: "AvatarListResponse";
+  avatars: (GetAvatars_getAvatars_avatars | null)[] | null;
+}
+
+export interface GetAvatars {
+  getAvatars: GetAvatars_getAvatars;
+}
+
+export interface GetAvatarsVariables {
+  userName: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: UploadAvatar
+// ====================================================
+
+export interface UploadAvatar_uploadAvatar_avatar {
+  __typename: "AvatarType";
+  id: string;
+  uuid: any | null;
+  image: string | null;
+  isMain: boolean;
+  likeCount: number | null;
+  thumbnail: string | null;
+}
+
+export interface UploadAvatar_uploadAvatar {
+  __typename: "UploadAvatarResponse";
+  ok: boolean | null;
+  preAvatarUUID: string | null;
+  newAvatarUUID: string | null;
+  avatar: UploadAvatar_uploadAvatar_avatar | null;
+}
+
+export interface UploadAvatar {
+  uploadAvatar: UploadAvatar_uploadAvatar;
+}
+
+export interface UploadAvatarVariables {
+  file: any;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: DeleteAvatar
+// ====================================================
+
+export interface DeleteAvatar_deleteAvatar {
+  __typename: "DeleteAvatarResponse";
+  ok: boolean | null;
+  uuid: string | null;
+}
+
+export interface DeleteAvatar {
+  deleteAvatar: DeleteAvatar_deleteAvatar;
+}
+
+export interface DeleteAvatarVariables {
+  uuid: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: MarkAsMain
+// ====================================================
+
+export interface MarkAsMain_markAsMain_avatar {
+  __typename: "AvatarType";
+  id: string;
+  uuid: any | null;
+  image: string | null;
+  isMain: boolean;
+  likeCount: number | null;
+  thumbnail: string | null;
+}
+
+export interface MarkAsMain_markAsMain {
+  __typename: "MarkAsMainResponse";
+  ok: boolean | null;
+  preAvatarUUID: string | null;
+  newAvatarUUID: string | null;
+  avatar: MarkAsMain_markAsMain_avatar | null;
+}
+
+export interface MarkAsMain {
+  markAsMain: MarkAsMain_markAsMain;
+}
+
+export interface MarkAsMainVariables {
+  uuid: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: CalculateDistance
+// ====================================================
+
+export interface CalculateDistance_calculateDistance {
+  __typename: "CalculateDistanceResponse";
+  distance: number | null;
+}
+
+export interface CalculateDistance {
+  calculateDistance: CalculateDistance_calculateDistance;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: SlackReportUsers
+// ====================================================
+
+export interface SlackReportUsers_slackReportUsers {
+  __typename: "SlackReportUsersResponse";
+  ok: boolean | null;
+}
+
+export interface SlackReportUsers {
+  slackReportUsers: SlackReportUsers_slackReportUsers;
+}
+
+export interface SlackReportUsersVariables {
+  targetUsername: string;
+  payload: string;
 }
 
 /* tslint:disable */
