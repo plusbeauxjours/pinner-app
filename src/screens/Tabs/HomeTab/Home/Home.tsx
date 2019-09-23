@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import Loader from "../../../components/Loader";
-import UserRow from "../../../components/UserRow";
+import Loader from "../../../../components/Loader";
+import UserRow from "../../../../components/UserRow";
 import { useQuery } from "react-apollo-hooks";
 import {
   GET_MATCHES,
   RECOMMEND_USERS,
   RECOMMEND_LOCATIONS
 } from "./HomeQueries";
-import { useMe } from "../../../context/MeContext";
-import { useLocation } from "../../../context/LocationContext";
+import { useMe } from "../../../../context/MeContext";
+import { useLocation } from "../../../../context/LocationContext";
 import { ScrollView, RefreshControl } from "react-native";
 import Swiper from "react-native-swiper";
-import { GET_COFFEES, REQUEST_COFFEE } from "../../../sharedQueries";
+import { GET_COFFEES, REQUEST_COFFEE } from "../../../../sharedQueries";
 import { useMutation } from "react-apollo";
 import { MARK_AS_READ_MATCH } from "./HomeQueries";
 import {
@@ -27,7 +27,7 @@ import {
   RecommendLocationsVariables,
   RequestCoffeeVariables,
   MarkAsReadMatchVariables
-} from "../../../types/api";
+} from "../../../../types/api";
 
 const Container = styled.View``;
 
@@ -37,6 +37,7 @@ const UserColumn = styled.View``;
 
 const Item = styled.View`
   flex: 1;
+  margin-bottom: 25px;
 `;
 const Title = styled.Text`
   font-weight: 500;
@@ -123,7 +124,10 @@ export default () => {
               <Item>
                 <Title>RECOMMEND USERS</Title>
                 <UserContainer>
-                  <Swiper style={{ height: 180 }}>
+                  <Swiper
+                    style={{ height: 135 }}
+                    paginationStyle={{ bottom: -15 }}
+                  >
                     {recommendUserData.recommendUsers.users.map(
                       (user, index) => {
                         return (
@@ -144,7 +148,10 @@ export default () => {
               <Item>
                 <Title>RECOMMEND LOCATIONS</Title>
                 <UserContainer>
-                  <Swiper style={{ height: 180 }}>
+                  <Swiper
+                    style={{ height: 135 }}
+                    paginationStyle={{ bottom: -15 }}
+                  >
                     {recommendLocationData.recommendLocations.cities.map(
                       (city, index) => (
                         <UserColumn key={index}>
@@ -163,7 +170,10 @@ export default () => {
               <Item>
                 <Title>NEED SOME COFFEE NOW</Title>
                 <UserContainer>
-                  <Swiper style={{ height: 180 }}>
+                  <Swiper
+                    style={{ height: 135 }}
+                    paginationStyle={{ bottom: -15 }}
+                  >
                     {coffeeData.getCoffees.coffees.map(coffee => (
                       <UserRow
                         key={coffee.id}

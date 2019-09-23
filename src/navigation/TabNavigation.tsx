@@ -3,34 +3,27 @@ import {
   createBottomTabNavigator,
   createStackNavigator
 } from "react-navigation";
-import { createMaterialTopTabNavigator } from "react-navigation";
-import Home from "../screens/Tabs/Home";
+
 import Search from "../screens/Tabs/Search";
 import Notifications from "../screens/Tabs/Notifications";
 import Profile from "../screens/Tabs/Profile";
-import MessagesLink from "../components/MessagesLink";
-import { View } from "react-native";
 import { Platform } from "react-native";
 import NavIcon from "../components/NavIcon";
-import { stackStyles } from "./Config";
 import PhotoNavigation from "./PhotoNavigation";
+import HomeNavigation from "./HomeNavigation";
 
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator({
     InitialRoute: {
       screen: initialRoute,
-      navigationOptions: {
-        ...customConfig,
-        headerStyle: { ...stackStyles }
-      }
+      navigationOptions: { ...customConfig }
     }
   });
 
-export default createMaterialTopTabNavigator(
+export default createBottomTabNavigator(
   {
     Home: {
-      screen: stackFactory(Home, {
-        headerRight: <MessagesLink />,
+      screen: stackFactory(HomeNavigation, {
         headerTitle: <NavIcon name="logo-instagram" size={36} />
       }),
       navigationOptions: {

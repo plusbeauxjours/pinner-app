@@ -3,7 +3,7 @@ import {
   MATCH_FRAGMENT,
   PROFILE_FRAGMENT,
   CITY_FRAGMENT
-} from "../../..//fragmentQueries";
+} from "../../../../fragmentQueries";
 
 export const RECOMMEND_USERS = gql`
   query RecommendUsers($page: Int) {
