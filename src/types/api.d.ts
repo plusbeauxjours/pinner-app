@@ -63,7 +63,7 @@ export interface CityProfile_cityProfile_city_country_continent {
   id: string;
   continentName: string | null;
   continentCode: string | null;
-  continentPhoto: string | null;
+  continentThumbnail: string | null;
 }
 
 export interface CityProfile_cityProfile_city_country {
@@ -129,7 +129,7 @@ export interface GetSamenameCities_getSamenameCities_cities {
   longitude: number | null;
   cityName: string | null;
   cityId: string | null;
-  cityPhoto: string | null;
+  cityThumbnail: string | null;
   distance: number | null;
   country: GetSamenameCities_getSamenameCities_cities_country;
   likeCount: number | null;
@@ -162,7 +162,7 @@ export interface CountryProfile_countryProfile_country_continent {
   id: string;
   continentName: string | null;
   continentCode: string | null;
-  continentPhoto: string | null;
+  continentThumbnail: string | null;
 }
 
 export interface CountryProfile_countryProfile_country {
@@ -244,7 +244,7 @@ export interface CountryProfile_countryProfile_cities {
   longitude: number | null;
   cityName: string | null;
   cityId: string | null;
-  cityPhoto: string | null;
+  cityThumbnail: string | null;
   distance: number | null;
   country: CountryProfile_countryProfile_cities_country;
   likeCount: number | null;
@@ -289,7 +289,7 @@ export interface GetCountries_getCountries_countries {
   id: string;
   countryName: string | null;
   countryCode: string | null;
-  countryPhoto: string | null;
+  countryThumbnail: string | null;
   cityCount: number | null;
   continent: GetCountries_getCountries_countries_continent | null;
 }
@@ -453,6 +453,92 @@ export interface CompletePhoneVerificationVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: RecommendUsers
+// ====================================================
+
+export interface RecommendUsers_recommendUsers_users_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface RecommendUsers_recommendUsers_users_currentCity {
+  __typename: "CityType";
+  cityName: string | null;
+  country: RecommendUsers_recommendUsers_users_currentCity_country;
+}
+
+export interface RecommendUsers_recommendUsers_users {
+  __typename: "ProfileType";
+  id: string;
+  username: string | null;
+  avatarUrl: string | null;
+  appAvatarUrl: string | null;
+  isSelf: boolean | null;
+  currentCity: RecommendUsers_recommendUsers_users_currentCity | null;
+}
+
+export interface RecommendUsers_recommendUsers {
+  __typename: "RecommendUsersResponse";
+  page: number | null;
+  hasNextPage: boolean | null;
+  users: (RecommendUsers_recommendUsers_users | null)[] | null;
+}
+
+export interface RecommendUsers {
+  recommendUsers: RecommendUsers_recommendUsers;
+}
+
+export interface RecommendUsersVariables {
+  page?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: RecommendLocations
+// ====================================================
+
+export interface RecommendLocations_recommendLocations_cities_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface RecommendLocations_recommendLocations_cities {
+  __typename: "CityType";
+  id: string;
+  latitude: number | null;
+  longitude: number | null;
+  cityName: string | null;
+  cityId: string | null;
+  cityThumbnail: string | null;
+  distance: number | null;
+  country: RecommendLocations_recommendLocations_cities_country;
+  likeCount: number | null;
+  isLiked: boolean | null;
+}
+
+export interface RecommendLocations_recommendLocations {
+  __typename: "RecommendLocationsResponse";
+  page: number | null;
+  hasNextPage: boolean | null;
+  cities: (RecommendLocations_recommendLocations_cities | null)[] | null;
+}
+
+export interface RecommendLocations {
+  recommendLocations: RecommendLocations_recommendLocations;
+}
+
+export interface RecommendLocationsVariables {
+  page?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: GetMatches
 // ====================================================
 
@@ -573,85 +659,6 @@ export interface GetMatchesVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: RequestCoffee
-// ====================================================
-
-export interface RequestCoffee_requestCoffee_coffee_city_country {
-  __typename: "CountryType";
-  countryName: string | null;
-}
-
-export interface RequestCoffee_requestCoffee_coffee_city {
-  __typename: "CityType";
-  cityId: string | null;
-  cityName: string | null;
-  cityPhoto: string | null;
-  country: RequestCoffee_requestCoffee_coffee_city_country;
-}
-
-export interface RequestCoffee_requestCoffee_coffee_host_profile_currentCity_country {
-  __typename: "CountryType";
-  countryName: string | null;
-}
-
-export interface RequestCoffee_requestCoffee_coffee_host_profile_currentCity {
-  __typename: "CityType";
-  cityName: string | null;
-  country: RequestCoffee_requestCoffee_coffee_host_profile_currentCity_country;
-}
-
-export interface RequestCoffee_requestCoffee_coffee_host_profile {
-  __typename: "ProfileType";
-  avatarUrl: string | null;
-  appAvatarUrl: string | null;
-  isSelf: boolean | null;
-  currentCity: RequestCoffee_requestCoffee_coffee_host_profile_currentCity | null;
-}
-
-export interface RequestCoffee_requestCoffee_coffee_host {
-  __typename: "UserType";
-  id: string;
-  /**
-   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
-   */
-  username: string;
-  profile: RequestCoffee_requestCoffee_coffee_host_profile | null;
-}
-
-export interface RequestCoffee_requestCoffee_coffee {
-  __typename: "CoffeeType";
-  id: string;
-  uuid: any | null;
-  city: RequestCoffee_requestCoffee_coffee_city;
-  host: RequestCoffee_requestCoffee_coffee_host;
-  status: string | null;
-  naturalTime: string | null;
-  target: CoffeeTarget;
-  createdAt: any;
-}
-
-export interface RequestCoffee_requestCoffee {
-  __typename: "RequestCoffeeResponse";
-  ok: boolean | null;
-  coffee: RequestCoffee_requestCoffee_coffee | null;
-}
-
-export interface RequestCoffee {
-  requestCoffee: RequestCoffee_requestCoffee;
-}
-
-export interface RequestCoffeeVariables {
-  countryCode?: string | null;
-  gender?: string | null;
-  currentCityId: string;
-  target?: string | null;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
 // GraphQL mutation operation: MarkAsReadMatch
 // ====================================================
 
@@ -691,7 +698,7 @@ export interface UserProfile_userProfile_user_profile_nationality {
   id: string;
   countryName: string | null;
   countryCode: string | null;
-  countryPhoto: string | null;
+  countryThumbnail: string | null;
   cityCount: number | null;
   continent: UserProfile_userProfile_user_profile_nationality_continent | null;
 }
@@ -708,7 +715,7 @@ export interface UserProfile_userProfile_user_profile_residence {
   id: string;
   countryName: string | null;
   countryCode: string | null;
-  countryPhoto: string | null;
+  countryThumbnail: string | null;
   cityCount: number | null;
   continent: UserProfile_userProfile_user_profile_residence_continent | null;
 }
@@ -1234,7 +1241,7 @@ export interface GetCoffees_getCoffees_coffees_city {
   __typename: "CityType";
   cityId: string | null;
   cityName: string | null;
-  cityPhoto: string | null;
+  cityThumbnail: string | null;
   country: GetCoffees_getCoffees_coffees_city_country;
 }
 
@@ -1301,6 +1308,85 @@ export interface GetCoffeesVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: RequestCoffee
+// ====================================================
+
+export interface RequestCoffee_requestCoffee_coffee_city_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_city {
+  __typename: "CityType";
+  cityId: string | null;
+  cityName: string | null;
+  cityThumbnail: string | null;
+  country: RequestCoffee_requestCoffee_coffee_city_country;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host_profile_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host_profile_currentCity {
+  __typename: "CityType";
+  cityName: string | null;
+  country: RequestCoffee_requestCoffee_coffee_host_profile_currentCity_country;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host_profile {
+  __typename: "ProfileType";
+  avatarUrl: string | null;
+  appAvatarUrl: string | null;
+  isSelf: boolean | null;
+  currentCity: RequestCoffee_requestCoffee_coffee_host_profile_currentCity | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host {
+  __typename: "UserType";
+  id: string;
+  /**
+   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+   */
+  username: string;
+  profile: RequestCoffee_requestCoffee_coffee_host_profile | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee {
+  __typename: "CoffeeType";
+  id: string;
+  uuid: any | null;
+  city: RequestCoffee_requestCoffee_coffee_city;
+  host: RequestCoffee_requestCoffee_coffee_host;
+  status: string | null;
+  naturalTime: string | null;
+  target: CoffeeTarget;
+  createdAt: any;
+}
+
+export interface RequestCoffee_requestCoffee {
+  __typename: "RequestCoffeeResponse";
+  ok: boolean | null;
+  coffee: RequestCoffee_requestCoffee_coffee | null;
+}
+
+export interface RequestCoffee {
+  requestCoffee: RequestCoffee_requestCoffee;
+}
+
+export interface RequestCoffeeVariables {
+  countryCode?: string | null;
+  gender?: string | null;
+  currentCityId: string;
+  target?: string | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL fragment: ProfileParts
 // ====================================================
 
@@ -1345,7 +1431,7 @@ export interface CityParts {
   longitude: number | null;
   cityName: string | null;
   cityId: string | null;
-  cityPhoto: string | null;
+  cityThumbnail: string | null;
   distance: number | null;
   country: CityParts_country;
   likeCount: number | null;
@@ -1371,7 +1457,7 @@ export interface CountryParts {
   id: string;
   countryName: string | null;
   countryCode: string | null;
-  countryPhoto: string | null;
+  countryThumbnail: string | null;
   cityCount: number | null;
   continent: CountryParts_continent | null;
 }
@@ -1389,7 +1475,7 @@ export interface ContinentParts {
   id: string;
   continentName: string | null;
   continentCode: string | null;
-  continentPhoto: string | null;
+  continentThumbnail: string | null;
 }
 
 /* tslint:disable */
@@ -1409,7 +1495,7 @@ export interface CoffeeParts_city {
   __typename: "CityType";
   cityId: string | null;
   cityName: string | null;
-  cityPhoto: string | null;
+  cityThumbnail: string | null;
   country: CoffeeParts_city_country;
 }
 

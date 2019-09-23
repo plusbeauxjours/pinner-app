@@ -1646,6 +1646,18 @@
             "deprecationReason": null
           },
           {
+            "name": "cityThumbnail",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "population",
             "description": "",
             "args": [],
@@ -2063,6 +2075,18 @@
             "deprecationReason": null
           },
           {
+            "name": "countryThumbnail",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "countryEmoji",
             "description": "",
             "args": [],
@@ -2339,6 +2363,18 @@
           },
           {
             "name": "continentPhoto",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "continentThumbnail",
             "description": "",
             "args": [],
             "type": {
