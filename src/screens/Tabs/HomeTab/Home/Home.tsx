@@ -3,30 +3,22 @@ import styled from "styled-components";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
 import { useQuery } from "react-apollo-hooks";
-import {
-  GET_MATCHES,
-  RECOMMEND_USERS,
-  RECOMMEND_LOCATIONS
-} from "./HomeQueries";
+import { RECOMMEND_USERS, RECOMMEND_LOCATIONS } from "./HomeQueries";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
 import { ScrollView, RefreshControl } from "react-native";
 import Swiper from "react-native-swiper";
 import { GET_COFFEES, REQUEST_COFFEE } from "../../../../sharedQueries";
 import { useMutation } from "react-apollo";
-import { MARK_AS_READ_MATCH } from "./HomeQueries";
 import {
-  GetMatches,
   GetCoffees,
   GetCoffeesVariables,
   RequestCoffee,
-  MarkAsReadMatch,
   RecommendUsers,
   RecommendUsersVariables,
   RecommendLocations,
   RecommendLocationsVariables,
-  RequestCoffeeVariables,
-  MarkAsReadMatchVariables
+  RequestCoffeeVariables
 } from "../../../../types/api";
 
 const Container = styled.View``;
@@ -51,7 +43,6 @@ export default () => {
   const location = useLocation();
   const [refreshing, setRefreshing] = useState(false);
   const [cityId, setCityId] = useState("");
-  const [matchId, setMarkAsReadMatch] = useState("");
   const [requestCoffeeVariables, setRequestCoffeeVariables] = useState({
     countryCode: location.currentCountryCode,
     gender: "",
@@ -81,15 +72,6 @@ export default () => {
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
     variables: { location: "city", cityId: "ChIJuQhD6D7sfDURB6J0Dx5TGW8" }
   });
-  const [MarkAsReadMatchFn] = useMutation<
-    MarkAsReadMatch,
-    MarkAsReadMatchVariables
-  >(MARK_AS_READ_MATCH, { variables: { matchId } });
-  const {
-    data: matchData,
-    loading: matchLoading,
-    refetch: matchRefetch
-  } = useQuery<GetMatches>(GET_MATCHES);
   console.log(me);
   useEffect(() => {
     setCityId(location.currentCityId);
@@ -112,10 +94,7 @@ export default () => {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      {recommendUserLoading ||
-      recommendLocationLoading ||
-      coffeeLoading ||
-      matchLoading ? (
+      {recommendUserLoading || recommendLocationLoading || coffeeLoading ? (
         <Loader />
       ) : (
         <Container>
@@ -180,20 +159,6 @@ export default () => {
                         coffee={coffee}
                         type={"coffee"}
                       />
-                    ))}
-                  </Swiper>
-                </UserContainer>
-              </Item>
-            )}
-
-          {matchData.getMatches.matches &&
-            matchData.getMatches.matches.length !== 0 && (
-              <Item>
-                <Title>MATCHES</Title>
-                <UserContainer>
-                  <Swiper style={{ height: 180 }}>
-                    {matchData.getMatches.matches.map(match => (
-                      <UserRow key={match.id} match={match} type={"match"} />
                     ))}
                   </Swiper>
                 </UserContainer>
