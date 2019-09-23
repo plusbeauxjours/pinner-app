@@ -1,13 +1,14 @@
 import React from "react";
 import { Image } from "react-native";
 import styled from "styled-components";
-import { BACKEND_URL } from "../../constants";
+import constants, { BACKEND_URL } from "../../constants";
 
 const Container = styled.TouchableOpacity`
   padding: 15px;
   flex-direction: row;
   align-items: center;
   height: 45px;
+  width: ${constants.width};
 `;
 const Touchable = styled.View``;
 const HeaderUserContainer = styled.View`
@@ -92,7 +93,7 @@ const UserRow: React.FC<IProps> = ({ user, city, coffee, match, type }) => {
           </Touchable>
           <Touchable>
             <HeaderUserContainer>
-              <Bold>{coffee.host.profile.username}</Bold>
+              <Bold>{coffee.host.username}</Bold>
               <Location>
                 {coffee.city.cityName}, {coffee.city.country.countryName}
               </Location>
@@ -109,15 +110,15 @@ const UserRow: React.FC<IProps> = ({ user, city, coffee, match, type }) => {
                 <Image
                   style={{ height: 40, width: 40, borderRadius: 20 }}
                   source={
-                    match.host.profile.appAvatarUrl && {
-                      uri: `${BACKEND_URL}/media/${match.host.profile.appAvatarUrl}`
+                    match.guest.profile.appAvatarUrl && {
+                      uri: `${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`
                     }
                   }
                 />
               </Touchable>
               <Touchable>
                 <HeaderUserContainer>
-                  <Bold>{match.coffee.host.profile.username}</Bold>
+                  <Bold>{match.coffee.guest.profile.username}</Bold>
                   <Location>
                     {match.coffee.city.cityName},{" "}
                     {match.coffee.city.country.countryName}
@@ -131,15 +132,15 @@ const UserRow: React.FC<IProps> = ({ user, city, coffee, match, type }) => {
                 <Image
                   style={{ height: 40, width: 40, borderRadius: 20 }}
                   source={
-                    match.guest.profile.appAvatarUrl && {
-                      uri: `${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`
+                    match.host.profile.appAvatarUrl && {
+                      uri: `${BACKEND_URL}/media/${match.host.profile.appAvatarUrl}`
                     }
                   }
                 />
               </Touchable>
               <Touchable>
                 <HeaderUserContainer>
-                  <Bold>{match.guest.profile.username}</Bold>
+                  <Bold>{match.host.profile.username}</Bold>
                   <Location>
                     {match.coffee.city.cityName},{" "}
                     {match.coffee.city.country.countryName}

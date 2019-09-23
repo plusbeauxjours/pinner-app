@@ -25,7 +25,6 @@ const LoginLinkText = styled.Text`
 
 export default ({ navigation }) => {
   const location = useLocation();
-  console.log(location);
   return (
     <View>
       <Image
