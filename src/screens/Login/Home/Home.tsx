@@ -3,6 +3,7 @@ import styled from "styled-components";
 import constants from "../../../../constants";
 import AuthButton from "../../../components/AuthButton";
 import FacebookApproach from "../Approach/FacebookApproach";
+import { useLocation } from "../../../context/LocationContext";
 
 const View = styled.View`
   justify-content: center;
@@ -22,21 +23,25 @@ const LoginLinkText = styled.Text`
   font-weight: 600;
 `;
 
-export default ({ navigation }) => (
-  <View>
-    <Image
-      resizeMode={"contain"}
-      source={require("../../../../assets/logo.png")}
-    />
-    <AuthButton
-      text={"Create New Account"}
-      onPress={() => navigation.navigate("Signup")}
-    />
-    <Touchable onPress={() => navigation.navigate("PhoneApproach")}>
-      <LoginLink>
-        <LoginLinkText>LOG IN WITH PHONE NUMBER</LoginLinkText>
-      </LoginLink>
-    </Touchable>
-    <FacebookApproach />
-  </View>
-);
+export default ({ navigation }) => {
+  const location = useLocation();
+  console.log(location);
+  return (
+    <View>
+      <Image
+        resizeMode={"contain"}
+        source={require("../../../../assets/logo.png")}
+      />
+      <AuthButton
+        text={"Create New Account"}
+        onPress={() => navigation.navigate("Signup")}
+      />
+      <Touchable onPress={() => navigation.navigate("PhoneApproach")}>
+        <LoginLink>
+          <LoginLinkText>LOG IN WITH PHONE NUMBER</LoginLinkText>
+        </LoginLink>
+      </Touchable>
+      <FacebookApproach />
+    </View>
+  );
+};

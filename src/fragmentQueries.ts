@@ -5,6 +5,7 @@ export const PROFILE_FRAGMENT = gql`
     id
     username
     avatarUrl
+    appAvatarUrl
     isSelf
     currentCity {
       cityName
@@ -72,6 +73,7 @@ export const COFFEE_FRAGMENT = gql`
       username
       profile {
         avatarUrl
+        appAvatarUrl
         isSelf
         currentCity {
           cityName
@@ -104,6 +106,7 @@ export const MATCH_FRAGMENT = gql`
         id
         username
         avatarUrl
+        appAvatarUrl
         isSelf
         currentCity {
           cityName
@@ -118,6 +121,7 @@ export const MATCH_FRAGMENT = gql`
         id
         username
         avatarUrl
+        appAvatarUrl
         isSelf
         currentCity {
           cityName

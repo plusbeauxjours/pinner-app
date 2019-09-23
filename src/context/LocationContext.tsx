@@ -28,7 +28,6 @@ export const LocationProvider = ({ children }) => {
     const {
       coords: { latitude, longitude }
     } = position;
-    console.log(latitude, longitude);
     getAddress(latitude, longitude);
   };
   const getAddress = async (latitude: number, longitude: number) => {

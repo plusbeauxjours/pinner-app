@@ -41,7 +41,6 @@ export default function App() {
       });
       const authLink = setContext(async (_, { headers }) => {
         const token = await AsyncStorage.getItem("jwt");
-        console.log("token::::::::::::::::", token);
         return {
           headers: {
             authorization: `JWT ${token || ""}`

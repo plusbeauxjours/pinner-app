@@ -22,6 +22,7 @@ export interface CityProfile_cityProfile_usersNow {
   id: string;
   username: string | null;
   avatarUrl: string | null;
+  appAvatarUrl: string | null;
   isSelf: boolean | null;
   currentCity: CityProfile_cityProfile_usersNow_currentCity | null;
 }
@@ -42,6 +43,7 @@ export interface CityProfile_cityProfile_usersBefore_actor_profile {
   id: string;
   username: string | null;
   avatarUrl: string | null;
+  appAvatarUrl: string | null;
   isSelf: boolean | null;
   currentCity: CityProfile_cityProfile_usersBefore_actor_profile_currentCity | null;
 }
@@ -194,6 +196,7 @@ export interface CountryProfile_countryProfile_usersNow {
   id: string;
   username: string | null;
   avatarUrl: string | null;
+  appAvatarUrl: string | null;
   isSelf: boolean | null;
   currentCity: CountryProfile_countryProfile_usersNow_currentCity | null;
 }
@@ -214,6 +217,7 @@ export interface CountryProfile_countryProfile_usersBefore_actor_profile {
   id: string;
   username: string | null;
   avatarUrl: string | null;
+  appAvatarUrl: string | null;
   isSelf: boolean | null;
   currentCity: CountryProfile_countryProfile_usersBefore_actor_profile_currentCity | null;
 }
@@ -389,6 +393,7 @@ export interface CompleteEmailVerification_completeEmailVerification_user_profil
 export interface CompleteEmailVerification_completeEmailVerification_user_profile {
   __typename: "ProfileType";
   avatarUrl: string | null;
+  appAvatarUrl: string | null;
   currentCity: CompleteEmailVerification_completeEmailVerification_user_profile_currentCity | null;
 }
 
@@ -479,6 +484,7 @@ export interface GetMatches_getMatches_matches_host_profile {
   id: string;
   username: string | null;
   avatarUrl: string | null;
+  appAvatarUrl: string | null;
   isSelf: boolean | null;
   currentCity: GetMatches_getMatches_matches_host_profile_currentCity | null;
 }
@@ -504,6 +510,7 @@ export interface GetMatches_getMatches_matches_guest_profile {
   id: string;
   username: string | null;
   avatarUrl: string | null;
+  appAvatarUrl: string | null;
   isSelf: boolean | null;
   currentCity: GetMatches_getMatches_matches_guest_profile_currentCity | null;
 }
@@ -596,6 +603,7 @@ export interface RequestCoffee_requestCoffee_coffee_host_profile_currentCity {
 export interface RequestCoffee_requestCoffee_coffee_host_profile {
   __typename: "ProfileType";
   avatarUrl: string | null;
+  appAvatarUrl: string | null;
   isSelf: boolean | null;
   currentCity: RequestCoffee_requestCoffee_coffee_host_profile_currentCity | null;
 }
@@ -726,6 +734,7 @@ export interface UserProfile_userProfile_user_profile {
   bio: string | null;
   gender: ProfileGender | null;
   avatarUrl: string | null;
+  appAvatarUrl: string | null;
   website: string | null;
   distance: number | null;
   countryPhoneNumber: string | null;
@@ -1138,6 +1147,7 @@ export interface Me_me_user_profile {
   residence: Me_me_user_profile_residence | null;
   nationality: Me_me_user_profile_nationality | null;
   avatarUrl: string | null;
+  appAvatarUrl: string | null;
   currentCity: Me_me_user_profile_currentCity | null;
 }
 
@@ -1242,6 +1252,7 @@ export interface GetCoffees_getCoffees_coffees_host_profile_currentCity {
 export interface GetCoffees_getCoffees_coffees_host_profile {
   __typename: "ProfileType";
   avatarUrl: string | null;
+  appAvatarUrl: string | null;
   isSelf: boolean | null;
   currentCity: GetCoffees_getCoffees_coffees_host_profile_currentCity | null;
 }
@@ -1309,6 +1320,7 @@ export interface ProfileParts {
   id: string;
   username: string | null;
   avatarUrl: string | null;
+  appAvatarUrl: string | null;
   isSelf: boolean | null;
   currentCity: ProfileParts_currentCity | null;
 }
@@ -1415,6 +1427,7 @@ export interface CoffeeParts_host_profile_currentCity {
 export interface CoffeeParts_host_profile {
   __typename: "ProfileType";
   avatarUrl: string | null;
+  appAvatarUrl: string | null;
   isSelf: boolean | null;
   currentCity: CoffeeParts_host_profile_currentCity | null;
 }
@@ -1477,6 +1490,7 @@ export interface MatchParts_host_profile {
   id: string;
   username: string | null;
   avatarUrl: string | null;
+  appAvatarUrl: string | null;
   isSelf: boolean | null;
   currentCity: MatchParts_host_profile_currentCity | null;
 }
@@ -1502,6 +1516,7 @@ export interface MatchParts_guest_profile {
   id: string;
   username: string | null;
   avatarUrl: string | null;
+  appAvatarUrl: string | null;
   isSelf: boolean | null;
   currentCity: MatchParts_guest_profile_currentCity | null;
 }

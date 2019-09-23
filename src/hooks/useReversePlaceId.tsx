@@ -1,9 +1,10 @@
 import { Alert } from "react-native";
 import axios from "axios";
+import keys from "../../keys";
 
 const useReversePlaceId = async (placeId: string) => {
-  const REACT_APP_GOOGLE_MAPS_KEY = process.env.REACT_APP_GOOGLE_MAPS_KEY;
-  const URL = `https://maps.googleapis.com/maps/api/geocode/json?&language=en&place_id=${placeId}&key=${REACT_APP_GOOGLE_MAPS_KEY}`;
+  console.log(keys.REACT_APP_GOOGLE_MAPS_KEY);
+  const URL = `https://maps.googleapis.com/maps/api/geocode/json?&language=en&place_id=${placeId}&key=${keys.REACT_APP_GOOGLE_MAPS_KEY}`;
   const { data } = await axios(URL);
   if (!data.error_message) {
     const { results } = data;

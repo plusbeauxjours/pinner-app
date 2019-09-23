@@ -19,6 +19,7 @@ export const ME = gql`
             countryEmoji
           }
           avatarUrl
+          appAvatarUrl
           currentCity {
             cityId
             cityName

@@ -13,6 +13,7 @@ export const GET_USER = gql`
           bio
           gender
           avatarUrl
+          appAvatarUrl
           website
           distance
           countryPhoneNumber

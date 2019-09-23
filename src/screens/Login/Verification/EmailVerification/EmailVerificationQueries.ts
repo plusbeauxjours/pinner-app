@@ -9,6 +9,7 @@ export const COMPLETE_EMAIL_SIGN_IN = gql`
         username
         profile {
           avatarUrl
+          appAvatarUrl
           currentCity {
             cityId
             cityName

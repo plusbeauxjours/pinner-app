@@ -21,6 +21,7 @@
     "expo-facebook": "~6.0.0",
     "expo-font": "~6.0.1",
     "graphql": "14.4.1",
+    "metro-react-native-babel-preset": "^0.56.0",
     "react": "16.8.3",
     "react-apollo": "^3.1.0",
     "react-apollo-hooks": "^0.5.0",

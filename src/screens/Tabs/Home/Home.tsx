@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Loader from "../../../components/Loader";
+import UserRow from "../../../components/UserRow";
 import { useQuery } from "react-apollo-hooks";
 import { GET_MATCHES } from "./HomeQueries";
 import { GetMatches } from "../../../types/api";
@@ -21,6 +22,7 @@ export default () => {
   const { loading, data, refetch } = useQuery<GetMatches>(GET_MATCHES);
   const me = useMe();
   const location = useLocation();
+  console.log(location);
   const onRefresh = async () => {
     try {
       setRefreshing(true);
@@ -31,18 +33,20 @@ export default () => {
       setRefreshing(false);
     }
   };
-  console.log("useLocation::", location);
-  console.log(me);
-
   return (
     <ScrollView
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      <View>
-        {loading ? <Loader /> : <Text>{me && me.user.username}</Text>}
-      </View>
+      {loading ? (
+        <Loader />
+      ) : (
+        data &&
+        data.getMatches.matches.map(match => (
+          <UserRow key={match.id} {...match} />
+        ))
+      )}
     </ScrollView>
   );
 };

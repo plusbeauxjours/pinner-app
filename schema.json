@@ -2629,6 +2629,18 @@
             "deprecationReason": null
           },
           {
+            "name": "appAvatarUrl",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "countryPhoneCode",
             "description": "",
             "args": [],
@@ -3482,6 +3494,18 @@
           },
           {
             "name": "thumbnail",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "appThumbnail",
             "description": "",
             "args": [],
             "type": {
