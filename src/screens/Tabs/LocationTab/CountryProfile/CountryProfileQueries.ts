@@ -4,7 +4,7 @@ import {
   COUNTRY_FRAGMENT,
   CONTINENT_FRAGMENT,
   PROFILE_FRAGMENT
-} from "../../fragmentQueries";
+} from "../../../../fragmentQueries";
 
 export const COUNTRY_PROFILE = gql`
   query CountryProfile($page: Int, $countryCode: String!) {

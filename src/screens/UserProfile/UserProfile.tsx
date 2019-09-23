@@ -1,6 +1,6 @@
 import React from "react";
-import styled from "../../styles/typed-components";
+import styled from "styled-components";
 
 const View = styled.View``;
 const Text = styled.Text``;
-export default () => <Text>CityProfile</Text>;
+export default () => <Text>UserProfil</Text>;

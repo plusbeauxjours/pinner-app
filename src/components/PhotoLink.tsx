@@ -9,9 +9,7 @@ const Container = styled.TouchableOpacity`
 `;
 
 export default withNavigation(({ navigation }) => (
-  <Container onPress={() => navigation.navigate("MessageNavigation")}>
-    <NavIcon
-      name={Platform.OS === "ios" ? "ios-paper-plane" : "md-paper-plane"}
-    />
+  <Container onPress={() => navigation.navigate("PhotoNavigation")}>
+    <NavIcon name={Platform.OS === "ios" ? "ios-add" : "md-add"} />
   </Container>
 ));

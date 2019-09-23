@@ -1,4 +1,4 @@
-import styled from "../../../../styles/typed-components";
+import styled from "styled-components";
 import * as Facebook from "expo-facebook";
 import AuthButton from "../../../../components/AuthButton";
 import { Alert } from "react-native";

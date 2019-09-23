@@ -3,7 +3,7 @@ import {
   PROFILE_FRAGMENT,
   CITY_FRAGMENT,
   CONTINENT_FRAGMENT
-} from "../../fragmentQueries";
+} from "../../../../fragmentQueries";
 
 export const CITY_PROFILE = gql`
   query CityProfile($page: Int, $cityId: String!) {
