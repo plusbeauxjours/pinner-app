@@ -24,10 +24,10 @@ import {
   GET_USER,
   GET_TRIPS,
   ADD_TRIP,
-  SLACK_REPORT_USERS,
   EDIT_TRIP,
   DELETE_TRIP,
-  CALCULATE_DISTANCE
+  CALCULATE_DISTANCE,
+  SLACK_REPORT_USERS
 } from "./UserProfileQueries";
 import Loader from "../../../../components/Loader";
 import { useMutation } from "react-apollo";
@@ -52,6 +52,7 @@ export default () => {
   const [moveNotificationId, setMoveNotificationId] = useState<string>();
   const [username, setUsername] = useState<string>();
   const [payload, setPayload] = useState<string>();
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const [date, setDate] = useState<{
     startDate: moment.Moment;
     endDate: moment.Moment;
@@ -66,7 +67,7 @@ export default () => {
     tripStartDate: null,
     tripEndDate: null
   });
-  const [refreshing, setRefreshing] = useState<boolean>(false);
+
   const {
     data: profileData,
     loading: profileLoading,
