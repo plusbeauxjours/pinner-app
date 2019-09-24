@@ -125,12 +125,7 @@ export default () => {
       setRefreshing(false);
     }
   };
-  const {
-    userProfile: { user }
-  } = profileData;
-  const {
-    getTrips: { trip }
-  } = tripData;
+
   return (
     <ScrollView
       refreshControl={
@@ -142,19 +137,34 @@ export default () => {
       ) : (
         <View>
           <Bold>UserProfile</Bold>
-          {user && (
+          {profileData.userProfile.user && (
             <>
-              <Text>username:{user.username}</Text>
-              <Text>bio:{user.profile.bio}</Text>
-              <Text>gender:{user.profile.gender}</Text>
-              <Text>distance:{user.profile.distance}</Text>
-              <Text>postCount:{user.profile.postCount}</Text>
-              <Text>tripCount:{user.profile.tripCount}</Text>
-              <Text>coffeeCount:{user.profile.coffeeCount}</Text>
-              <Text>cityCount:{user.profile.cityCount}</Text>
-              <Text>countryCount:{user.profile.countryCount}</Text>
-              <Text>continentCount:{user.profile.continentCount}</Text>
-              <Text>isSelf:{user.profile.isSelf}</Text>
+              <Text>username:{profileData.userProfile.user.username}</Text>
+              <Text>bio:{profileData.userProfile.user.profile.bio}</Text>
+              <Text>gender:{profileData.userProfile.user.profile.gender}</Text>
+              <Text>
+                distance:{profileData.userProfile.user.profile.distance}
+              </Text>
+              <Text>
+                postCount:{profileData.userProfile.user.profile.postCount}
+              </Text>
+              <Text>
+                tripCount:{profileData.userProfile.user.profile.tripCount}
+              </Text>
+              <Text>
+                coffeeCount:{profileData.userProfile.user.profile.coffeeCount}
+              </Text>
+              <Text>
+                cityCount:{profileData.userProfile.user.profile.cityCount}
+              </Text>
+              <Text>
+                countryCount:{profileData.userProfile.user.profile.countryCount}
+              </Text>
+              <Text>
+                continentCount:
+                {profileData.userProfile.user.profile.continentCount}
+              </Text>
+              <Text>isSelf:{profileData.userProfile.user.profile.isSelf}</Text>
             </>
           )}
           <Bold>EditProfile</Bold>
@@ -163,9 +173,13 @@ export default () => {
           <Bold>Countries</Bold>
           <Bold>Continents</Bold>
           <Bold>Coffees</Bold>
-          {trip.length === 1 ? <Bold>Trip</Bold> : <Bold>Trips</Bold>}
-          {trip &&
-            trip.map((i, index) => (
+          {tripData.getTrips.trip.length === 1 ? (
+            <Bold>Trip</Bold>
+          ) : (
+            <Bold>Trips</Bold>
+          )}
+          {tripData.getTrips.trip &&
+            tripData.getTrips.trip.map((i, index) => (
               <UserRow key={index} trip={i} type={"trip"} />
             ))}
         </View>

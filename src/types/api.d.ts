@@ -525,6 +525,49 @@ export interface GetSamenameCitiesVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: NearCities
+// ====================================================
+
+export interface NearCities_nearCities_cities_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface NearCities_nearCities_cities {
+  __typename: "CityType";
+  id: string;
+  latitude: number | null;
+  longitude: number | null;
+  cityName: string | null;
+  cityId: string | null;
+  cityThumbnail: string | null;
+  distance: number | null;
+  country: NearCities_nearCities_cities_country;
+  likeCount: number | null;
+  isLiked: boolean | null;
+}
+
+export interface NearCities_nearCities {
+  __typename: "NearCitiesResponse";
+  page: number | null;
+  hasNextPage: boolean | null;
+  cities: (NearCities_nearCities_cities | null)[] | null;
+}
+
+export interface NearCities {
+  nearCities: NearCities_nearCities;
+}
+
+export interface NearCitiesVariables {
+  cityId: string;
+  page?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: ContinentProfile
 // ====================================================
 
