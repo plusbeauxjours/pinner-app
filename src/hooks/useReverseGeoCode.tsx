@@ -2,7 +2,10 @@ import axios from "axios";
 import { Alert } from "react-native";
 import keys from "../../keys";
 
-const useReverseGeoCode = async (latitude: number, longitude: number) => {
+export const useReverseGeoCode = async (
+  latitude: number,
+  longitude: number
+) => {
   const URL = `https://maps.googleapis.com/maps/api/geocode/json?&language=en&latlng=${latitude},${longitude}&key=${keys.REACT_APP_GOOGLE_MAPS_KEY}`;
   const { data } = await axios(URL);
   if (!data.error_message) {
@@ -35,8 +38,6 @@ const useReverseGeoCode = async (latitude: number, longitude: number) => {
     return { storableLocation };
   } else {
     Alert.alert(data.error_message);
-    return;
+    return null;
   }
 };
-
-export default useReverseGeoCode;

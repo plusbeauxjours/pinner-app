@@ -2,8 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { useMutation } from "react-apollo-hooks";
 import { ReportLocation, ReportLocationVariables } from "../types/api";
 import { REPORT_LOCATION } from "../sharedQueries";
-import useReverseGeoCode from "../hooks/useReverseGeoCode";
-import useReversePlaceId from "../hooks/useReversePlaceId";
+import { useReverseGeoCode } from "../hooks/useReverseGeoCode";
+import { useReversePlaceId } from "../hooks/useReversePlaceId";
 import { AsyncStorage } from "react-native";
 
 interface IState {

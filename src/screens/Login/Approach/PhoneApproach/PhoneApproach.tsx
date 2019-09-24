@@ -65,7 +65,7 @@ export default ({ navigation }) => {
             ? phoneNumber.substring(1)
             : phoneNumber
         });
-        return;
+        return null;
       } else {
         Alert.alert("Please write a valid phone number");
       }

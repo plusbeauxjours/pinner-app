@@ -46,7 +46,7 @@ export default ({ navigation }) => {
       if (startEmailVerification) {
         Alert.alert("Check your email");
         navigation.navigate("EmailVerification");
-        return;
+        return null;
       } else {
         Alert.alert("Can't log in now");
       }
