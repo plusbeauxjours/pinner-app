@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { RefreshControl, ScrollView } from "react-native";
-import { useQuery } from "react-apollo-hooks";
+import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
@@ -10,7 +10,9 @@ import {
   CityProfile,
   CityProfileVariables,
   GetSamenameCities,
-  GetSamenameCitiesVariables
+  GetSamenameCitiesVariables,
+  SlackReportLocations,
+  SlackReportLocationsVariables
 } from "../../../../types/api";
 import {
   CITY_PROFILE,
@@ -19,6 +21,7 @@ import {
 } from "./CityProfileQueries";
 import Swiper from "react-native-swiper";
 import { NearCities, NearCitiesVariables } from "../../../../types/api";
+import { SLACK_REPORT_LOCATIONS } from "../../../../sharedQueries";
 
 const Container = styled.View``;
 
@@ -48,6 +51,17 @@ export default () => {
   const location = useLocation();
   const [cityId, setCityId] = useState<string>(location.currentCityId);
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [payload, setPayload] = useState<string>();
+  const [slackReportLocationsFn] = useMutation<
+    SlackReportLocations,
+    SlackReportLocationsVariables
+  >(SLACK_REPORT_LOCATIONS, {
+    variables: {
+      targetLocationId: cityId,
+      targetLocationType: "city",
+      payload
+    }
+  });
   const {
     data: profileData,
     loading: profileLoading,
