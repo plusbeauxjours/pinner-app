@@ -11,7 +11,6 @@ import LocationNavigation from "./LocationNavigation";
 import Search from "../components/Search";
 import PhotoLink from "../components/PhotoLink";
 import RequestCoffee from "../screens/Tabs/RequestCoffeeTab/RequestCoffee";
-import UserProfile from "../screens/Tabs/UserProfileTab/UserProfile/index";
 import UserProfileNavigation from "./UserProfileNavigation";
 
 const stackFactory = (initialRoute, customConfig) =>

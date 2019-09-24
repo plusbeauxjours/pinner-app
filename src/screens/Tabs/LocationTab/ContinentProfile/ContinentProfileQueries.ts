@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 import {
-  PROFILE_FRAGMENT,
+  COUNTRY_FRAGMENT,
   CONTINENT_FRAGMENT
 } from "../../../../fragmentQueries";
 
@@ -9,16 +9,6 @@ export const CONTINENT_PROFILE = gql`
     continentProfile(page: $page, continentCode: $continentCode) {
       count
       hasNextPage
-      usersNow {
-        ...ProfileParts
-      }
-      usersBefore {
-        actor {
-          profile {
-            ...ProfileParts
-          }
-        }
-      }
       continent {
         countryCount
         ...ContinentParts
@@ -32,6 +22,6 @@ export const CONTINENT_PROFILE = gql`
       }
     }
   }
-  ${PROFILE_FRAGMENT}
+  ${COUNTRY_FRAGMENT}
   ${CONTINENT_FRAGMENT}
 `;

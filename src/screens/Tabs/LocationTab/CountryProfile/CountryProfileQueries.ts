@@ -2,8 +2,7 @@ import gql from "graphql-tag";
 import {
   CITY_FRAGMENT,
   COUNTRY_FRAGMENT,
-  CONTINENT_FRAGMENT,
-  PROFILE_FRAGMENT
+  CONTINENT_FRAGMENT
 } from "../../../../fragmentQueries";
 
 export const COUNTRY_PROFILE = gql`
@@ -26,23 +25,12 @@ export const COUNTRY_PROFILE = gql`
           ...ContinentParts
         }
       }
-      usersNow {
-        ...ProfileParts
-      }
-      usersBefore {
-        actor {
-          profile {
-            ...ProfileParts
-          }
-        }
-      }
       cities {
         ...CityParts
       }
     }
   }
   ${CITY_FRAGMENT}
-  ${PROFILE_FRAGMENT}
   ${CONTINENT_FRAGMENT}
 `;
 

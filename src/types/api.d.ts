@@ -203,6 +203,7 @@ export interface RecommendLocations_recommendLocations_cities {
   longitude: number | null;
   cityName: string | null;
   cityId: string | null;
+  cityPhoto: string | null;
   cityThumbnail: string | null;
   distance: number | null;
   country: RecommendLocations_recommendLocations_cities_country;
@@ -434,6 +435,7 @@ export interface CityProfile_cityProfile_city_country_continent {
   id: string;
   continentName: string | null;
   continentCode: string | null;
+  continentPhoto: string | null;
   continentThumbnail: string | null;
 }
 
@@ -500,6 +502,7 @@ export interface GetSamenameCities_getSamenameCities_cities {
   longitude: number | null;
   cityName: string | null;
   cityId: string | null;
+  cityPhoto: string | null;
   cityThumbnail: string | null;
   distance: number | null;
   country: GetSamenameCities_getSamenameCities_cities_country;
@@ -540,6 +543,7 @@ export interface NearCities_nearCities_cities {
   longitude: number | null;
   cityName: string | null;
   cityId: string | null;
+  cityPhoto: string | null;
   cityThumbnail: string | null;
   distance: number | null;
   country: NearCities_nearCities_cities_country;
@@ -571,64 +575,13 @@ export interface NearCitiesVariables {
 // GraphQL query operation: ContinentProfile
 // ====================================================
 
-export interface ContinentProfile_continentProfile_usersNow_currentCity_country {
-  __typename: "CountryType";
-  countryName: string | null;
-}
-
-export interface ContinentProfile_continentProfile_usersNow_currentCity {
-  __typename: "CityType";
-  cityName: string | null;
-  country: ContinentProfile_continentProfile_usersNow_currentCity_country;
-}
-
-export interface ContinentProfile_continentProfile_usersNow {
-  __typename: "ProfileType";
-  id: string;
-  username: string | null;
-  avatarUrl: string | null;
-  appAvatarUrl: string | null;
-  isSelf: boolean | null;
-  currentCity: ContinentProfile_continentProfile_usersNow_currentCity | null;
-}
-
-export interface ContinentProfile_continentProfile_usersBefore_actor_profile_currentCity_country {
-  __typename: "CountryType";
-  countryName: string | null;
-}
-
-export interface ContinentProfile_continentProfile_usersBefore_actor_profile_currentCity {
-  __typename: "CityType";
-  cityName: string | null;
-  country: ContinentProfile_continentProfile_usersBefore_actor_profile_currentCity_country;
-}
-
-export interface ContinentProfile_continentProfile_usersBefore_actor_profile {
-  __typename: "ProfileType";
-  id: string;
-  username: string | null;
-  avatarUrl: string | null;
-  appAvatarUrl: string | null;
-  isSelf: boolean | null;
-  currentCity: ContinentProfile_continentProfile_usersBefore_actor_profile_currentCity | null;
-}
-
-export interface ContinentProfile_continentProfile_usersBefore_actor {
-  __typename: "UserType";
-  profile: ContinentProfile_continentProfile_usersBefore_actor_profile | null;
-}
-
-export interface ContinentProfile_continentProfile_usersBefore {
-  __typename: "MoveNotificationType";
-  actor: ContinentProfile_continentProfile_usersBefore_actor;
-}
-
 export interface ContinentProfile_continentProfile_continent {
   __typename: "ContinentType";
   countryCount: number | null;
   id: string;
   continentName: string | null;
   continentCode: string | null;
+  continentPhoto: string | null;
   continentThumbnail: string | null;
 }
 
@@ -638,6 +591,7 @@ export interface ContinentProfile_continentProfile_continents {
   id: string;
   continentName: string | null;
   continentCode: string | null;
+  continentPhoto: string | null;
   continentThumbnail: string | null;
 }
 
@@ -652,6 +606,7 @@ export interface ContinentProfile_continentProfile_countries {
   id: string;
   countryName: string | null;
   countryCode: string | null;
+  countryPhoto: string | null;
   countryThumbnail: string | null;
   cityCount: number | null;
   continent: ContinentProfile_continentProfile_countries_continent | null;
@@ -661,8 +616,6 @@ export interface ContinentProfile_continentProfile {
   __typename: "ContinentProfileResponse";
   count: number | null;
   hasNextPage: boolean | null;
-  usersNow: (ContinentProfile_continentProfile_usersNow | null)[] | null;
-  usersBefore: (ContinentProfile_continentProfile_usersBefore | null)[] | null;
   continent: ContinentProfile_continentProfile_continent | null;
   continents: (ContinentProfile_continentProfile_continents | null)[] | null;
   countries: (ContinentProfile_continentProfile_countries | null)[] | null;
@@ -690,6 +643,7 @@ export interface CountryProfile_countryProfile_country_continent {
   id: string;
   continentName: string | null;
   continentCode: string | null;
+  continentPhoto: string | null;
   continentThumbnail: string | null;
 }
 
@@ -708,58 +662,6 @@ export interface CountryProfile_countryProfile_country {
   continent: CountryProfile_countryProfile_country_continent | null;
 }
 
-export interface CountryProfile_countryProfile_usersNow_currentCity_country {
-  __typename: "CountryType";
-  countryName: string | null;
-}
-
-export interface CountryProfile_countryProfile_usersNow_currentCity {
-  __typename: "CityType";
-  cityName: string | null;
-  country: CountryProfile_countryProfile_usersNow_currentCity_country;
-}
-
-export interface CountryProfile_countryProfile_usersNow {
-  __typename: "ProfileType";
-  id: string;
-  username: string | null;
-  avatarUrl: string | null;
-  appAvatarUrl: string | null;
-  isSelf: boolean | null;
-  currentCity: CountryProfile_countryProfile_usersNow_currentCity | null;
-}
-
-export interface CountryProfile_countryProfile_usersBefore_actor_profile_currentCity_country {
-  __typename: "CountryType";
-  countryName: string | null;
-}
-
-export interface CountryProfile_countryProfile_usersBefore_actor_profile_currentCity {
-  __typename: "CityType";
-  cityName: string | null;
-  country: CountryProfile_countryProfile_usersBefore_actor_profile_currentCity_country;
-}
-
-export interface CountryProfile_countryProfile_usersBefore_actor_profile {
-  __typename: "ProfileType";
-  id: string;
-  username: string | null;
-  avatarUrl: string | null;
-  appAvatarUrl: string | null;
-  isSelf: boolean | null;
-  currentCity: CountryProfile_countryProfile_usersBefore_actor_profile_currentCity | null;
-}
-
-export interface CountryProfile_countryProfile_usersBefore_actor {
-  __typename: "UserType";
-  profile: CountryProfile_countryProfile_usersBefore_actor_profile | null;
-}
-
-export interface CountryProfile_countryProfile_usersBefore {
-  __typename: "MoveNotificationType";
-  actor: CountryProfile_countryProfile_usersBefore_actor;
-}
-
 export interface CountryProfile_countryProfile_cities_country {
   __typename: "CountryType";
   countryName: string | null;
@@ -772,6 +674,7 @@ export interface CountryProfile_countryProfile_cities {
   longitude: number | null;
   cityName: string | null;
   cityId: string | null;
+  cityPhoto: string | null;
   cityThumbnail: string | null;
   distance: number | null;
   country: CountryProfile_countryProfile_cities_country;
@@ -784,8 +687,6 @@ export interface CountryProfile_countryProfile {
   count: number | null;
   hasNextPage: boolean | null;
   country: CountryProfile_countryProfile_country | null;
-  usersNow: (CountryProfile_countryProfile_usersNow | null)[] | null;
-  usersBefore: (CountryProfile_countryProfile_usersBefore | null)[] | null;
   cities: (CountryProfile_countryProfile_cities | null)[] | null;
 }
 
@@ -817,6 +718,7 @@ export interface GetCountries_getCountries_countries {
   id: string;
   countryName: string | null;
   countryCode: string | null;
+  countryPhoto: string | null;
   countryThumbnail: string | null;
   cityCount: number | null;
   continent: GetCountries_getCountries_countries_continent | null;
@@ -848,6 +750,7 @@ export interface TripProfile_tripProfile_city_country_continent {
   id: string;
   continentName: string | null;
   continentCode: string | null;
+  continentPhoto: string | null;
   continentThumbnail: string | null;
 }
 
@@ -1202,6 +1105,7 @@ export interface FrequentVisits_frequentVisits_cities {
   longitude: number | null;
   cityName: string | null;
   cityId: string | null;
+  cityPhoto: string | null;
   cityThumbnail: string | null;
   distance: number | null;
   country: FrequentVisits_frequentVisits_cities_country;
@@ -1360,6 +1264,7 @@ export interface TopContinents_topContinents_continents {
   id: string;
   continentName: string | null;
   continentCode: string | null;
+  continentPhoto: string | null;
   continentThumbnail: string | null;
 }
 
@@ -1397,6 +1302,7 @@ export interface TopCountries_topCountries_countries {
   id: string;
   countryName: string | null;
   countryCode: string | null;
+  countryPhoto: string | null;
   countryThumbnail: string | null;
   cityCount: number | null;
   continent: TopCountries_topCountries_countries_continent | null;
@@ -1435,6 +1341,7 @@ export interface EditProfile_editProfile_user_profile_nationality {
   id: string;
   countryName: string | null;
   countryCode: string | null;
+  countryPhoto: string | null;
   countryThumbnail: string | null;
   cityCount: number | null;
   continent: EditProfile_editProfile_user_profile_nationality_continent | null;
@@ -1452,6 +1359,7 @@ export interface EditProfile_editProfile_user_profile_residence {
   id: string;
   countryName: string | null;
   countryCode: string | null;
+  countryPhoto: string | null;
   countryThumbnail: string | null;
   cityCount: number | null;
   continent: EditProfile_editProfile_user_profile_residence_continent | null;
@@ -1690,6 +1598,7 @@ export interface UserProfile_userProfile_user_profile_nationality {
   id: string;
   countryName: string | null;
   countryCode: string | null;
+  countryPhoto: string | null;
   countryThumbnail: string | null;
   cityCount: number | null;
   continent: UserProfile_userProfile_user_profile_nationality_continent | null;
@@ -1707,6 +1616,7 @@ export interface UserProfile_userProfile_user_profile_residence {
   id: string;
   countryName: string | null;
   countryCode: string | null;
+  countryPhoto: string | null;
   countryThumbnail: string | null;
   cityCount: number | null;
   continent: UserProfile_userProfile_user_profile_residence_continent | null;
@@ -2144,6 +2054,7 @@ export interface CityParts {
   longitude: number | null;
   cityName: string | null;
   cityId: string | null;
+  cityPhoto: string | null;
   cityThumbnail: string | null;
   distance: number | null;
   country: CityParts_country;
@@ -2170,6 +2081,7 @@ export interface CountryParts {
   id: string;
   countryName: string | null;
   countryCode: string | null;
+  countryPhoto: string | null;
   countryThumbnail: string | null;
   cityCount: number | null;
   continent: CountryParts_continent | null;
@@ -2188,6 +2100,7 @@ export interface ContinentParts {
   id: string;
   continentName: string | null;
   continentCode: string | null;
+  continentPhoto: string | null;
   continentThumbnail: string | null;
 }
 

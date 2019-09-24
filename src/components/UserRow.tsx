@@ -26,6 +26,7 @@ interface IProps {
   city?: any;
   trip?: any;
   country?: any;
+  continent?: any;
   coffee?: any;
   match?: any;
   type: string;
@@ -36,6 +37,7 @@ const UserRow: React.FC<IProps> = ({
   city,
   trip,
   country,
+  continent,
   coffee,
   match,
   type
@@ -124,6 +126,26 @@ const UserRow: React.FC<IProps> = ({
             <HeaderUserContainer>
               <Bold>{country.countryName}</Bold>
               <Location>{country.continent.continentName}</Location>
+            </HeaderUserContainer>
+          </Touchable>
+        </Container>
+      );
+    case "continent":
+      return (
+        <Container>
+          <Touchable>
+            <Image
+              style={{ height: 40, width: 40, borderRadius: 5 }}
+              source={
+                continent.countryThumbnail && {
+                  uri: continent.countryThumbnail
+                }
+              }
+            />
+          </Touchable>
+          <Touchable>
+            <HeaderUserContainer>
+              <Bold>{continent.continentName}</Bold>
             </HeaderUserContainer>
           </Touchable>
         </Container>

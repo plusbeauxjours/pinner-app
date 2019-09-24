@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
-import { useQuery } from "react-apollo-hooks";
+import { useQuery, useMutation } from "react-apollo-hooks";
 import { GET_MATCHES } from "./MatchQueries";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
 import { ScrollView, RefreshControl } from "react-native";
 import Swiper from "react-native-swiper";
-import { useMutation } from "react-apollo";
 import { MARK_AS_READ_MATCH } from "./MatchQueries";
 import {
   GetMatches,

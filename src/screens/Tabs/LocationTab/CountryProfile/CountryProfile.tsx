@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { RefreshControl, ScrollView } from "react-native";
-import { useQuery } from "react-apollo-hooks";
+import { useQuery , useMutation} from "react-apollo-hooks";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
@@ -13,7 +13,6 @@ import {
   SlackReportLocationsVariables
 } from "../../../../types/api";
 import { SLACK_REPORT_LOCATIONS } from "../../../../sharedQueries";
-import { useMutation } from "react-apollo";
 import {
   CountryProfile,
   CountryProfileVariables,
@@ -96,9 +95,7 @@ export default () => {
       }
     >
       {profileLoading || countriesLoading ? (
-        <Container>
-          <Loader />
-        </Container>
+        <Loader />
       ) : (
         <Container>
           <Bold>UserProfile</Bold>
@@ -154,52 +151,6 @@ export default () => {
                             <UserRow country={country} type={"country"} />
                             <UserRow country={country} type={"country"} />
                             <UserRow country={country} type={"country"} />
-                          </UserColumn>
-                        );
-                      }
-                    )}
-                  </Swiper>
-                </UserContainer>
-              </Item>
-            )}
-          {profileData.countryProfile.usersNow &&
-            profileData.countryProfile.usersNow.length !== 0 && (
-              <Item>
-                <Title>USERS NOW</Title>
-                <UserContainer>
-                  <Swiper
-                    style={{ height: 135 }}
-                    paginationStyle={{ bottom: -15 }}
-                  >
-                    {profileData.countryProfile.usersNow.map((user, index) => {
-                      return (
-                        <UserColumn key={index}>
-                          <UserRow user={user} type={"user"} />
-                          <UserRow user={user} type={"user"} />
-                          <UserRow user={user} type={"user"} />
-                        </UserColumn>
-                      );
-                    })}
-                  </Swiper>
-                </UserContainer>
-              </Item>
-            )}
-          {profileData.countryProfile.usersBefore &&
-            profileData.countryProfile.usersBefore.length !== 0 && (
-              <Item>
-                <Title>USERS BEFORE</Title>
-                <UserContainer>
-                  <Swiper
-                    style={{ height: 135 }}
-                    paginationStyle={{ bottom: -15 }}
-                  >
-                    {profileData.countryProfile.usersBefore.map(
-                      (user, index) => {
-                        return (
-                          <UserColumn key={index}>
-                            <UserRow user={user.actor.profile} type={"user"} />
-                            <UserRow user={user.actor.profile} type={"user"} />
-                            <UserRow user={user.actor.profile} type={"user"} />
                           </UserColumn>
                         );
                       }

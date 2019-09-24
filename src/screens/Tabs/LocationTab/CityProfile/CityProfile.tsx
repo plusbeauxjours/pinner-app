@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { RefreshControl, ScrollView } from "react-native";
-import { useQuery, useMutation } from "react-apollo-hooks";
+import { useQuery, useMutation } from 'react-apollo-hooks';
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
@@ -21,7 +21,7 @@ import {
 } from "./CityProfileQueries";
 import Swiper from "react-native-swiper";
 import { NearCities, NearCitiesVariables } from "../../../../types/api";
-import { SLACK_REPORT_LOCATIONS } from "../../../../sharedQueries";
+import { SLACK_REPORT_LOCATIONS } from '../../../../sharedQueries';
 
 const Container = styled.View``;
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import moment from "moment";
 import { RefreshControl, ScrollView } from "react-native";
-import { useQuery } from "react-apollo-hooks";
+import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
@@ -30,7 +30,6 @@ import {
   SLACK_REPORT_USERS
 } from "./UserProfileQueries";
 import Loader from "../../../../components/Loader";
-import { useMutation } from "react-apollo";
 import UserRow from "../../../../components/UserRow";
 
 const View = styled.View`
