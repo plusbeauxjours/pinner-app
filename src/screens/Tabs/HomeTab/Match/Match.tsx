@@ -47,7 +47,6 @@ export default () => {
     loading: matchLoading,
     refetch: matchRefetch
   } = useQuery<GetMatches>(GET_MATCHES);
-  console.log(me);
 
   const onRefresh = async () => {
     try {

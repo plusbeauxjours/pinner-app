@@ -88,25 +88,3 @@ export const GET_COFFEES = gql`
   }
   ${COFFEE_FRAGMENT}
 `;
-
-export const REQUEST_COFFEE = gql`
-  mutation RequestCoffee(
-    $countryCode: String
-    $gender: String
-    $currentCityId: String!
-    $target: String
-  ) {
-    requestCoffee(
-      countryCode: $countryCode
-      gender: $gender
-      currentCityId: $currentCityId
-      target: $target
-    ) {
-      ok
-      coffee {
-        ...CoffeeParts
-      }
-    }
-  }
-  ${COFFEE_FRAGMENT}
-`;

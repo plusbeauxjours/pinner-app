@@ -72,7 +72,7 @@ export const GET_TRIPS = gql`
         city {
           cityId
           cityName
-          cityPhoto
+          cityThumbnail
           country {
             countryName
             countryCode
@@ -102,7 +102,7 @@ export const ADD_TRIP = gql`
         city {
           cityId
           cityName
-          cityPhoto
+          cityThumbnail
           country {
             countryName
             countryCode
@@ -133,7 +133,7 @@ export const EDIT_TRIP = gql`
         city {
           cityId
           cityName
-          cityPhoto
+          cityThumbnail
           country {
             countryName
             countryCode

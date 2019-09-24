@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { COFFEE_FRAGMENT } from "src/fragmentQueries";
+import { COFFEE_FRAGMENT } from "../../../../fragmentQueries";
 
 export const GET_COFFEES = gql`
   query GetCoffees(

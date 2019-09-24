@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { CONTINENT_FRAGMENT } from "src/fragmentQueries";
+import { CONTINENT_FRAGMENT } from "../../../../fragmentQueries";
 
 export const TRIP_PROFILE = gql`
   query TripProfile($cityId: String!, $startDate: Date!, $endDate: Date!) {

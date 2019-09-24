@@ -24,12 +24,20 @@ const Location = styled.Text`
 interface IProps {
   user?: any;
   city?: any;
+  trip?: any;
   coffee?: any;
   match?: any;
   type: string;
 }
 
-const UserRow: React.FC<IProps> = ({ user, city, coffee, match, type }) => {
+const UserRow: React.FC<IProps> = ({
+  user,
+  city,
+  trip,
+  coffee,
+  match,
+  type
+}) => {
   switch (type) {
     case "user":
       return (
@@ -71,9 +79,28 @@ const UserRow: React.FC<IProps> = ({ user, city, coffee, match, type }) => {
           <Touchable>
             <HeaderUserContainer>
               <Bold>{city.cityName}</Bold>
-              <Location>
-                {city.country.countryName}, {city.country.countryName}
-              </Location>
+              <Location>{city.country.countryName}</Location>
+            </HeaderUserContainer>
+          </Touchable>
+        </Container>
+      );
+    case "trip":
+      return (
+        <Container>
+          <Touchable>
+            <Image
+              style={{ height: 40, width: 40, borderRadius: 5 }}
+              source={
+                trip.city.cityThumbnail && {
+                  uri: trip.city.cityThumbnail
+                }
+              }
+            />
+          </Touchable>
+          <Touchable>
+            <HeaderUserContainer>
+              <Bold>{trip.city.cityName}</Bold>
+              <Location>{trip.city.country.countryName}</Location>
             </HeaderUserContainer>
           </Touchable>
         </Container>

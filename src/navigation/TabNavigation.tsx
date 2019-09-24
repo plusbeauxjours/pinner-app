@@ -3,16 +3,16 @@ import {
   createBottomTabNavigator,
   createStackNavigator
 } from "react-navigation";
-
 // import Notifications from "../screens/Tabs/Notifications";
-import Profile from "../screens/Tabs/Profile";
 import { Platform } from "react-native";
 import NavIcon from "../components/NavIcon";
-import PhotoNavigation from "./PhotoNavigation";
 import HomeNavigation from "./HomeNavigation";
 import LocationNavigation from "./LocationNavigation";
 import Search from "../components/Search";
 import PhotoLink from "../components/PhotoLink";
+import RequestCoffee from "../screens/Tabs/RequestCoffeeTab/RequestCoffee";
+import UserProfile from "../screens/Tabs/UserProfileTab/UserProfile/index";
+import UserProfileNavigation from "./UserProfileNavigation";
 
 const stackFactory = (initialRoute, customConfig) =>
   createStackNavigator({
@@ -63,7 +63,7 @@ export default createBottomTabNavigator(
       }
     },
     Add: {
-      screen: stackFactory(PhotoNavigation, {
+      screen: stackFactory(RequestCoffee, {
         headerLeft: (
           <Search
             name={Platform.OS === "ios" ? "ios-search" : "md-search"}
@@ -73,8 +73,6 @@ export default createBottomTabNavigator(
         headerRight: <PhotoLink />
       }),
       navigationOptions: {
-        tabBarOnPress: ({ navigation }) =>
-          navigation.navigate("PhotoNavigation"),
         tabBarIcon: ({ focused }) => (
           <NavIcon
             focused={focused}
@@ -105,7 +103,7 @@ export default createBottomTabNavigator(
     //   }
     // },
     Profile: {
-      screen: stackFactory(Profile, {
+      screen: stackFactory(UserProfileNavigation, {
         headerLeft: (
           <Search
             name={Platform.OS === "ios" ? "ios-search" : "md-search"}

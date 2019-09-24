@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { COUNTRY_FRAGMENT } from "src/fragmentQueries";
+import { COUNTRY_FRAGMENT } from "../../../../fragmentQueries";
 
 export const TOP_COUNTRIES = gql`
   query TopCountries($userName: String!) {

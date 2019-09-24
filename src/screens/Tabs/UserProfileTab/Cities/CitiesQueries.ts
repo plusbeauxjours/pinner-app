@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { CITY_FRAGMENT } from "src/fragmentQueries";
+import { CITY_FRAGMENT } from "../../../../fragmentQueries";
 
 export const FREQUENT_VISITS = gql`
   query FrequentVisits($userName: String!) {

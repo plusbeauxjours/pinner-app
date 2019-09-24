@@ -797,6 +797,841 @@ export interface GetCountriesVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: TripProfile
+// ====================================================
+
+export interface TripProfile_tripProfile_city_country_continent {
+  __typename: "ContinentType";
+  id: string;
+  continentName: string | null;
+  continentCode: string | null;
+  continentThumbnail: string | null;
+}
+
+export interface TripProfile_tripProfile_city_country {
+  __typename: "CountryType";
+  countryName: string | null;
+  countryPhoto: string | null;
+  countryCode: string | null;
+  continent: TripProfile_tripProfile_city_country_continent | null;
+}
+
+export interface TripProfile_tripProfile_city {
+  __typename: "CityType";
+  id: string;
+  latitude: number | null;
+  longitude: number | null;
+  cityId: string | null;
+  cityName: string | null;
+  cityPhoto: string | null;
+  country: TripProfile_tripProfile_city_country;
+  likeCount: number | null;
+  isLiked: boolean | null;
+  userCount: number | null;
+  userLogCount: number | null;
+  count: number | null;
+  diff: number | null;
+}
+
+export interface TripProfile_tripProfile_usersBefore_actor_profile_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface TripProfile_tripProfile_usersBefore_actor_profile_currentCity {
+  __typename: "CityType";
+  cityId: string | null;
+  cityName: string | null;
+  country: TripProfile_tripProfile_usersBefore_actor_profile_currentCity_country;
+}
+
+export interface TripProfile_tripProfile_usersBefore_actor_profile {
+  __typename: "ProfileType";
+  id: string;
+  username: string | null;
+  avatarUrl: string | null;
+  isSelf: boolean | null;
+  currentCity: TripProfile_tripProfile_usersBefore_actor_profile_currentCity | null;
+}
+
+export interface TripProfile_tripProfile_usersBefore_actor {
+  __typename: "UserType";
+  profile: TripProfile_tripProfile_usersBefore_actor_profile | null;
+}
+
+export interface TripProfile_tripProfile_usersBefore {
+  __typename: "MoveNotificationType";
+  actor: TripProfile_tripProfile_usersBefore_actor;
+}
+
+export interface TripProfile_tripProfile_coffees_host_profile {
+  __typename: "ProfileType";
+  avatarUrl: string | null;
+}
+
+export interface TripProfile_tripProfile_coffees_host {
+  __typename: "UserType";
+  id: string;
+  /**
+   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+   */
+  username: string;
+  profile: TripProfile_tripProfile_coffees_host_profile | null;
+}
+
+export interface TripProfile_tripProfile_coffees {
+  __typename: "CoffeeType";
+  id: string;
+  uuid: any | null;
+  target: CoffeeTarget;
+  host: TripProfile_tripProfile_coffees_host;
+}
+
+export interface TripProfile_tripProfile {
+  __typename: "TripProfileResponse";
+  city: TripProfile_tripProfile_city | null;
+  count: number | null;
+  usersBefore: (TripProfile_tripProfile_usersBefore | null)[] | null;
+  userCount: number | null;
+  coffees: (TripProfile_tripProfile_coffees | null)[] | null;
+}
+
+export interface TripProfile {
+  tripProfile: TripProfile_tripProfile;
+}
+
+export interface TripProfileVariables {
+  cityId: string;
+  startDate: any;
+  endDate: any;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: RequestCoffee
+// ====================================================
+
+export interface RequestCoffee_requestCoffee_coffee_city_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_city {
+  __typename: "CityType";
+  cityId: string | null;
+  cityName: string | null;
+  cityThumbnail: string | null;
+  country: RequestCoffee_requestCoffee_coffee_city_country;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host_profile_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host_profile_currentCity {
+  __typename: "CityType";
+  cityName: string | null;
+  country: RequestCoffee_requestCoffee_coffee_host_profile_currentCity_country;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host_profile {
+  __typename: "ProfileType";
+  avatarUrl: string | null;
+  appAvatarUrl: string | null;
+  isSelf: boolean | null;
+  currentCity: RequestCoffee_requestCoffee_coffee_host_profile_currentCity | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host {
+  __typename: "UserType";
+  id: string;
+  /**
+   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+   */
+  username: string;
+  profile: RequestCoffee_requestCoffee_coffee_host_profile | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee {
+  __typename: "CoffeeType";
+  id: string;
+  uuid: any | null;
+  city: RequestCoffee_requestCoffee_coffee_city;
+  host: RequestCoffee_requestCoffee_coffee_host;
+  status: string | null;
+  naturalTime: string | null;
+  target: CoffeeTarget;
+  createdAt: any;
+}
+
+export interface RequestCoffee_requestCoffee {
+  __typename: "RequestCoffeeResponse";
+  ok: boolean | null;
+  coffee: RequestCoffee_requestCoffee_coffee | null;
+}
+
+export interface RequestCoffee {
+  requestCoffee: RequestCoffee_requestCoffee;
+}
+
+export interface RequestCoffeeVariables {
+  countryCode?: string | null;
+  gender?: string | null;
+  currentCityId: string;
+  target?: string | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GetAvatarDetail
+// ====================================================
+
+export interface GetAvatarDetail_getAvatarDetail_avatar {
+  __typename: "AvatarType";
+  id: string;
+  uuid: any | null;
+  image: string | null;
+  isMain: boolean;
+  likeCount: number | null;
+  thumbnail: string | null;
+}
+
+export interface GetAvatarDetail_getAvatarDetail {
+  __typename: "AvatarDetailResponse";
+  avatar: GetAvatarDetail_getAvatarDetail_avatar | null;
+}
+
+export interface GetAvatarDetail {
+  getAvatarDetail: GetAvatarDetail_getAvatarDetail;
+}
+
+export interface GetAvatarDetailVariables {
+  avatarId: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GetAvatars
+// ====================================================
+
+export interface GetAvatars_getAvatars_avatars {
+  __typename: "AvatarType";
+  id: string;
+  uuid: any | null;
+  image: string | null;
+  isMain: boolean;
+  likeCount: number | null;
+  thumbnail: string | null;
+}
+
+export interface GetAvatars_getAvatars {
+  __typename: "AvatarListResponse";
+  avatars: (GetAvatars_getAvatars_avatars | null)[] | null;
+}
+
+export interface GetAvatars {
+  getAvatars: GetAvatars_getAvatars;
+}
+
+export interface GetAvatarsVariables {
+  userName: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: UploadAvatar
+// ====================================================
+
+export interface UploadAvatar_uploadAvatar_avatar {
+  __typename: "AvatarType";
+  id: string;
+  uuid: any | null;
+  image: string | null;
+  isMain: boolean;
+  likeCount: number | null;
+  thumbnail: string | null;
+}
+
+export interface UploadAvatar_uploadAvatar {
+  __typename: "UploadAvatarResponse";
+  ok: boolean | null;
+  preAvatarUUID: string | null;
+  newAvatarUUID: string | null;
+  avatar: UploadAvatar_uploadAvatar_avatar | null;
+}
+
+export interface UploadAvatar {
+  uploadAvatar: UploadAvatar_uploadAvatar;
+}
+
+export interface UploadAvatarVariables {
+  file: any;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: DeleteAvatar
+// ====================================================
+
+export interface DeleteAvatar_deleteAvatar {
+  __typename: "DeleteAvatarResponse";
+  ok: boolean | null;
+  uuid: string | null;
+}
+
+export interface DeleteAvatar {
+  deleteAvatar: DeleteAvatar_deleteAvatar;
+}
+
+export interface DeleteAvatarVariables {
+  uuid: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: MarkAsMain
+// ====================================================
+
+export interface MarkAsMain_markAsMain_avatar {
+  __typename: "AvatarType";
+  id: string;
+  uuid: any | null;
+  image: string | null;
+  isMain: boolean;
+  likeCount: number | null;
+  thumbnail: string | null;
+}
+
+export interface MarkAsMain_markAsMain {
+  __typename: "MarkAsMainResponse";
+  ok: boolean | null;
+  preAvatarUUID: string | null;
+  newAvatarUUID: string | null;
+  avatar: MarkAsMain_markAsMain_avatar | null;
+}
+
+export interface MarkAsMain {
+  markAsMain: MarkAsMain_markAsMain;
+}
+
+export interface MarkAsMainVariables {
+  uuid: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: FrequentVisits
+// ====================================================
+
+export interface FrequentVisits_frequentVisits_cities_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface FrequentVisits_frequentVisits_cities {
+  __typename: "CityType";
+  count: number | null;
+  diff: number | null;
+  id: string;
+  latitude: number | null;
+  longitude: number | null;
+  cityName: string | null;
+  cityId: string | null;
+  cityThumbnail: string | null;
+  distance: number | null;
+  country: FrequentVisits_frequentVisits_cities_country;
+  likeCount: number | null;
+  isLiked: boolean | null;
+}
+
+export interface FrequentVisits_frequentVisits {
+  __typename: "CitiesResponse";
+  cities: (FrequentVisits_frequentVisits_cities | null)[] | null;
+}
+
+export interface FrequentVisits {
+  frequentVisits: FrequentVisits_frequentVisits;
+}
+
+export interface FrequentVisitsVariables {
+  userName: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GetCoffees
+// ====================================================
+
+export interface GetCoffees_getCoffees_coffees_city_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface GetCoffees_getCoffees_coffees_city {
+  __typename: "CityType";
+  cityId: string | null;
+  cityName: string | null;
+  cityThumbnail: string | null;
+  country: GetCoffees_getCoffees_coffees_city_country;
+}
+
+export interface GetCoffees_getCoffees_coffees_host_profile_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface GetCoffees_getCoffees_coffees_host_profile_currentCity {
+  __typename: "CityType";
+  cityName: string | null;
+  country: GetCoffees_getCoffees_coffees_host_profile_currentCity_country;
+}
+
+export interface GetCoffees_getCoffees_coffees_host_profile {
+  __typename: "ProfileType";
+  avatarUrl: string | null;
+  appAvatarUrl: string | null;
+  isSelf: boolean | null;
+  currentCity: GetCoffees_getCoffees_coffees_host_profile_currentCity | null;
+}
+
+export interface GetCoffees_getCoffees_coffees_host {
+  __typename: "UserType";
+  id: string;
+  /**
+   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+   */
+  username: string;
+  profile: GetCoffees_getCoffees_coffees_host_profile | null;
+}
+
+export interface GetCoffees_getCoffees_coffees {
+  __typename: "CoffeeType";
+  id: string;
+  uuid: any | null;
+  city: GetCoffees_getCoffees_coffees_city;
+  host: GetCoffees_getCoffees_coffees_host;
+  status: string | null;
+  naturalTime: string | null;
+  target: CoffeeTarget;
+  createdAt: any;
+}
+
+export interface GetCoffees_getCoffees {
+  __typename: "GetCoffeesResponse";
+  coffees: (GetCoffees_getCoffees_coffees | null)[] | null;
+}
+
+export interface GetCoffees {
+  getCoffees: GetCoffees_getCoffees;
+}
+
+export interface GetCoffeesVariables {
+  cityId?: string | null;
+  countryCode?: string | null;
+  continentCode?: string | null;
+  userName?: string | null;
+  location: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: CompleteEditEmailVerification
+// ====================================================
+
+export interface CompleteEditEmailVerification_completeEditEmailVerification_user_profile_currentCity {
+  __typename: "CityType";
+  cityId: string | null;
+  cityName: string | null;
+}
+
+export interface CompleteEditEmailVerification_completeEditEmailVerification_user_profile {
+  __typename: "ProfileType";
+  avatarUrl: string | null;
+  currentCity: CompleteEditEmailVerification_completeEditEmailVerification_user_profile_currentCity | null;
+}
+
+export interface CompleteEditEmailVerification_completeEditEmailVerification_user {
+  __typename: "UserType";
+  /**
+   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+   */
+  username: string;
+  profile: CompleteEditEmailVerification_completeEditEmailVerification_user_profile | null;
+}
+
+export interface CompleteEditEmailVerification_completeEditEmailVerification {
+  __typename: "CompleteEditEmailVerificationResponse";
+  ok: boolean | null;
+  token: string | null;
+  user: CompleteEditEmailVerification_completeEditEmailVerification_user | null;
+}
+
+export interface CompleteEditEmailVerification {
+  completeEditEmailVerification: CompleteEditEmailVerification_completeEditEmailVerification;
+}
+
+export interface CompleteEditEmailVerificationVariables {
+  key: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: TopContinents
+// ====================================================
+
+export interface TopContinents_topContinents_continents {
+  __typename: "ContinentType";
+  count: number | null;
+  diff: number | null;
+  id: string;
+  continentName: string | null;
+  continentCode: string | null;
+  continentThumbnail: string | null;
+}
+
+export interface TopContinents_topContinents {
+  __typename: "ContinentsResponse";
+  continents: (TopContinents_topContinents_continents | null)[] | null;
+}
+
+export interface TopContinents {
+  topContinents: TopContinents_topContinents;
+}
+
+export interface TopContinentsVariables {
+  userName: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: TopCountries
+// ====================================================
+
+export interface TopCountries_topCountries_countries_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
+export interface TopCountries_topCountries_countries {
+  __typename: "CountryType";
+  count: number | null;
+  diff: number | null;
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryThumbnail: string | null;
+  cityCount: number | null;
+  continent: TopCountries_topCountries_countries_continent | null;
+}
+
+export interface TopCountries_topCountries {
+  __typename: "CountriesResponse";
+  countries: (TopCountries_topCountries_countries | null)[] | null;
+}
+
+export interface TopCountries {
+  topCountries: TopCountries_topCountries;
+}
+
+export interface TopCountriesVariables {
+  userName: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: EditProfile
+// ====================================================
+
+export interface EditProfile_editProfile_user_profile_nationality_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
+export interface EditProfile_editProfile_user_profile_nationality {
+  __typename: "CountryType";
+  countryEmoji: string | null;
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryThumbnail: string | null;
+  cityCount: number | null;
+  continent: EditProfile_editProfile_user_profile_nationality_continent | null;
+}
+
+export interface EditProfile_editProfile_user_profile_residence_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
+export interface EditProfile_editProfile_user_profile_residence {
+  __typename: "CountryType";
+  countryEmoji: string | null;
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryThumbnail: string | null;
+  cityCount: number | null;
+  continent: EditProfile_editProfile_user_profile_residence_continent | null;
+}
+
+export interface EditProfile_editProfile_user_profile_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+  countryCode: string | null;
+}
+
+export interface EditProfile_editProfile_user_profile_currentCity {
+  __typename: "CityType";
+  latitude: number | null;
+  longitude: number | null;
+  cityId: string | null;
+  cityName: string | null;
+  cityThumbnail: string | null;
+  country: EditProfile_editProfile_user_profile_currentCity_country;
+}
+
+export interface EditProfile_editProfile_user_profile {
+  __typename: "ProfileType";
+  bio: string | null;
+  gender: ProfileGender | null;
+  avatarUrl: string | null;
+  website: string | null;
+  distance: number | null;
+  countryPhoneNumber: string | null;
+  countryPhoneCode: string | null;
+  phoneNumber: string | null;
+  emailAddress: string | null;
+  isVerifiedPhoneNumber: boolean;
+  isVerifiedEmailAddress: boolean;
+  nationality: EditProfile_editProfile_user_profile_nationality | null;
+  residence: EditProfile_editProfile_user_profile_residence | null;
+  postCount: number | null;
+  tripCount: number | null;
+  coffeeCount: number | null;
+  cityCount: number | null;
+  countryCount: number | null;
+  continentCount: number | null;
+  isSelf: boolean | null;
+  isDarkMode: boolean;
+  isHideTrips: boolean;
+  isHideCoffees: boolean;
+  isHideCities: boolean;
+  isHideCountries: boolean;
+  isHideContinents: boolean;
+  isAutoLocationReport: boolean;
+  currentCity: EditProfile_editProfile_user_profile_currentCity | null;
+}
+
+export interface EditProfile_editProfile_user {
+  __typename: "UserType";
+  id: string;
+  /**
+   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+   */
+  username: string;
+  firstName: string;
+  lastName: string;
+  profile: EditProfile_editProfile_user_profile | null;
+}
+
+export interface EditProfile_editProfile {
+  __typename: "EditProfileResponse";
+  ok: boolean | null;
+  token: string | null;
+  user: EditProfile_editProfile_user | null;
+}
+
+export interface EditProfile {
+  editProfile: EditProfile_editProfile;
+}
+
+export interface EditProfileVariables {
+  username?: string | null;
+  bio?: string | null;
+  gender?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  nationalityCode?: string | null;
+  residenceCode?: string | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: DeleteProfile
+// ====================================================
+
+export interface DeleteProfile_deleteProfile {
+  __typename: "DeleteProfileResponse";
+  ok: boolean | null;
+}
+
+export interface DeleteProfile {
+  deleteProfile: DeleteProfile_deleteProfile;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: StartEditPhoneVerification
+// ====================================================
+
+export interface StartEditPhoneVerification_startEditPhoneVerification {
+  __typename: "StartEditPhoneVerificationResponse";
+  ok: boolean | null;
+}
+
+export interface StartEditPhoneVerification {
+  startEditPhoneVerification: StartEditPhoneVerification_startEditPhoneVerification;
+}
+
+export interface StartEditPhoneVerificationVariables {
+  phoneNumber: string;
+  countryPhoneNumber: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: CompleteEditPhoneVerification
+// ====================================================
+
+export interface CompleteEditPhoneVerification_completeEditPhoneVerification {
+  __typename: "CompleteEditPhoneVerificationResponse";
+  ok: boolean | null;
+  phoneNumber: string | null;
+  countryPhoneNumber: string | null;
+  countryPhoneCode: string | null;
+  isVerifiedPhoneNumber: boolean | null;
+}
+
+export interface CompleteEditPhoneVerification {
+  completeEditPhoneVerification: CompleteEditPhoneVerification_completeEditPhoneVerification;
+}
+
+export interface CompleteEditPhoneVerificationVariables {
+  key: string;
+  phoneNumber: string;
+  countryPhoneNumber: string;
+  countryPhoneCode: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: StartEditEmailVerification
+// ====================================================
+
+export interface StartEditEmailVerification_startEditEmailVerification {
+  __typename: "StartEditEmailVerificationResponse";
+  ok: boolean | null;
+}
+
+export interface StartEditEmailVerification {
+  startEditEmailVerification: StartEditEmailVerification_startEditEmailVerification;
+}
+
+export interface StartEditEmailVerificationVariables {
+  emailAddress: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: ToggleSettings
+// ====================================================
+
+export interface ToggleSettings_toggleSettings_user_profile {
+  __typename: "ProfileType";
+  isSelf: boolean | null;
+  isDarkMode: boolean;
+  isHideTrips: boolean;
+  isHideCoffees: boolean;
+  isHideCities: boolean;
+  isHideCountries: boolean;
+  isHideContinents: boolean;
+  isAutoLocationReport: boolean;
+}
+
+export interface ToggleSettings_toggleSettings_user {
+  __typename: "UserType";
+  id: string;
+  /**
+   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+   */
+  username: string;
+  profile: ToggleSettings_toggleSettings_user_profile | null;
+}
+
+export interface ToggleSettings_toggleSettings {
+  __typename: "ToggleSettingsResponse";
+  ok: boolean | null;
+  user: ToggleSettings_toggleSettings_user | null;
+}
+
+export interface ToggleSettings {
+  toggleSettings: ToggleSettings_toggleSettings;
+}
+
+export interface ToggleSettingsVariables {
+  payload: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: UserProfile
 // ====================================================
 
@@ -926,7 +1761,7 @@ export interface GetTrips_getTrips_trip_city {
   __typename: "CityType";
   cityId: string | null;
   cityName: string | null;
-  cityPhoto: string | null;
+  cityThumbnail: string | null;
   country: GetTrips_getTrips_trip_city_country;
 }
 
@@ -974,7 +1809,7 @@ export interface AddTrip_addTrip_moveNotification_city {
   __typename: "CityType";
   cityId: string | null;
   cityName: string | null;
-  cityPhoto: string | null;
+  cityThumbnail: string | null;
   country: AddTrip_addTrip_moveNotification_city_country;
 }
 
@@ -1020,7 +1855,7 @@ export interface EditTrip_editTrip_moveNotification_city {
   __typename: "CityType";
   cityId: string | null;
   cityName: string | null;
-  cityPhoto: string | null;
+  cityThumbnail: string | null;
   country: EditTrip_editTrip_moveNotification_city_country;
 }
 
@@ -1072,127 +1907,6 @@ export interface DeleteTrip {
 
 export interface DeleteTripVariables {
   moveNotificationId: number;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL query operation: GetAvatars
-// ====================================================
-
-export interface GetAvatars_getAvatars_avatars {
-  __typename: "AvatarType";
-  id: string;
-  uuid: any | null;
-  image: string | null;
-  isMain: boolean;
-  likeCount: number | null;
-  thumbnail: string | null;
-}
-
-export interface GetAvatars_getAvatars {
-  __typename: "AvatarListResponse";
-  avatars: (GetAvatars_getAvatars_avatars | null)[] | null;
-}
-
-export interface GetAvatars {
-  getAvatars: GetAvatars_getAvatars;
-}
-
-export interface GetAvatarsVariables {
-  userName: string;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL mutation operation: UploadAvatar
-// ====================================================
-
-export interface UploadAvatar_uploadAvatar_avatar {
-  __typename: "AvatarType";
-  id: string;
-  uuid: any | null;
-  image: string | null;
-  isMain: boolean;
-  likeCount: number | null;
-  thumbnail: string | null;
-}
-
-export interface UploadAvatar_uploadAvatar {
-  __typename: "UploadAvatarResponse";
-  ok: boolean | null;
-  preAvatarUUID: string | null;
-  newAvatarUUID: string | null;
-  avatar: UploadAvatar_uploadAvatar_avatar | null;
-}
-
-export interface UploadAvatar {
-  uploadAvatar: UploadAvatar_uploadAvatar;
-}
-
-export interface UploadAvatarVariables {
-  file: any;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL mutation operation: DeleteAvatar
-// ====================================================
-
-export interface DeleteAvatar_deleteAvatar {
-  __typename: "DeleteAvatarResponse";
-  ok: boolean | null;
-  uuid: string | null;
-}
-
-export interface DeleteAvatar {
-  deleteAvatar: DeleteAvatar_deleteAvatar;
-}
-
-export interface DeleteAvatarVariables {
-  uuid: string;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL mutation operation: MarkAsMain
-// ====================================================
-
-export interface MarkAsMain_markAsMain_avatar {
-  __typename: "AvatarType";
-  id: string;
-  uuid: any | null;
-  image: string | null;
-  isMain: boolean;
-  likeCount: number | null;
-  thumbnail: string | null;
-}
-
-export interface MarkAsMain_markAsMain {
-  __typename: "MarkAsMainResponse";
-  ok: boolean | null;
-  preAvatarUUID: string | null;
-  newAvatarUUID: string | null;
-  avatar: MarkAsMain_markAsMain_avatar | null;
-}
-
-export interface MarkAsMain {
-  markAsMain: MarkAsMain_markAsMain;
-}
-
-export interface MarkAsMainVariables {
-  uuid: string;
 }
 
 /* tslint:disable */
@@ -1336,164 +2050,6 @@ export interface ReportLocationVariables {
   currentCityId?: string | null;
   currentCityName: string;
   currentCountryCode: string;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL query operation: GetCoffees
-// ====================================================
-
-export interface GetCoffees_getCoffees_coffees_city_country {
-  __typename: "CountryType";
-  countryName: string | null;
-}
-
-export interface GetCoffees_getCoffees_coffees_city {
-  __typename: "CityType";
-  cityId: string | null;
-  cityName: string | null;
-  cityThumbnail: string | null;
-  country: GetCoffees_getCoffees_coffees_city_country;
-}
-
-export interface GetCoffees_getCoffees_coffees_host_profile_currentCity_country {
-  __typename: "CountryType";
-  countryName: string | null;
-}
-
-export interface GetCoffees_getCoffees_coffees_host_profile_currentCity {
-  __typename: "CityType";
-  cityName: string | null;
-  country: GetCoffees_getCoffees_coffees_host_profile_currentCity_country;
-}
-
-export interface GetCoffees_getCoffees_coffees_host_profile {
-  __typename: "ProfileType";
-  avatarUrl: string | null;
-  appAvatarUrl: string | null;
-  isSelf: boolean | null;
-  currentCity: GetCoffees_getCoffees_coffees_host_profile_currentCity | null;
-}
-
-export interface GetCoffees_getCoffees_coffees_host {
-  __typename: "UserType";
-  id: string;
-  /**
-   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
-   */
-  username: string;
-  profile: GetCoffees_getCoffees_coffees_host_profile | null;
-}
-
-export interface GetCoffees_getCoffees_coffees {
-  __typename: "CoffeeType";
-  id: string;
-  uuid: any | null;
-  city: GetCoffees_getCoffees_coffees_city;
-  host: GetCoffees_getCoffees_coffees_host;
-  status: string | null;
-  naturalTime: string | null;
-  target: CoffeeTarget;
-  createdAt: any;
-}
-
-export interface GetCoffees_getCoffees {
-  __typename: "GetCoffeesResponse";
-  coffees: (GetCoffees_getCoffees_coffees | null)[] | null;
-}
-
-export interface GetCoffees {
-  getCoffees: GetCoffees_getCoffees;
-}
-
-export interface GetCoffeesVariables {
-  cityId?: string | null;
-  countryCode?: string | null;
-  continentCode?: string | null;
-  userName?: string | null;
-  location: string;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL mutation operation: RequestCoffee
-// ====================================================
-
-export interface RequestCoffee_requestCoffee_coffee_city_country {
-  __typename: "CountryType";
-  countryName: string | null;
-}
-
-export interface RequestCoffee_requestCoffee_coffee_city {
-  __typename: "CityType";
-  cityId: string | null;
-  cityName: string | null;
-  cityThumbnail: string | null;
-  country: RequestCoffee_requestCoffee_coffee_city_country;
-}
-
-export interface RequestCoffee_requestCoffee_coffee_host_profile_currentCity_country {
-  __typename: "CountryType";
-  countryName: string | null;
-}
-
-export interface RequestCoffee_requestCoffee_coffee_host_profile_currentCity {
-  __typename: "CityType";
-  cityName: string | null;
-  country: RequestCoffee_requestCoffee_coffee_host_profile_currentCity_country;
-}
-
-export interface RequestCoffee_requestCoffee_coffee_host_profile {
-  __typename: "ProfileType";
-  avatarUrl: string | null;
-  appAvatarUrl: string | null;
-  isSelf: boolean | null;
-  currentCity: RequestCoffee_requestCoffee_coffee_host_profile_currentCity | null;
-}
-
-export interface RequestCoffee_requestCoffee_coffee_host {
-  __typename: "UserType";
-  id: string;
-  /**
-   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
-   */
-  username: string;
-  profile: RequestCoffee_requestCoffee_coffee_host_profile | null;
-}
-
-export interface RequestCoffee_requestCoffee_coffee {
-  __typename: "CoffeeType";
-  id: string;
-  uuid: any | null;
-  city: RequestCoffee_requestCoffee_coffee_city;
-  host: RequestCoffee_requestCoffee_coffee_host;
-  status: string | null;
-  naturalTime: string | null;
-  target: CoffeeTarget;
-  createdAt: any;
-}
-
-export interface RequestCoffee_requestCoffee {
-  __typename: "RequestCoffeeResponse";
-  ok: boolean | null;
-  coffee: RequestCoffee_requestCoffee_coffee | null;
-}
-
-export interface RequestCoffee {
-  requestCoffee: RequestCoffee_requestCoffee;
-}
-
-export interface RequestCoffeeVariables {
-  countryCode?: string | null;
-  gender?: string | null;
-  currentCityId: string;
-  target?: string | null;
 }
 
 /* tslint:disable */

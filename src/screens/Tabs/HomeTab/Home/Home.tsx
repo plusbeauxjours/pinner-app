@@ -8,17 +8,14 @@ import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
 import { ScrollView, RefreshControl } from "react-native";
 import Swiper from "react-native-swiper";
-import { GET_COFFEES, REQUEST_COFFEE } from "../../../../sharedQueries";
-import { useMutation } from "react-apollo";
+import { GET_COFFEES } from "../../../../sharedQueries";
 import {
   GetCoffees,
   GetCoffeesVariables,
-  RequestCoffee,
   RecommendUsers,
   RecommendUsersVariables,
   RecommendLocations,
-  RecommendLocationsVariables,
-  RequestCoffeeVariables
+  RecommendLocationsVariables
 } from "../../../../types/api";
 
 const Container = styled.View``;
@@ -43,12 +40,6 @@ export default () => {
   const location = useLocation();
   const [refreshing, setRefreshing] = useState(false);
   const [cityId, setCityId] = useState("");
-  const [requestCoffeeVariables, setRequestCoffeeVariables] = useState({
-    countryCode: location.currentCountryCode,
-    gender: "",
-    currentCityId: location.currentCityId,
-    target: ""
-  });
   const {
     data: recommendUserData,
     loading: recommendUserLoading,
@@ -61,10 +52,6 @@ export default () => {
   } = useQuery<RecommendLocations, RecommendLocationsVariables>(
     RECOMMEND_LOCATIONS
   );
-  const [requestCoffeeFn] = useMutation<RequestCoffee, RequestCoffeeVariables>(
-    REQUEST_COFFEE,
-    { variables: { ...requestCoffeeVariables } }
-  );
   const {
     data: coffeeData,
     loading: coffeeLoading,
@@ -72,7 +59,6 @@ export default () => {
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
     variables: { location: "city", cityId: "ChIJuQhD6D7sfDURB6J0Dx5TGW8" }
   });
-  console.log(me);
   useEffect(() => {
     setCityId(location.currentCityId);
   }, [location]);
