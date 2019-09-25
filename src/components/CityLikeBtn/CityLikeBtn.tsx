@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { TOGGLE_LIKE_CITY } from "./CityLikeBtnQueries";
-import {
-  ToggleLikeCity,
-  ToggleLikeCityVariables,
-} from "../../types/api";
+import { ToggleLikeCity, ToggleLikeCityVariables } from "../../types/api";
 import { useMutation } from "react-apollo";
 import styled from "styled-components";
 import { Ionicons } from "@expo/vector-icons";
@@ -42,7 +39,7 @@ const CityLikeBtn: React.FC<IProps> = ({
   const [likeCount, setLikeCount] = useState(likeCountProp);
   const [toggleLikeFn] = useMutation<ToggleLikeCity, ToggleLikeCityVariables>(
     TOGGLE_LIKE_CITY,
-    {variables: { cityId }}
+    { variables: { cityId } }
   );
   const handleLike = async () => {
     if (isLiked === true) {
@@ -56,7 +53,6 @@ const CityLikeBtn: React.FC<IProps> = ({
     } catch (e) {}
   };
   useEffect(() => {
-    console.log("working");
     setIsLiked(isLikedProp);
     setLikeCount(likeCountProp);
   }, [likeCountProp]);

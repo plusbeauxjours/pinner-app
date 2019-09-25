@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Image, View } from "react-native";
+import React from "react";
+import { Image } from "react-native";
 import styled from "styled-components";
 import constants, { BACKEND_URL } from "../../constants";
 import CityLikeBtn from "./CityLikeBtn/CityLikeBtn";
@@ -13,6 +13,7 @@ const Container = styled.TouchableOpacity`
 `;
 const Touchable = styled.View`
   justify-content: center;
+  align-items: center;
 `;
 const HeaderUserContainer = styled.View`
   margin-left: 10px;
@@ -27,6 +28,7 @@ const Header = styled.View`
   flex: 1;
   flex-direction: row;
 `;
+const Text = styled.Text``;
 
 interface IProps {
   user?: any;
@@ -37,6 +39,7 @@ interface IProps {
   coffee?: any;
   match?: any;
   type: string;
+  onPress?: any;
 }
 
 const UserRow: React.FC<IProps> = ({
@@ -47,31 +50,34 @@ const UserRow: React.FC<IProps> = ({
   continent,
   coffee,
   match,
-  type
+  type,
+  onPress
 }) => {
   switch (type) {
     case "user":
       return (
         <Container>
-          <Touchable>
-            <Image
-              style={{ height: 40, width: 40, borderRadius: 20 }}
-              source={
-                user.appAvatarUrl && {
-                  uri: `${BACKEND_URL}/media/${user.appAvatarUrl}`
+          <Header>
+            <Touchable>
+              <Image
+                style={{ height: 40, width: 40, borderRadius: 20 }}
+                source={
+                  user.appAvatarUrl
+                    ? { uri: `${BACKEND_URL}/media/${user.appAvatarUrl}` }
+                    : require(`../Images/avatars/earth1.png`)
                 }
-              }
-            />
-          </Touchable>
-          <Touchable>
-            <HeaderUserContainer>
-              <Bold>{user.username}</Bold>
-              <Location>
-                {user.currentCity.cityName},{" "}
-                {user.currentCity.country.countryName}
-              </Location>
-            </HeaderUserContainer>
-          </Touchable>
+              />
+            </Touchable>
+            <Touchable>
+              <HeaderUserContainer>
+                <Bold>{user.username}</Bold>
+                <Location>
+                  {user.currentCity.cityName},{" "}
+                  {user.currentCity.country.countryName}
+                </Location>
+              </HeaderUserContainer>
+            </Touchable>
+          </Header>
         </Container>
       );
     case "city":
@@ -105,134 +111,150 @@ const UserRow: React.FC<IProps> = ({
     case "trip":
       return (
         <Container>
-          <Touchable>
-            <Image
-              style={{ height: 40, width: 40, borderRadius: 5 }}
-              source={
-                trip.city.cityThumbnail && {
-                  uri: trip.city.cityThumbnail
+          <Header>
+            <Touchable>
+              <Image
+                style={{ height: 40, width: 40, borderRadius: 5 }}
+                source={
+                  trip.city.cityThumbnail && {
+                    uri: trip.city.cityThumbnail
+                  }
                 }
-              }
-            />
-          </Touchable>
-          <Touchable>
-            <HeaderUserContainer>
-              <Bold>{trip.city.cityName}</Bold>
-              <Location>{trip.city.country.countryName}</Location>
-            </HeaderUserContainer>
-          </Touchable>
+              />
+            </Touchable>
+            <Touchable>
+              <HeaderUserContainer>
+                <Bold>{trip.city.cityName}</Bold>
+                <Location>{trip.city.country.countryName}</Location>
+              </HeaderUserContainer>
+            </Touchable>
+          </Header>
         </Container>
       );
     case "country":
       return (
         <Container>
-          <Touchable>
-            <Image
-              style={{ height: 40, width: 40, borderRadius: 5 }}
-              source={
-                country.countryThumbnail && {
-                  uri: country.countryThumbnail
+          <Header>
+            <Touchable>
+              <Image
+                style={{ height: 40, width: 40, borderRadius: 5 }}
+                source={
+                  country.countryThumbnail && {
+                    uri: country.countryThumbnail
+                  }
                 }
-              }
-            />
-          </Touchable>
-          <Touchable>
-            <HeaderUserContainer>
-              <Bold>{country.countryName}</Bold>
-              <Location>{country.continent.continentName}</Location>
-            </HeaderUserContainer>
-          </Touchable>
+              />
+            </Touchable>
+            <Touchable>
+              <HeaderUserContainer>
+                <Bold>{country.countryName}</Bold>
+                <Location>{country.continent.continentName}</Location>
+              </HeaderUserContainer>
+            </Touchable>
+          </Header>
         </Container>
       );
     case "continent":
       return (
         <Container>
-          <Touchable>
-            <Image
-              style={{ height: 40, width: 40, borderRadius: 5 }}
-              source={
-                continent.continentThumbnail && {
-                  uri: continent.continentThumbnail
+          <Header>
+            <Touchable>
+              <Image
+                style={{ height: 40, width: 40, borderRadius: 5 }}
+                source={
+                  continent.continentThumbnail && {
+                    uri: continent.continentThumbnail
+                  }
                 }
-              }
-            />
-          </Touchable>
-          <Touchable>
-            <HeaderUserContainer>
-              <Bold>{continent.continentName}</Bold>
-            </HeaderUserContainer>
-          </Touchable>
+              />
+            </Touchable>
+            <Touchable>
+              <HeaderUserContainer>
+                <Bold>{continent.continentName}</Bold>
+              </HeaderUserContainer>
+            </Touchable>
+          </Header>
         </Container>
       );
     case "coffee":
       return (
         <Container>
-          <Touchable>
-            <Image
-              style={{ height: 40, width: 40, borderRadius: 20 }}
-              source={
-                coffee.host.profile.appAvatarUrl && {
-                  uri: `${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`
+          <Header>
+            <Touchable>
+              <Image
+                style={{ height: 40, width: 40, borderRadius: 20 }}
+                source={
+                  coffee.host.profile.appAvatarUrl && {
+                    uri: `${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`
+                  }
                 }
-              }
-            />
-          </Touchable>
-          <Touchable>
-            <HeaderUserContainer>
-              <Bold>{coffee.host.username}</Bold>
-              <Location>
-                {coffee.city.cityName}, {coffee.city.country.countryName}
-              </Location>
-            </HeaderUserContainer>
-          </Touchable>
+              />
+            </Touchable>
+            <Touchable>
+              <HeaderUserContainer>
+                <Bold>{coffee.host.username}</Bold>
+                <Location>
+                  {coffee.city.cityName}, {coffee.city.country.countryName}
+                </Location>
+              </HeaderUserContainer>
+            </Touchable>
+          </Header>
         </Container>
       );
     case "match":
       return (
         <>
           {match.isHost ? (
-            <Container>
-              <Touchable>
-                <Image
-                  style={{ height: 40, width: 40, borderRadius: 20 }}
-                  source={
-                    match.guest.profile.appAvatarUrl && {
-                      uri: `${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`
+            <Container onPress={() => onPress(match.id)}>
+              <Header>
+                <Touchable>
+                  {!match.isReadByHost && <Text>N</Text>}
+                  <Image
+                    style={{ height: 40, width: 40, borderRadius: 20 }}
+                    source={
+                      match.guest.profile.appAvatarUrl && {
+                        uri: `${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`
+                      }
                     }
-                  }
-                />
-              </Touchable>
-              <Touchable>
-                <HeaderUserContainer>
-                  <Bold>{match.coffee.guest.profile.username}</Bold>
-                  <Location>
-                    {match.coffee.city.cityName},{" "}
-                    {match.coffee.city.country.countryName}
-                  </Location>
-                </HeaderUserContainer>
-              </Touchable>
+                  />
+                </Touchable>
+                <Touchable>
+                  <HeaderUserContainer>
+                    <Bold>{match.coffee.guest.profile.username}</Bold>
+                    <Location>
+                      {match.coffee.city.cityName},{" "}
+                      {match.coffee.city.country.countryName}
+                    </Location>
+                  </HeaderUserContainer>
+                </Touchable>
+              </Header>
             </Container>
           ) : (
-            <Container>
-              <Touchable>
-                <Image
-                  style={{ height: 40, width: 40, borderRadius: 20 }}
-                  source={
-                    match.host.profile.appAvatarUrl && {
-                      uri: `${BACKEND_URL}/media/${match.host.profile.appAvatarUrl}`
+            <Container onPress={() => onPress(match.id)}>
+              <Header>
+                <Touchable>
+                  {!match.isReadByGuest && <Text>N</Text>}
+                  <Image
+                    style={{ height: 40, width: 40, borderRadius: 20 }}
+                    source={
+                      match.host.profile.appAvatarUrl
+                        ? {
+                            uri: `${BACKEND_URL}/media/${match.host.profile.appAvatarUrl}`
+                          }
+                        : require(`../Images/avatars/earth1.png`)
                     }
-                  }
-                />
-              </Touchable>
-              <Touchable>
-                <HeaderUserContainer>
-                  <Bold>{match.host.profile.username}</Bold>
-                  <Location>
-                    {match.coffee.city.cityName},{" "}
-                    {match.coffee.city.country.countryName}
-                  </Location>
-                </HeaderUserContainer>
-              </Touchable>
+                  />
+                </Touchable>
+                <Touchable>
+                  <HeaderUserContainer>
+                    <Bold>{match.host.profile.username}</Bold>
+                    <Location>
+                      {match.coffee.city.cityName},{" "}
+                      {match.coffee.city.country.countryName}
+                    </Location>
+                  </HeaderUserContainer>
+                </Touchable>
+              </Header>
             </Container>
           )}
         </>
