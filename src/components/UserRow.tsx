@@ -137,8 +137,8 @@ const UserRow: React.FC<IProps> = ({
             <Image
               style={{ height: 40, width: 40, borderRadius: 5 }}
               source={
-                continent.countryThumbnail && {
-                  uri: continent.countryThumbnail
+                continent.continentThumbnail && {
+                  uri: continent.continentThumbnail
                 }
               }
             />

@@ -3,6 +3,44 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: ToggleLikeCity
+// ====================================================
+
+export interface ToggleLikeCity_toggleLikeCity_city_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface ToggleLikeCity_toggleLikeCity_city {
+  __typename: "CityType";
+  id: string;
+  isLiked: boolean | null;
+  likeCount: number | null;
+  country: ToggleLikeCity_toggleLikeCity_city_country;
+}
+
+export interface ToggleLikeCity_toggleLikeCity {
+  __typename: "ToggleLikeCityResponse";
+  ok: boolean | null;
+  city: ToggleLikeCity_toggleLikeCity_city | null;
+}
+
+export interface ToggleLikeCity {
+  /**
+   * Like a City 
+   */
+  toggleLikeCity: ToggleLikeCity_toggleLikeCity;
+}
+
+export interface ToggleLikeCityVariables {
+  cityId: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: StartEmailVerification
 // ====================================================
 

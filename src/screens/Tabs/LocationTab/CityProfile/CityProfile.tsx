@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { RefreshControl, ScrollView } from "react-native";
-import { useQuery, useMutation } from 'react-apollo-hooks';
+import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
@@ -21,7 +21,8 @@ import {
 } from "./CityProfileQueries";
 import Swiper from "react-native-swiper";
 import { NearCities, NearCitiesVariables } from "../../../../types/api";
-import { SLACK_REPORT_LOCATIONS } from '../../../../sharedQueries';
+import { SLACK_REPORT_LOCATIONS } from "../../../../sharedQueries";
+import CityLikeBtn from "../../../../components/CityLikeBtn";
 
 const Container = styled.View``;
 
@@ -108,7 +109,7 @@ export default () => {
         <Loader />
       ) : (
         <Container>
-          <Bold>UserProfile</Bold>
+          <Bold>City Profile</Bold>
           {profileData.cityProfile.city && (
             <>
               <Text>cityName:{profileData.cityProfile.city.cityName}</Text>
@@ -138,6 +139,11 @@ export default () => {
               ) : null}
             </>
           )}
+          <CityLikeBtn
+            isLiked={profileData.cityProfile.city.isLiked}
+            cityId={profileData.cityProfile.city.cityId}
+            likeCount={profileData.cityProfile.city.likeCount}
+          />
           {nearCitiesData.nearCities.cities &&
             nearCitiesData.nearCities.cities.length !== 0 && (
               <Item>

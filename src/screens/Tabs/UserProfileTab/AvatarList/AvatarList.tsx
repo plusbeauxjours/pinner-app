@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQuery, useMutation } from "react-apollo-hooks";
-import { ScrollView, RefreshControl } from "react-native";
+import { ScrollView, RefreshControl, FlatList } from "react-native";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";

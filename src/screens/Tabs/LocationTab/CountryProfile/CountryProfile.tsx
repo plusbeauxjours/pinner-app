@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { RefreshControl, ScrollView } from "react-native";
-import { useQuery , useMutation} from "react-apollo-hooks";
+import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
@@ -98,7 +98,7 @@ export default () => {
         <Loader />
       ) : (
         <Container>
-          <Bold>UserProfile</Bold>
+          <Bold>Country Profile</Bold>
           {profileData.countryProfile.country && (
             <>
               <Text>

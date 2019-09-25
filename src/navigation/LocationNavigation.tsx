@@ -63,6 +63,7 @@ export default createMaterialTopTabNavigator(
     animationEnabled: true,
     swipeEnabled: true,
     tabBarPosition: "bottom",
+    lazy: true,
     tabBarOptions: {
       style: {
         backgroundColor: "white"

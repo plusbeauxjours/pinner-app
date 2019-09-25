@@ -62,8 +62,6 @@ export default () => {
       payload
     }
   });
-
-  console.log("profileData, ", profileData);
   const onRefresh = async () => {
     try {
       setRefreshing(true);
@@ -84,7 +82,7 @@ export default () => {
         <Loader />
       ) : (
         <Container>
-          <Bold>continentName</Bold>
+          <Bold>Continent Profile</Bold>
           {profileData.continentProfile.continent && (
             <>
               <Text>
