@@ -1,7 +1,8 @@
-import React from "react";
-import { Image } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Image, View } from "react-native";
 import styled from "styled-components";
 import constants, { BACKEND_URL } from "../../constants";
+import CityLikeBtn from "./CityLikeBtn/CityLikeBtn";
 
 const Container = styled.TouchableOpacity`
   padding: 15px;
@@ -10,7 +11,9 @@ const Container = styled.TouchableOpacity`
   height: 45px;
   width: ${constants.width};
 `;
-const Touchable = styled.View``;
+const Touchable = styled.View`
+  justify-content: center;
+`;
 const HeaderUserContainer = styled.View`
   margin-left: 10px;
 `;
@@ -19,6 +22,10 @@ const Bold = styled.Text`
 `;
 const Location = styled.Text`
   font-size: 12px;
+`;
+const Header = styled.View`
+  flex: 1;
+  flex-direction: row;
 `;
 
 interface IProps {
@@ -70,22 +77,29 @@ const UserRow: React.FC<IProps> = ({
     case "city":
       return (
         <Container>
-          <Touchable>
-            <Image
-              style={{ height: 40, width: 40, borderRadius: 5 }}
-              source={
-                city.cityThumbnail && {
-                  uri: city.cityThumbnail
+          <Header>
+            <Touchable>
+              <Image
+                style={{ height: 40, width: 40, borderRadius: 5 }}
+                source={
+                  city.cityThumbnail && {
+                    uri: city.cityThumbnail
+                  }
                 }
-              }
-            />
-          </Touchable>
-          <Touchable>
-            <HeaderUserContainer>
-              <Bold>{city.cityName}</Bold>
-              <Location>{city.country.countryName}</Location>
-            </HeaderUserContainer>
-          </Touchable>
+              />
+            </Touchable>
+            <Touchable>
+              <HeaderUserContainer>
+                <Bold>{city.cityName}</Bold>
+                <Location>{city.country.countryName}</Location>
+              </HeaderUserContainer>
+            </Touchable>
+          </Header>
+          <CityLikeBtn
+            isLiked={city.isLiked}
+            cityId={city.cityId}
+            likeCount={city.likeCount}
+          />
         </Container>
       );
     case "trip":

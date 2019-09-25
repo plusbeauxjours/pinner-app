@@ -9,11 +9,13 @@
 export interface ToggleLikeCity_toggleLikeCity_city_country {
   __typename: "CountryType";
   countryName: string | null;
+  countryCode: string | null;
 }
 
 export interface ToggleLikeCity_toggleLikeCity_city {
   __typename: "CityType";
   id: string;
+  cityId: string | null;
   isLiked: boolean | null;
   likeCount: number | null;
   country: ToggleLikeCity_toggleLikeCity_city_country;

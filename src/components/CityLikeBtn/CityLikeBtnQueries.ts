@@ -6,10 +6,12 @@ export const TOGGLE_LIKE_CITY = gql`
       ok
       city {
         id
+        cityId
         isLiked
         likeCount
         country {
           countryName
+          countryCode
         }
       }
     }

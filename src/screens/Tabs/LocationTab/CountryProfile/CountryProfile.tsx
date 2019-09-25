@@ -172,6 +172,14 @@ export default () => {
                   profileData.countryProfile.cities.map((city, index) => (
                     <UserRow key={index} city={city} type={"city"} />
                   ))}
+                {profileData.countryProfile.cities &&
+                  profileData.countryProfile.cities.map((city, index) => (
+                    <Text key={index}>
+                      {city.cityName}
+                      {city.likeCount}
+                      {city.isLiked}
+                    </Text>
+                  ))}
               </Item>
             )}
         </Container>
