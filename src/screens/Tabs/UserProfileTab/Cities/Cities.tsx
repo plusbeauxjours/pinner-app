@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { ScrollView, RefreshControl } from "react-native";
-import { FrequentVisits } from "src/types/api";
-import { FrequentVisitsVariables } from "../../../../types/api";
+import { FrequentVisits, FrequentVisitsVariables } from "../../../../types/api";
 import { useQuery } from "react-apollo-hooks";
 import { FREQUENT_VISITS } from "./CitiesQueries";
 import { useMe } from "../../../../context/MeContext";
