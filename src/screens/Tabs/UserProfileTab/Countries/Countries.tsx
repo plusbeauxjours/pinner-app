@@ -54,7 +54,11 @@ export default () => {
           <Bold>COUNTRIES</Bold>
           {data.topCountries.countries &&
             data.topCountries.countries.map((country, index) => (
-              <UserRow key={index} country={country} type={"country"} />
+              <UserRow
+                key={index}
+                country={country}
+                type={"userProfileCountry"}
+              />
             ))}
         </View>
       )}

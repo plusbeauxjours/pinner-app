@@ -80,6 +80,29 @@ const UserRow: React.FC<IProps> = ({
           </Header>
         </Container>
       );
+    case "trip":
+      return (
+        <Container>
+          <Header>
+            <Touchable>
+              <Image
+                style={{ height: 40, width: 40, borderRadius: 5 }}
+                source={
+                  trip.city.cityThumbnail && {
+                    uri: trip.city.cityThumbnail
+                  }
+                }
+              />
+            </Touchable>
+            <Touchable>
+              <HeaderUserContainer>
+                <Bold>{trip.city.cityName}</Bold>
+                <Location>{trip.city.country.countryName}</Location>
+              </HeaderUserContainer>
+            </Touchable>
+          </Header>
+        </Container>
+      );
     case "city":
       return (
         <Container>
@@ -108,7 +131,7 @@ const UserRow: React.FC<IProps> = ({
           />
         </Container>
       );
-    case "trip":
+    case "userProfileCity":
       return (
         <Container>
           <Header>
@@ -116,22 +139,51 @@ const UserRow: React.FC<IProps> = ({
               <Image
                 style={{ height: 40, width: 40, borderRadius: 5 }}
                 source={
-                  trip.city.cityThumbnail && {
-                    uri: trip.city.cityThumbnail
+                  city.cityThumbnail && {
+                    uri: city.cityThumbnail
                   }
                 }
               />
             </Touchable>
             <Touchable>
               <HeaderUserContainer>
-                <Bold>{trip.city.cityName}</Bold>
-                <Location>{trip.city.country.countryName}</Location>
+                <Bold>{city.cityName}</Bold>
+                <Location>{city.country.countryName}</Location>
+              </HeaderUserContainer>
+            </Touchable>
+          </Header>
+          <CityLikeBtn
+            isLiked={city.isLiked}
+            cityId={city.cityId}
+            likeCount={city.likeCount}
+          />
+        </Container>
+      );
+
+    case "country":
+      return (
+        <Container>
+          <Header>
+            <Touchable>
+              <Image
+                style={{ height: 40, width: 40, borderRadius: 5 }}
+                source={
+                  country.countryThumbnail && {
+                    uri: country.countryThumbnail
+                  }
+                }
+              />
+            </Touchable>
+            <Touchable>
+              <HeaderUserContainer>
+                <Bold>{country.countryName}</Bold>
+                <Location>{country.continent.continentName}</Location>
               </HeaderUserContainer>
             </Touchable>
           </Header>
         </Container>
       );
-    case "country":
+    case "userProfileCountry":
       return (
         <Container>
           <Header>
@@ -176,6 +228,28 @@ const UserRow: React.FC<IProps> = ({
           </Header>
         </Container>
       );
+    case "userProfileContinent":
+      return (
+        <Container>
+          <Header>
+            <Touchable>
+              <Image
+                style={{ height: 40, width: 40, borderRadius: 5 }}
+                source={
+                  continent.continentThumbnail && {
+                    uri: continent.continentThumbnail
+                  }
+                }
+              />
+            </Touchable>
+            <Touchable>
+              <HeaderUserContainer>
+                <Bold>{continent.continentName}</Bold>
+              </HeaderUserContainer>
+            </Touchable>
+          </Header>
+        </Container>
+      );
     case "coffee":
       return (
         <Container>
@@ -186,6 +260,31 @@ const UserRow: React.FC<IProps> = ({
                 source={
                   coffee.host.profile.appAvatarUrl && {
                     uri: `${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`
+                  }
+                }
+              />
+            </Touchable>
+            <Touchable>
+              <HeaderUserContainer>
+                <Bold>{coffee.host.username}</Bold>
+                <Location>
+                  {coffee.city.cityName}, {coffee.city.country.countryName}
+                </Location>
+              </HeaderUserContainer>
+            </Touchable>
+          </Header>
+        </Container>
+      );
+    case "userProfileCoffee":
+      return (
+        <Container>
+          <Header>
+            <Touchable>
+              <Image
+                style={{ height: 40, width: 40, borderRadius: 5 }}
+                source={
+                  coffee.city.cityThumbnail && {
+                    uri: `${coffee.city.cityThumbnail}`
                   }
                 }
               />
