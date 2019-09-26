@@ -60,7 +60,7 @@ const UserRow: React.FC<IProps> = ({
           <Header>
             <Touchable>
               <Image
-                style={{ height: 40, width: 40, borderRadius: 20 }}
+                style={{ height: 35, width: 35, borderRadius: 20 }}
                 source={
                   user.appAvatarUrl
                     ? { uri: `${BACKEND_URL}/media/${user.appAvatarUrl}` }
@@ -235,7 +235,7 @@ const UserRow: React.FC<IProps> = ({
                 <Touchable>
                   {!match.isReadByGuest && <Text>N</Text>}
                   <Image
-                    style={{ height: 40, width: 40, borderRadius: 20 }}
+                    style={{ height: 35, width: 35, borderRadius: 20 }}
                     source={
                       match.host.profile.appAvatarUrl
                         ? {

@@ -11,11 +11,14 @@ import { useLocation } from "../../context/LocationContext";
 
 const Touchable = styled.TouchableOpacity`
   width: 70px;
+  height: 45px;
 `;
 const IconContainer = styled.View`
   flex: 1;
   flex-direction: row;
   margin-right: 10px;
+  justify-content: center;
+  align-items: center;
 `;
 const Text = styled.Text`
   margin-left: 10px;
@@ -60,7 +63,7 @@ const CityLikeBtn: React.FC<IProps> = ({
     <Touchable onPress={handleLike}>
       <IconContainer>
         <Ionicons
-          size={18}
+          size={16}
           color={isLiked ? theme.blueColor : theme.darkBlueColor}
           name={
             Platform.OS === "ios"

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQuery, useMutation } from "react-apollo-hooks";
-import { ScrollView, RefreshControl, FlatList } from "react-native";
+import { ScrollView, RefreshControl, FlatList, Image } from "react-native";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
@@ -21,10 +21,9 @@ import {
   MarkAsMainVariables
 } from "../../../../types/api";
 import Loader from "../../../../components/Loader";
+import constants, { BACKEND_URL } from "../../../../../constants";
 
 const View = styled.View`
-  justify-content: center;
-  align-items: center;
   flex: 1;
 `;
 
@@ -32,6 +31,13 @@ const Text = styled.Text``;
 const Bold = styled.Text`
   font-weight: 500;
   font-size: 20;
+`;
+
+const Container = styled.TouchableOpacity``;
+const Touchable = styled.View`
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
 `;
 
 export default () => {
@@ -81,10 +87,31 @@ export default () => {
       ) : (
         <View>
           <Bold>AvatarList</Bold>
-          {avatarData.getAvatars.avatars &&
-            avatarData.getAvatars.avatars.map((avatar, index) => (
-              <Text key={index}>{avatar.uuid}</Text>
-            ))}
+          <FlatList
+            data={avatarData.getAvatars.avatars}
+            renderItem={({ item }) => (
+              <Touchable
+                style={{ flex: 1, flexDirection: "column", margin: 1 }}
+              >
+                <Container>
+                  <Image
+                    style={{
+                      height: constants.width / 3 - 2,
+                      width: constants.width / 3 - 2,
+                      borderRadius: 8
+                    }}
+                    source={
+                      item.thumbnail && {
+                        uri: `${BACKEND_URL}/media/${item.thumbnail}`
+                      }
+                    }
+                  />
+                </Container>
+              </Touchable>
+            )}
+            numColumns={3}
+            keyExtractor={item => item.id}
+          />
         </View>
       )}
     </ScrollView>

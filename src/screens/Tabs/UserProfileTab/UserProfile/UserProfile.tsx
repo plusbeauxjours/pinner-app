@@ -43,8 +43,11 @@ const Bold = styled.Text`
   font-weight: 500;
   font-size: 20;
 `;
+const Item = styled.View``;
 
-export default () => {
+const Touchable = styled.TouchableOpacity``;
+
+export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
   const [cityId, setCityId] = useState<string>(location.currentCityId);
@@ -166,12 +169,31 @@ export default () => {
               <Text>isSelf:{profileData.userProfile.user.profile.isSelf}</Text>
             </>
           )}
-          <Bold>EditProfile</Bold>
-          <Bold>ToggleSettings</Bold>
-          <Bold>Cities</Bold>
-          <Bold>Countries</Bold>
-          <Bold>Continents</Bold>
-          <Bold>Coffees</Bold>
+          <Item>
+            <Touchable onPress={() => navigation.navigate("EditProfile")}>
+              <Bold>EditProfile</Bold>
+            </Touchable>
+          </Item>
+          <Touchable onPress={() => navigation.navigate("Cities")}>
+            <Item>
+              <Bold>Cities</Bold>
+            </Item>
+          </Touchable>
+          <Touchable onPress={() => navigation.navigate("Countries")}>
+            <Item>
+              <Bold>Countries</Bold>
+            </Item>
+          </Touchable>
+          <Touchable onPress={() => navigation.navigate("Continents")}>
+            <Item>
+              <Bold>Continents</Bold>
+            </Item>
+          </Touchable>
+          <Touchable onPress={() => navigation.navigate("Coffees")}>
+            <Item>
+              <Bold>Coffees</Bold>
+            </Item>
+          </Touchable>
           {tripData.getTrips.trip.length === 1 ? (
             <Bold>Trip</Bold>
           ) : (
