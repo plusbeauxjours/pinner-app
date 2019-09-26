@@ -159,7 +159,6 @@ const UserRow: React.FC<IProps> = ({
           />
         </Container>
       );
-
     case "country":
       return (
         <Container>
