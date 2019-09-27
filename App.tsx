@@ -53,7 +53,7 @@ export default function App() {
         ...apolloClientOptions
       });
       const isDarkMode = (await AsyncStorage.getItem("isDarkMode"))
-        ? localStorage.getItem("isDarkMode") === "true"
+        ? (await AsyncStorage.getItem("isDarkMode")) === "true"
         : true;
       const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
       if (isLoggedIn === null || isLoggedIn === "false") {

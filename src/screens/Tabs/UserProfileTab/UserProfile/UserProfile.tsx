@@ -170,7 +170,14 @@ export default ({ navigation }) => {
             </>
           )}
           <Item>
-            <Touchable onPress={() => navigation.navigate("EditProfile")}>
+            <Touchable
+              onPress={() =>
+                navigation.navigate("EditProfile", {
+                  ...profileData.userProfile.user,
+                  profileRefetch
+                })
+              }
+            >
               <Bold>EditProfile</Bold>
             </Touchable>
           </Item>

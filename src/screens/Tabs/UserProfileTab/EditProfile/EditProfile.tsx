@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
+import { useTheme } from "../../../../hooks/useTheme";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
 import {
@@ -11,10 +12,9 @@ import {
   StartEditPhoneVerificationVariables,
   CompleteEditPhoneVerification,
   CompleteEditPhoneVerificationVariables,
-  CompleteEditEmailVerification,
-  CompleteEditEmailVerificationVariables,
   ToggleSettings,
-  ToggleSettingsVariables
+  ToggleSettingsVariables,
+  UserProfile
 } from "../../../../types/api";
 import {
   EDIT_PROFILE,
@@ -29,11 +29,17 @@ import {
   StartEditEmailVerification,
   StartEditEmailVerificationVariables
 } from "../../../../types/api";
+import { theme } from "../../../../styles/theme";
+import NavIcon from "../../../../components/NavIcon";
+import { GET_USER } from "../UserProfile/UserProfileQueries";
+import { UserProfileVariables } from "../../../../types/api";
+import { ScrollView, RefreshControl } from "react-native";
 
 const View = styled.View`
+  flex: 1;
   justify-content: center;
   align-items: center;
-  flex: 1;
+  padding: 15px;
 `;
 
 const ToggleContainer = styled.View``;
@@ -44,75 +50,66 @@ const Bold = styled.Text`
   font-weight: 500;
   font-size: 20;
 `;
-const Item = styled.View``;
+const Item = styled.View`
+  margin-top: 15px;
+  flex-direction: row;
+  justify-content: space-between;
+`;
 
-const Touchable = styled.TouchableOpacity``;
+const ToggleIcon = styled.TouchableOpacity``;
+const ExplainText = styled.Text`
+  font-size: 12px;
+  font-weight: 100;
+`;
 
-interface IProps {
-  navigation: any;
-  usernameProp: string;
-  bioProp: string;
-  genderProp: string;
-  firstNameProp: string;
-  lastNameProp: string;
-  nationalityCodeProp: string;
-  residenceCodeProp: string;
-  isSelfProp: boolean;
-  isDarkModeProp: boolean;
-  isHideTripsProp: boolean;
-  isHideCoffeesProp: boolean;
-  isHideCitiesProp: boolean;
-  isHideCountriesProp: boolean;
-  isHideContinentsProp: boolean;
-  isAutoLocationReportProp: boolean;
-  phoneNumberProp: string;
-  countryPhoneNumberProp: string;
-}
-const EditProfile: React.FC<IProps> = ({
-  navigation,
-  usernameProp,
-  bioProp,
-  genderProp,
-  firstNameProp,
-  lastNameProp,
-  nationalityCodeProp,
-  residenceCodeProp,
-  isSelfProp,
-  isDarkModeProp,
-  isHideTripsProp,
-  isHideCoffeesProp,
-  isHideCitiesProp,
-  isHideCountriesProp,
-  isHideContinentsProp,
-  isAutoLocationReportProp,
-  phoneNumberProp,
-  countryPhoneNumberProp
-}) => {
+export default ({ navigation }) => {
+  const profileRefetch = navigation.getParam("profileRefetch");
+  const profile = navigation.getParam("profile");
   const me = useMe();
   const location = useLocation();
-  const [username, setUsername] = useState(usernameProp);
-  const [bio, setUio] = useState(bioProp);
-  const [gender, setUender] = useState(genderProp);
-  const [firstName, setUirstName] = useState(firstNameProp);
-  const [lastName, setUastName] = useState(lastNameProp);
-  const [nationalityCode, setUationalityCode] = useState(nationalityCodeProp);
-  const [residenceCode, setUesidenceCode] = useState(residenceCodeProp);
-  const [isSelf, setIsSelf] = useState(isSelfProp);
-  const [isDarkMode, setIsDarkMode] = useState(isDarkModeProp);
-  const [isHideTrips, setIsHideTrips] = useState(isHideTripsProp);
-  const [isHideCoffees, setIsHideCoffees] = useState(isHideCoffeesProp);
-  const [isHideCities, setIsHideCities] = useState(isHideCitiesProp);
-  const [isHideCountries, setIsHideCountries] = useState(isHideCountriesProp);
-  const [isHideContinents, setIsHideContinents] = useState(
-    isHideContinentsProp
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+  const { theme, toggleTheme } = useTheme();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [username, setUsername] = useState<string>(
+    navigation.getParam("username")
   );
-  const [isAutoLocationReport, setIsAutoLocationReport] = useState(
-    isAutoLocationReportProp
+  const [bio, setUio] = useState<string>(profile.bio || "");
+  const [gender, setUender] = useState<string>(profile.gender || "");
+  const [firstName, setUirstName] = useState<string>(
+    navigation.getParam("firstName") || ""
+  );
+  const [lastName, setUastName] = useState<string>(
+    navigation.getParam("lastName") || ""
+  );
+  const [nationalityCode, setUationalityCode] = useState<string>(
+    profile.nationality && profile.nationality.countryCode
+  );
+  const [residenceCode, setUesidenceCode] = useState<string>(
+    profile.residence && profile.residence.countryCode
+  );
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(theme);
+  const [isHideTrips, setIsHideTrips] = useState<boolean>(profile.isHideTrips);
+  const [isHideCoffees, setIsHideCoffees] = useState<boolean>(
+    profile.isHideCoffees
+  );
+  const [isHideCities, setIsHideCities] = useState<boolean>(
+    profile.isHideCities
+  );
+  const [isHideCountries, setIsHideCountries] = useState<boolean>(
+    profile.isHideCountries
+  );
+  const [isHideContinents, setIsHideContinents] = useState<boolean>(
+    profile.isHideContinents
+  );
+  const [isAutoLocationReport, setIsAutoLocationReport] = useState<boolean>(
+    profile.isAutoLocationReport
   );
 
-  const [phoneNumber, setPhoneNumber] = useState(phoneNumberProp);
-  const [countryPhoneNumber, setCountryPhoneNumber] = useState(
-    countryPhoneNumberProp
+  const [phoneNumber, setPhoneNumber] = useState<string>(
+    profile.phoneNumber || ""
+  );
+  const [countryPhoneNumber, setCountryPhoneNumber] = useState<string>(
+    profile.countryPhoneNumber || ""
   );
 
   const [editProfileFn] = useMutation<EditProfile, EditProfileVariables>(
@@ -150,8 +147,7 @@ const EditProfile: React.FC<IProps> = ({
       countryPhoneCode: ""
     }
   });
-
-  const [slackReportUsersFn] = useMutation<
+  const [startEditEmailVerificationFn] = useMutation<
     StartEditEmailVerification,
     StartEditEmailVerificationVariables
   >(START_EDIT_EMAIL_VERIFICATION, {
@@ -159,16 +155,44 @@ const EditProfile: React.FC<IProps> = ({
       emailAddress: ""
     }
   });
-
   const [toggleSettingsFn] = useMutation<
     ToggleSettings,
     ToggleSettingsVariables
-  >(TOGGLE_SETTINGS);
-
+  >(TOGGLE_SETTINGS, {
+    update(cache, { data: { toggleSettings } }) {
+      try {
+        const data = cache.readQuery<UserProfile, UserProfileVariables>({
+          query: GET_USER,
+          variables: { username }
+        });
+        if (data) {
+          data.userProfile.user.profile.isDarkMode =
+            toggleSettings.user.profile.isDarkMode;
+          data.userProfile.user.profile.isHideTrips =
+            toggleSettings.user.profile.isHideTrips;
+          data.userProfile.user.profile.isHideCoffees =
+            toggleSettings.user.profile.isHideCoffees;
+          data.userProfile.user.profile.isHideCities =
+            toggleSettings.user.profile.isHideCities;
+          data.userProfile.user.profile.isHideCountries =
+            toggleSettings.user.profile.isHideCountries;
+          data.userProfile.user.profile.isHideContinents =
+            toggleSettings.user.profile.isHideContinents;
+          data.userProfile.user.profile.isAutoLocationReport =
+            toggleSettings.user.profile.isAutoLocationReport;
+          cache.writeQuery({
+            query: GET_USER,
+            variables: { username },
+            data
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  });
   const onPressToggleIcon = async (payload: string) => {
-    if (payload === "DARK_MODE") {
-      setIsDarkMode(isDarkMode => !isDarkMode);
-    } else if (payload === "HIDE_TRIPS") {
+    if (payload === "HIDE_TRIPS") {
       setIsHideTrips(isHideTrips => !isHideTrips);
     } else if (payload === "HIDE_COFFEES") {
       setIsHideCoffees(isHideCoffees => !isHideCoffees);
@@ -185,94 +209,128 @@ const EditProfile: React.FC<IProps> = ({
       variables: { payload }
     });
   };
-
+  const onRefresh = async () => {
+    try {
+      setRefreshing(true);
+      await profileRefetch();
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setRefreshing(false);
+    }
+  };
   return (
-    // <>
-    //   {loading ? (
-    //     <Loader />
-    //   ) : (
-    //     <View>
-    //       <Bold>EditProfile</Bold>
-    //       <ToggleContainer>
-    //         <ToggleContainer>
-    //           <ToggleText>DARK MODE</ToggleText>
-    //           <ToggleIcon onClick={toggleTheme}>
-    //             {isSelf && theme ? <ToggleOn /> : <ToggleOff />}
-    //           </ToggleIcon>
-    //         </ToggleContainer>
-    //         {isSelf && isDarkMode ? (
-    //           <ExplainText>Set to make light background.</ExplainText>
-    //         ) : (
-    //           <ExplainText>Set to make dark background.</ExplainText>
-    //         )}
-    //         <ToggleContainer>
-    //           <ToggleText>HIDE TRIPS</ToggleText>
-    //           <ToggleIcon onPress={() => onPressToggleIcon("HIDE_TRIPS")}>
-    //             {isSelf && isHideTrips ? <ToggleOn /> : <ToggleOff />}
-    //           </ToggleIcon>
-    //         </ToggleContainer>
-    //         <ExplainText>
-    //           If you set your trips hide, only you can see your trips, otherwise
-    //           only number of trips and your trip distance are shown.
-    //         </ExplainText>
-    //         <ToggleContainer>
-    //           <ToggleText>HIDE COFFEES</ToggleText>
-    //           <ToggleIcon onPress={() => onPressToggleIcon("HIDE_COFFEES")}>
-    //             {isSelf && isHideCoffees ? <ToggleOn /> : <ToggleOff />}
-    //           </ToggleIcon>
-    //         </ToggleContainer>
-    //         <ExplainText>
-    //           If you set your coffees hide, only you can see you coffees
-    //           request, otherwise only number of coffees request is shown.
-    //         </ExplainText>
-    //         <ToggleContainer>
-    //           <ToggleText>HIDE CITIES</ToggleText>
-    //           <ToggleIcon onPress={() => onPressToggleIcon("HIDE_CITIES")}>
-    //             {isSelf && isHideCities ? <ToggleOn /> : <ToggleOff />}
-    //           </ToggleIcon>
-    //         </ToggleContainer>
-    //         <ExplainText>
-    //           If you set your cities hide, only you can see cities where you've
-    //           been before, otherwise only number of cities is shown.
-    //         </ExplainText>
-    //         <ToggleContainer>
-    //           <ToggleText>HIDE COUNTRIES</ToggleText>
-    //           <ToggleIcon onPress={() => onPressToggleIcon("HIDE_COUNTRIES")}>
-    //             {isSelf && isHideCountries ? <ToggleOn /> : <ToggleOff />}
-    //           </ToggleIcon>
-    //         </ToggleContainer>
-    //         <ExplainText>
-    //           If you set your coutries hide, only you can see countries where
-    //           you've been before, otherwise only number of countries is shown.
-    //         </ExplainText>
-    //         <ToggleContainer>
-    //           <ToggleText>HIDE CONTINENTS</ToggleText>
-    //           <ToggleIcon onPress={() => onPressToggleIcon("HIDE_CONTINENTS")}>
-    //             {isSelf && isHideContinents ? <ToggleOn /> : <ToggleOff />}
-    //           </ToggleIcon>
-    //         </ToggleContainer>
-    //         <ExplainText>
-    //           If you set your coutries hide, only you can see countries where
-    //           you've been before, otherwise only number of countries is shown.
-    //         </ExplainText>
-    //         <ToggleContainer>
-    //           <ToggleText>AUTO LOCATION REPORT</ToggleText>
-    //           <ToggleIcon
-    //             onPress={() => onPressToggleIcon("AUTO_LOCATION_REPORT")}
-    //           >
-    //             {isSelf && isAutoLocationReport ? <ToggleOn /> : <ToggleOff />}
-    //           </ToggleIcon>
-    //         </ToggleContainer>
-    //         <ExplainText>
-    //           If you set auto location report off, the app cannot find where you
-    //           are. Your lacation will be shown on your profile
-    //         </ExplainText>
-    //       </ToggleContainer>
-    //     </View>
-    //   )}
-    // </>
-    null
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      {loading ? (
+        <Loader />
+      ) : (
+        <View>
+          <Bold>EditProfile</Bold>
+          <ToggleContainer>
+            <Item>
+              <ToggleText>DARK MODE</ToggleText>
+              <ToggleIcon onPress={toggleTheme}>
+                <NavIcon size={20} name={theme ? "ios-search" : "ios-home"} />
+              </ToggleIcon>
+            </Item>
+            {isDarkMode ? (
+              <ExplainText>Set to make light background.</ExplainText>
+            ) : (
+              <ExplainText>Set to make dark background.</ExplainText>
+            )}
+
+            <Item>
+              <ToggleText>HIDE TRIPS</ToggleText>
+              <ToggleIcon onPress={() => onPressToggleIcon("HIDE_TRIPS")}>
+                <NavIcon
+                  size={20}
+                  name={isHideTrips ? "ios-search" : "ios-home"}
+                />
+              </ToggleIcon>
+            </Item>
+            <ExplainText>
+              If you set your trips hide, only you can see your trips, otherwise
+              only number of trips and your trip distance are shown.
+            </ExplainText>
+
+            <Item>
+              <ToggleText>HIDE COFFEES</ToggleText>
+              <ToggleIcon onPress={() => onPressToggleIcon("HIDE_COFFEES")}>
+                <NavIcon
+                  size={20}
+                  name={isHideCoffees ? "ios-search" : "ios-home"}
+                />
+              </ToggleIcon>
+            </Item>
+            <ExplainText>
+              If you set your coffees hide, only you can see you coffees
+              request, otherwise only number of coffees request is shown.
+            </ExplainText>
+
+            <Item>
+              <ToggleText>HIDE CITIES</ToggleText>
+              <ToggleIcon onPress={() => onPressToggleIcon("HIDE_CITIES")}>
+                <NavIcon
+                  size={20}
+                  name={isHideCities ? "ios-search" : "ios-home"}
+                />
+              </ToggleIcon>
+            </Item>
+            <ExplainText>
+              If you set your cities hide, only you can see cities where you've
+              been before, otherwise only number of cities is shown.
+            </ExplainText>
+
+            <Item>
+              <ToggleText>HIDE COUNTRIES</ToggleText>
+              <ToggleIcon onPress={() => onPressToggleIcon("HIDE_COUNTRIES")}>
+                <NavIcon
+                  size={20}
+                  name={isHideCountries ? "ios-search" : "ios-home"}
+                />
+              </ToggleIcon>
+            </Item>
+            <ExplainText>
+              If you set your coutries hide, only you can see countries where
+              you've been before, otherwise only number of countries is shown.
+            </ExplainText>
+
+            <Item>
+              <ToggleText>HIDE CONTINENTS</ToggleText>
+              <ToggleIcon onPress={() => onPressToggleIcon("HIDE_CONTINENTS")}>
+                <NavIcon
+                  size={20}
+                  name={isHideContinents ? "ios-search" : "ios-home"}
+                />
+              </ToggleIcon>
+            </Item>
+            <ExplainText>
+              If you set your coutries hide, only you can see countries where
+              you've been before, otherwise only number of countries is shown.
+            </ExplainText>
+
+            <Item>
+              <ToggleText>AUTO LOCATION REPORT</ToggleText>
+              <ToggleIcon
+                onPress={() => onPressToggleIcon("AUTO_LOCATION_REPORT")}
+              >
+                <NavIcon
+                  size={20}
+                  name={isAutoLocationReport ? "ios-search" : "ios-home"}
+                />
+              </ToggleIcon>
+            </Item>
+            <ExplainText>
+              If you set auto location report off, the app cannot find where you
+              are. Your lacation will be shown on your profile
+            </ExplainText>
+          </ToggleContainer>
+        </View>
+      )}
+    </ScrollView>
   );
 };
-
-export default EditProfile;

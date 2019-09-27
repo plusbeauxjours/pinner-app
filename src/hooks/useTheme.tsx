@@ -1,5 +1,6 @@
-import React, { useContext, useCallback } from "react";
+import { useContext, useCallback } from "react";
 import { ThemeContext } from "../context/ThemeContext";
+import { AsyncStorage } from "react-native";
 
 const useTheme = () => {
   const context = useContext(ThemeContext);
@@ -7,14 +8,15 @@ const useTheme = () => {
     throw new Error("useTheme must be used within a ThemeProvider");
   } else {
     const { isDarkMode, setDarkMode } = context;
-    const toggleTheme = useCallback(() => {
+    const toggleTheme = useCallback(async () => {
       if (isDarkMode === false) {
         setDarkMode(true);
-        localStorage.setItem("isDarkMode", "true");
+        await AsyncStorage.setItem("isDarkMode", "true");
       } else if (isDarkMode === true) {
         setDarkMode(false);
-        localStorage.setItem("isDarkMode", "false");
+        await AsyncStorage.setItem("isDarkMode", "false");
       }
+      console.log(await AsyncStorage.getItem("isDarkMode"));
     }, [isDarkMode]);
     return {
       theme: isDarkMode,
@@ -23,4 +25,4 @@ const useTheme = () => {
   }
 };
 
-export default { useTheme };
+export { useTheme };

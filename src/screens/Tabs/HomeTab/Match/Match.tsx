@@ -19,7 +19,6 @@ const Container = styled.View``;
 
 const UserContainer = styled.View``;
 
-
 const Item = styled.View`
   flex: 1;
   margin-bottom: 25px;
