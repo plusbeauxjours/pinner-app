@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useTheme } from "../../../../hooks/useTheme";
@@ -33,7 +33,7 @@ import { theme } from "../../../../styles/theme";
 import NavIcon from "../../../../components/NavIcon";
 import { GET_USER } from "../UserProfile/UserProfileQueries";
 import { UserProfileVariables } from "../../../../types/api";
-import { ScrollView, RefreshControl } from "react-native";
+import { ScrollView, RefreshControl, Platform } from "react-native";
 
 const View = styled.View`
   flex: 1;
@@ -73,18 +73,18 @@ export default ({ navigation }) => {
   const [username, setUsername] = useState<string>(
     navigation.getParam("username")
   );
-  const [bio, setUio] = useState<string>(profile.bio || "");
-  const [gender, setUender] = useState<string>(profile.gender || "");
-  const [firstName, setUirstName] = useState<string>(
-    navigation.getParam("firstName") || ""
+  const [bio, setBio] = useState<string>(profile.bio);
+  const [gender, setGender] = useState<string>(profile.gender);
+  const [firstName, setFirstName] = useState<string>(
+    navigation.getParam("firstName")
   );
-  const [lastName, setUastName] = useState<string>(
-    navigation.getParam("lastName") || ""
+  const [lastName, setLastName] = useState<string>(
+    navigation.getParam("lastName")
   );
-  const [nationalityCode, setUationalityCode] = useState<string>(
+  const [nationalityCode, setNationalityCode] = useState<string>(
     profile.nationality && profile.nationality.countryCode
   );
-  const [residenceCode, setUesidenceCode] = useState<string>(
+  const [residenceCode, setResidenceCode] = useState<string>(
     profile.residence && profile.residence.countryCode
   );
   const [isDarkMode, setIsDarkMode] = useState<boolean>(theme);
@@ -105,11 +105,9 @@ export default ({ navigation }) => {
     profile.isAutoLocationReport
   );
 
-  const [phoneNumber, setPhoneNumber] = useState<string>(
-    profile.phoneNumber || ""
-  );
+  const [phoneNumber, setPhoneNumber] = useState<string>(profile.phoneNumber);
   const [countryPhoneNumber, setCountryPhoneNumber] = useState<string>(
-    profile.countryPhoneNumber || ""
+    profile.countryPhoneNumber
   );
 
   const [editProfileFn] = useMutation<EditProfile, EditProfileVariables>(
@@ -230,11 +228,23 @@ export default ({ navigation }) => {
       ) : (
         <View>
           <Bold>EditProfile</Bold>
+          <Bold>{me.user.username}</Bold>
           <ToggleContainer>
             <Item>
               <ToggleText>DARK MODE</ToggleText>
               <ToggleIcon onPress={toggleTheme}>
-                <NavIcon size={20} name={theme ? "ios-search" : "ios-home"} />
+                <NavIcon
+                  size={20}
+                  name={
+                    Platform.OS === "ios"
+                      ? theme
+                        ? "ios-radio-button-on"
+                        : "ios-radio-button-off"
+                      : theme
+                      ? "md-radio-button-on"
+                      : "md-radio-button-off"
+                  }
+                />
               </ToggleIcon>
             </Item>
             {isDarkMode ? (
@@ -248,7 +258,15 @@ export default ({ navigation }) => {
               <ToggleIcon onPress={() => onPressToggleIcon("HIDE_TRIPS")}>
                 <NavIcon
                   size={20}
-                  name={isHideTrips ? "ios-search" : "ios-home"}
+                  name={
+                    Platform.OS === "ios"
+                      ? isHideTrips
+                        ? "ios-radio-button-on"
+                        : "ios-radio-button-off"
+                      : isHideTrips
+                      ? "md-radio-button-on"
+                      : "md-radio-button-off"
+                  }
                 />
               </ToggleIcon>
             </Item>
@@ -262,7 +280,15 @@ export default ({ navigation }) => {
               <ToggleIcon onPress={() => onPressToggleIcon("HIDE_COFFEES")}>
                 <NavIcon
                   size={20}
-                  name={isHideCoffees ? "ios-search" : "ios-home"}
+                  name={
+                    Platform.OS === "ios"
+                      ? isHideCoffees
+                        ? "ios-radio-button-on"
+                        : "ios-radio-button-off"
+                      : isHideCoffees
+                      ? "md-radio-button-on"
+                      : "md-radio-button-off"
+                  }
                 />
               </ToggleIcon>
             </Item>
@@ -276,7 +302,15 @@ export default ({ navigation }) => {
               <ToggleIcon onPress={() => onPressToggleIcon("HIDE_CITIES")}>
                 <NavIcon
                   size={20}
-                  name={isHideCities ? "ios-search" : "ios-home"}
+                  name={
+                    Platform.OS === "ios"
+                      ? isHideCities
+                        ? "ios-radio-button-on"
+                        : "ios-radio-button-off"
+                      : isHideCities
+                      ? "md-radio-button-on"
+                      : "md-radio-button-off"
+                  }
                 />
               </ToggleIcon>
             </Item>
@@ -290,7 +324,15 @@ export default ({ navigation }) => {
               <ToggleIcon onPress={() => onPressToggleIcon("HIDE_COUNTRIES")}>
                 <NavIcon
                   size={20}
-                  name={isHideCountries ? "ios-search" : "ios-home"}
+                  name={
+                    Platform.OS === "ios"
+                      ? isHideCountries
+                        ? "ios-radio-button-on"
+                        : "ios-radio-button-off"
+                      : isHideCities
+                      ? "md-radio-button-on"
+                      : "md-radio-button-off"
+                  }
                 />
               </ToggleIcon>
             </Item>
@@ -304,7 +346,15 @@ export default ({ navigation }) => {
               <ToggleIcon onPress={() => onPressToggleIcon("HIDE_CONTINENTS")}>
                 <NavIcon
                   size={20}
-                  name={isHideContinents ? "ios-search" : "ios-home"}
+                  name={
+                    Platform.OS === "ios"
+                      ? isHideContinents
+                        ? "ios-radio-button-on"
+                        : "ios-radio-button-off"
+                      : isHideContinents
+                      ? "md-radio-button-on"
+                      : "md-radio-button-off"
+                  }
                 />
               </ToggleIcon>
             </Item>
@@ -320,7 +370,15 @@ export default ({ navigation }) => {
               >
                 <NavIcon
                   size={20}
-                  name={isAutoLocationReport ? "ios-search" : "ios-home"}
+                  name={
+                    Platform.OS === "ios"
+                      ? isAutoLocationReport
+                        ? "ios-radio-button-on"
+                        : "ios-radio-button-off"
+                      : isAutoLocationReport
+                      ? "md-radio-button-on"
+                      : "md-radio-button-off"
+                  }
                 />
               </ToggleIcon>
             </Item>

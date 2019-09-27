@@ -67,14 +67,14 @@ export default () => {
     loading: profileLoading,
     refetch: profileRefetch
   } = useQuery<CountryProfile, CountryProfileVariables>(COUNTRY_PROFILE, {
-    variables: { countryCode: "KR" }
+    variables: { countryCode: "JP" }
   });
   const {
     data: countriesData,
     loading: countriesLoading,
     refetch: countriesRefetch
   } = useQuery<GetCountries, GetCountriesVariables>(GET_COUNTRIES, {
-    variables: { countryCode: "KR" }
+    variables: { countryCode: "JP" }
   });
   const onRefresh = async () => {
     try {
@@ -87,16 +87,20 @@ export default () => {
       setRefreshing(false);
     }
   };
-
-  return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      {profileLoading || countriesLoading ? (
-        <Loader />
-      ) : (
+  if (profileLoading || countriesLoading) {
+    return <Loader />
+  } else if (
+    !profileLoading &&
+    !countriesLoading &&
+    profileData &&
+    countriesData
+  ) {
+    return (
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <Container>
           <Bold>Country Profile</Bold>
           {profileData.countryProfile.country && (
@@ -183,7 +187,9 @@ export default () => {
               </Item>
             )}
         </Container>
-      )}
-    </ScrollView>
-  );
+      </ScrollView>
+    );
+  } else {
+    return null;
+  }
 };

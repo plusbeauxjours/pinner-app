@@ -32,6 +32,8 @@ const Bold = styled.Text`
   font-size: 20;
 `;
 
+const View = styled.View``;
+
 const UserContainer = styled.View``;
 
 const UserColumn = styled.View``;
@@ -68,14 +70,14 @@ export default () => {
     loading: profileLoading,
     refetch: profileRefetch
   } = useQuery<CityProfile, CityProfileVariables>(CITY_PROFILE, {
-    variables: { cityId: "ChIJzWXFYYuifDUR64Pq5LTtioU" }
+    variables: { cityId: "ChIJZ2jHc-2kw0cRpwJzeGY6i8E" }
   });
   const {
     data: nearCitiesData,
     loading: nearCitiesLoading,
     refetch: nearCitiesRefetch
   } = useQuery<NearCities, NearCitiesVariables>(NEAR_CITIES, {
-    variables: { cityId: "ChIJzWXFYYuifDUR64Pq5LTtioU" }
+    variables: { cityId: "ChIJZ2jHc-2kw0cRpwJzeGY6i8E" }
   });
   const {
     data: samenameCitiesData,
@@ -83,7 +85,7 @@ export default () => {
     refetch: samenameCitiesRefetch
   } = useQuery<GetSamenameCities, GetSamenameCitiesVariables>(
     GET_SAMENAME_CITIES,
-    { variables: { cityId: "ChIJzWXFYYuifDUR64Pq5LTtioU" } }
+    { variables: { cityId: "ChIJZ2jHc-2kw0cRpwJzeGY6i8E" } }
   );
 
   const onRefresh = async () => {
@@ -99,19 +101,26 @@ export default () => {
     }
   };
 
-  return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      {profileLoading || samenameCitiesLoading || nearCitiesLoading ? (
-        <Loader />
-      ) : (
+  if (profileLoading || nearCitiesLoading || samenameCitiesLoading) {
+    return <Loader />;
+  } else if (
+    !profileLoading &&
+    !nearCitiesLoading &&
+    !samenameCitiesLoading &&
+    profileData &&
+    nearCitiesData &&
+    samenameCitiesData
+  ) {
+    return (
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <Container>
           <Bold>City Profile</Bold>
           {profileData.cityProfile.city && (
-            <>
+            <View>
               <Text>cityName:{profileData.cityProfile.city.cityName}</Text>
               <Text>cityPhoto:{profileData.cityProfile.city.cityPhoto}</Text>
               {profileData.cityProfile.city.likeCount !== 0 ? (
@@ -122,14 +131,14 @@ export default () => {
                     : " likes"}
                 </Text>
               ) : null}
-              {profileData.cityProfile.city.userCount && (
+              {profileData.cityProfile.city.userCount !== 0 ? (
                 <Text>userCount:{profileData.cityProfile.city.userCount}</Text>
-              )}
-              {profileData.cityProfile.city.userLogCount && (
+              ) : null}
+              {profileData.cityProfile.city.userLogCount == 0 ? (
                 <Text>
                   userLogCount:{profileData.cityProfile.city.userLogCount}
                 </Text>
-              )}
+              ) : null}
               {profileData.cityProfile.count !== 0 ? (
                 <Text>
                   You've been {profileData.cityProfile.city.cityName}{" "}
@@ -137,7 +146,7 @@ export default () => {
                   {profileData.cityProfile.count === 1 ? " time" : " times"}
                 </Text>
               ) : null}
-            </>
+            </View>
           )}
           <CityLikeBtn
             isLiked={profileData.cityProfile.city.isLiked}
@@ -223,7 +232,9 @@ export default () => {
               </Item>
             )}
         </Container>
-      )}
-    </ScrollView>
-  );
+      </ScrollView>
+    );
+  } else {
+    return null;
+  }
 };
