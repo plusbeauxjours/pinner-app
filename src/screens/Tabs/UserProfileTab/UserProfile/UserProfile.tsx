@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import moment from "moment";
 import { RefreshControl, ScrollView } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
@@ -50,7 +50,6 @@ const Touchable = styled.TouchableOpacity``;
 export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
-  console.log(navigation);
   const isSelf = navigation.getParam("isSelf");
   const [cityId, setCityId] = useState<string>(location.currentCityId);
   const [moveNotificationId, setMoveNotificationId] = useState<string>();

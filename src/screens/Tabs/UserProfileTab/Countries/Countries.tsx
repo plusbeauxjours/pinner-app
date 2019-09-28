@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { ScrollView, RefreshControl } from "react-native";
 import { TopCountries, TopCountriesVariables } from "../../../../types/api";
@@ -21,15 +21,16 @@ const Bold = styled.Text`
 
 const Text = styled.Text``;
 
-export default () => {
+export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
+  const [username, setUsername] = useState(navigation.getParam("username"));
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const { data, loading, refetch } = useQuery<
     TopCountries,
     TopCountriesVariables
   >(TOP_COUNTRIES, {
-    variables: { userName: "devilishPlusbeauxjours" }
+    variables: { userName: username }
   });
   const onRefresh = async () => {
     try {

@@ -145,9 +145,33 @@ export default ({ navigation }) => {
                     {recommendLocationData.recommendLocations.cities.map(
                       (city, index) => (
                         <UserColumn key={index}>
-                          <UserRow city={city} type={"city"} />
-                          <UserRow city={city} type={"city"} />
-                          <UserRow city={city} type={"city"} />
+                          <Touchable
+                            onPress={() =>
+                              navigation.navigate("CityProfile", {
+                                cityId: city.cityId
+                              })
+                            }
+                          >
+                            <UserRow city={city} type={"city"} />
+                          </Touchable>
+                          <Touchable
+                            onPress={() =>
+                              navigation.navigate("CityProfile", {
+                                cityId: city.cityId
+                              })
+                            }
+                          >
+                            <UserRow city={city} type={"city"} />
+                          </Touchable>
+                          <Touchable
+                            onPress={() =>
+                              navigation.navigate("CityProfile", {
+                                cityId: city.cityId
+                              })
+                            }
+                          >
+                            <UserRow city={city} type={"city"} />
+                          </Touchable>
                         </UserColumn>
                       )
                     )}
