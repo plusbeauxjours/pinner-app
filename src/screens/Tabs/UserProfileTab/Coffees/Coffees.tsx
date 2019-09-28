@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { ScrollView, RefreshControl } from "react-native";
 import { GetCoffees, GetCoffeesVariables } from "../../../../types/api";
@@ -21,14 +21,18 @@ const Bold = styled.Text`
 
 const Text = styled.Text``;
 
-export default () => {
+export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
+  const [username, setUsername] = useState(navigation.getParam("username"));
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const { data, loading, refetch } = useQuery<GetCoffees, GetCoffeesVariables>(
     GET_COFFEES,
     {
-      variables: { userName: "devilishPlusbeauxjours", location: "profile" }
+      variables: {
+        userName: username,
+        location: "history"
+      }
     }
   );
   const onRefresh = async () => {
@@ -41,6 +45,9 @@ export default () => {
       setRefreshing(false);
     }
   };
+  useEffect(() => {
+    setUsername(navigation.getParam("username")), [navigation];
+  });
   return (
     <ScrollView
       refreshControl={

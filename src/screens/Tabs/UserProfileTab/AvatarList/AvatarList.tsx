@@ -43,6 +43,7 @@ const Touchable = styled.View`
 export default () => {
   const me = useMe();
   const location = useLocation();
+  const [username, setUsername] = useState();
   const [uuid, setUuid] = useState();
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [file, setFile] = useState();

@@ -50,14 +50,13 @@ const Touchable = styled.TouchableOpacity``;
 export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
+  console.log(navigation);
+  const isSelf = navigation.getParam("isSelf");
   const [cityId, setCityId] = useState<string>(location.currentCityId);
   const [moveNotificationId, setMoveNotificationId] = useState<string>();
   const [username, setUsername] = useState<string>(
     navigation.getParam("username") || me.user.username
   );
-  console.log("11", username);
-  console.log("12221", navigation.getParam("username"));
-  console.log("1222222331", me.user.username);
   const [payload, setPayload] = useState<string>();
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [date, setDate] = useState<{
@@ -173,34 +172,44 @@ export default ({ navigation }) => {
               <Text>isSelf:{profileData.userProfile.user.profile.isSelf}</Text>
             </>
           )}
-          <Item>
-            <Touchable
-              onPress={() =>
-                navigation.navigate("EditProfile", {
-                  ...profileData.userProfile.user,
-                  profileRefetch
-                })
-              }
-            >
-              <Bold>EditProfile</Bold>
-            </Touchable>
-          </Item>
-          <Touchable onPress={() => navigation.navigate("Cities")}>
+          {isSelf && (
+            <Item>
+              <Touchable
+                onPress={() =>
+                  navigation.navigate("EditProfile", {
+                    ...profileData.userProfile.user,
+                    profileRefetch
+                  })
+                }
+              >
+                <Bold>EditProfile</Bold>
+              </Touchable>
+            </Item>
+          )}
+          <Touchable
+            onPress={() => navigation.navigate("Cities", { username })}
+          >
             <Item>
               <Bold>Cities</Bold>
             </Item>
           </Touchable>
-          <Touchable onPress={() => navigation.navigate("Countries")}>
+          <Touchable
+            onPress={() => navigation.navigate("Countries", { username })}
+          >
             <Item>
               <Bold>Countries</Bold>
             </Item>
           </Touchable>
-          <Touchable onPress={() => navigation.navigate("Continents")}>
+          <Touchable
+            onPress={() => navigation.navigate("Continents", { username })}
+          >
             <Item>
               <Bold>Continents</Bold>
             </Item>
           </Touchable>
-          <Touchable onPress={() => navigation.navigate("Coffees")}>
+          <Touchable
+            onPress={() => navigation.navigate("Coffees", { username })}
+          >
             <Item>
               <Bold>Coffees</Bold>
             </Item>

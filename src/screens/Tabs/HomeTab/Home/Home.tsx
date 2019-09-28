@@ -34,8 +34,9 @@ const Title = styled.Text`
   padding-left: 15px;
   margin-bottom: 5px;
 `;
+const Touchable = styled.TouchableOpacity``;
 
-export default () => {
+export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
   const [refreshing, setRefreshing] = useState(false);
@@ -97,9 +98,33 @@ export default () => {
                       (user, index) => {
                         return (
                           <UserColumn key={index}>
-                            <UserRow user={user} type={"user"} />
-                            <UserRow user={user} type={"user"} />
-                            <UserRow user={user} type={"user"} />
+                            <Touchable
+                              onPress={() =>
+                                navigation.navigate("UserProfile", {
+                                  username: user.username
+                                })
+                              }
+                            >
+                              <UserRow user={user} type={"user"} />
+                            </Touchable>
+                            <Touchable
+                              onPress={() =>
+                                navigation.navigate("UserProfile", {
+                                  username: user.username
+                                })
+                              }
+                            >
+                              <UserRow user={user} type={"user"} />
+                            </Touchable>
+                            <Touchable
+                              onPress={() =>
+                                navigation.navigate("UserProfile", {
+                                  ...user
+                                })
+                              }
+                            >
+                              <UserRow user={user} type={"user"} />
+                            </Touchable>
                           </UserColumn>
                         );
                       }
