@@ -4,7 +4,7 @@ import styled from "styled-components";
 import constants, { BACKEND_URL } from "../../constants";
 import CityLikeBtn from "./CityLikeBtn/CityLikeBtn";
 
-const Container = styled.TouchableOpacity`
+const Container = styled.View`
   padding: 15px;
   flex-direction: row;
   align-items: center;

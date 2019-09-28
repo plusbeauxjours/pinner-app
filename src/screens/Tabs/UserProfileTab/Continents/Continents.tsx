@@ -52,7 +52,7 @@ export default () => {
       ) : (
         <View>
           <Bold>CONTINENTS</Bold>
-          {data.topContinents.continents &&
+          {data.topContinents.continents.length !== 0 &&
             data.topContinents.continents.map((continent, index) => (
               <UserRow
                 key={index}

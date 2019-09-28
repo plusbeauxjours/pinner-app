@@ -95,7 +95,7 @@ export default () => {
               </Text>
             </>
           )}
-          {profileData.continentProfile.countries &&
+          {profileData.continentProfile &&
             profileData.continentProfile.countries.length !== 0 && (
               <Item>
                 <Title>CONTINENTS</Title>
@@ -119,7 +119,7 @@ export default () => {
                 </UserContainer>
               </Item>
             )}
-          {profileData.continentProfile.countries &&
+          {profileData.continentProfile &&
             profileData.continentProfile.countries.length !== 0 && (
               <Item>
                 <Title>
@@ -128,7 +128,7 @@ export default () => {
                     ? " COUNTRY"
                     : " COUNTRIES"}
                 </Title>
-                {profileData.continentProfile.countries &&
+                {profileData.continentProfile &&
                   profileData.continentProfile.countries.map(
                     (country, index) => (
                       <UserRow key={index} country={country} type={"country"} />

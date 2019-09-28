@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { RefreshControl, ScrollView } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
@@ -52,7 +52,12 @@ export default ({ navigation }) => {
   const location = useLocation();
   const [cityId, setCityId] = useState<string>(location.currentCityId);
   const [moveNotificationId, setMoveNotificationId] = useState<string>();
-  const [username, setUsername] = useState<string>();
+  const [username, setUsername] = useState<string>(
+    navigation.getParam("username") || me.user.username
+  );
+  console.log("11", username);
+  console.log("12221", navigation.getParam("username"));
+  console.log("1222222331", me.user.username);
   const [payload, setPayload] = useState<string>();
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [date, setDate] = useState<{
@@ -75,14 +80,14 @@ export default ({ navigation }) => {
     loading: profileLoading,
     refetch: profileRefetch
   } = useQuery<UserProfile, UserProfileVariables>(GET_USER, {
-    variables: { username: "devilishPlusbeauxjours" }
+    variables: { username }
   });
   const {
     data: tripData,
     loading: tripLoading,
     refetch: tripRefetch
   } = useQuery<GetTrips, GetTripsVariables>(GET_TRIPS, {
-    variables: { username: "devilishPlusbeauxjours" }
+    variables: { username }
   });
   const [addTripFn] = useMutation<AddTrip, AddTripVariables>(ADD_TRIP, {
     variables: {
@@ -127,7 +132,6 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
-
   return (
     <ScrollView
       refreshControl={
@@ -201,12 +205,12 @@ export default ({ navigation }) => {
               <Bold>Coffees</Bold>
             </Item>
           </Touchable>
-          {tripData.getTrips.trip.length === 1 ? (
+          {tripData.getTrips && tripData.getTrips.trip.length === 1 ? (
             <Bold>Trip</Bold>
           ) : (
             <Bold>Trips</Bold>
           )}
-          {tripData.getTrips.trip &&
+          {tripData.getTrips &&
             tripData.getTrips.trip.map((i, index) => (
               <UserRow key={index} trip={i} type={"trip"} />
             ))}

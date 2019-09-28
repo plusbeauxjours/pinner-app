@@ -52,7 +52,7 @@ export default () => {
       ) : (
         <View>
           <Bold>CITIES</Bold>
-          {data.frequentVisits.cities &&
+          {data.frequentVisits.cities.length !== 0 &&
             data.frequentVisits.cities.map((city, index) => (
               <UserRow key={index} city={city} type={"userProfileCity"} />
             ))}

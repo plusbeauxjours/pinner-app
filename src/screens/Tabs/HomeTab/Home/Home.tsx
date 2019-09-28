@@ -84,7 +84,7 @@ export default () => {
         <Loader />
       ) : (
         <Container>
-          {recommendUserData.recommendUsers.users &&
+          {recommendUserData.recommendUsers &&
             recommendUserData.recommendUsers.users.length !== 0 && (
               <Item>
                 <Title>RECOMMEND USERS</Title>
@@ -108,7 +108,7 @@ export default () => {
                 </UserContainer>
               </Item>
             )}
-          {recommendLocationData.recommendLocations.cities &&
+          {recommendLocationData.recommendLocations &&
             recommendLocationData.recommendLocations.cities.length !== 0 && (
               <Item>
                 <Title>RECOMMEND LOCATIONS</Title>
@@ -130,26 +130,21 @@ export default () => {
                 </UserContainer>
               </Item>
             )}
-          {coffeeData.getCoffees.coffees &&
-            coffeeData.getCoffees.coffees.length !== 0 && (
-              <Item>
-                <Title>NEED SOME COFFEE NOW</Title>
-                <UserContainer>
-                  <Swiper
-                    style={{ height: 135 }}
-                    paginationStyle={{ bottom: -15 }}
-                  >
-                    {coffeeData.getCoffees.coffees.map(coffee => (
-                      <UserRow
-                        key={coffee.id}
-                        coffee={coffee}
-                        type={"coffee"}
-                      />
-                    ))}
-                  </Swiper>
-                </UserContainer>
-              </Item>
-            )}
+          {coffeeData.getCoffees && coffeeData.getCoffees.coffees.length !== 0 && (
+            <Item>
+              <Title>NEED SOME COFFEE NOW</Title>
+              <UserContainer>
+                <Swiper
+                  style={{ height: 135 }}
+                  paginationStyle={{ bottom: -15 }}
+                >
+                  {coffeeData.getCoffees.coffees.map(coffee => (
+                    <UserRow key={coffee.id} coffee={coffee} type={"coffee"} />
+                  ))}
+                </Swiper>
+              </UserContainer>
+            </Item>
+          )}
         </Container>
       )}
     </ScrollView>

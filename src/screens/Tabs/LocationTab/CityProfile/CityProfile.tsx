@@ -48,8 +48,9 @@ const Title = styled.Text`
   padding-left: 15px;
   margin-bottom: 5px;
 `;
+const Touchable = styled.TouchableOpacity``;
 
-export default () => {
+export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
   const [cityId, setCityId] = useState<string>(location.currentCityId);
@@ -70,14 +71,14 @@ export default () => {
     loading: profileLoading,
     refetch: profileRefetch
   } = useQuery<CityProfile, CityProfileVariables>(CITY_PROFILE, {
-    variables: { cityId: "ChIJZ2jHc-2kw0cRpwJzeGY6i8E" }
+    variables: { cityId: "ChIJzWXFYYuifDUR64Pq5LTtioU" }
   });
   const {
     data: nearCitiesData,
     loading: nearCitiesLoading,
     refetch: nearCitiesRefetch
   } = useQuery<NearCities, NearCitiesVariables>(NEAR_CITIES, {
-    variables: { cityId: "ChIJZ2jHc-2kw0cRpwJzeGY6i8E" }
+    variables: { cityId: "ChIJzWXFYYuifDUR64Pq5LTtioU" }
   });
   const {
     data: samenameCitiesData,
@@ -85,7 +86,7 @@ export default () => {
     refetch: samenameCitiesRefetch
   } = useQuery<GetSamenameCities, GetSamenameCitiesVariables>(
     GET_SAMENAME_CITIES,
-    { variables: { cityId: "ChIJZ2jHc-2kw0cRpwJzeGY6i8E" } }
+    { variables: { cityId: "ChIJzWXFYYuifDUR64Pq5LTtioU" } }
   );
 
   const onRefresh = async () => {
@@ -153,7 +154,7 @@ export default () => {
             cityId={profileData.cityProfile.city.cityId}
             likeCount={profileData.cityProfile.city.likeCount}
           />
-          {nearCitiesData.nearCities.cities &&
+          {nearCitiesData.nearCities &&
             nearCitiesData.nearCities.cities.length !== 0 && (
               <Item>
                 <Title>SAMENAME CITIES</Title>
@@ -175,7 +176,7 @@ export default () => {
                 </UserContainer>
               </Item>
             )}
-          {samenameCitiesData.getSamenameCities.cities &&
+          {samenameCitiesData.getSamenameCities &&
             samenameCitiesData.getSamenameCities.cities.length !== 0 && (
               <Item>
                 <Title>SAMENAME CITIES</Title>
@@ -199,7 +200,7 @@ export default () => {
                 </UserContainer>
               </Item>
             )}
-          {profileData.cityProfile.usersBefore &&
+          {profileData.cityProfile &&
             profileData.cityProfile.usersBefore.length !== 0 && (
               <Item>
                 <Title>USERS BEFORE</Title>
@@ -221,14 +222,22 @@ export default () => {
                 </UserContainer>
               </Item>
             )}
-          {profileData.cityProfile.usersNow &&
+          {profileData.cityProfile &&
             profileData.cityProfile.usersNow.length !== 0 && (
               <Item>
                 <Title>USERS NOW</Title>
-                {profileData.cityProfile.usersNow &&
-                  profileData.cityProfile.usersNow.map((user, index) => (
-                    <UserRow key={index} user={user} type={"user"} />
-                  ))}
+                {profileData.cityProfile.usersNow.map((user, index) => (
+                  <Touchable
+                    key={index}
+                    onPress={() =>
+                      navigation.navigate("UserProfile", {
+                        username: user.username
+                      })
+                    }
+                  >
+                    <UserRow user={user} type={"user"} />
+                  </Touchable>
+                ))}
               </Item>
             )}
         </Container>

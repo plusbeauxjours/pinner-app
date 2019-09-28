@@ -1,61 +1,30 @@
-import React from "react";
 import { createStackNavigator } from "react-navigation";
 import { createMaterialTopTabNavigator } from "react-navigation";
 import CityProfile from "../screens/Tabs/LocationTab/CityProfile";
 import CountryProfile from "../screens/Tabs/LocationTab/CountryProfile";
 import ContinentProfile from "../screens/Tabs/LocationTab/ContinentProfile";
-import { Platform } from "react-native";
-import NavIcon from "../components/NavIcon";
+import Cities from "../screens/Tabs/UserProfileTab/Cities";
+import Countries from "../screens/Tabs/UserProfileTab/Countries";
+import Continents from "../screens/Tabs/UserProfileTab/Continents";
+import Coffees from "../screens/Tabs/UserProfileTab/Coffees";
+import UserProfile from "../screens/Tabs/UserProfileTab/UserProfile";
+import EditProfile from "../screens/Tabs/UserProfileTab/EditProfile";
+import AvatarList from "../screens/Tabs/UserProfileTab/AvatarList/index";
 
-const stackFactory = (initialRoute, customConfig) =>
-  createStackNavigator({
-    InitialRoute: {
-      screen: initialRoute,
+const UserProfileTabs = createMaterialTopTabNavigator(
+  {
+    UserProfile: {
+      screen: UserProfile,
       navigationOptions: {
-        ...customConfig,
         header: null,
         mode: "modal"
       }
-    }
-  });
-
-export default createMaterialTopTabNavigator(
-  {
-    CityProfile: {
-      screen: stackFactory(CityProfile, { title: "CityProfile" }),
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            name={Platform.OS === "ios" ? "ios-home" : "md-home"}
-          />
-        )
-      }
     },
-    CountryProfile: {
-      screen: stackFactory(CountryProfile, {
-        title: "CountryProfile"
-      }),
+    AvatarList: {
+      screen: AvatarList,
       navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            name={Platform.OS === "ios" ? "ios-person" : "md-person"}
-          />
-        )
-      }
-    },
-    ContinentProfile: {
-      screen: stackFactory(ContinentProfile, {
-        title: "ContinentProfile"
-      }),
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            name={Platform.OS === "ios" ? "ios-person" : "md-person"}
-          />
-        )
+        header: null,
+        mode: "modal"
       }
     }
   },
@@ -63,7 +32,6 @@ export default createMaterialTopTabNavigator(
     animationEnabled: true,
     swipeEnabled: true,
     tabBarPosition: "bottom",
-    lazy: true,
     tabBarOptions: {
       style: {
         backgroundColor: "white"
@@ -73,6 +41,64 @@ export default createMaterialTopTabNavigator(
       upperCaseLabel: false,
       showLabel: false,
       showIcon: false
+    }
+  }
+);
+
+const LocationProfileTabs = createMaterialTopTabNavigator(
+  {
+    CityProfile: {
+      screen: CityProfile,
+      navigationOptions: {
+        header: null,
+        mode: "modal"
+      }
+    },
+    CountryProfile: {
+      screen: CountryProfile,
+      navigationOptions: {
+        header: null,
+        mode: "modal"
+      }
+    },
+    ContinentProfile: {
+      screen: ContinentProfile,
+      navigationOptions: {
+        header: null,
+        mode: "modal"
+      }
+    }
+  },
+  {
+    animationEnabled: true,
+    swipeEnabled: true,
+    tabBarPosition: "bottom",
+    tabBarOptions: {
+      style: {
+        backgroundColor: "white"
+      },
+      activeTintColor: "#000",
+      inactiveTintColor: "#d1cece",
+      upperCaseLabel: false,
+      showLabel: false,
+      showIcon: false
+    }
+  }
+);
+
+export default createStackNavigator(
+  {
+    LocationProfileTabs,
+    UserProfileTabs,
+    EditProfile,
+    Cities,
+    Countries,
+    Continents,
+    Coffees
+  },
+  {
+    defaultNavigationOptions: {
+      header: null
     }
   }
 );

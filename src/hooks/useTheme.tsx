@@ -16,7 +16,6 @@ const useTheme = () => {
         setDarkMode(false);
         await AsyncStorage.setItem("isDarkMode", "false");
       }
-      console.log(await AsyncStorage.getItem("isDarkMode"));
     }, [isDarkMode]);
     return {
       theme: isDarkMode,

@@ -52,7 +52,7 @@ export default () => {
       ) : (
         <View>
           <Bold>COUNTRIES</Bold>
-          {data.topCountries.countries &&
+          {data.topCountries.countries.length !== 0 &&
             data.topCountries.countries.map((country, index) => (
               <UserRow
                 key={index}

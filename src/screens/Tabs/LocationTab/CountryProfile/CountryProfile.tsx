@@ -67,14 +67,14 @@ export default () => {
     loading: profileLoading,
     refetch: profileRefetch
   } = useQuery<CountryProfile, CountryProfileVariables>(COUNTRY_PROFILE, {
-    variables: { countryCode: "JP" }
+    variables: { countryCode: "KR" }
   });
   const {
     data: countriesData,
     loading: countriesLoading,
     refetch: countriesRefetch
   } = useQuery<GetCountries, GetCountriesVariables>(GET_COUNTRIES, {
-    variables: { countryCode: "JP" }
+    variables: { countryCode: "KR" }
   });
   const onRefresh = async () => {
     try {
@@ -88,7 +88,7 @@ export default () => {
     }
   };
   if (profileLoading || countriesLoading) {
-    return <Loader />
+    return <Loader />;
   } else if (
     !profileLoading &&
     !countriesLoading &&
@@ -137,7 +137,7 @@ export default () => {
               ) : null}
             </>
           )}
-          {countriesData.getCountries.countries &&
+          {countriesData.getCountries &&
             countriesData.getCountries.countries.length !== 0 && (
               <Item>
                 <Title>
@@ -163,7 +163,7 @@ export default () => {
                 </UserContainer>
               </Item>
             )}
-          {profileData.countryProfile.cities &&
+          {profileData.countryProfile &&
             profileData.countryProfile.cities.length !== 0 && (
               <Item>
                 <Title>
@@ -172,18 +172,9 @@ export default () => {
                     ? " CITY"
                     : " CITIES"}
                 </Title>
-                {profileData.countryProfile.cities &&
-                  profileData.countryProfile.cities.map((city, index) => (
-                    <UserRow key={index} city={city} type={"city"} />
-                  ))}
-                {profileData.countryProfile.cities &&
-                  profileData.countryProfile.cities.map((city, index) => (
-                    <Text key={index}>
-                      {city.cityName}
-                      {city.likeCount}
-                      {city.isLiked}
-                    </Text>
-                  ))}
+                {profileData.countryProfile.cities.map((city, index) => (
+                  <UserRow key={index} city={city} type={"city"} />
+                ))}
               </Item>
             )}
         </Container>
