@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RefreshControl, ScrollView } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -53,7 +53,10 @@ const Touchable = styled.TouchableOpacity``;
 export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
-  const [cityId, setCityId] = useState<string>(location.currentCityId);
+  const [cityId, setCityId] = useState<string>(
+    navigation.getParam("cityId") || location.currentCityId
+  );
+  console.log(cityId);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [payload, setPayload] = useState<string>();
   const [slackReportLocationsFn] = useMutation<
@@ -71,14 +74,14 @@ export default ({ navigation }) => {
     loading: profileLoading,
     refetch: profileRefetch
   } = useQuery<CityProfile, CityProfileVariables>(CITY_PROFILE, {
-    variables: { cityId: "ChIJzWXFYYuifDUR64Pq5LTtioU" }
+    variables: { cityId }
   });
   const {
     data: nearCitiesData,
     loading: nearCitiesLoading,
     refetch: nearCitiesRefetch
   } = useQuery<NearCities, NearCitiesVariables>(NEAR_CITIES, {
-    variables: { cityId: "ChIJzWXFYYuifDUR64Pq5LTtioU" }
+    variables: { cityId }
   });
   const {
     data: samenameCitiesData,
@@ -86,7 +89,7 @@ export default ({ navigation }) => {
     refetch: samenameCitiesRefetch
   } = useQuery<GetSamenameCities, GetSamenameCitiesVariables>(
     GET_SAMENAME_CITIES,
-    { variables: { cityId: "ChIJzWXFYYuifDUR64Pq5LTtioU" } }
+    { variables: { cityId } }
   );
 
   const onRefresh = async () => {
@@ -101,7 +104,10 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
-
+  useEffect(() => {
+    console.log("effect is workign ");
+    setCityId(navigation.getParam("cityId") || location.currentCityId);
+  }, [navigation]);
   if (profileLoading || nearCitiesLoading || samenameCitiesLoading) {
     return <Loader />;
   } else if (
@@ -157,7 +163,7 @@ export default ({ navigation }) => {
           {nearCitiesData.nearCities &&
             nearCitiesData.nearCities.cities.length !== 0 && (
               <Item>
-                <Title>SAMENAME CITIES</Title>
+                <Title>NEAR CITIES</Title>
                 <UserContainer>
                   <Swiper
                     style={{ height: 135 }}
@@ -166,9 +172,33 @@ export default ({ navigation }) => {
                     {nearCitiesData.nearCities.cities.map((city, index) => {
                       return (
                         <UserColumn key={index}>
-                          <UserRow city={city} type={"city"} />
-                          <UserRow city={city} type={"city"} />
-                          <UserRow city={city} type={"city"} />
+                          <Touchable
+                            onPress={() =>
+                              navigation.navigate("CityProfile", {
+                                cityId: city.cityId
+                              })
+                            }
+                          >
+                            <UserRow city={city} type={"city"} />
+                          </Touchable>
+                          <Touchable
+                            onPress={() =>
+                              navigation.navigate("CityProfile", {
+                                cityId: city.cityId
+                              })
+                            }
+                          >
+                            <UserRow city={city} type={"city"} />
+                          </Touchable>
+                          <Touchable
+                            onPress={() =>
+                              navigation.navigate("CityProfile", {
+                                cityId: city.cityId
+                              })
+                            }
+                          >
+                            <UserRow city={city} type={"city"} />
+                          </Touchable>
                         </UserColumn>
                       );
                     })}
@@ -189,9 +219,33 @@ export default ({ navigation }) => {
                       (city, index) => {
                         return (
                           <UserColumn key={index}>
-                            <UserRow city={city} type={"city"} />
-                            <UserRow city={city} type={"city"} />
-                            <UserRow city={city} type={"city"} />
+                            <Touchable
+                              onPress={() =>
+                                navigation.navigate("CityProfile ", {
+                                  cityId: city.cityId
+                                })
+                              }
+                            >
+                              <UserRow city={city} type={"city"} />
+                            </Touchable>
+                            <Touchable
+                              onPress={() =>
+                                navigation.navigate("CityProfile ", {
+                                  cityId: city.cityId
+                                })
+                              }
+                            >
+                              <UserRow city={city} type={"city"} />
+                            </Touchable>
+                            <Touchable
+                              onPress={() =>
+                                navigation.navigate("CityProfile ", {
+                                  cityId: city.cityId
+                                })
+                              }
+                            >
+                              <UserRow city={city} type={"city"} />
+                            </Touchable>
                           </UserColumn>
                         );
                       }
@@ -212,9 +266,33 @@ export default ({ navigation }) => {
                     {profileData.cityProfile.usersBefore.map((user, index) => {
                       return (
                         <UserColumn key={index}>
-                          <UserRow user={user.actor.profile} type={"user"} />
-                          <UserRow user={user.actor.profile} type={"user"} />
-                          <UserRow user={user.actor.profile} type={"user"} />
+                          <Touchable
+                            onPress={() =>
+                              navigation.navigate("UserProfile", {
+                                username: user.actor.profile.username
+                              })
+                            }
+                          >
+                            <UserRow user={user.actor.profile} type={"user"} />
+                          </Touchable>
+                          <Touchable
+                            onPress={() =>
+                              navigation.navigate("UserProfile", {
+                                username: user.actor.profile.username
+                              })
+                            }
+                          >
+                            <UserRow user={user.actor.profile} type={"user"} />
+                          </Touchable>
+                          <Touchable
+                            onPress={() =>
+                              navigation.navigate("UserProfile", {
+                                username: user.actor.profile.username
+                              })
+                            }
+                          >
+                            <UserRow user={user.actor.profile} type={"user"} />
+                          </Touchable>
                         </UserColumn>
                       );
                     })}

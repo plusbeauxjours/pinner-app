@@ -100,7 +100,7 @@ export default ({ navigation }) => {
                           <UserColumn key={index}>
                             <Touchable
                               onPress={() =>
-                                navigation.navigate("UserProfile", {
+                                navigation.navigate("UserProfileTabs", {
                                   username: user.username
                                 })
                               }
@@ -109,7 +109,7 @@ export default ({ navigation }) => {
                             </Touchable>
                             <Touchable
                               onPress={() =>
-                                navigation.navigate("UserProfile", {
+                                navigation.navigate("UserProfileTabs", {
                                   username: user.username
                                 })
                               }
@@ -118,7 +118,7 @@ export default ({ navigation }) => {
                             </Touchable>
                             <Touchable
                               onPress={() =>
-                                navigation.navigate("UserProfile", {
+                                navigation.navigate("UserProfileTabs", {
                                   ...user
                                 })
                               }

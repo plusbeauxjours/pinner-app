@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import { ScrollView, RefreshControl, FlatList, Image } from "react-native";
 import styled from "styled-components";
@@ -40,10 +40,13 @@ const Touchable = styled.View`
   flex-direction: row;
 `;
 
-export default () => {
+export default ({ navigation }) => {
+  console.log(navigation);
   const me = useMe();
   const location = useLocation();
-  const [username, setUsername] = useState();
+  const [username, setUsername] = useState<string>(
+    navigation.getParam("username") || me.user.username
+  );
   const [uuid, setUuid] = useState();
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [file, setFile] = useState();
@@ -53,7 +56,7 @@ export default () => {
     loading: avatarLoading,
     refetch: avatarRefetch
   } = useQuery<GetAvatars, GetAvatarsVariables>(GET_AVATARS, {
-    variables: { userName: "devilishPlusbeauxjours" }
+    variables: { userName: username }
   });
   const [uploadAvatarFn] = useMutation<UploadAvatar, UploadAvatarVariables>(
     UPLOAD_AVATAR,
@@ -77,6 +80,9 @@ export default () => {
       setRefreshing(false);
     }
   };
+  useEffect(() => {
+    setUsername(navigation.getParam("username") || me.user.username);
+  }, [navigation]);
   return (
     <ScrollView
       refreshControl={

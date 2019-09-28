@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { RefreshControl, ScrollView } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
@@ -130,6 +130,9 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
+  useEffect(() => {
+    setUsername(navigation.getParam("username") || me.user.username);
+  }, [navigation]);
   return (
     <ScrollView
       refreshControl={

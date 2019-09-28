@@ -20,6 +20,7 @@ const Bold = styled.Text`
 `;
 
 const Text = styled.Text``;
+const Touchable = styled.TouchableOpacity``;
 
 export default ({ navigation }) => {
   const me = useMe();
@@ -55,11 +56,20 @@ export default ({ navigation }) => {
           <Bold>COUNTRIES</Bold>
           {data.topCountries.countries.length !== 0 &&
             data.topCountries.countries.map((country, index) => (
-              <UserRow
+              <Touchable
                 key={index}
-                country={country}
-                type={"userProfileCountry"}
-              />
+                onPress={() =>
+                  navigation.navigate("CountryProfile", {
+                    countryCode: country.countryCode
+                  })
+                }
+              >
+                <UserRow
+                  key={index}
+                  country={country}
+                  type={"userProfileCountry"}
+                />
+              </Touchable>
             ))}
         </View>
       )}
