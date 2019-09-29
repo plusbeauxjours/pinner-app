@@ -133,7 +133,7 @@ export default ({ navigation }) => {
                 </UserContainer>
               </Item>
             )}
-          {recommendLocationData.recommendLocations.cities &&
+          {recommendLocationData.recommendLocations &&
             recommendLocationData.recommendLocations.cities.length !== 0 && (
               <Item>
                 <Title>RECOMMEND LOCATIONS</Title>

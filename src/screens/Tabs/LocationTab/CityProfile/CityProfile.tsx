@@ -161,7 +161,6 @@ export default ({ navigation }) => {
             cityId={profileData.cityProfile.city.cityId}
             likeCount={profileData.cityProfile.city.likeCount}
           />
-          {console.log(nearCitiesData)}
           {nearCitiesData.nearCities &&
             nearCitiesData.nearCities.cities.length !== 0 && (
               <Item>
@@ -288,17 +287,7 @@ export default ({ navigation }) => {
                         <UserColumn key={index}>
                           <Touchable
                             onPress={() =>
-                              navigation.navigate("UserProfile", {
-                                username: user.actor.profile.username
-                              })
-                            }
-                          >
-                            {console.log(user.actor.profile.username)}
-                            <UserRow user={user.actor.profile} type={"user"} />
-                          </Touchable>
-                          <Touchable
-                            onPress={() =>
-                              navigation.navigate("UserProfile", {
+                              navigation.navigate("UserProfileTabs", {
                                 username: user.actor.profile.username
                               })
                             }
@@ -307,7 +296,16 @@ export default ({ navigation }) => {
                           </Touchable>
                           <Touchable
                             onPress={() =>
-                              navigation.navigate("UserProfile", {
+                              navigation.navigate("UserProfileTabs", {
+                                username: user.actor.profile.username
+                              })
+                            }
+                          >
+                            <UserRow user={user.actor.profile} type={"user"} />
+                          </Touchable>
+                          <Touchable
+                            onPress={() =>
+                              navigation.navigate("UserProfileTabs", {
                                 username: user.actor.profile.username
                               })
                             }
@@ -334,7 +332,6 @@ export default ({ navigation }) => {
                       })
                     }
                   >
-                    {console.log(user.username)}
                     <UserRow user={user} type={"user"} />
                   </Touchable>
                 ))}

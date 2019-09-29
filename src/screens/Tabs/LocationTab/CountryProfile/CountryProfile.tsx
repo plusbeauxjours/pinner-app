@@ -48,9 +48,9 @@ export default ({ navigation }) => {
   const [countryCode, setCountryCode] = useState<string>(
     navigation.getParam("countryCode") || location.currentCountryCode
   );
-  // console.log("navigation", navigation.getParam("countryCode"));
-  // console.log("state", countryCode);
-  // console.log("location", location.currentCountryCode);
+  console.log("navigation", navigation.getParam("countryCode"));
+  console.log("state", countryCode);
+  console.log("location", location.currentCountryCode);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [payload, setPayload] = useState<string>();
   const [slackReportLocationsFn] = useMutation<
@@ -68,7 +68,7 @@ export default ({ navigation }) => {
     loading: profileLoading,
     refetch: profileRefetch
   } = useQuery<CountryProfile, CountryProfileVariables>(COUNTRY_PROFILE, {
-    variables: { countryCode }
+    variables: { countryCode: "HU" }
   });
   const {
     data: countriesData,
@@ -88,110 +88,120 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
+  console.log(profileData);
   useEffect(() => {
     setCountryCode(
       navigation.getParam("countryCode") || location.currentCountryCode
     );
   });
-  return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      {profileLoading || countriesLoading ? (
-        <Loader />
-      ) : (
-        <Container>
-          <Bold>Country Profile</Bold>
-          {profileData.countryProfile.country && (
-            <>
-              <Text>
-                cityName:{profileData.countryProfile.country.countryName}
-                {profileData.countryProfile.country.countryEmoji}
-              </Text>
-              <Text>
-                cityPhoto:{profileData.countryProfile.country.countryPhoto}
-              </Text>
-              {profileData.countryProfile.country.totalLikeCount !== 0 ? (
+
+  if (profileLoading || countriesLoading) {
+    return <Loader />;
+  } else {
+    const { countryProfile: { country = null } = {} } = profileData;
+    if (country) {
+      return (
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          <Container>
+            <Bold>Country Profile</Bold>
+            {console.log(profileData)}
+            {profileData.countryProfile.country && (
+              <>
                 <Text>
-                  {profileData.countryProfile.country.totalLikeCount}
-                  {profileData.countryProfile.country.totalLikeCount === 1
-                    ? " like"
-                    : " likes"}
+                  countryName:{profileData.countryProfile.country.countryName}
+                  {profileData.countryProfile.country.countryEmoji}
                 </Text>
-              ) : null}
-              {profileData.countryProfile.country.cityCount !== 0 ? (
                 <Text>
-                  {profileData.countryProfile.country.cityCount}
-                  {profileData.countryProfile.country.cityCount === 1
-                    ? " city"
-                    : " cities"}
+                  countryPhoto:{profileData.countryProfile.country.countryPhoto}
                 </Text>
-              ) : null}
-              {profileData.countryProfile.count !== 0 ? (
-                <Text>
-                  You've been {profileData.countryProfile.country.countryName}{" "}
-                  {profileData.countryProfile.count}
-                  {profileData.countryProfile.count === 1 ? " time" : " times"}
-                </Text>
-              ) : null}
-            </>
-          )}
-          {countriesData.getCountries.countries &&
-            countriesData.getCountries.countries.length !== 0 && (
-              <Item>
-                <Title>
-                  {profileData.countryProfile.country.continent.continentName}
-                </Title>
-                <UserContainer>
-                  <Swiper
-                    style={{ height: 135 }}
-                    paginationStyle={{ bottom: -15 }}
-                  >
-                    {countriesData.getCountries.countries.map(
-                      (country, index) => {
-                        return (
-                          <UserColumn key={index}>
-                            <Touchable
-                              onPress={() =>
-                                navigation.navigate("CountryProfileTabs", {
-                                  countryCode: country.countryCode,
-                                  continentCode: country.continent.continentCode
-                                })
-                              }
-                            >
-                              <UserRow country={country} type={"country"} />
-                            </Touchable>
-                            <Touchable
-                              onPress={() =>
-                                navigation.navigate("CountryProfileTabs", {
-                                  countryCode: country.countryCode,
-                                  continentCode: country.continent.continentCode
-                                })
-                              }
-                            >
-                              <UserRow country={country} type={"country"} />
-                            </Touchable>
-                            <Touchable
-                              onPress={() =>
-                                navigation.navigate("CountryProfileTabs", {
-                                  countryCode: country.countryCode,
-                                  continentCode: country.continent.continentCode
-                                })
-                              }
-                            >
-                              <UserRow country={country} type={"country"} />
-                            </Touchable>
-                          </UserColumn>
-                        );
-                      }
-                    )}
-                  </Swiper>
-                </UserContainer>
-              </Item>
+                {profileData.countryProfile.country.totalLikeCount !== 0 ? (
+                  <Text>
+                    {profileData.countryProfile.country.totalLikeCount}
+                    {profileData.countryProfile.country.totalLikeCount === 1
+                      ? " like"
+                      : " likes"}
+                  </Text>
+                ) : null}
+                {profileData.countryProfile.country.cityCount !== 0 ? (
+                  <Text>
+                    {profileData.countryProfile.country.cityCount}
+                    {profileData.countryProfile.country.cityCount === 1
+                      ? " city"
+                      : " cities"}
+                  </Text>
+                ) : null}
+                {profileData.countryProfile.count !== 0 ? (
+                  <Text>
+                    You've been {profileData.countryProfile.country.countryName}{" "}
+                    {profileData.countryProfile.count}
+                    {profileData.countryProfile.count === 1
+                      ? " time"
+                      : " times"}
+                  </Text>
+                ) : null}
+              </>
             )}
-          {/* {profileData.countryProfile.cities &&
+            {countriesData.getCountries.countries &&
+              countriesData.getCountries.countries.length !== 0 && (
+                <Item>
+                  <Title>
+                    {profileData.countryProfile.country.continent.continentName}
+                  </Title>
+                  <UserContainer>
+                    <Swiper
+                      style={{ height: 135 }}
+                      paginationStyle={{ bottom: -15 }}
+                    >
+                      {countriesData.getCountries.countries.map(
+                        (country, index) => {
+                          return (
+                            <UserColumn key={index}>
+                              <Touchable
+                                onPress={() =>
+                                  navigation.navigate("CountryProfileTabs", {
+                                    countryCode: country.countryCode,
+                                    continentCode:
+                                      country.continent.continentCode
+                                  })
+                                }
+                              >
+                                <UserRow country={country} type={"country"} />
+                              </Touchable>
+                              <Touchable
+                                onPress={() =>
+                                  navigation.navigate("CountryProfileTabs", {
+                                    countryCode: country.countryCode,
+                                    continentCode:
+                                      country.continent.continentCode
+                                  })
+                                }
+                              >
+                                <UserRow country={country} type={"country"} />
+                              </Touchable>
+                              <Touchable
+                                onPress={() =>
+                                  navigation.navigate("CountryProfileTabs", {
+                                    countryCode: country.countryCode,
+                                    continentCode:
+                                      country.continent.continentCode
+                                  })
+                                }
+                              >
+                                <UserRow country={country} type={"country"} />
+                              </Touchable>
+                            </UserColumn>
+                          );
+                        }
+                      )}
+                    </Swiper>
+                  </UserContainer>
+                </Item>
+              )}
+            {/* {profileData.countryProfile.cities &&
             profileData.countryProfile.cities.length !== 0 && (
               <Item>
                 <Title>
@@ -215,8 +225,11 @@ export default ({ navigation }) => {
                 ))}
               </Item>
             )} */}
-        </Container>
-      )}
-    </ScrollView>
-  );
+          </Container>
+        </ScrollView>
+      );
+    } else {
+      return null;
+    }
+  }
 };

@@ -94,7 +94,7 @@ export default ({ navigation }) => {
       endDate: date.endDate
     }
   });
-  console.log("navigation from userprofile", navigation);
+  // console.log("navigation from userprofile", navigation);
   const [editTripFn] = useMutation<EditTrip, EditTripVariables>(EDIT_TRIP, {
     variables: {
       moveNotificationId: parseInt(moveNotificationId, 10),
@@ -133,11 +133,14 @@ export default ({ navigation }) => {
     }
   };
   useEffect(() => {
-    console.log("navigation", navigation.getParam("username"));
-    console.log("state", username);
-    console.log("location", me.user.username);
+    console.log(
+      "UserProfile ======= navigation",
+      navigation.getParam("username")
+    );
+    console.log("UserProfile ======= state", username);
+    console.log("UserProfile ======= location", me.user.username);
     setUsername(navigation.getParam("username") || me.user.username);
-  }, [navigation.state.params]);
+  });
   return (
     <ScrollView
       refreshControl={

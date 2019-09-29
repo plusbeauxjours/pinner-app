@@ -46,7 +46,8 @@ export default ({ navigation }) => {
   const location = useLocation();
   const [continentCode, setContinentCode] = useState<string>(
     navigation.getParam("continentCode") ||
-      countries.find(i => i.code === location.currentCountryCode).continent
+      // countries.find(i => i.code === location.currentCountryCode).continent
+      countries.find(i => i.code === "HU").continent
   );
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [payload, setPayload] = useState<string>();
@@ -80,7 +81,8 @@ export default ({ navigation }) => {
   useEffect(() => {
     setContinentCode(
       navigation.getParam("continentCode") ||
-        countries.find(i => i.code === location.currentCountryCode).continent
+        // countries.find(i => i.code === location.currentCountryCode).continent
+        countries.find(i => i.code === "HU").continent
     );
   }, [navigation]);
   if (profileLoading) {
@@ -175,7 +177,17 @@ export default ({ navigation }) => {
                 {profileData.continentProfile &&
                   profileData.continentProfile.countries.map(
                     (country, index) => (
-                      <UserRow key={index} country={country} type={"country"} />
+                      <Touchable
+                        key={index}
+                        onPress={() =>
+                          navigation.navigate("CountryProfileTabs", {
+                            countryCode: country.countryCode,
+                            continentCode: country.continent.continentCode
+                          })
+                        }
+                      >
+                        <UserRow country={country} type={"country"} />
+                      </Touchable>
                     )
                   )}
               </Item>

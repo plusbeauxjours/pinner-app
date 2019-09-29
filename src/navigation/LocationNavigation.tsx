@@ -10,8 +10,9 @@ import Coffees from "../screens/Tabs/UserProfileTab/Coffees";
 import UserProfile from "../screens/Tabs/UserProfileTab/UserProfile";
 import EditProfile from "../screens/Tabs/UserProfileTab/EditProfile";
 import AvatarList from "../screens/Tabs/UserProfileTab/AvatarList";
+import { createAppContainer } from "react-navigation";
 
-const UserProfileTabs = createMaterialTopTabNavigator(
+export const UserProfileTabs = createMaterialTopTabNavigator(
   {
     UserProfile: {
       screen: UserProfile,
@@ -45,7 +46,7 @@ const UserProfileTabs = createMaterialTopTabNavigator(
   }
 );
 
-const CountryProfileTabs = createMaterialTopTabNavigator(
+export const CountryProfileTabs = createMaterialTopTabNavigator(
   {
     CountryProfile: {
       screen: CountryProfile,
@@ -79,7 +80,7 @@ const CountryProfileTabs = createMaterialTopTabNavigator(
   }
 );
 
-const CityProfileTabs = createMaterialTopTabNavigator(
+export const CityProfileTabs = createMaterialTopTabNavigator(
   {
     CityProfile: {
       screen: CityProfile,
@@ -120,7 +121,7 @@ const CityProfileTabs = createMaterialTopTabNavigator(
   }
 );
 
-export default createStackNavigator(
+const LocationNavigation = createStackNavigator(
   {
     CityProfileTabs,
     ContinentProfile,
@@ -138,3 +139,5 @@ export default createStackNavigator(
     }
   }
 );
+
+export default createAppContainer(LocationNavigation);

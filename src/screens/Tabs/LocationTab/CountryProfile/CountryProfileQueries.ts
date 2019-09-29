@@ -11,19 +11,19 @@ export const COUNTRY_PROFILE = gql`
       count
       hasNextPage
       country {
-        latitude
-        longitude
+        # latitude
+        # longitude
         countryName
-        countryCode
-        countryPhoto
-        countryCapital
-        countryCurrency
-        countryEmoji
-        totalLikeCount
-        cityCount
-        continent {
-          ...ContinentParts
-        }
+        # countryCode
+        # countryPhoto
+        # countryCapital
+        # countryCurrency
+        # countryEmoji
+        # totalLikeCount
+        # cityCount
+        # continent {
+        #   ...ContinentParts
+        # }
       }
       # cities {
       #   ...CityParts
