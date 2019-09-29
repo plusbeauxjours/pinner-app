@@ -68,9 +68,9 @@ export default ({ navigation }) => {
       payload
     }
   });
-  console.log("navigation", navigation.getParam("cityId"));
-  console.log("state", cityId);
-  console.log("location", location.currentCityId);
+  // console.log("navigation", navigation.getParam("cityId"));
+  // console.log("state", cityId);
+  // console.log("location", location.currentCityId);
   const {
     data: profileData,
     loading: profileLoading,
@@ -176,7 +176,7 @@ export default ({ navigation }) => {
                         <UserColumn key={index}>
                           <Touchable
                             onPress={() =>
-                              navigation.navigate("CityProfile", {
+                              navigation.navigate("CityProfileTabs", {
                                 cityId: city.cityId,
                                 countryCode: city.country.countryCode,
                                 continentCode:
@@ -188,7 +188,7 @@ export default ({ navigation }) => {
                           </Touchable>
                           <Touchable
                             onPress={() =>
-                              navigation.navigate("CityProfile", {
+                              navigation.navigate("CityProfileTabs", {
                                 cityId: city.cityId,
                                 countryCode: city.country.countryCode,
                                 continentCode:
@@ -200,7 +200,7 @@ export default ({ navigation }) => {
                           </Touchable>
                           <Touchable
                             onPress={() =>
-                              navigation.navigate("CityProfile", {
+                              navigation.navigate("CityProfileTabs", {
                                 cityId: city.cityId,
                                 countryCode: city.country.countryCode,
                                 continentCode:
@@ -217,7 +217,7 @@ export default ({ navigation }) => {
                 </UserContainer>
               </Item>
             )}
-          {samenameCitiesData.getSamenameCities &&
+          {samenameCitiesData.getSamenameCities.cities &&
             samenameCitiesData.getSamenameCities.cities.length !== 0 && (
               <Item>
                 <Title>SAMENAME CITIES</Title>
@@ -232,7 +232,7 @@ export default ({ navigation }) => {
                           <UserColumn key={index}>
                             <Touchable
                               onPress={() =>
-                                navigation.navigate("CityProfile ", {
+                                navigation.navigate("CityProfileTabs ", {
                                   cityId: city.cityId,
                                   countryCode: city.country.countryCode,
                                   continentCode:
@@ -244,7 +244,7 @@ export default ({ navigation }) => {
                             </Touchable>
                             <Touchable
                               onPress={() =>
-                                navigation.navigate("CityProfile ", {
+                                navigation.navigate("CityProfileTabs ", {
                                   cityId: city.cityId,
                                   countryCode: city.country.countryCode,
                                   continentCode:
@@ -256,7 +256,7 @@ export default ({ navigation }) => {
                             </Touchable>
                             <Touchable
                               onPress={() =>
-                                navigation.navigate("CityProfile ", {
+                                navigation.navigate("CityProfileTabs ", {
                                   cityId: city.cityId,
                                   countryCode: city.country.countryCode,
                                   continentCode:
@@ -274,7 +274,7 @@ export default ({ navigation }) => {
                 </UserContainer>
               </Item>
             )}
-          {profileData.cityProfile &&
+          {profileData.cityProfile.usersBefore &&
             profileData.cityProfile.usersBefore.length !== 0 && (
               <Item>
                 <Title>USERS BEFORE</Title>
@@ -293,6 +293,7 @@ export default ({ navigation }) => {
                               })
                             }
                           >
+                            {console.log(user.actor.profile.username)}
                             <UserRow user={user.actor.profile} type={"user"} />
                           </Touchable>
                           <Touchable
@@ -320,7 +321,7 @@ export default ({ navigation }) => {
                 </UserContainer>
               </Item>
             )}
-          {profileData.cityProfile &&
+          {profileData.cityProfile.usersNow &&
             profileData.cityProfile.usersNow.length !== 0 && (
               <Item>
                 <Title>USERS NOW</Title>
@@ -328,11 +329,12 @@ export default ({ navigation }) => {
                   <Touchable
                     key={index}
                     onPress={() =>
-                      navigation.navigate("UserProfile", {
+                      navigation.navigate("UserProfileTabs", {
                         username: user.username
                       })
                     }
                   >
+                    {console.log(user.username)}
                     <UserRow user={user} type={"user"} />
                   </Touchable>
                 ))}

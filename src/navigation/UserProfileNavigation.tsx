@@ -123,6 +123,7 @@ const CityProfileTabs = createMaterialTopTabNavigator(
 export default createStackNavigator(
   {
     UserProfileTabs,
+    ContinentProfile,
     CountryProfileTabs,
     CityProfileTabs,
     EditProfile,

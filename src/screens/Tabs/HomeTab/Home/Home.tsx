@@ -40,7 +40,7 @@ export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
   const [refreshing, setRefreshing] = useState(false);
-  const [cityId, setCityId] = useState("");
+  const [cityId, setCityId] = useState(location.currentCityId);
   const {
     data: recommendUserData,
     loading: recommendUserLoading,
@@ -58,7 +58,7 @@ export default ({ navigation }) => {
     loading: coffeeLoading,
     refetch: coffeeRefetch
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
-    variables: { location: "city", cityId: "ChIJuQhD6D7sfDURB6J0Dx5TGW8" }
+    variables: { location: "city", cityId }
   });
   useEffect(() => {
     setCityId(location.currentCityId);
@@ -85,7 +85,7 @@ export default ({ navigation }) => {
         <Loader />
       ) : (
         <Container>
-          {recommendUserData.recommendUsers &&
+          {recommendUserData.recommendUsers.users &&
             recommendUserData.recommendUsers.users.length !== 0 && (
               <Item>
                 <Title>RECOMMEND USERS</Title>
@@ -133,7 +133,7 @@ export default ({ navigation }) => {
                 </UserContainer>
               </Item>
             )}
-          {recommendLocationData.recommendLocations &&
+          {recommendLocationData.recommendLocations.cities &&
             recommendLocationData.recommendLocations.cities.length !== 0 && (
               <Item>
                 <Title>RECOMMEND LOCATIONS</Title>
@@ -188,21 +188,26 @@ export default ({ navigation }) => {
                 </UserContainer>
               </Item>
             )}
-          {coffeeData.getCoffees && coffeeData.getCoffees.coffees.length !== 0 && (
-            <Item>
-              <Title>NEED SOME COFFEE NOW</Title>
-              <UserContainer>
-                <Swiper
-                  style={{ height: 135 }}
-                  paginationStyle={{ bottom: -15 }}
-                >
-                  {coffeeData.getCoffees.coffees.map(coffee => (
-                    <UserRow key={coffee.id} coffee={coffee} type={"coffee"} />
-                  ))}
-                </Swiper>
-              </UserContainer>
-            </Item>
-          )}
+          {coffeeData.getCoffees.coffees &&
+            coffeeData.getCoffees.coffees.length !== 0 && (
+              <Item>
+                <Title>NEED SOME COFFEE NOW</Title>
+                <UserContainer>
+                  <Swiper
+                    style={{ height: 135 }}
+                    paginationStyle={{ bottom: -15 }}
+                  >
+                    {coffeeData.getCoffees.coffees.map(coffee => (
+                      <UserRow
+                        key={coffee.id}
+                        coffee={coffee}
+                        type={"coffee"}
+                      />
+                    ))}
+                  </Swiper>
+                </UserContainer>
+              </Item>
+            )}
         </Container>
       )}
     </ScrollView>

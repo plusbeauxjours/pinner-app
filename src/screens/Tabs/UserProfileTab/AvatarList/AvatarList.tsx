@@ -43,6 +43,7 @@ const Touchable = styled.View`
 export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
+  console.log("avatar list, ", navigation.getParam("username"));
   const [username, setUsername] = useState<string>(
     navigation.getParam("username") || me.user.username
   );
@@ -80,8 +81,11 @@ export default ({ navigation }) => {
     }
   };
   useEffect(() => {
+    console.log("navigation", navigation.getParam("username"));
+    console.log("state", username);
+    console.log("location", me.user.username);
     setUsername(navigation.getParam("username") || me.user.username);
-  }, [navigation]);
+  }, [navigation.state.params]);
   return (
     <ScrollView
       refreshControl={

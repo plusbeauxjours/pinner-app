@@ -59,7 +59,8 @@ export default ({ navigation }) => {
       ) : (
         <View>
           <Bold>COFFEES</Bold>
-          {data.getCoffees.coffees.length !== 0 &&
+          {data.getCoffees.coffees &&
+            data.getCoffees.coffees.length !== 0 &&
             data.getCoffees.coffees.map((coffee, index) => (
               <UserRow key={index} coffee={coffee} type={"userProfileCoffee"} />
             ))}

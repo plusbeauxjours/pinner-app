@@ -54,7 +54,8 @@ export default ({ navigation }) => {
       ) : (
         <View>
           <Bold>COUNTRIES</Bold>
-          {data.topCountries.countries.length !== 0 &&
+          {data.topCountries.countries &&
+            data.topCountries.countries.length !== 0 &&
             data.topCountries.countries.map((country, index) => (
               <Touchable
                 key={index}

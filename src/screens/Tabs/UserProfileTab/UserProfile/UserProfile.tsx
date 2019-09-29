@@ -78,14 +78,14 @@ export default ({ navigation }) => {
     loading: profileLoading,
     refetch: profileRefetch
   } = useQuery<UserProfile, UserProfileVariables>(GET_USER, {
-    variables: { username }
+    variables: { username: navigation.getParam("username") || me.user.username }
   });
   const {
     data: tripData,
     loading: tripLoading,
     refetch: tripRefetch
   } = useQuery<GetTrips, GetTripsVariables>(GET_TRIPS, {
-    variables: { username }
+    variables: { username: navigation.getParam("username") || me.user.username }
   });
   const [addTripFn] = useMutation<AddTrip, AddTripVariables>(ADD_TRIP, {
     variables: {
@@ -94,6 +94,7 @@ export default ({ navigation }) => {
       endDate: date.endDate
     }
   });
+  console.log("navigation from userprofile", navigation);
   const [editTripFn] = useMutation<EditTrip, EditTripVariables>(EDIT_TRIP, {
     variables: {
       moveNotificationId: parseInt(moveNotificationId, 10),
@@ -119,6 +120,7 @@ export default ({ navigation }) => {
   >(SLACK_REPORT_USERS, {
     variables: { targetUsername: username, payload }
   });
+
   const onRefresh = async () => {
     try {
       setRefreshing(true);
@@ -131,8 +133,11 @@ export default ({ navigation }) => {
     }
   };
   useEffect(() => {
+    console.log("navigation", navigation.getParam("username"));
+    console.log("state", username);
+    console.log("location", me.user.username);
     setUsername(navigation.getParam("username") || me.user.username);
-  }, [navigation]);
+  }, [navigation.state.params]);
   return (
     <ScrollView
       refreshControl={

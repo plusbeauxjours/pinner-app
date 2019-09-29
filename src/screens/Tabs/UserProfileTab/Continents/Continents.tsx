@@ -56,16 +56,18 @@ export default ({ navigation }) => {
       ) : (
         <View>
           <Bold>CONTINENTS</Bold>
-          {data.topContinents.continents.length !== 0 &&
+          {data.topContinents.continents &&
+            data.topContinents.continents.length !== 0 &&
             data.topContinents.continents.map((continent, index) => (
               <Touchable
-                onPress={() => navigation.navigate("ContinentProfile")}
+                key={index}
+                onPress={() =>
+                  navigation.navigate("ContinentProfile", {
+                    continentCode: continent.continentCode
+                  })
+                }
               >
-                <UserRow
-                  key={index}
-                  continent={continent}
-                  type={"userProfileContinent"}
-                />
+                <UserRow continent={continent} type={"userProfileContinent"} />
               </Touchable>
             ))}
         </View>

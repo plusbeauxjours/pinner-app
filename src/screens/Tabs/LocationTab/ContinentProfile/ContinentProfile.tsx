@@ -39,6 +39,7 @@ const Title = styled.Text`
   padding-left: 15px;
   margin-bottom: 5px;
 `;
+const Touchable = styled.TouchableOpacity``;
 
 export default ({ navigation }) => {
   const me = useMe();
@@ -105,7 +106,7 @@ export default ({ navigation }) => {
               </Text>
             </>
           )}
-          {profileData.continentProfile &&
+          {profileData.continentProfile.countries &&
             profileData.continentProfile.countries.length !== 0 && (
               <Item>
                 <Title>CONTINENTS</Title>
@@ -118,9 +119,42 @@ export default ({ navigation }) => {
                       (continent, index) => {
                         return (
                           <UserColumn key={index}>
-                            <UserRow continent={continent} type={"continent"} />
-                            <UserRow continent={continent} type={"continent"} />
-                            <UserRow continent={continent} type={"continent"} />
+                            <Touchable
+                              onPress={() =>
+                                navigation.navigate("ContinentProfile", {
+                                  continentCode: continent.continentCode
+                                })
+                              }
+                            >
+                              <UserRow
+                                continent={continent}
+                                type={"continent"}
+                              />
+                            </Touchable>
+                            <Touchable
+                              onPress={() =>
+                                navigation.navigate("ContinentProfile", {
+                                  continentCode: continent.continentCode
+                                })
+                              }
+                            >
+                              <UserRow
+                                continent={continent}
+                                type={"continent"}
+                              />
+                            </Touchable>
+                            <Touchable
+                              onPress={() =>
+                                navigation.navigate("ContinentProfile", {
+                                  continentCode: continent.continentCode
+                                })
+                              }
+                            >
+                              <UserRow
+                                continent={continent}
+                                type={"continent"}
+                              />
+                            </Touchable>
                           </UserColumn>
                         );
                       }
@@ -129,7 +163,7 @@ export default ({ navigation }) => {
                 </UserContainer>
               </Item>
             )}
-          {profileData.continentProfile &&
+          {profileData.continentProfile.countries &&
             profileData.continentProfile.countries.length !== 0 && (
               <Item>
                 <Title>

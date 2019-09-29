@@ -20,6 +20,7 @@ const Bold = styled.Text`
 `;
 
 const Text = styled.Text``;
+const Touchable = styled.TouchableOpacity``;
 
 export default ({ navigation }) => {
   const me = useMe();
@@ -56,10 +57,20 @@ export default ({ navigation }) => {
       ) : (
         <View>
           <Bold>CITIES</Bold>
-          {data.frequentVisits &&
+          {data.frequentVisits.cities &&
             data.frequentVisits.cities.length !== 0 &&
             data.frequentVisits.cities.map((city, index) => (
-              <UserRow key={index} city={city} type={"userProfileCity"} />
+              <Touchable
+                key={index}
+                onPress={() =>
+                  navigation.navigate("CountryProfileTabs", {
+                    countryCode: city.country.countryCode,
+                    continentCode: city.country.continent.continentCode
+                  })
+                }
+              >
+                <UserRow key={index} city={city} type={"userProfileCity"} />
+              </Touchable>
             ))}
         </View>
       )}
