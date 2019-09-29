@@ -59,8 +59,9 @@ export default ({ navigation }) => {
               <Touchable
                 key={index}
                 onPress={() =>
-                  navigation.navigate("CountryProfile", {
-                    countryCode: country.countryCode
+                  navigation.navigate("CountryProfileTabs", {
+                    countryCode: country.countryCode,
+                    continentCode: country.continent.continentCode
                   })
                 }
               >

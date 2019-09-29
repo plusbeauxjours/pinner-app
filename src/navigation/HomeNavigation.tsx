@@ -48,7 +48,7 @@ const UserProfileTabs = createMaterialTopTabNavigator(
   }
 );
 
-const LocationProfileTabs = createMaterialTopTabNavigator(
+const CityProfileTabs = createMaterialTopTabNavigator(
   {
     CityProfile: {
       screen: CityProfile,
@@ -133,7 +133,7 @@ const HomeTabs = createMaterialTopTabNavigator(
 export default createStackNavigator(
   {
     HomeTabs,
-    LocationProfileTabs,
+    CityProfileTabs,
     UserProfileTabs,
     EditProfile,
     Cities,

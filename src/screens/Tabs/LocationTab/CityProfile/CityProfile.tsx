@@ -56,7 +56,6 @@ export default ({ navigation }) => {
   const [cityId, setCityId] = useState<string>(
     navigation.getParam("cityId") || location.currentCityId
   );
-  console.log(cityId);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [payload, setPayload] = useState<string>();
   const [slackReportLocationsFn] = useMutation<
@@ -69,6 +68,9 @@ export default ({ navigation }) => {
       payload
     }
   });
+  console.log("navigation", navigation.getParam("cityId"));
+  console.log("state", cityId);
+  console.log("location", location.currentCityId);
   const {
     data: profileData,
     loading: profileLoading,
@@ -105,7 +107,6 @@ export default ({ navigation }) => {
     }
   };
   useEffect(() => {
-    console.log("effect is workign ");
     setCityId(navigation.getParam("cityId") || location.currentCityId);
   }, [navigation]);
   if (profileLoading || nearCitiesLoading || samenameCitiesLoading) {
@@ -160,6 +161,7 @@ export default ({ navigation }) => {
             cityId={profileData.cityProfile.city.cityId}
             likeCount={profileData.cityProfile.city.likeCount}
           />
+          {console.log(nearCitiesData)}
           {nearCitiesData.nearCities &&
             nearCitiesData.nearCities.cities.length !== 0 && (
               <Item>
@@ -175,7 +177,10 @@ export default ({ navigation }) => {
                           <Touchable
                             onPress={() =>
                               navigation.navigate("CityProfile", {
-                                cityId: city.cityId
+                                cityId: city.cityId,
+                                countryCode: city.country.countryCode,
+                                continentCode:
+                                  city.country.continent.continentCode
                               })
                             }
                           >
@@ -184,7 +189,10 @@ export default ({ navigation }) => {
                           <Touchable
                             onPress={() =>
                               navigation.navigate("CityProfile", {
-                                cityId: city.cityId
+                                cityId: city.cityId,
+                                countryCode: city.country.countryCode,
+                                continentCode:
+                                  city.country.continent.continentCode
                               })
                             }
                           >
@@ -193,7 +201,10 @@ export default ({ navigation }) => {
                           <Touchable
                             onPress={() =>
                               navigation.navigate("CityProfile", {
-                                cityId: city.cityId
+                                cityId: city.cityId,
+                                countryCode: city.country.countryCode,
+                                continentCode:
+                                  city.country.continent.continentCode
                               })
                             }
                           >
@@ -222,7 +233,10 @@ export default ({ navigation }) => {
                             <Touchable
                               onPress={() =>
                                 navigation.navigate("CityProfile ", {
-                                  cityId: city.cityId
+                                  cityId: city.cityId,
+                                  countryCode: city.country.countryCode,
+                                  continentCode:
+                                    city.country.continent.continentCode
                                 })
                               }
                             >
@@ -231,7 +245,10 @@ export default ({ navigation }) => {
                             <Touchable
                               onPress={() =>
                                 navigation.navigate("CityProfile ", {
-                                  cityId: city.cityId
+                                  cityId: city.cityId,
+                                  countryCode: city.country.countryCode,
+                                  continentCode:
+                                    city.country.continent.continentCode
                                 })
                               }
                             >
@@ -240,7 +257,10 @@ export default ({ navigation }) => {
                             <Touchable
                               onPress={() =>
                                 navigation.navigate("CityProfile ", {
-                                  cityId: city.cityId
+                                  cityId: city.cityId,
+                                  countryCode: city.country.countryCode,
+                                  continentCode:
+                                    city.country.continent.continentCode
                                 })
                               }
                             >

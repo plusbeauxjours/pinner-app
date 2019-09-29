@@ -147,8 +147,11 @@ export default ({ navigation }) => {
                         <UserColumn key={index}>
                           <Touchable
                             onPress={() =>
-                              navigation.navigate("CityProfile", {
-                                cityId: city.cityId
+                              navigation.navigate("CityProfileTabs", {
+                                cityId: city.cityId,
+                                countryCode: city.country.countryCode,
+                                continentCode:
+                                  city.country.continent.continentCode
                               })
                             }
                           >
@@ -156,8 +159,11 @@ export default ({ navigation }) => {
                           </Touchable>
                           <Touchable
                             onPress={() =>
-                              navigation.navigate("CityProfile", {
-                                cityId: city.cityId
+                              navigation.navigate("CityProfileTabs", {
+                                cityId: city.cityId,
+                                countryCode: city.country.countryCode,
+                                continentCode:
+                                  city.country.continent.continentCode
                               })
                             }
                           >
@@ -165,8 +171,11 @@ export default ({ navigation }) => {
                           </Touchable>
                           <Touchable
                             onPress={() =>
-                              navigation.navigate("CityProfile", {
-                                cityId: city.cityId
+                              navigation.navigate("CityProfileTabs", {
+                                cityId: city.cityId,
+                                countryCode: city.country.countryCode,
+                                continentCode:
+                                  city.country.continent.continentCode
                               })
                             }
                           >

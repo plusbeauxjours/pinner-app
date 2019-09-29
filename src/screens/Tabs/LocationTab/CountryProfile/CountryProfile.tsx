@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RefreshControl, ScrollView } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -6,18 +6,15 @@ import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
-
 import Swiper from "react-native-swiper";
-import {
-  SlackReportLocations,
-  SlackReportLocationsVariables
-} from "../../../../types/api";
 import { SLACK_REPORT_LOCATIONS } from "../../../../sharedQueries";
 import {
   CountryProfile,
   CountryProfileVariables,
   GetCountries,
-  GetCountriesVariables
+  GetCountriesVariables,
+  SlackReportLocations,
+  SlackReportLocationsVariables
 } from "../../../../types/api";
 import { COUNTRY_PROFILE, GET_COUNTRIES } from "./CountryProfileQueries";
 
@@ -44,12 +41,15 @@ const Title = styled.Text`
   margin-bottom: 5px;
 `;
 
-export default () => {
+export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
   const [countryCode, setCountryCode] = useState<string>(
-    location.currentCountryCode
+    navigation.getParam("countryCode") || location.currentCountryCode
   );
+  console.log("navigation", navigation.getParam("countryCode"));
+  console.log("state", countryCode);
+  console.log("location", location.currentCountryCode);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [payload, setPayload] = useState<string>();
   const [slackReportLocationsFn] = useMutation<
@@ -67,14 +67,14 @@ export default () => {
     loading: profileLoading,
     refetch: profileRefetch
   } = useQuery<CountryProfile, CountryProfileVariables>(COUNTRY_PROFILE, {
-    variables: { countryCode: "KR" }
+    variables: { countryCode }
   });
   const {
     data: countriesData,
     loading: countriesLoading,
     refetch: countriesRefetch
   } = useQuery<GetCountries, GetCountriesVariables>(GET_COUNTRIES, {
-    variables: { countryCode: "KR" }
+    variables: { countryCode }
   });
   const onRefresh = async () => {
     try {
@@ -87,23 +87,23 @@ export default () => {
       setRefreshing(false);
     }
   };
-  if (profileLoading || countriesLoading) {
-    return <Loader />;
-  } else if (
-    !profileLoading &&
-    !countriesLoading &&
-    profileData &&
-    countriesData
-  ) {
-    return (
-      <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
+  useEffect(() => {
+    setCountryCode(
+      navigation.getParam("countryCode") || location.currentCountryCode
+    );
+  }, [navigation]);
+  return (
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      {profileLoading || countriesLoading ? (
+        <Loader />
+      ) : (
         <Container>
           <Bold>Country Profile</Bold>
-          {profileData.countryProfile.country && (
+          {/* {profileData.countryProfile.country && (
             <>
               <Text>
                 cityName:{profileData.countryProfile.country.countryName}
@@ -162,25 +162,22 @@ export default () => {
                   </Swiper>
                 </UserContainer>
               </Item>
-            )}
-          {profileData.countryProfile &&
-            profileData.countryProfile.cities.length !== 0 && (
-              <Item>
-                <Title>
-                  {profileData.countryProfile.country.cityCount}
-                  {profileData.countryProfile.country.cityCount === 1
-                    ? " CITY"
-                    : " CITIES"}
-                </Title>
-                {profileData.countryProfile.cities.map((city, index) => (
-                  <UserRow key={index} city={city} type={"city"} />
-                ))}
-              </Item>
-            )}
+            )} */}
+          {/* {profileData.countryProfile.cities.length !== 0 && (
+            <Item>
+              <Title>
+                {profileData.countryProfile.country.cityCount}
+                {profileData.countryProfile.country.cityCount === 1
+                  ? " CITY"
+                  : " CITIES"}
+              </Title>
+              {profileData.countryProfile.cities.map((city, index) => (
+                <UserRow key={index} city={city} type={"city"} />
+              ))}
+            </Item>
+          )} */}
         </Container>
-      </ScrollView>
-    );
-  } else {
-    return null;
-  }
+      )}
+    </ScrollView>
+  );
 };

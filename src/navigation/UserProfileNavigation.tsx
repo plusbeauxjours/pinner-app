@@ -7,6 +7,9 @@ import Cities from "../screens/Tabs/UserProfileTab/Cities";
 import Countries from "../screens/Tabs/UserProfileTab/Countries";
 import Continents from "../screens/Tabs/UserProfileTab/Continents";
 import Coffees from "../screens/Tabs/UserProfileTab/Coffees";
+import CityProfile from "../screens/Tabs/LocationTab/CityProfile";
+import CountryProfile from "../screens/Tabs/LocationTab/CountryProfile";
+import ContinentProfile from "../screens/Tabs/LocationTab/ContinentProfile";
 
 const UserProfileTabs = createMaterialTopTabNavigator(
   {
@@ -42,9 +45,86 @@ const UserProfileTabs = createMaterialTopTabNavigator(
   }
 );
 
+const CountryProfileTabs = createMaterialTopTabNavigator(
+  {
+    CountryProfile: {
+      screen: CountryProfile,
+      navigationOptions: {
+        header: null,
+        mode: "modal"
+      }
+    },
+    ContinentProfile: {
+      screen: ContinentProfile,
+      navigationOptions: {
+        header: null,
+        mode: "modal"
+      }
+    }
+  },
+  {
+    animationEnabled: true,
+    swipeEnabled: true,
+    tabBarPosition: "bottom",
+    tabBarOptions: {
+      style: {
+        backgroundColor: "white"
+      },
+      activeTintColor: "#000",
+      inactiveTintColor: "#d1cece",
+      upperCaseLabel: false,
+      showLabel: false,
+      showIcon: false
+    }
+  }
+);
+
+const CityProfileTabs = createMaterialTopTabNavigator(
+  {
+    CityProfile: {
+      screen: CityProfile,
+      navigationOptions: {
+        header: null,
+        mode: "modal"
+      }
+    },
+    CountryProfile: {
+      screen: CountryProfile,
+      navigationOptions: {
+        header: null,
+        mode: "modal"
+      }
+    },
+    ContinentProfile: {
+      screen: ContinentProfile,
+      navigationOptions: {
+        header: null,
+        mode: "modal"
+      }
+    }
+  },
+  {
+    animationEnabled: true,
+    swipeEnabled: true,
+    tabBarPosition: "bottom",
+    tabBarOptions: {
+      style: {
+        backgroundColor: "white"
+      },
+      activeTintColor: "#000",
+      inactiveTintColor: "#d1cece",
+      upperCaseLabel: false,
+      showLabel: false,
+      showIcon: false
+    }
+  }
+);
+
 export default createStackNavigator(
   {
     UserProfileTabs,
+    CountryProfileTabs,
+    CityProfileTabs,
     EditProfile,
     Cities,
     Countries,

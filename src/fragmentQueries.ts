@@ -28,6 +28,11 @@ export const CITY_FRAGMENT = gql`
     distance
     country {
       countryName
+      countryCode
+      continent {
+        continentCode
+        continentName
+      }
     }
     likeCount
     isLiked

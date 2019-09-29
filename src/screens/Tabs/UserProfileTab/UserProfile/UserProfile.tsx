@@ -223,7 +223,18 @@ export default ({ navigation }) => {
           )}
           {tripData.getTrips &&
             tripData.getTrips.trip.map((i, index) => (
-              <UserRow key={index} trip={i} type={"trip"} />
+              <Touchable
+                key={index}
+                onPress={() =>
+                  navigation.navigate("CityProfileTabs", {
+                    cityId: i.city.cityId,
+                    countryCode: i.city.country.countryCode,
+                    continentCode: i.city.country.continent.continentCode
+                  })
+                }
+              >
+                <UserRow trip={i} type={"trip"} />
+              </Touchable>
             ))}
         </View>
       )}

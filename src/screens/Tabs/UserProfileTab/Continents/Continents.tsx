@@ -20,6 +20,7 @@ const Bold = styled.Text`
 `;
 
 const Text = styled.Text``;
+const Touchable = styled.TouchableOpacity``;
 
 export default ({ navigation }) => {
   const me = useMe();
@@ -57,11 +58,15 @@ export default ({ navigation }) => {
           <Bold>CONTINENTS</Bold>
           {data.topContinents.continents.length !== 0 &&
             data.topContinents.continents.map((continent, index) => (
-              <UserRow
-                key={index}
-                continent={continent}
-                type={"userProfileContinent"}
-              />
+              <Touchable
+                onPress={() => navigation.navigate("ContinentProfile")}
+              >
+                <UserRow
+                  key={index}
+                  continent={continent}
+                  type={"userProfileContinent"}
+                />
+              </Touchable>
             ))}
         </View>
       )}

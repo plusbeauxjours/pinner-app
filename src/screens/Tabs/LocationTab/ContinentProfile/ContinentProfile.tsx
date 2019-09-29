@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RefreshControl, ScrollView } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -15,6 +15,7 @@ import {
 } from "../../../../types/api";
 import { SLACK_REPORT_LOCATIONS } from "../../../../sharedQueries";
 import { CONTINENT_PROFILE } from "./ContinentProfileQueries";
+import { countries } from "../../../../../countryData";
 
 const Container = styled.View``;
 
@@ -39,10 +40,13 @@ const Title = styled.Text`
   margin-bottom: 5px;
 `;
 
-export default () => {
+export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
-  const [continentCode, setContinentCode] = useState<string>();
+  const [continentCode, setContinentCode] = useState<string>(
+    navigation.getParam("continentCode") ||
+      countries.find(i => i.code === location.currentCountryCode).continent
+  );
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [payload, setPayload] = useState<string>();
   const {
@@ -50,7 +54,7 @@ export default () => {
     loading: profileLoading,
     refetch: profileRefetch
   } = useQuery<ContinentProfile, ContinentProfileVariables>(CONTINENT_PROFILE, {
-    variables: { continentCode: "NA" }
+    variables: { continentCode }
   });
   const [slackReportLocationsFn] = useMutation<
     SlackReportLocations,
@@ -72,15 +76,21 @@ export default () => {
       setRefreshing(false);
     }
   };
-  return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      {profileLoading ? (
-        <Loader />
-      ) : (
+  useEffect(() => {
+    setContinentCode(
+      navigation.getParam("continentCode") ||
+        countries.find(i => i.code === location.currentCountryCode).continent
+    );
+  }, [navigation]);
+  if (profileLoading) {
+    return <Loader />;
+  } else if (!profileLoading && profileData.continentProfile) {
+    return (
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <Container>
           <Bold>Continent Profile</Bold>
           {profileData.continentProfile.continent && (
@@ -137,7 +147,9 @@ export default () => {
               </Item>
             )}
         </Container>
-      )}
-    </ScrollView>
-  );
+      </ScrollView>
+    );
+  } else {
+    return null;
+  }
 };

@@ -41,7 +41,6 @@ const Touchable = styled.View`
 `;
 
 export default ({ navigation }) => {
-  console.log(navigation);
   const me = useMe();
   const location = useLocation();
   const [username, setUsername] = useState<string>(

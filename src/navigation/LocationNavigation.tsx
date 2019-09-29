@@ -45,7 +45,41 @@ const UserProfileTabs = createMaterialTopTabNavigator(
   }
 );
 
-const LocationProfileTabs = createMaterialTopTabNavigator(
+const CountryProfileTabs = createMaterialTopTabNavigator(
+  {
+    CountryProfile: {
+      screen: CountryProfile,
+      navigationOptions: {
+        header: null,
+        mode: "modal"
+      }
+    },
+    ContinentProfile: {
+      screen: ContinentProfile,
+      navigationOptions: {
+        header: null,
+        mode: "modal"
+      }
+    }
+  },
+  {
+    animationEnabled: true,
+    swipeEnabled: true,
+    tabBarPosition: "bottom",
+    tabBarOptions: {
+      style: {
+        backgroundColor: "white"
+      },
+      activeTintColor: "#000",
+      inactiveTintColor: "#d1cece",
+      upperCaseLabel: false,
+      showLabel: false,
+      showIcon: false
+    }
+  }
+);
+
+const CityProfileTabs = createMaterialTopTabNavigator(
   {
     CityProfile: {
       screen: CityProfile,
@@ -88,7 +122,8 @@ const LocationProfileTabs = createMaterialTopTabNavigator(
 
 export default createStackNavigator(
   {
-    LocationProfileTabs,
+    CityProfileTabs,
+    CountryProfileTabs,
     UserProfileTabs,
     EditProfile,
     Cities,

@@ -76,6 +76,10 @@ export const GET_TRIPS = gql`
           country {
             countryName
             countryCode
+            continent {
+              continentCode
+              continentName
+            }
           }
         }
         startDate
@@ -106,6 +110,10 @@ export const ADD_TRIP = gql`
           country {
             countryName
             countryCode
+            continent {
+              continentCode
+              continentName
+            }
           }
         }
       }
@@ -137,6 +145,10 @@ export const EDIT_TRIP = gql`
           country {
             countryName
             countryCode
+            continent {
+              continentCode
+              continentName
+            }
           }
         }
         startDate
