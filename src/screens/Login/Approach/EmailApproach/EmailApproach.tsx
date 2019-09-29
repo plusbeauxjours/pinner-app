@@ -45,7 +45,7 @@ export default ({ navigation }) => {
       } = await emailSignInFn();
       if (startEmailVerification) {
         Alert.alert("Check your email");
-        navigation.navigate("EmailVerification");
+        navigation.replace("EmailVerification");
         return null;
       } else {
         Alert.alert("Can't log in now");

@@ -68,7 +68,7 @@ export default ({ navigation }) => {
     loading: profileLoading,
     refetch: profileRefetch
   } = useQuery<CountryProfile, CountryProfileVariables>(COUNTRY_PROFILE, {
-    variables: { countryCode: "HU" }
+    variables: { countryCode }
   });
   const {
     data: countriesData,
@@ -88,7 +88,6 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
-  console.log(profileData);
   useEffect(() => {
     setCountryCode(
       navigation.getParam("countryCode") || location.currentCountryCode
@@ -98,7 +97,9 @@ export default ({ navigation }) => {
   if (profileLoading || countriesLoading) {
     return <Loader />;
   } else {
+    console.log(profileData);
     const { countryProfile: { country = null } = {} } = profileData;
+    console.log(country);
     if (country) {
       return (
         <ScrollView
@@ -108,7 +109,6 @@ export default ({ navigation }) => {
         >
           <Container>
             <Bold>Country Profile</Bold>
-            {console.log(profileData)}
             {profileData.countryProfile.country && (
               <>
                 <Text>
@@ -162,7 +162,7 @@ export default ({ navigation }) => {
                             <UserColumn key={index}>
                               <Touchable
                                 onPress={() =>
-                                  navigation.navigate("CountryProfileTabs", {
+                                  navigation.push("CountryProfileTabs", {
                                     countryCode: country.countryCode,
                                     continentCode:
                                       country.continent.continentCode
@@ -173,7 +173,7 @@ export default ({ navigation }) => {
                               </Touchable>
                               <Touchable
                                 onPress={() =>
-                                  navigation.navigate("CountryProfileTabs", {
+                                  navigation.push("CountryProfileTabs", {
                                     countryCode: country.countryCode,
                                     continentCode:
                                       country.continent.continentCode
@@ -184,7 +184,7 @@ export default ({ navigation }) => {
                               </Touchable>
                               <Touchable
                                 onPress={() =>
-                                  navigation.navigate("CountryProfileTabs", {
+                                  navigation.push("CountryProfileTabs", {
                                     countryCode: country.countryCode,
                                     continentCode:
                                       country.continent.continentCode
@@ -213,7 +213,7 @@ export default ({ navigation }) => {
                 {profileData.countryProfile.cities.map((city, index) => (
                   <Touchable
                     onPress={() =>
-                      navigation.navigate("CityProfileTabs", {
+                      navigation.push("CityProfileTabs", {
                         cityId: city.cityId,
                         countryCode: city.country.countryCode,
                         continentCode: city.country.continent.continentCode

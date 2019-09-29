@@ -13,18 +13,11 @@ import PhotoLink from "../components/PhotoLink";
 import RequestCoffee from "../screens/Tabs/RequestCoffeeTab/RequestCoffee";
 import UserProfileNavigation from "./UserProfileNavigation";
 
-const stackFactory = (initialRoute, customConfig) =>
+const stackFactory = initialRoute =>
   createStackNavigator({
     InitialRoute: {
       screen: initialRoute,
-      navigationOptions: { ...customConfig }
-    }
-  });
-
-export default createBottomTabNavigator(
-  {
-    Home: {
-      screen: stackFactory(HomeNavigation, {
+      navigationOptions: {
         headerLeft: (
           <Search
             name={Platform.OS === "ios" ? "ios-search" : "md-search"}
@@ -32,7 +25,14 @@ export default createBottomTabNavigator(
           />
         ),
         headerRight: <PhotoLink />
-      }),
+      }
+    }
+  });
+
+export default createBottomTabNavigator(
+  {
+    Home: {
+      screen: stackFactory(HomeNavigation),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
           <NavIcon
@@ -43,15 +43,7 @@ export default createBottomTabNavigator(
       }
     },
     Location: {
-      screen: stackFactory(LocationNavigation, {
-        headerLeft: (
-          <Search
-            name={Platform.OS === "ios" ? "ios-search" : "md-search"}
-            size={36}
-          />
-        ),
-        headerRight: <PhotoLink />
-      }),
+      screen: stackFactory(LocationNavigation),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
           <NavIcon
@@ -62,15 +54,7 @@ export default createBottomTabNavigator(
       }
     },
     Add: {
-      screen: stackFactory(RequestCoffee, {
-        headerLeft: (
-          <Search
-            name={Platform.OS === "ios" ? "ios-search" : "md-search"}
-            size={36}
-          />
-        ),
-        headerRight: <PhotoLink />
-      }),
+      screen: stackFactory(RequestCoffee),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
           <NavIcon
@@ -102,15 +86,7 @@ export default createBottomTabNavigator(
     //   }
     // },
     Profile: {
-      screen: stackFactory(UserProfileNavigation, {
-        headerLeft: (
-          <Search
-            name={Platform.OS === "ios" ? "ios-search" : "md-search"}
-            size={36}
-          />
-        ),
-        headerRight: <PhotoLink />
-      }),
+      screen: stackFactory(UserProfileNavigation),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
           <NavIcon

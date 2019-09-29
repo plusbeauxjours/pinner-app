@@ -33,9 +33,9 @@ export default ({ navigation }) => {
       />
       <AuthButton
         text={"Create New Account"}
-        onPress={() => navigation.navigate("Signup")}
+        onPress={() => navigation.push("Signup")}
       />
-      <Touchable onPress={() => navigation.navigate("PhoneApproach")}>
+      <Touchable onPress={() => navigation.push("PhoneApproach")}>
         <LoginLink>
           <LoginLinkText>LOG IN WITH PHONE NUMBER</LoginLinkText>
         </LoginLink>

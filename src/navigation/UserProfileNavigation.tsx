@@ -121,7 +121,7 @@ export const CityProfileTabs = createMaterialTopTabNavigator(
   }
 );
 
-const UserProfileNavigation = createStackNavigator(
+export default createStackNavigator(
   {
     UserProfileTabs,
     ContinentProfile,
@@ -139,5 +139,3 @@ const UserProfileNavigation = createStackNavigator(
     }
   }
 );
-
-export default createAppContainer(UserProfileNavigation);

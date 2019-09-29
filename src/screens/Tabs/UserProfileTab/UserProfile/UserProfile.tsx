@@ -186,7 +186,7 @@ export default ({ navigation }) => {
             <Item>
               <Touchable
                 onPress={() =>
-                  navigation.navigate("EditProfile", {
+                  navigation.push("EditProfile", {
                     ...profileData.userProfile.user,
                     profileRefetch
                   })
@@ -196,30 +196,24 @@ export default ({ navigation }) => {
               </Touchable>
             </Item>
           )}
-          <Touchable
-            onPress={() => navigation.navigate("Cities", { username })}
-          >
+          <Touchable onPress={() => navigation.push("Cities", { username })}>
             <Item>
               <Bold>Cities</Bold>
             </Item>
           </Touchable>
-          <Touchable
-            onPress={() => navigation.navigate("Countries", { username })}
-          >
+          <Touchable onPress={() => navigation.push("Countries", { username })}>
             <Item>
               <Bold>Countries</Bold>
             </Item>
           </Touchable>
           <Touchable
-            onPress={() => navigation.navigate("Continents", { username })}
+            onPress={() => navigation.push("Continents", { username })}
           >
             <Item>
               <Bold>Continents</Bold>
             </Item>
           </Touchable>
-          <Touchable
-            onPress={() => navigation.navigate("Coffees", { username })}
-          >
+          <Touchable onPress={() => navigation.push("Coffees", { username })}>
             <Item>
               <Bold>Coffees</Bold>
             </Item>
@@ -234,7 +228,7 @@ export default ({ navigation }) => {
               <Touchable
                 key={index}
                 onPress={() =>
-                  navigation.navigate("CityProfileTabs", {
+                  navigation.push("CityProfileTabs", {
                     cityId: i.city.cityId,
                     countryCode: i.city.country.countryCode,
                     continentCode: i.city.country.continent.continentCode

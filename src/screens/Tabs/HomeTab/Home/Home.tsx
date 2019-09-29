@@ -100,7 +100,7 @@ export default ({ navigation }) => {
                           <UserColumn key={index}>
                             <Touchable
                               onPress={() =>
-                                navigation.navigate("UserProfileTabs", {
+                                navigation.push("UserProfileTabs", {
                                   username: user.username
                                 })
                               }
@@ -109,7 +109,7 @@ export default ({ navigation }) => {
                             </Touchable>
                             <Touchable
                               onPress={() =>
-                                navigation.navigate("UserProfileTabs", {
+                                navigation.push("UserProfileTabs", {
                                   username: user.username
                                 })
                               }
@@ -118,7 +118,7 @@ export default ({ navigation }) => {
                             </Touchable>
                             <Touchable
                               onPress={() =>
-                                navigation.navigate("UserProfileTabs", {
+                                navigation.push("UserProfileTabs", {
                                   ...user
                                 })
                               }
@@ -147,7 +147,7 @@ export default ({ navigation }) => {
                         <UserColumn key={index}>
                           <Touchable
                             onPress={() =>
-                              navigation.navigate("CityProfileTabs", {
+                              navigation.push("CityProfileTabs", {
                                 cityId: city.cityId,
                                 countryCode: city.country.countryCode,
                                 continentCode:
@@ -159,7 +159,7 @@ export default ({ navigation }) => {
                           </Touchable>
                           <Touchable
                             onPress={() =>
-                              navigation.navigate("CityProfileTabs", {
+                              navigation.push("CityProfileTabs", {
                                 cityId: city.cityId,
                                 countryCode: city.country.countryCode,
                                 continentCode:
@@ -171,7 +171,7 @@ export default ({ navigation }) => {
                           </Touchable>
                           <Touchable
                             onPress={() =>
-                              navigation.navigate("CityProfileTabs", {
+                              navigation.push("CityProfileTabs", {
                                 cityId: city.cityId,
                                 countryCode: city.country.countryCode,
                                 continentCode:

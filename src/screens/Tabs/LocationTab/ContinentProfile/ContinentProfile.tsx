@@ -123,7 +123,7 @@ export default ({ navigation }) => {
                           <UserColumn key={index}>
                             <Touchable
                               onPress={() =>
-                                navigation.navigate("ContinentProfile", {
+                                navigation.push("ContinentProfile", {
                                   continentCode: continent.continentCode
                                 })
                               }
@@ -135,7 +135,7 @@ export default ({ navigation }) => {
                             </Touchable>
                             <Touchable
                               onPress={() =>
-                                navigation.navigate("ContinentProfile", {
+                                navigation.push("ContinentProfile", {
                                   continentCode: continent.continentCode
                                 })
                               }
@@ -147,7 +147,7 @@ export default ({ navigation }) => {
                             </Touchable>
                             <Touchable
                               onPress={() =>
-                                navigation.navigate("ContinentProfile", {
+                                navigation.push("ContinentProfile", {
                                   continentCode: continent.continentCode
                                 })
                               }
@@ -180,7 +180,7 @@ export default ({ navigation }) => {
                       <Touchable
                         key={index}
                         onPress={() =>
-                          navigation.navigate("CountryProfileTabs", {
+                          navigation.push("CountryProfileTabs", {
                             countryCode: country.countryCode,
                             continentCode: country.continent.continentCode
                           })
