@@ -726,11 +726,40 @@ export interface CountryProfile_countryProfile_country {
   continent: CountryProfile_countryProfile_country_continent | null;
 }
 
+export interface CountryProfile_countryProfile_cities_country_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
+export interface CountryProfile_countryProfile_cities_country {
+  __typename: "CountryType";
+  countryName: string | null;
+  countryCode: string | null;
+  continent: CountryProfile_countryProfile_cities_country_continent | null;
+}
+
+export interface CountryProfile_countryProfile_cities {
+  __typename: "CityType";
+  id: string;
+  latitude: number | null;
+  longitude: number | null;
+  cityName: string | null;
+  cityId: string | null;
+  cityPhoto: string | null;
+  cityThumbnail: string | null;
+  distance: number | null;
+  country: CountryProfile_countryProfile_cities_country;
+  likeCount: number | null;
+  isLiked: boolean | null;
+}
+
 export interface CountryProfile_countryProfile {
   __typename: "CountryProfileResponse";
   count: number | null;
   hasNextPage: boolean | null;
   country: CountryProfile_countryProfile_country | null;
+  cities: (CountryProfile_countryProfile_cities | null)[] | null;
 }
 
 export interface CountryProfile {

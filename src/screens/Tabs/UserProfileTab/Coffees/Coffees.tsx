@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { ScrollView, RefreshControl } from "react-native";
 import { GetCoffees, GetCoffeesVariables } from "../../../../types/api";
@@ -45,9 +45,7 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
-  useEffect(() => {
-    setUsername(navigation.getParam("username")), [navigation];
-  });
+
   return (
     <ScrollView
       refreshControl={

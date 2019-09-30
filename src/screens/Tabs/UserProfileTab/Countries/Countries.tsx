@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { ScrollView, RefreshControl } from "react-native";
 import { TopCountries, TopCountriesVariables } from "../../../../types/api";

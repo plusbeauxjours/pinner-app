@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import { ScrollView, RefreshControl, FlatList, Image } from "react-native";
 import styled from "styled-components";
@@ -36,7 +36,6 @@ const Bold = styled.Text`
 const Container = styled.TouchableOpacity``;
 const Touchable = styled.View`
   justify-content: center;
-  align-items: center;
   flex-direction: row;
 `;
 
@@ -80,12 +79,7 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
-  useEffect(() => {
-    // console.log("navigation", navigation.getParam("username"));
-    // console.log("state", username);
-    // console.log("location", me.user.username);
-    setUsername(navigation.getParam("username") || me.user.username);
-  }, [navigation.state.params]);
+
   return (
     <ScrollView
       refreshControl={

@@ -32,12 +32,12 @@ interface IProps {
 
 const CityLikeBtn: React.FC<IProps> = ({
   isLiked: isLikedProp,
-
   cityId,
   likeCount: likeCountProp
 }) => {
   const me = useMe();
   const location = useLocation();
+  const [isSubmitted, setSubmitted] = useState(false);
   const [isLiked, setIsLiked] = useState(isLikedProp);
   const [likeCount, setLikeCount] = useState(likeCountProp);
   const [toggleLikeFn] = useMutation<ToggleLikeCity, ToggleLikeCityVariables>(
@@ -45,15 +45,21 @@ const CityLikeBtn: React.FC<IProps> = ({
     { variables: { cityId } }
   );
   const handleLike = async () => {
-    if (isLiked === true) {
-      setLikeCount(l => l - 1);
-    } else {
-      setLikeCount(l => l + 1);
+    if (!isSubmitted) {
+      setSubmitted(true);
+      if (isLiked === true) {
+        setLikeCount(l => l - 1);
+      } else {
+        setLikeCount(l => l + 1);
+      }
+      setIsLiked(p => !p);
+      try {
+        await toggleLikeFn();
+        setSubmitted(false);
+      } catch (e) {
+        setSubmitted(false);
+      }
     }
-    setIsLiked(p => !p);
-    try {
-      await toggleLikeFn();
-    } catch (e) {}
   };
   useEffect(() => {
     setIsLiked(isLikedProp);

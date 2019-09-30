@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { RefreshControl, ScrollView } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -78,13 +78,6 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
-  useEffect(() => {
-    setContinentCode(
-      navigation.getParam("continentCode") ||
-        // countries.find(i => i.code === location.currentCountryCode).continent
-        countries.find(i => i.code === "HU").continent
-    );
-  }, [navigation]);
   if (profileLoading) {
     return <Loader />;
   } else if (!profileLoading && profileData.continentProfile) {

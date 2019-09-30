@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { RefreshControl, ScrollView } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -106,9 +106,6 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
-  useEffect(() => {
-    setCityId(navigation.getParam("cityId") || location.currentCityId);
-  }, [navigation]);
   if (profileLoading || nearCitiesLoading || samenameCitiesLoading) {
     return <Loader />;
   } else if (

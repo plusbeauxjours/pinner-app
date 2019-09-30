@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
@@ -60,9 +60,7 @@ export default ({ navigation }) => {
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
     variables: { location: "city", cityId }
   });
-  useEffect(() => {
-    setCityId(location.currentCityId);
-  }, [location]);
+
   const onRefresh = async () => {
     try {
       setRefreshing(true);

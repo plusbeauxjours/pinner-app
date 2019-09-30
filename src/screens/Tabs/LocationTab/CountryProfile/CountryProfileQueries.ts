@@ -25,9 +25,9 @@ export const COUNTRY_PROFILE = gql`
           ...ContinentParts
         }
       }
-      # cities {
-      #   ...CityParts
-      # }
+      cities {
+        ...CityParts
+      }
     }
   }
   ${CITY_FRAGMENT}
