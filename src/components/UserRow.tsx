@@ -8,6 +8,7 @@ const Container = styled.View`
   padding: 15px;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   height: 45px;
   width: ${constants.width};
 `;
@@ -25,10 +26,19 @@ const Location = styled.Text`
   font-size: 12px;
 `;
 const Header = styled.View`
-  flex: 1;
+  flex: 2;
   flex-direction: row;
 `;
 const Text = styled.Text``;
+const GreyText = styled(Text)`
+  margin-right: 15px;
+  color: grey;
+`;
+const Items = styled.View`
+  flex: 1;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+`;
 
 interface IProps {
   user?: any;
@@ -38,6 +48,8 @@ interface IProps {
   continent?: any;
   coffee?: any;
   match?: any;
+  count?: number;
+  diff?: number;
   type: string;
   onPress?: any;
 }
@@ -50,6 +62,8 @@ const UserRow: React.FC<IProps> = ({
   continent,
   coffee,
   match,
+  count,
+  diff,
   type,
   onPress
 }) => {
@@ -140,7 +154,7 @@ const UserRow: React.FC<IProps> = ({
                 style={{ height: 40, width: 40, borderRadius: 5 }}
                 source={
                   city.cityThumbnail && {
-                    uri: city.cityThumbnail
+                    uri: `${city.cityThumbnail}`
                   }
                 }
               />
@@ -152,11 +166,26 @@ const UserRow: React.FC<IProps> = ({
               </HeaderUserContainer>
             </Touchable>
           </Header>
-          <CityLikeBtn
-            isLiked={city.isLiked}
-            cityId={city.cityId}
-            likeCount={city.likeCount}
-          />
+          <Items>
+            {diff && (
+              <>
+                {diff !== 1 ? (
+                  <GreyText>{diff} days</GreyText>
+                ) : (
+                  <GreyText>{diff} day</GreyText>
+                )}
+              </>
+            )}
+            {count && (
+              <>
+                {count !== 1 ? (
+                  <GreyText>{count} times</GreyText>
+                ) : (
+                  <GreyText>{count} time</GreyText>
+                )}
+              </>
+            )}
+          </Items>
         </Container>
       );
     case "country":
@@ -203,6 +232,26 @@ const UserRow: React.FC<IProps> = ({
               </HeaderUserContainer>
             </Touchable>
           </Header>
+          <Items>
+            {diff && (
+              <>
+                {diff !== 1 ? (
+                  <GreyText>{diff} days</GreyText>
+                ) : (
+                  <GreyText>{diff} day</GreyText>
+                )}
+              </>
+            )}
+            {count && (
+              <>
+                {count !== 1 ? (
+                  <GreyText>{count} times</GreyText>
+                ) : (
+                  <GreyText>{count} time</GreyText>
+                )}
+              </>
+            )}
+          </Items>
         </Container>
       );
     case "continent":
@@ -247,6 +296,26 @@ const UserRow: React.FC<IProps> = ({
               </HeaderUserContainer>
             </Touchable>
           </Header>
+          <Items>
+            {diff && (
+              <>
+                {diff !== 1 ? (
+                  <GreyText>{diff} days</GreyText>
+                ) : (
+                  <GreyText>{diff} day</GreyText>
+                )}
+              </>
+            )}
+            {count && (
+              <>
+                {count !== 1 ? (
+                  <GreyText>{count} times</GreyText>
+                ) : (
+                  <GreyText>{count} time</GreyText>
+                )}
+              </>
+            )}
+          </Items>
         </Container>
       );
     case "coffee":
@@ -357,6 +426,7 @@ const UserRow: React.FC<IProps> = ({
           )}
         </>
       );
+
     default:
       return null;
   }

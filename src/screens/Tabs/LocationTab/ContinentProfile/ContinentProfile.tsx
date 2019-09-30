@@ -115,11 +115,13 @@ export default ({ navigation }) => {
                         return (
                           <UserColumn key={index}>
                             <Touchable
-                              onPress={() =>
-                                navigation.push("ContinentProfile", {
-                                  continentCode: continent.continentCode
-                                })
-                              }
+                              onPress={() => {
+                                if (continentCode !== continent.continentCode) {
+                                  navigation.push("ContinentProfile", {
+                                    continentCode: continent.continentCode
+                                  });
+                                }
+                              }}
                             >
                               <UserRow
                                 continent={continent}
@@ -127,11 +129,13 @@ export default ({ navigation }) => {
                               />
                             </Touchable>
                             <Touchable
-                              onPress={() =>
-                                navigation.push("ContinentProfile", {
-                                  continentCode: continent.continentCode
-                                })
-                              }
+                              onPress={() => {
+                                if (continentCode !== continent.continentCode) {
+                                  navigation.push("ContinentProfile", {
+                                    continentCode: continent.continentCode
+                                  });
+                                }
+                              }}
                             >
                               <UserRow
                                 continent={continent}
@@ -139,11 +143,13 @@ export default ({ navigation }) => {
                               />
                             </Touchable>
                             <Touchable
-                              onPress={() =>
-                                navigation.push("ContinentProfile", {
-                                  continentCode: continent.continentCode
-                                })
-                              }
+                              onPress={() => {
+                                if (continentCode !== continent.continentCode) {
+                                  navigation.push("ContinentProfile", {
+                                    continentCode: continent.continentCode
+                                  });
+                                }
+                              }}
                             >
                               <UserRow
                                 continent={continent}
@@ -172,12 +178,19 @@ export default ({ navigation }) => {
                     (country, index) => (
                       <Touchable
                         key={index}
-                        onPress={() =>
-                          navigation.push("CountryProfileTabs", {
-                            countryCode: country.countryCode,
-                            continentCode: country.continent.continentCode
-                          })
-                        }
+                        onPress={() => {
+                          if (
+                            navigation.getParam("countryCode") !==
+                            country.countryCode
+                          ) {
+                            navigation.push("CountryProfileTabs", {
+                              countryCode: country.countryCode,
+                              continentCode: country.continent.continentCode
+                            });
+                          } else {
+                            navigation.goBack();
+                          }
+                        }}
                       >
                         <UserRow country={country} type={"country"} />
                       </Touchable>

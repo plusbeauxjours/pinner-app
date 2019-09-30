@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RefreshControl, ScrollView } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -88,6 +88,11 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
+  // useEffect(() => {
+  //   setCountryCode(
+  //     navigation.getParam("countryCode") || location.currentCountryCode
+  //   );
+  // }, [navigation]);
   if (profileLoading || countriesLoading) {
     return <Loader />;
   } else {
@@ -185,7 +190,7 @@ export default ({ navigation }) => {
                 </UserContainer>
               </Item>
             )}
-            {cities.length !== 0 && (
+            {/* {cities.length !== 0 && (
               <Item>
                 <Title>
                   {country.cityCount}
@@ -205,7 +210,7 @@ export default ({ navigation }) => {
                   </Touchable>
                 ))}
               </Item>
-            )}
+            )} */}
           </Container>
         </ScrollView>
       );

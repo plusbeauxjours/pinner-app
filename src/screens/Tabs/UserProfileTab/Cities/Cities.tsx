@@ -43,34 +43,43 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
-  return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      {loading ? (
-        <Loader />
-      ) : (
-        <View>
-          <Bold>CITIES</Bold>
-          {data.frequentVisits.cities &&
-            data.frequentVisits.cities.length !== 0 &&
-            data.frequentVisits.cities.map((city, index) => (
-              <Touchable
-                key={index}
-                onPress={() =>
-                  navigation.push("CountryProfileTabs", {
-                    countryCode: city.country.countryCode,
-                    continentCode: city.country.continent.continentCode
-                  })
-                }
-              >
-                <UserRow key={index} city={city} type={"userProfileCity"} />
-              </Touchable>
-            ))}
-        </View>
-      )}
-    </ScrollView>
-  );
+  if (loading) {
+    return <Loader />;
+  } else {
+    const { frequentVisits: { cities = null } = {} } = data;
+    if (cities) {
+      return (
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          <View>
+            <Bold>CITIES</Bold>
+            {cities.length !== 0 &&
+              cities.map((city, index) => (
+                <Touchable
+                  key={index}
+                  onPress={() =>
+                    navigation.push("CountryProfileTabs", {
+                      countryCode: city.country.countryCode,
+                      continentCode: city.country.continent.continentCode
+                    })
+                  }
+                >
+                  <UserRow
+                    city={city}
+                    count={city.count}
+                    diff={city.diff}
+                    type={"userProfileCity"}
+                  />
+                </Touchable>
+              ))}
+          </View>
+        </ScrollView>
+      );
+    } else {
+      return null;
+    }
+  }
 };

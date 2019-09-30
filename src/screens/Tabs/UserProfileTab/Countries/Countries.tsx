@@ -43,38 +43,44 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
-  return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      {loading ? (
-        <Loader />
-      ) : (
-        <View>
-          <Bold>COUNTRIES</Bold>
-          {data.topCountries.countries &&
-            data.topCountries.countries.length !== 0 &&
-            data.topCountries.countries.map((country, index) => (
-              <Touchable
-                key={index}
-                onPress={() =>
-                  navigation.push("CountryProfileTabs", {
-                    countryCode: country.countryCode,
-                    continentCode: country.continent.continentCode
-                  })
-                }
-              >
-                <UserRow
+  if (loading) {
+    return <Loader />;
+  } else {
+    const { topCountries: { countries = null } = {} } = data;
+    if (countries) {
+      return (
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          <View>
+            <Bold>COUNTRIES</Bold>
+            {countries &&
+              countries.length !== 0 &&
+              countries.map((country, index) => (
+                <Touchable
                   key={index}
-                  country={country}
-                  type={"userProfileCountry"}
-                />
-              </Touchable>
-            ))}
-        </View>
-      )}
-    </ScrollView>
-  );
+                  onPress={() =>
+                    navigation.push("CountryProfileTabs", {
+                      countryCode: country.countryCode,
+                      continentCode: country.continent.continentCode
+                    })
+                  }
+                >
+                  <UserRow
+                    country={country}
+                    count={country.count}
+                    diff={country.diff}
+                    type={"userProfileCountry"}
+                  />
+                </Touchable>
+              ))}
+          </View>
+        </ScrollView>
+      );
+    } else {
+      return null;
+    }
+  }
 };
