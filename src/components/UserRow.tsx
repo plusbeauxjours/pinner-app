@@ -3,6 +3,7 @@ import { Image } from "react-native";
 import styled from "styled-components";
 import constants, { BACKEND_URL } from "../../constants";
 import CityLikeBtn from "./CityLikeBtn/CityLikeBtn";
+import moment from "moment";
 
 const Container = styled.View`
   padding: 15px;
@@ -31,11 +32,17 @@ const Header = styled.View`
 `;
 const Text = styled.Text``;
 const GreyText = styled(Text)`
-  margin-right: 15px;
+  margin-left: 15px;
   color: grey;
 `;
 const Items = styled.View`
   flex: 1;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: center;
+`;
+const TripItems = styled.View`
+  flex-wrap: wrap;
   flex-direction: row-reverse;
   justify-content: space-between;
 `;
@@ -144,6 +151,27 @@ const UserRow: React.FC<IProps> = ({
               </HeaderUserContainer>
             </Touchable>
           </Header>
+          <Items>
+            <TripItems>
+              {trip.endDate && (
+                <GreyText>{moment(trip.endDate).format("MMM Do YY")}</GreyText>
+              )}
+              {trip.startDate && (
+                <GreyText>
+                  {moment(trip.startDate).format("MMM Do YY")}
+                </GreyText>
+              )}
+            </TripItems>
+            {trip.diffDays && (
+              <>
+                {trip.diffDays !== 1 ? (
+                  <GreyText>{trip.diffDays} days</GreyText>
+                ) : (
+                  <GreyText>{trip.diffDays} day</GreyText>
+                )}
+              </>
+            )}
+          </Items>
         </Container>
       );
     case "city":
@@ -196,21 +224,21 @@ const UserRow: React.FC<IProps> = ({
             </Touchable>
           </Header>
           <Items>
-            {diff && (
-              <>
-                {diff !== 1 ? (
-                  <GreyText>{diff} days</GreyText>
-                ) : (
-                  <GreyText>{diff} day</GreyText>
-                )}
-              </>
-            )}
             {count && (
               <>
                 {count !== 1 ? (
                   <GreyText>{count} times</GreyText>
                 ) : (
                   <GreyText>{count} time</GreyText>
+                )}
+              </>
+            )}
+            {diff && (
+              <>
+                {diff !== 1 ? (
+                  <GreyText>{diff} days</GreyText>
+                ) : (
+                  <GreyText>{diff} day</GreyText>
                 )}
               </>
             )}
@@ -238,6 +266,9 @@ const UserRow: React.FC<IProps> = ({
               </HeaderUserContainer>
             </Touchable>
           </Header>
+          <GreyText>
+            {country.cityCount} {country.cityCount === 1 ? "city" : "cities"}
+          </GreyText>
         </Container>
       );
     case "userProfileCountry":
@@ -262,21 +293,21 @@ const UserRow: React.FC<IProps> = ({
             </Touchable>
           </Header>
           <Items>
-            {diff && (
-              <>
-                {diff !== 1 ? (
-                  <GreyText>{diff} days</GreyText>
-                ) : (
-                  <GreyText>{diff} day</GreyText>
-                )}
-              </>
-            )}
             {count && (
               <>
                 {count !== 1 ? (
                   <GreyText>{count} times</GreyText>
                 ) : (
                   <GreyText>{count} time</GreyText>
+                )}
+              </>
+            )}
+            {diff && (
+              <>
+                {diff !== 1 ? (
+                  <GreyText>{diff} days</GreyText>
+                ) : (
+                  <GreyText>{diff} day</GreyText>
                 )}
               </>
             )}
@@ -303,6 +334,10 @@ const UserRow: React.FC<IProps> = ({
               </HeaderUserContainer>
             </Touchable>
           </Header>
+          <GreyText>
+            {continent.countryCount}{" "}
+            {continent.countryCount === 1 ? "country" : "countries"}
+          </GreyText>
         </Container>
       );
     case "userProfileContinent":
@@ -326,21 +361,21 @@ const UserRow: React.FC<IProps> = ({
             </Touchable>
           </Header>
           <Items>
-            {diff && (
-              <>
-                {diff !== 1 ? (
-                  <GreyText>{diff} days</GreyText>
-                ) : (
-                  <GreyText>{diff} day</GreyText>
-                )}
-              </>
-            )}
             {count && (
               <>
                 {count !== 1 ? (
                   <GreyText>{count} times</GreyText>
                 ) : (
                   <GreyText>{count} time</GreyText>
+                )}
+              </>
+            )}
+            {diff && (
+              <>
+                {diff !== 1 ? (
+                  <GreyText>{diff} days</GreyText>
+                ) : (
+                  <GreyText>{diff} day</GreyText>
                 )}
               </>
             )}
