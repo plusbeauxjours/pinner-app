@@ -475,6 +475,7 @@ export interface CityProfile_cityProfile_usersBefore_actor {
 
 export interface CityProfile_cityProfile_usersBefore {
   __typename: "MoveNotificationType";
+  naturalTime: string | null;
   actor: CityProfile_cityProfile_usersBefore_actor;
 }
 

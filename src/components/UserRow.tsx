@@ -50,6 +50,7 @@ interface IProps {
   match?: any;
   count?: number;
   diff?: number;
+  naturalTime?: string;
   type: string;
   onPress?: any;
 }
@@ -64,6 +65,7 @@ const UserRow: React.FC<IProps> = ({
   match,
   count,
   diff,
+  naturalTime,
   type,
   onPress
 }) => {
@@ -92,6 +94,33 @@ const UserRow: React.FC<IProps> = ({
               </HeaderUserContainer>
             </Touchable>
           </Header>
+        </Container>
+      );
+    case "userBefore":
+      return (
+        <Container>
+          <Header>
+            <Touchable>
+              <Image
+                style={{ height: 35, width: 35, borderRadius: 20 }}
+                source={
+                  user.appAvatarUrl
+                    ? { uri: `${BACKEND_URL}/media/${user.appAvatarUrl}` }
+                    : require(`../Images/avatars/earth1.png`)
+                }
+              />
+            </Touchable>
+            <Touchable>
+              <HeaderUserContainer>
+                <Bold>{user.username}</Bold>
+                <Location>
+                  {user.currentCity.cityName},{" "}
+                  {user.currentCity.country.countryName}
+                </Location>
+              </HeaderUserContainer>
+            </Touchable>
+          </Header>
+          <GreyText>{naturalTime}</GreyText>
         </Container>
       );
     case "trip":

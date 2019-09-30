@@ -289,7 +289,11 @@ export default ({ navigation }) => {
                               })
                             }
                           >
-                            <UserRow user={user.actor.profile} type={"user"} />
+                            <UserRow
+                              user={user.actor.profile}
+                              naturalTime={user.naturalTime}
+                              type={"userBefore"}
+                            />
                           </Touchable>
                           <Touchable
                             onPress={() =>
@@ -298,7 +302,11 @@ export default ({ navigation }) => {
                               })
                             }
                           >
-                            <UserRow user={user.actor.profile} type={"user"} />
+                            <UserRow
+                              user={user.actor.profile}
+                              naturalTime={user.naturalTime}
+                              type={"userBefore"}
+                            />
                           </Touchable>
                           <Touchable
                             onPress={() =>
@@ -307,7 +315,11 @@ export default ({ navigation }) => {
                               })
                             }
                           >
-                            <UserRow user={user.actor.profile} type={"user"} />
+                            <UserRow
+                              user={user.actor.profile}
+                              naturalTime={user.naturalTime}
+                              type={"userBefore"}
+                            />
                           </Touchable>
                         </UserColumn>
                       );

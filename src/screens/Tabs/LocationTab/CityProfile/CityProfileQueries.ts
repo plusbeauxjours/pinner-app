@@ -14,6 +14,7 @@ export const CITY_PROFILE = gql`
         ...ProfileParts
       }
       usersBefore {
+        naturalTime
         actor {
           profile {
             ...ProfileParts

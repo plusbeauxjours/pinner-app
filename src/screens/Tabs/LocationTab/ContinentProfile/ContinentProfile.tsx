@@ -78,6 +78,7 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
+  console.log(navigation);
   if (profileLoading) {
     return <Loader />;
   } else if (!profileLoading && profileData.continentProfile) {
@@ -181,7 +182,8 @@ export default ({ navigation }) => {
                         onPress={() => {
                           if (
                             navigation.getParam("countryCode") !==
-                            country.countryCode
+                              country.countryCode ||
+                            navigation.getParam("cityId")
                           ) {
                             navigation.push("CountryProfileTabs", {
                               countryCode: country.countryCode,
