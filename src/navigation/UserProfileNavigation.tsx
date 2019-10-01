@@ -10,7 +10,7 @@ import Coffees from "../screens/Tabs/UserProfileTab/Coffees";
 import CityProfile from "../screens/Tabs/LocationTab/CityProfile";
 import CountryProfile from "../screens/Tabs/LocationTab/CountryProfile";
 import ContinentProfile from "../screens/Tabs/LocationTab/ContinentProfile";
-import { createAppContainer } from "react-navigation";
+import AvatarDetail from "../screens/Tabs/UserProfileTab/AvatarDetail/index";
 
 export const UserProfileTabs = createMaterialTopTabNavigator(
   {
@@ -124,6 +124,7 @@ export const CityProfileTabs = createMaterialTopTabNavigator(
 export default createStackNavigator(
   {
     UserProfileTabs,
+    AvatarDetail,
     ContinentProfile,
     CountryProfileTabs,
     CityProfileTabs,

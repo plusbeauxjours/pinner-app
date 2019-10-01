@@ -99,7 +99,8 @@ export default ({ navigation }) => {
                             <Touchable
                               onPress={() =>
                                 navigation.push("UserProfileTabs", {
-                                  username: user.username
+                                  username: user.username,
+                                  isSelf: user.isSelf
                                 })
                               }
                             >
@@ -108,7 +109,8 @@ export default ({ navigation }) => {
                             <Touchable
                               onPress={() =>
                                 navigation.push("UserProfileTabs", {
-                                  username: user.username
+                                  username: user.username,
+                                  isSelf: user.isSelf
                                 })
                               }
                             >
@@ -117,7 +119,8 @@ export default ({ navigation }) => {
                             <Touchable
                               onPress={() =>
                                 navigation.push("UserProfileTabs", {
-                                  ...user
+                                  username: user.username,
+                                  isSelf: user.isSelf
                                 })
                               }
                             >

@@ -174,7 +174,7 @@ export default ({ navigation }) => {
               <Text>isSelf:{profileData.userProfile.user.profile.isSelf}</Text>
             </>
           )}
-          {isSelf && (
+          {profileData.userProfile.user.profile.isSelf && (
             <Item>
               <Touchable
                 onPress={() =>

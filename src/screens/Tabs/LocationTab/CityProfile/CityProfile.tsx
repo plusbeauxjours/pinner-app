@@ -285,7 +285,8 @@ export default ({ navigation }) => {
                           <Touchable
                             onPress={() =>
                               navigation.push("UserProfileTabs", {
-                                username: user.actor.profile.username
+                                username: user.actor.profile.username,
+                                isSelf: user.actor.profile.isSelf
                               })
                             }
                           >
@@ -298,7 +299,8 @@ export default ({ navigation }) => {
                           <Touchable
                             onPress={() =>
                               navigation.push("UserProfileTabs", {
-                                username: user.actor.profile.username
+                                username: user.actor.profile.username,
+                                isSelf: user.actor.profile.isSelf
                               })
                             }
                           >
@@ -311,7 +313,8 @@ export default ({ navigation }) => {
                           <Touchable
                             onPress={() =>
                               navigation.push("UserProfileTabs", {
-                                username: user.actor.profile.username
+                                username: user.actor.profile.username,
+                                isSelf: user.actor.profile.isSelf
                               })
                             }
                           >
