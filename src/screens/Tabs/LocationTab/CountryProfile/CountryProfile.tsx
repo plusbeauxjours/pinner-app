@@ -24,11 +24,18 @@ const Container = styled.View``;
 const Text = styled.Text``;
 const Bold = styled.Text`
   font-weight: 500;
-  font-size: 30;
+  font-size: 34;
+`;
+const Flag = styled.Text`
+  font-size: 24;
 `;
 const View = styled.View`
   justify-content: center;
   padding: 15px;
+`;
+const CountryNameContainer = styled.View`
+  align-items: center;
+  flex-direction: row;
 `;
 
 const UserContainer = styled.View``;
@@ -111,89 +118,88 @@ export default ({ navigation }) => {
       } = {}
     } = profileData;
     const { getCountries: { countries = null } = {} } = countriesData;
-    if (countries && cities) {
-      return (
-        <ScrollView
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        >
-          <Container>
-            {country && (
-              <View>
-                <Image
-                  style={{
-                    height: constants.width - 30,
-                    width: constants.width - 30,
-                    borderRadius: 3
-                  }}
-                  source={
-                    country.countryPhoto && {
-                      uri: country.countryPhoto
-                    }
+    return (
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <Container>
+          {country && (
+            <View>
+              <Image
+                style={{
+                  height: constants.width - 30,
+                  width: constants.width - 30,
+                  borderRadius: 3
+                }}
+                source={
+                  country.countryPhoto && {
+                    uri: country.countryPhoto
                   }
-                />
-                <Bold>
-                  {country.countryName}
-                  {country.countryEmoji}{" "}
-                </Bold>
-                {count && count !== 0 ? (
-                  <Text>
-                    You've been to {country.countryName} {count}
-                    {count === 1 ? " time" : " times"}
-                  </Text>
-                ) : null}
-              </View>
-            )}
-            {countries.length !== 0 && (
-              <Item>
-                {/* <Title>{country.continent.continentName}</Title> */}
-                <UserContainer>
-                  <Swiper
-                    style={{ height: 135 }}
-                    paginationStyle={{ bottom: -15 }}
-                  >
-                    {countries.map((country, index) => {
-                      return (
-                        <UserColumn key={index}>
-                          <Touchable
-                            onPress={() =>
-                              navigation.push("CountryProfileTabs", {
-                                countryCode: country.countryCode,
-                                continentCode: country.continent.continentCode
-                              })
-                            }
-                          >
-                            <UserRow country={country} type={"country"} />
-                          </Touchable>
-                          <Touchable
-                            onPress={() =>
-                              navigation.push("CountryProfileTabs", {
-                                countryCode: country.countryCode,
-                                continentCode: country.continent.continentCode
-                              })
-                            }
-                          >
-                            <UserRow country={country} type={"country"} />
-                          </Touchable>
-                          <Touchable
-                            onPress={() =>
-                              navigation.push("CountryProfileTabs", {
-                                countryCode: country.countryCode,
-                                continentCode: country.continent.continentCode
-                              })
-                            }
-                          >
-                            <UserRow country={country} type={"country"} />
-                          </Touchable>
-                        </UserColumn>
-                      );
-                    })}
-                  </Swiper>
-                </UserContainer>
-              </Item>
-            )}
-            {/* {cities.length !== 0 && (
+                }
+              />
+              <CountryNameContainer>
+                <Bold>{country.countryName}</Bold>
+                <Flag>{country.countryEmoji}</Flag>
+              </CountryNameContainer>
+              {count && count !== 0 ? (
+                <Text>
+                  You've been to {country.countryName} {count}
+                  {count === 1 ? " time" : " times"}
+                </Text>
+              ) : null}
+            </View>
+          )}
+          {countries.length !== 0 && (
+            <Item>
+              {/* <Title>{country.continent.continentName}</Title> */}
+              <UserContainer>
+                <Swiper
+                  style={{ height: 135 }}
+                  paginationStyle={{ bottom: -15 }}
+                >
+                  {countries.map((country, index) => {
+                    return (
+                      <UserColumn key={index}>
+                        <Touchable
+                          onPress={() =>
+                            navigation.push("CountryProfileTabs", {
+                              countryCode: country.countryCode,
+                              continentCode: country.continent.continentCode
+                            })
+                          }
+                        >
+                          <UserRow country={country} type={"country"} />
+                        </Touchable>
+                        <Touchable
+                          onPress={() =>
+                            navigation.push("CountryProfileTabs", {
+                              countryCode: country.countryCode,
+                              continentCode: country.continent.continentCode
+                            })
+                          }
+                        >
+                          <UserRow country={country} type={"country"} />
+                        </Touchable>
+                        <Touchable
+                          onPress={() =>
+                            navigation.push("CountryProfileTabs", {
+                              countryCode: country.countryCode,
+                              continentCode: country.continent.continentCode
+                            })
+                          }
+                        >
+                          <UserRow country={country} type={"country"} />
+                        </Touchable>
+                      </UserColumn>
+                    );
+                  })}
+                </Swiper>
+              </UserContainer>
+            </Item>
+          )}
+          {/* {cities.length !== 0 && (
               <Item>
                 <Title>
                   {country.cityCount}
@@ -214,11 +220,8 @@ export default ({ navigation }) => {
                 ))}
               </Item>
             )} */}
-          </Container>
-        </ScrollView>
-      );
-    } else {
-      return null;
-    }
+        </Container>
+      </ScrollView>
+    );
   }
 };

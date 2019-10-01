@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RefreshControl, ScrollView } from "react-native";
+import { RefreshControl, ScrollView, Image } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
@@ -16,15 +16,20 @@ import {
 import { SLACK_REPORT_LOCATIONS } from "../../../../sharedQueries";
 import { CONTINENT_PROFILE } from "./ContinentProfileQueries";
 import { countries } from "../../../../../countryData";
+import constants from "../../../../../constants";
 
 const Container = styled.View``;
 
 const Text = styled.Text``;
 const Bold = styled.Text`
   font-weight: 500;
-  font-size: 20;
+  font-size: 34;
 `;
 
+const View = styled.View`
+  justify-content: center;
+  padding: 15px;
+`;
 const UserContainer = styled.View``;
 
 const UserColumn = styled.View``;
@@ -46,8 +51,7 @@ export default ({ navigation }) => {
   const location = useLocation();
   const [continentCode, setContinentCode] = useState<string>(
     navigation.getParam("continentCode") ||
-      // countries.find(i => i.code === location.currentCountryCode).continent
-      countries.find(i => i.code === "HU").continent
+      countries.find(i => i.code === location.currentCountryCode).continent
   );
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [payload, setPayload] = useState<string>();
@@ -81,7 +85,16 @@ export default ({ navigation }) => {
   console.log(navigation);
   if (profileLoading) {
     return <Loader />;
-  } else if (!profileLoading && profileData.continentProfile) {
+  } else {
+    const {
+      continentProfile: {
+        count = null,
+        hasNextPage = null,
+        continent = null,
+        continents = null,
+        countries = null
+      } = {}
+    } = profileData;
     return (
       <ScrollView
         refreshControl={
@@ -89,121 +102,111 @@ export default ({ navigation }) => {
         }
       >
         <Container>
-          <Bold>Continent Profile</Bold>
-          {profileData.continentProfile.continent && (
-            <>
-              <Text>
-                continentName:
-                {profileData.continentProfile.continent.continentName}
-              </Text>
-              <Text>
-                continentPhoto:
-                {profileData.continentProfile.continent.continentPhoto}
-              </Text>
-            </>
+          {continent && (
+            <View>
+              <Image
+                style={{
+                  height: constants.width - 30,
+                  width: constants.width - 30,
+                  borderRadius: 3
+                }}
+                source={
+                  continent.continentPhoto && {
+                    uri: continent.continentPhoto
+                  }
+                }
+              />
+              <Bold>{continent.continentName}</Bold>
+              {count && count !== 0 ? (
+                <Text>
+                  You've been to {continent.continentName} {count}
+                  {count === 1 ? " time" : " times"}
+                </Text>
+              ) : null}
+            </View>
           )}
-          {profileData.continentProfile.countries &&
-            profileData.continentProfile.countries.length !== 0 && (
-              <Item>
-                <Title>CONTINENTS</Title>
-                <UserContainer>
-                  <Swiper
-                    style={{ height: 135 }}
-                    paginationStyle={{ bottom: -15 }}
-                  >
-                    {profileData.continentProfile.continents.map(
-                      (continent, index) => {
-                        return (
-                          <UserColumn key={index}>
-                            <Touchable
-                              onPress={() => {
-                                if (continentCode !== continent.continentCode) {
-                                  navigation.push("ContinentProfile", {
-                                    continentCode: continent.continentCode
-                                  });
-                                }
-                              }}
-                            >
-                              <UserRow
-                                continent={continent}
-                                type={"continent"}
-                              />
-                            </Touchable>
-                            <Touchable
-                              onPress={() => {
-                                if (continentCode !== continent.continentCode) {
-                                  navigation.push("ContinentProfile", {
-                                    continentCode: continent.continentCode
-                                  });
-                                }
-                              }}
-                            >
-                              <UserRow
-                                continent={continent}
-                                type={"continent"}
-                              />
-                            </Touchable>
-                            <Touchable
-                              onPress={() => {
-                                if (continentCode !== continent.continentCode) {
-                                  navigation.push("ContinentProfile", {
-                                    continentCode: continent.continentCode
-                                  });
-                                }
-                              }}
-                            >
-                              <UserRow
-                                continent={continent}
-                                type={"continent"}
-                              />
-                            </Touchable>
-                          </UserColumn>
-                        );
-                      }
-                    )}
-                  </Swiper>
-                </UserContainer>
-              </Item>
-            )}
-          {profileData.continentProfile.countries &&
-            profileData.continentProfile.countries.length !== 0 && (
-              <Item>
-                <Title>
-                  {profileData.continentProfile.continent.countryCount}
-                  {profileData.continentProfile.continent.countryCount === 1
-                    ? " COUNTRY"
-                    : " COUNTRIES"}
-                </Title>
-                {profileData.continentProfile &&
-                  profileData.continentProfile.countries.map(
-                    (country, index) => (
-                      <Touchable
-                        key={index}
-                        onPress={() => {
-                          if (
-                            navigation.getParam("countryCode") !==
-                              country.countryCode ||
-                            navigation.getParam("cityId")
-                          ) {
-                            navigation.push("CountryProfileTabs", {
-                              countryCode: country.countryCode,
-                              continentCode: country.continent.continentCode
-                            });
-                          } else {
-                            navigation.goBack();
-                          }
-                        }}
-                      >
-                        <UserRow country={country} type={"country"} />
-                      </Touchable>
-                    )
-                  )}
-              </Item>
-            )}
+          {countries && countries.length !== 0 && (
+            <Item>
+              <Title>CONTINENTS</Title>
+              <UserContainer>
+                <Swiper
+                  style={{ height: 135 }}
+                  paginationStyle={{ bottom: -15 }}
+                >
+                  {continents.map((continent, index) => {
+                    return (
+                      <UserColumn key={index}>
+                        <Touchable
+                          onPress={() => {
+                            if (continentCode !== continent.continentCode) {
+                              navigation.push("ContinentProfile", {
+                                continentCode: continent.continentCode
+                              });
+                            }
+                          }}
+                        >
+                          <UserRow continent={continent} type={"continent"} />
+                        </Touchable>
+                        <Touchable
+                          onPress={() => {
+                            if (continentCode !== continent.continentCode) {
+                              navigation.push("ContinentProfile", {
+                                continentCode: continent.continentCode
+                              });
+                            }
+                          }}
+                        >
+                          <UserRow continent={continent} type={"continent"} />
+                        </Touchable>
+                        <Touchable
+                          onPress={() => {
+                            if (continentCode !== continent.continentCode) {
+                              navigation.push("ContinentProfile", {
+                                continentCode: continent.continentCode
+                              });
+                            }
+                          }}
+                        >
+                          <UserRow continent={continent} type={"continent"} />
+                        </Touchable>
+                      </UserColumn>
+                    );
+                  })}
+                </Swiper>
+              </UserContainer>
+            </Item>
+          )}
+          {countries && countries.length !== 0 && (
+            <Item>
+              <Title>
+                {continent.countryCount}
+                {continent.countryCount === 1 ? " COUNTRY" : " COUNTRIES"}
+              </Title>
+              {countries.map((country, index) => (
+                <Touchable
+                  key={index}
+                  onPress={() => {
+                    if (
+                      navigation.getParam("countryCode") !==
+                        country.countryCode ||
+                      navigation.getParam("cityId")
+                    ) {
+                      navigation.push("CountryProfileTabs", {
+                        countryCode: country.countryCode,
+                        continentCode: country.continent.continentCode
+                      });
+                    } else {
+                      navigation.goBack();
+                    }
+                  }}
+                >
+                  <UserRow country={country} type={"country"} />
+                </Touchable>
+              ))}
+            </Item>
+          )}
         </Container>
       </ScrollView>
     );
-  } else {
-    return null;
   }
 };

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import moment from "moment";
-import { RefreshControl, ScrollView } from "react-native";
+import { RefreshControl, ScrollView, Image } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
@@ -44,6 +44,11 @@ const Bold = styled.Text`
   font-size: 20;
 `;
 const Item = styled.View``;
+const Header = styled.View`
+  flex: 1;
+  flex-direction: column;
+  background-color: grey;
+`;
 
 const Touchable = styled.TouchableOpacity``;
 
@@ -131,54 +136,58 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
-
-  return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      {profileLoading || tripLoading ? (
-        <Loader />
-      ) : (
+  if (profileLoading || tripLoading) {
+    return <Loader />;
+  } else {
+    const { userProfile: { user = null } = {} } = profileData;
+    const { getTrips: { trip = null } = {} } = tripData;
+    return (
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <Header>
+          <Image
+            style={{
+              height: 150,
+              width: 150,
+              borderRadius: 75
+            }}
+            source={
+              user.profile.avatarUrl && {
+                uri: user.profile.avatarUrl
+              }
+            }
+          />
+        </Header>
         <View>
           <Bold>UserProfile</Bold>
-          {profileData.userProfile.user && (
+
+          {user && (
             <>
-              <Text>username:{profileData.userProfile.user.username}</Text>
-              <Text>bio:{profileData.userProfile.user.profile.bio}</Text>
-              <Text>gender:{profileData.userProfile.user.profile.gender}</Text>
-              <Text>
-                distance:{profileData.userProfile.user.profile.distance}
-              </Text>
-              <Text>
-                postCount:{profileData.userProfile.user.profile.postCount}
-              </Text>
-              <Text>
-                tripCount:{profileData.userProfile.user.profile.tripCount}
-              </Text>
-              <Text>
-                coffeeCount:{profileData.userProfile.user.profile.coffeeCount}
-              </Text>
-              <Text>
-                cityCount:{profileData.userProfile.user.profile.cityCount}
-              </Text>
-              <Text>
-                countryCount:{profileData.userProfile.user.profile.countryCount}
-              </Text>
+              <Text>username:{user.username}</Text>
+              <Text>bio:{user.profile.bio}</Text>
+              <Text>gender:{user.profile.gender}</Text>
+              <Text>distance:{user.profile.distance}</Text>
+              <Text>postCount:{user.profile.postCount}</Text>
+              <Text>tripCount:{user.profile.tripCount}</Text>
+              <Text>coffeeCount:{user.profile.coffeeCount}</Text>
+              <Text>cityCount:{user.profile.cityCount}</Text>
+              <Text>countryCount:{user.profile.countryCount}</Text>
               <Text>
                 continentCount:
-                {profileData.userProfile.user.profile.continentCount}
+                {user.profile.continentCount}
               </Text>
-              <Text>isSelf:{profileData.userProfile.user.profile.isSelf}</Text>
+              <Text>isSelf:{user.profile.isSelf}</Text>
             </>
           )}
-          {profileData.userProfile.user.profile.isSelf && (
+          {user.profile.isSelf && (
             <Item>
               <Touchable
                 onPress={() =>
                   navigation.push("EditProfile", {
-                    ...profileData.userProfile.user,
+                    ...user,
                     profileRefetch
                   })
                 }
@@ -209,28 +218,23 @@ export default ({ navigation }) => {
               <Bold>Coffees</Bold>
             </Item>
           </Touchable>
-          {tripData.getTrips && tripData.getTrips.trip.length === 1 ? (
-            <Bold>Trip</Bold>
-          ) : (
-            <Bold>Trips</Bold>
-          )}
-          {tripData.getTrips &&
-            tripData.getTrips.trip.map((i, index) => (
-              <Touchable
-                key={index}
-                onPress={() =>
-                  navigation.push("CityProfileTabs", {
-                    cityId: i.city.cityId,
-                    countryCode: i.city.country.countryCode,
-                    continentCode: i.city.country.continent.continentCode
-                  })
-                }
-              >
-                <UserRow trip={i} type={"trip"} />
-              </Touchable>
-            ))}
+          {trip && trip.length === 1 ? <Bold>Trip</Bold> : <Bold>Trips</Bold>}
+          {trip.map((i, index) => (
+            <Touchable
+              key={index}
+              onPress={() =>
+                navigation.push("CityProfileTabs", {
+                  cityId: i.city.cityId,
+                  countryCode: i.city.country.countryCode,
+                  continentCode: i.city.country.continent.continentCode
+                })
+              }
+            >
+              <UserRow trip={i} type={"trip"} />
+            </Touchable>
+          ))}
         </View>
-      )}
-    </ScrollView>
-  );
+      </ScrollView>
+    );
+  }
 };

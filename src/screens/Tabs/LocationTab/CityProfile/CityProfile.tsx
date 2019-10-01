@@ -30,7 +30,7 @@ const Container = styled.View``;
 const Text = styled.Text``;
 const Bold = styled.Text`
   font-weight: 500;
-  font-size: 30;
+  font-size: 34;
 `;
 
 const View = styled.View`
@@ -122,6 +122,8 @@ export default ({ navigation }) => {
         usersNow = null
       } = {}
     } = profileData;
+    const { getSamenameCities: { cities: samenameCities = null } = {} } = samenameCitiesData;
+    const { nearCities: { cities: nearCities = null } = {} } = nearCitiesData;
     return (
       <ScrollView
         refreshControl={
@@ -157,118 +159,114 @@ export default ({ navigation }) => {
               />
             </View>
           )}
-          {nearCitiesData.nearCities &&
-            nearCitiesData.nearCities.cities.length !== 0 && (
-              <Item>
-                <Title>NEAR CITIES</Title>
-                <UserContainer>
-                  <Swiper
-                    style={{ height: 135 }}
-                    paginationStyle={{ bottom: -15 }}
-                  >
-                    {nearCitiesData.nearCities.cities.map((city, index) => {
-                      return (
-                        <UserColumn key={index}>
-                          <Touchable
-                            onPress={() =>
-                              navigation.push("CityProfileTabs", {
-                                cityId: city.cityId,
-                                countryCode: city.country.countryCode,
-                                continentCode:
-                                  city.country.continent.continentCode
-                              })
-                            }
-                          >
-                            <UserRow city={city} type={"city"} />
-                          </Touchable>
-                          <Touchable
-                            onPress={() =>
-                              navigation.push("CityProfileTabs", {
-                                cityId: city.cityId,
-                                countryCode: city.country.countryCode,
-                                continentCode:
-                                  city.country.continent.continentCode
-                              })
-                            }
-                          >
-                            <UserRow city={city} type={"city"} />
-                          </Touchable>
-                          <Touchable
-                            onPress={() =>
-                              navigation.push("CityProfileTabs", {
-                                cityId: city.cityId,
-                                countryCode: city.country.countryCode,
-                                continentCode:
-                                  city.country.continent.continentCode
-                              })
-                            }
-                          >
-                            <UserRow city={city} type={"city"} />
-                          </Touchable>
-                        </UserColumn>
-                      );
-                    })}
-                  </Swiper>
-                </UserContainer>
-              </Item>
-            )}
-          {samenameCitiesData.getSamenameCities.cities &&
-            samenameCitiesData.getSamenameCities.cities.length !== 0 && (
-              <Item>
-                <Title>SAMENAME CITIES</Title>
-                <UserContainer>
-                  <Swiper
-                    style={{ height: 135 }}
-                    paginationStyle={{ bottom: -15 }}
-                  >
-                    {samenameCitiesData.getSamenameCities.cities.map(
-                      (city, index) => {
-                        return (
-                          <UserColumn key={index}>
-                            <Touchable
-                              onPress={() =>
-                                navigation.push("CityProfileTabs ", {
-                                  cityId: city.cityId,
-                                  countryCode: city.country.countryCode,
-                                  continentCode:
-                                    city.country.continent.continentCode
-                                })
-                              }
-                            >
-                              <UserRow city={city} type={"city"} />
-                            </Touchable>
-                            <Touchable
-                              onPress={() =>
-                                navigation.push("CityProfileTabs ", {
-                                  cityId: city.cityId,
-                                  countryCode: city.country.countryCode,
-                                  continentCode:
-                                    city.country.continent.continentCode
-                                })
-                              }
-                            >
-                              <UserRow city={city} type={"city"} />
-                            </Touchable>
-                            <Touchable
-                              onPress={() =>
-                                navigation.push("CityProfileTabs ", {
-                                  cityId: city.cityId,
-                                  countryCode: city.country.countryCode,
-                                  continentCode:
-                                    city.country.continent.continentCode
-                                })
-                              }
-                            >
-                              <UserRow city={city} type={"city"} />
-                            </Touchable>
-                          </UserColumn>
-                        );
-                      }
-                    )}
-                  </Swiper>
-                </UserContainer>
-              </Item>
-            )}
+          {nearCities && nearCities.length !== 0 && (
+            <Item>
+              <Title>NEAR CITIES</Title>
+              <UserContainer>
+                <Swiper
+                  style={{ height: 135 }}
+                  paginationStyle={{ bottom: -15 }}
+                >
+                  {nearCities.map((city, index) => {
+                    return (
+                      <UserColumn key={index}>
+                        <Touchable
+                          onPress={() =>
+                            navigation.push("CityProfileTabs", {
+                              cityId: city.cityId,
+                              countryCode: city.country.countryCode,
+                              continentCode:
+                                city.country.continent.continentCode
+                            })
+                          }
+                        >
+                          <UserRow city={city} type={"city"} />
+                        </Touchable>
+                        <Touchable
+                          onPress={() =>
+                            navigation.push("CityProfileTabs", {
+                              cityId: city.cityId,
+                              countryCode: city.country.countryCode,
+                              continentCode:
+                                city.country.continent.continentCode
+                            })
+                          }
+                        >
+                          <UserRow city={city} type={"city"} />
+                        </Touchable>
+                        <Touchable
+                          onPress={() =>
+                            navigation.push("CityProfileTabs", {
+                              cityId: city.cityId,
+                              countryCode: city.country.countryCode,
+                              continentCode:
+                                city.country.continent.continentCode
+                            })
+                          }
+                        >
+                          <UserRow city={city} type={"city"} />
+                        </Touchable>
+                      </UserColumn>
+                    );
+                  })}
+                </Swiper>
+              </UserContainer>
+            </Item>
+          )}
+          {samenameCities && samenameCities.length !== 0 && (
+            <Item>
+              <Title>SAMENAME CITIES</Title>
+              <UserContainer>
+                <Swiper
+                  style={{ height: 135 }}
+                  paginationStyle={{ bottom: -15 }}
+                >
+                  {samenameCities.map((city, index) => {
+                    return (
+                      <UserColumn key={index}>
+                        <Touchable
+                          onPress={() =>
+                            navigation.push("CityProfileTabs ", {
+                              cityId: city.cityId,
+                              countryCode: city.country.countryCode,
+                              continentCode:
+                                city.country.continent.continentCode
+                            })
+                          }
+                        >
+                          <UserRow city={city} type={"city"} />
+                        </Touchable>
+                        <Touchable
+                          onPress={() =>
+                            navigation.push("CityProfileTabs ", {
+                              cityId: city.cityId,
+                              countryCode: city.country.countryCode,
+                              continentCode:
+                                city.country.continent.continentCode
+                            })
+                          }
+                        >
+                          <UserRow city={city} type={"city"} />
+                        </Touchable>
+                        <Touchable
+                          onPress={() =>
+                            navigation.push("CityProfileTabs ", {
+                              cityId: city.cityId,
+                              countryCode: city.country.countryCode,
+                              continentCode:
+                                city.country.continent.continentCode
+                            })
+                          }
+                        >
+                          <UserRow city={city} type={"city"} />
+                        </Touchable>
+                      </UserColumn>
+                    );
+                  })}
+                </Swiper>
+              </UserContainer>
+            </Item>
+          )}
           {usersBefore && usersBefore.length !== 0 && (
             <Item>
               <Title>USERS BEFORE</Title>
