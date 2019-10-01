@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RefreshControl, ScrollView } from "react-native";
+import { RefreshControl, ScrollView, Image } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
@@ -23,16 +23,20 @@ import Swiper from "react-native-swiper";
 import { NearCities, NearCitiesVariables } from "../../../../types/api";
 import { SLACK_REPORT_LOCATIONS } from "../../../../sharedQueries";
 import CityLikeBtn from "../../../../components/CityLikeBtn";
+import constants from "../../../../../constants";
 
 const Container = styled.View``;
 
 const Text = styled.Text``;
 const Bold = styled.Text`
   font-weight: 500;
-  font-size: 20;
+  font-size: 30;
 `;
 
-const View = styled.View``;
+const View = styled.View`
+  justify-content: center;
+  padding: 15px;
+`;
 
 const UserContainer = styled.View``;
 
@@ -108,14 +112,16 @@ export default ({ navigation }) => {
   };
   if (profileLoading || nearCitiesLoading || samenameCitiesLoading) {
     return <Loader />;
-  } else if (
-    !profileLoading &&
-    !nearCitiesLoading &&
-    !samenameCitiesLoading &&
-    profileData &&
-    nearCitiesData &&
-    samenameCitiesData
-  ) {
+  } else {
+    const {
+      cityProfile: {
+        count = null,
+        hasNextPage = null,
+        city = null,
+        usersBefore = null,
+        usersNow = null
+      } = {}
+    } = profileData;
     return (
       <ScrollView
         refreshControl={
@@ -123,41 +129,34 @@ export default ({ navigation }) => {
         }
       >
         <Container>
-          <Bold>City Profile</Bold>
-          {profileData.cityProfile.city && (
+          {city && (
             <View>
-              <Text>cityName:{profileData.cityProfile.city.cityName}</Text>
-              <Text>cityPhoto:{profileData.cityProfile.city.cityPhoto}</Text>
-              {profileData.cityProfile.city.likeCount !== 0 ? (
+              <Image
+                style={{
+                  height: constants.width - 30,
+                  width: constants.width - 30,
+                  borderRadius: 3
+                }}
+                source={
+                  city.cityPhoto && {
+                    uri: city.cityPhoto
+                  }
+                }
+              />
+              <Bold>{city.cityName}</Bold>
+              {count && count !== 0 ? (
                 <Text>
-                  {profileData.cityProfile.city.likeCount}
-                  {profileData.cityProfile.city.likeCount === 1
-                    ? " like"
-                    : " likes"}
+                  You've been to {city.cityName} {count}
+                  {count === 1 ? " time" : " times"}
                 </Text>
               ) : null}
-              {profileData.cityProfile.city.userCount !== 0 ? (
-                <Text>userCount:{profileData.cityProfile.city.userCount}</Text>
-              ) : null}
-              {profileData.cityProfile.city.userLogCount == 0 ? (
-                <Text>
-                  userLogCount:{profileData.cityProfile.city.userLogCount}
-                </Text>
-              ) : null}
-              {profileData.cityProfile.count !== 0 ? (
-                <Text>
-                  You've been {profileData.cityProfile.city.cityName}{" "}
-                  {profileData.cityProfile.count}
-                  {profileData.cityProfile.count === 1 ? " time" : " times"}
-                </Text>
-              ) : null}
+              <CityLikeBtn
+                isLiked={city.isLiked}
+                cityId={city.cityId}
+                likeCount={city.likeCount}
+              />
             </View>
           )}
-          <CityLikeBtn
-            isLiked={profileData.cityProfile.city.isLiked}
-            cityId={profileData.cityProfile.city.cityId}
-            likeCount={profileData.cityProfile.city.likeCount}
-          />
           {nearCitiesData.nearCities &&
             nearCitiesData.nearCities.cities.length !== 0 && (
               <Item>
@@ -270,89 +269,85 @@ export default ({ navigation }) => {
                 </UserContainer>
               </Item>
             )}
-          {profileData.cityProfile.usersBefore &&
-            profileData.cityProfile.usersBefore.length !== 0 && (
-              <Item>
-                <Title>USERS BEFORE</Title>
-                <UserContainer>
-                  <Swiper
-                    style={{ height: 135 }}
-                    paginationStyle={{ bottom: -15 }}
-                  >
-                    {profileData.cityProfile.usersBefore.map((user, index) => {
-                      return (
-                        <UserColumn key={index}>
-                          <Touchable
-                            onPress={() =>
-                              navigation.push("UserProfileTabs", {
-                                username: user.actor.profile.username,
-                                isSelf: user.actor.profile.isSelf
-                              })
-                            }
-                          >
-                            <UserRow
-                              user={user.actor.profile}
-                              naturalTime={user.naturalTime}
-                              type={"userBefore"}
-                            />
-                          </Touchable>
-                          <Touchable
-                            onPress={() =>
-                              navigation.push("UserProfileTabs", {
-                                username: user.actor.profile.username,
-                                isSelf: user.actor.profile.isSelf
-                              })
-                            }
-                          >
-                            <UserRow
-                              user={user.actor.profile}
-                              naturalTime={user.naturalTime}
-                              type={"userBefore"}
-                            />
-                          </Touchable>
-                          <Touchable
-                            onPress={() =>
-                              navigation.push("UserProfileTabs", {
-                                username: user.actor.profile.username,
-                                isSelf: user.actor.profile.isSelf
-                              })
-                            }
-                          >
-                            <UserRow
-                              user={user.actor.profile}
-                              naturalTime={user.naturalTime}
-                              type={"userBefore"}
-                            />
-                          </Touchable>
-                        </UserColumn>
-                      );
-                    })}
-                  </Swiper>
-                </UserContainer>
-              </Item>
-            )}
-          {profileData.cityProfile.usersNow &&
-            profileData.cityProfile.usersNow.length !== 0 && (
-              <Item>
-                <Title>USERS NOW</Title>
-                {profileData.cityProfile.usersNow.map((user, index) => (
-                  <Touchable
-                    key={index}
-                    onPress={() =>
-                      navigation.push("UserProfileTabs", {
-                        username: user.username
-                      })
-                    }
-                  >
-                    <UserRow user={user} type={"user"} />
-                  </Touchable>
-                ))}
-              </Item>
-            )}
+          {usersBefore && usersBefore.length !== 0 && (
+            <Item>
+              <Title>USERS BEFORE</Title>
+              <UserContainer>
+                <Swiper
+                  style={{ height: 135 }}
+                  paginationStyle={{ bottom: -15 }}
+                >
+                  {usersBefore.map((user, index) => {
+                    return (
+                      <UserColumn key={index}>
+                        <Touchable
+                          onPress={() =>
+                            navigation.push("UserProfileTabs", {
+                              username: user.actor.profile.username,
+                              isSelf: user.actor.profile.isSelf
+                            })
+                          }
+                        >
+                          <UserRow
+                            user={user.actor.profile}
+                            naturalTime={user.naturalTime}
+                            type={"userBefore"}
+                          />
+                        </Touchable>
+                        <Touchable
+                          onPress={() =>
+                            navigation.push("UserProfileTabs", {
+                              username: user.actor.profile.username,
+                              isSelf: user.actor.profile.isSelf
+                            })
+                          }
+                        >
+                          <UserRow
+                            user={user.actor.profile}
+                            naturalTime={user.naturalTime}
+                            type={"userBefore"}
+                          />
+                        </Touchable>
+                        <Touchable
+                          onPress={() =>
+                            navigation.push("UserProfileTabs", {
+                              username: user.actor.profile.username,
+                              isSelf: user.actor.profile.isSelf
+                            })
+                          }
+                        >
+                          <UserRow
+                            user={user.actor.profile}
+                            naturalTime={user.naturalTime}
+                            type={"userBefore"}
+                          />
+                        </Touchable>
+                      </UserColumn>
+                    );
+                  })}
+                </Swiper>
+              </UserContainer>
+            </Item>
+          )}
+          {usersNow && usersNow.length !== 0 && (
+            <Item>
+              <Title>USERS NOW</Title>
+              {usersNow.map((user, index) => (
+                <Touchable
+                  key={index}
+                  onPress={() =>
+                    navigation.push("UserProfileTabs", {
+                      username: user.username
+                    })
+                  }
+                >
+                  <UserRow user={user} type={"user"} />
+                </Touchable>
+              ))}
+            </Item>
+          )}
         </Container>
       </ScrollView>
     );
-  } else {
-    return null;
   }
 };

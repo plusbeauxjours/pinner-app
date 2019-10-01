@@ -94,7 +94,6 @@ export default ({ navigation }) => {
       endDate: date.endDate
     }
   });
-  // console.log("navigation from userprofile", navigation);
   const [editTripFn] = useMutation<EditTrip, EditTripVariables>(EDIT_TRIP, {
     variables: {
       moveNotificationId: parseInt(moveNotificationId, 10),

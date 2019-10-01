@@ -338,7 +338,7 @@ export default ({ navigation }) => {
             </Item>
             <ExplainText>
               If you set your coutries hide, only you can see countries where
-              you've been before, otherwise only number of countries is shown.
+              You've been to before, otherwise only number of countries is shown.
             </ExplainText>
 
             <Item>
@@ -360,7 +360,7 @@ export default ({ navigation }) => {
             </Item>
             <ExplainText>
               If you set your coutries hide, only you can see countries where
-              you've been before, otherwise only number of countries is shown.
+              You've been to before, otherwise only number of countries is shown.
             </ExplainText>
 
             <Item>

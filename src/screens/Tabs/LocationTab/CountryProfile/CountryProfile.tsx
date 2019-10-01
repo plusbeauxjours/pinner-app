@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { RefreshControl, ScrollView } from "react-native";
+import React, { useState } from "react";
+import { RefreshControl, ScrollView, Image } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
@@ -17,13 +17,18 @@ import {
   SlackReportLocationsVariables
 } from "../../../../types/api";
 import { COUNTRY_PROFILE, GET_COUNTRIES } from "./CountryProfileQueries";
+import constants from "../../../../../constants";
 
 const Container = styled.View``;
 
 const Text = styled.Text``;
 const Bold = styled.Text`
   font-weight: 500;
-  font-size: 20;
+  font-size: 30;
+`;
+const View = styled.View`
+  justify-content: center;
+  padding: 15px;
 `;
 
 const UserContainer = styled.View``;
@@ -99,10 +104,10 @@ export default ({ navigation }) => {
     console.log(profileData);
     const {
       countryProfile: {
-        country = null,
-        cities = null,
         count = null,
-        hasNextPage = null
+        hasNextPage = null,
+        country = null,
+        cities = null
       } = {}
     } = profileData;
     const { getCountries: { countries = null } = {} } = countriesData;
@@ -114,33 +119,31 @@ export default ({ navigation }) => {
           }
         >
           <Container>
-            <Bold>Country Profile</Bold>
             {country && (
-              <>
-                <Text>
-                  countryName:{country.countryName}
-                  {country.countryEmoji}
-                </Text>
-                <Text>countryPhoto:{country.countryPhoto}</Text>
-                {country.totalLikeCount !== 0 ? (
+              <View>
+                <Image
+                  style={{
+                    height: constants.width - 30,
+                    width: constants.width - 30,
+                    borderRadius: 3
+                  }}
+                  source={
+                    country.countryPhoto && {
+                      uri: country.countryPhoto
+                    }
+                  }
+                />
+                <Bold>
+                  {country.countryName}
+                  {country.countryEmoji}{" "}
+                </Bold>
+                {count && count !== 0 ? (
                   <Text>
-                    {country.totalLikeCount}
-                    {country.totalLikeCount === 1 ? " like" : " likes"}
-                  </Text>
-                ) : null}
-                {country.cityCount !== 0 ? (
-                  <Text>
-                    {country.cityCount}
-                    {country.cityCount === 1 ? " city" : " cities"}
-                  </Text>
-                ) : null}
-                {count !== 0 ? (
-                  <Text>
-                    You've been {country.countryName} {count}
+                    You've been to {country.countryName} {count}
                     {count === 1 ? " time" : " times"}
                   </Text>
                 ) : null}
-              </>
+              </View>
             )}
             {countries.length !== 0 && (
               <Item>
