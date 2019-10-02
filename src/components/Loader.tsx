@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { theme } from "../styles/theme";
 
 const Container = styled.View`
-  flex: 1;
+  /* flex: 1; */
   justify-content: center;
   align-items: center;
 `;

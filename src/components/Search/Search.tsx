@@ -25,26 +25,21 @@ const Touchable = styled.TouchableOpacity`
 const Search = ({ navigation }) => {
   const [search, setSearch] = useState<string>("");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  // const { data, loading } = useQuery<SearchTerms, SearchTermsVariables>(
-  //   SEARCH,
-  //   {
-  //     variables: { search: "aaa" },
-  //     fetchPolicy: "network-only"
-  //   }
-  // );
+  const { data, loading } = useQuery<SearchTerms, SearchTermsVariables>(
+    SEARCH,
+    {
+      variables: { search },
+      skip: search === "",
+      fetchPolicy: "network-only"
+    }
+  );
   const onChange = (text: string) => {
-    if (search.length !== 0) {
+    if (search !== "") {
       setModalOpen(true);
     }
     console.log(text);
     setSearch(text);
   };
-  // console.log("data", data);
-  // const {
-  //   // searchUsers: { users = null } = {},
-  //   searchCountries: { countries = null } = {},
-  //   searchContinents: { continents = null } = {}
-  // } = data;
   return (
     <>
       <Modal
@@ -59,35 +54,37 @@ const Search = ({ navigation }) => {
             backgroundColor: theme.whiteColor,
             padding: 10,
             borderRadius: 5,
-            textAlign: "center"
+            textAlign: "center",
+            bottom: 10
           }}
+          autoFocus={true}
           value={navigation.value}
           placeholder={"Search"}
           returnKeyType="search"
           onChangeText={onChange}
+          onModalHide={() => setSearch("")}
         />
-        {/* {loading ? (
+        {loading ? (
           <Loader />
-        ) :
-         (
+        ) : (
           <>
-            {users &&
-                countries.length !== 0 &&
-                users.map(user => (
-                  <UserRow
-                    key={user.profile.id}
-                    user={user.profile}
-                    type={"user"}
-                  />
-                ))}
-            {countries &&
-              countries.length !== 0 &&
-              countries.map(country => (
+            {data &&
+              data.searchUsers.users.length !== 0 &&
+              data.searchUsers.users.map(user => (
+                <UserRow
+                  key={user.profile.id}
+                  user={user.profile}
+                  type={"user"}
+                />
+              ))}
+            {data &&
+              data.searchCountries.countries.length !== 0 &&
+              data.searchCountries.countries.map(country => (
                 <UserRow key={country.id} country={country} type={"country"} />
               ))}
-            {continents &&
-              continents.length !== 0 &&
-              continents.map(continent => (
+            {data &&
+              data.searchContinents.continents.length !== 0 &&
+              data.searchContinents.continents.map(continent => (
                 <UserRow
                   key={continent.id}
                   continent={continent}
@@ -95,7 +92,7 @@ const Search = ({ navigation }) => {
                 />
               ))}
           </>
-        )} */}
+        )}
       </Modal>
       <View>
         <Touchable onPress={() => setModalOpen(true)}>

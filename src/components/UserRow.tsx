@@ -95,8 +95,8 @@ const UserRow: React.FC<IProps> = ({
               <HeaderUserContainer>
                 <Bold>{user.username}</Bold>
                 <Location>
-                  {user.currentCity.cityName},{" "}
-                  {user.currentCity.country.countryName}
+                  {user.currentCity && user.currentCity.cityName},{" "}
+                  {user.currentCity && user.currentCity.country.countryName}
                 </Location>
               </HeaderUserContainer>
             </Touchable>
