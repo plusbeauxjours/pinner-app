@@ -43,6 +43,91 @@ export interface ToggleLikeCityVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: SearchTerms
+// ====================================================
+
+export interface SearchTerms_searchUsers_users_profile_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface SearchTerms_searchUsers_users_profile_currentCity {
+  __typename: "CityType";
+  cityName: string | null;
+  country: SearchTerms_searchUsers_users_profile_currentCity_country;
+}
+
+export interface SearchTerms_searchUsers_users_profile {
+  __typename: "ProfileType";
+  id: string;
+  username: string | null;
+  avatarUrl: string | null;
+  appAvatarUrl: string | null;
+  isSelf: boolean | null;
+  currentCity: SearchTerms_searchUsers_users_profile_currentCity | null;
+}
+
+export interface SearchTerms_searchUsers_users {
+  __typename: "UserType";
+  profile: SearchTerms_searchUsers_users_profile | null;
+}
+
+export interface SearchTerms_searchUsers {
+  __typename: "SearchUsersResponse";
+  users: (SearchTerms_searchUsers_users | null)[] | null;
+}
+
+export interface SearchTerms_searchCountries_countries_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
+export interface SearchTerms_searchCountries_countries {
+  __typename: "CountryType";
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryPhoto: string | null;
+  countryThumbnail: string | null;
+  cityCount: number | null;
+  continent: SearchTerms_searchCountries_countries_continent | null;
+}
+
+export interface SearchTerms_searchCountries {
+  __typename: "CountriesResponse";
+  countries: (SearchTerms_searchCountries_countries | null)[] | null;
+}
+
+export interface SearchTerms_searchContinents_continents {
+  __typename: "ContinentType";
+  id: string;
+  continentName: string | null;
+  continentCode: string | null;
+  continentPhoto: string | null;
+  continentThumbnail: string | null;
+}
+
+export interface SearchTerms_searchContinents {
+  __typename: "ContinentsResponse";
+  continents: (SearchTerms_searchContinents_continents | null)[] | null;
+}
+
+export interface SearchTerms {
+  searchUsers: SearchTerms_searchUsers;
+  searchCountries: SearchTerms_searchCountries;
+  searchContinents: SearchTerms_searchContinents;
+}
+
+export interface SearchTermsVariables {
+  search: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: StartEmailVerification
 // ====================================================
 

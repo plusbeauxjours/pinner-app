@@ -8,22 +8,17 @@ import { Platform } from "react-native";
 import NavIcon from "../components/NavIcon";
 import HomeNavigation from "./HomeNavigation";
 import LocationNavigation from "./LocationNavigation";
-import Search from "../components/Search";
 import PhotoLink from "../components/PhotoLink";
 import RequestCoffee from "../screens/Tabs/RequestCoffeeTab/RequestCoffee";
 import UserProfileNavigation from "./UserProfileNavigation";
+import Search from "../components/Search";
 
 const stackFactory = initialRoute =>
   createStackNavigator({
     InitialRoute: {
       screen: initialRoute,
       navigationOptions: {
-        headerLeft: (
-          <Search
-            name={Platform.OS === "ios" ? "ios-search" : "md-search"}
-            size={36}
-          />
-        ),
+        headerLeft: <Search />,
         headerRight: <PhotoLink />
       }
     }
