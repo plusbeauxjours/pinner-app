@@ -37,7 +37,7 @@ export default ({
   debounceMs = 400,
   options = {}
 }: IAutocompleteProps) => {
-  console.log(apiKey);
+  console.log(query);
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const id = uuid();
   const sessionToken = React.useRef<string>(id);

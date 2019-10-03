@@ -122,7 +122,9 @@ export default ({ navigation }) => {
         usersNow = null
       } = {}
     } = profileData;
-    const { getSamenameCities: { cities: samenameCities = null } = {} } = samenameCitiesData;
+    const {
+      getSamenameCities: { cities: samenameCities = null } = {}
+    } = samenameCitiesData;
     const { nearCities: { cities: nearCities = null } = {} } = nearCitiesData;
     return (
       <ScrollView

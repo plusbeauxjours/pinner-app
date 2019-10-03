@@ -63,7 +63,6 @@ const Search = ({ navigation }) => {
     if (search !== "") {
       setModalOpen(true);
     }
-    console.log(text);
     setSearch(text);
   };
   const { results, isLoading } = useGoogleAutocomplete({
@@ -108,10 +107,7 @@ const Search = ({ navigation }) => {
           />
         </TouchableIcon> */}
 
-        <ScrollView
-          style={{ marginTop: 250, marginBottom: 24 }}
-          contentOffset={{ x: 0, y: 200 }}
-        >
+        <ScrollView style={{ marginTop: 250, marginBottom: 25 }}>
           {loading ? (
             <Loader />
           ) : (
@@ -121,12 +117,13 @@ const Search = ({ navigation }) => {
                 data.searchUsers.users.map(user => (
                   <Touchable
                     key={user.profile.id}
-                    onPress={() =>
-                      navigation.push("UserProfileTabs", {
+                    onPress={() => {
+                      navigation.replace("UserProfileTabs", {
                         username: user.profile.username,
                         isSelf: user.profile.isSelf
-                      })
-                    }
+                      }),
+                        setModalOpen(false);
+                    }}
                   >
                     <UserRow user={user.profile} type={"user"} />
                   </Touchable>
@@ -169,12 +166,13 @@ const Search = ({ navigation }) => {
                 data.searchCountries.countries.map(country => (
                   <Touchable
                     key={country.id}
-                    onPress={() =>
-                      navigation.push("CountryProfileTabs", {
+                    onPress={() => {
+                      navigation.replace("CountryProfileTabs", {
                         countryCode: country.countryCode,
                         continentCode: country.continent.continentCode
-                      })
-                    }
+                      }),
+                        setModalOpen(false);
+                    }}
                   >
                     <UserRow country={country} type={"country"} />
                   </Touchable>
@@ -184,11 +182,12 @@ const Search = ({ navigation }) => {
                 data.searchContinents.continents.map(continent => (
                   <Touchable
                     key={continent.id}
-                    onPress={() =>
-                      navigation.push("ContinentProfile", {
+                    onPress={() => {
+                      navigation.replace("ContinentProfile", {
                         continentCode: continent.continentCode
-                      })
-                    }
+                      }),
+                        setModalOpen(false);
+                    }}
                   >
                     <UserRow continent={continent} type={"continent"} />
                   </Touchable>
