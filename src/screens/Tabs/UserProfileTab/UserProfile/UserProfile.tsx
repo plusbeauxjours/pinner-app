@@ -31,6 +31,7 @@ import {
 } from "./UserProfileQueries";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
+import { theme } from "../../../../styles/theme";
 
 const View = styled.View`
   justify-content: center;
@@ -46,8 +47,8 @@ const Bold = styled.Text`
 const Item = styled.View``;
 const Header = styled.View`
   flex: 1;
-  flex-direction: column;
-  background-color: grey;
+  height: 300;
+  background-color: ${theme.lightGreyColor};
 `;
 
 const Touchable = styled.TouchableOpacity``;
@@ -152,7 +153,8 @@ export default ({ navigation }) => {
             style={{
               height: 150,
               width: 150,
-              borderRadius: 75
+              borderRadius: 75,
+              zIndex: 3
             }}
             source={
               user.profile.avatarUrl && {
