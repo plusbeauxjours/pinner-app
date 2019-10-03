@@ -119,7 +119,15 @@ const Search = ({ navigation }) => {
               {data &&
                 data.searchUsers.users.length !== 0 &&
                 data.searchUsers.users.map(user => (
-                  <Touchable key={user.profile.id}>
+                  <Touchable
+                    key={user.profile.id}
+                    onPress={() =>
+                      navigation.push("UserProfileTabs", {
+                        username: user.profile.username,
+                        isSelf: user.profile.isSelf
+                      })
+                    }
+                  >
                     <UserRow user={user.profile} type={"user"} />
                   </Touchable>
                 ))}
@@ -159,14 +167,29 @@ const Search = ({ navigation }) => {
               {data &&
                 data.searchCountries.countries.length !== 0 &&
                 data.searchCountries.countries.map(country => (
-                  <Touchable key={country.id}>
+                  <Touchable
+                    key={country.id}
+                    onPress={() =>
+                      navigation.push("CountryProfileTabs", {
+                        countryCode: country.countryCode,
+                        continentCode: country.continent.continentCode
+                      })
+                    }
+                  >
                     <UserRow country={country} type={"country"} />
                   </Touchable>
                 ))}
               {data &&
                 data.searchContinents.continents.length !== 0 &&
                 data.searchContinents.continents.map(continent => (
-                  <Touchable key={continent.id}>
+                  <Touchable
+                    key={continent.id}
+                    onPress={() =>
+                      navigation.push("ContinentProfile", {
+                        continentCode: continent.continentCode
+                      })
+                    }
+                  >
                     <UserRow continent={continent} type={"continent"} />
                   </Touchable>
                 ))}
