@@ -128,6 +128,51 @@ export interface SearchTermsVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: CreateCity
+// ====================================================
+
+export interface CreateCity_createCity {
+  __typename: "CreateCityResponse";
+  ok: boolean | null;
+  cityId: string | null;
+  countryCode: string | null;
+  continentCode: string | null;
+}
+
+export interface CreateCity {
+  createCity: CreateCity_createCity;
+}
+
+export interface CreateCityVariables {
+  cityId: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GetCityPhoto
+// ====================================================
+
+export interface GetCityPhoto_getCityPhoto {
+  __typename: "PhotoResponse";
+  photo: string | null;
+}
+
+export interface GetCityPhoto {
+  getCityPhoto: GetCityPhoto_getCityPhoto;
+}
+
+export interface GetCityPhotoVariables {
+  cityId?: string | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: StartEmailVerification
 // ====================================================
 

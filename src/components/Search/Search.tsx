@@ -1,17 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Modal from "react-native-modal";
-import { Platform, TextInput, ScrollView, Image } from "react-native";
+import { Platform, TextInput, ScrollView } from "react-native";
 import constants from "../../../constants";
 import { Ionicons } from "@expo/vector-icons";
-import { useQuery } from "react-apollo-hooks";
-import { SEARCH } from "./SearchQueries";
+import { useQuery, useMutation } from "react-apollo-hooks";
+import { SEARCH, CREATE_CITY } from "./SearchQueries";
 import Loader from "../Loader";
 import { withNavigation } from "react-navigation";
 import UserRow from "../UserRow";
-import { SearchTerms, SearchTermsVariables } from "../../types/api";
+import {
+  SearchTerms,
+  SearchTermsVariables,
+  CreateCity,
+  CreateCityVariables
+} from "../../types/api";
 import keys from "../../../keys";
 import useGoogleAutocomplete from "../../hooks/useGoogleAutocomplete";
+import SearchCityPhoto from "../SearchCityPhoto";
 
 const Text = styled.Text``;
 const View = styled.View`
@@ -19,6 +25,7 @@ const View = styled.View`
   align-items: center;
   flex: 1;
 `;
+
 const Container = styled.View`
   padding: 15px;
   flex-direction: row;
@@ -27,10 +34,12 @@ const Container = styled.View`
   height: 45px;
   width: ${constants.width};
 `;
+
 const Touchable = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
 `;
+
 const TouchableIcon = styled.TouchableOpacity`
   margin-left: 15px;
 `;
@@ -38,19 +47,31 @@ const TouchableIcon = styled.TouchableOpacity`
 const HeaderUserContainer = styled.View`
   margin-left: 10px;
 `;
+
 const Bold = styled.Text`
   font-weight: 500;
 `;
+
 const Location = styled.Text`
   font-size: 12px;
 `;
+
 const Header = styled.View`
   flex: 2;
   flex-direction: row;
 `;
+
 const Search = ({ navigation }) => {
   const [search, setSearch] = useState<string>("");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [createCityFn, { loading: createCityLoading }] = useMutation<
+    CreateCity,
+    CreateCityVariables
+  >(CREATE_CITY);
+  // const [getCityPhotoFn, { loading: getCityPhotoLoading }] = useMutation<
+  //   GetCityPhoto,
+  //   GetCityPhotoVariables
+  // >(GET_CITY_PHOTO, { variables: { cityId } });
   const { data, loading } = useQuery<SearchTerms, SearchTermsVariables>(
     SEARCH,
     {
@@ -59,6 +80,23 @@ const Search = ({ navigation }) => {
       fetchPolicy: "network-only"
     }
   );
+  const onPress = async cityId => {
+    let result;
+    try {
+      result = await createCityFn({
+        variables: { cityId }
+      });
+      await navigation.push("CityProfileTabs", {
+        cityId: result.data.createCity.cityId,
+        countryCode: result.data.createCity.countryCode,
+        continentCode: result.data.createCity.continentCode
+      });
+      setSearch("");
+      setModalOpen(false);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const onChange = (text: string) => {
     if (search !== "") {
       setModalOpen(true);
@@ -67,7 +105,7 @@ const Search = ({ navigation }) => {
   };
   const { results, isLoading } = useGoogleAutocomplete({
     apiKey: `${keys.REACT_APP_GOOGLE_PLACE_KEY}`,
-    query: search !== "" && search,
+    query: search,
     options: {
       types: "(cities)",
       language: "en"
@@ -92,23 +130,16 @@ const Search = ({ navigation }) => {
             backgroundColor: "transparent",
             textAlign: "center",
             fontSize: 30
-            // position: "absolute"
           }}
           autoFocus={true}
           value={navigation.value}
           placeholder={"Search"}
           returnKeyType="search"
           onChangeText={onChange}
+          autoCorrect={false}
         />
-        {/* <TouchableIcon onPress={() => setModalOpen(false)}>
-          <Ionicons
-            name={Platform.OS === "ios" ? "ios-add" : "md-add"}
-            size={36}
-          />
-        </TouchableIcon> */}
-
         <ScrollView style={{ marginTop: 250, marginBottom: 25 }}>
-          {loading ? (
+          {loading || createCityLoading ? (
             <Loader />
           ) : (
             <>
@@ -118,7 +149,7 @@ const Search = ({ navigation }) => {
                   <Touchable
                     key={user.profile.id}
                     onPress={() => {
-                      navigation.replace("UserProfileTabs", {
+                      navigation.push("UserProfileTabs", {
                         username: user.profile.username,
                         isSelf: user.profile.isSelf
                       }),
@@ -128,35 +159,27 @@ const Search = ({ navigation }) => {
                     <UserRow user={user.profile} type={"user"} />
                   </Touchable>
                 ))}
-              {results.predictions &&
+              {search !== "" &&
+                results.predictions &&
                 results.predictions.length !== 0 &&
                 results.predictions.map(prediction => (
-                  <Touchable key={prediction.id}>
+                  <Touchable
+                    key={prediction.id}
+                    onPress={() => onPress(prediction.place_id)}
+                  >
                     <Container>
                       <Header>
-                        <Touchable>
-                          {/* <Image
-        style={{ height: 40, width: 40, borderRadius: 5 }}
-        source={
-          city.cityThumbnail && {
-            uri: city.cityThumbnail
-          }
-        }
-      /> */}
-                        </Touchable>
-                        <Touchable>
-                          <HeaderUserContainer>
-                            <Bold>
-                              {prediction.structured_formatting.main_text}
-                            </Bold>
-                            <Location>
-                              {prediction.structured_formatting.secondary_text
-                                ? prediction.structured_formatting
-                                    .secondary_text
-                                : prediction.structured_formatting.main_text}
-                            </Location>
-                          </HeaderUserContainer>
-                        </Touchable>
+                        <SearchCityPhoto cityId={prediction.place_id} />
+                        <HeaderUserContainer>
+                          <Bold>
+                            {prediction.structured_formatting.main_text}
+                          </Bold>
+                          <Location>
+                            {prediction.structured_formatting.secondary_text
+                              ? prediction.structured_formatting.secondary_text
+                              : prediction.structured_formatting.main_text}
+                          </Location>
+                        </HeaderUserContainer>
                       </Header>
                     </Container>
                   </Touchable>
@@ -167,7 +190,7 @@ const Search = ({ navigation }) => {
                   <Touchable
                     key={country.id}
                     onPress={() => {
-                      navigation.replace("CountryProfileTabs", {
+                      navigation.push("CountryProfileTabs", {
                         countryCode: country.countryCode,
                         continentCode: country.continent.continentCode
                       }),
@@ -183,7 +206,7 @@ const Search = ({ navigation }) => {
                   <Touchable
                     key={continent.id}
                     onPress={() => {
-                      navigation.replace("ContinentProfile", {
+                      navigation.push("ContinentProfile", {
                         continentCode: continent.continentCode
                       }),
                         setModalOpen(false);

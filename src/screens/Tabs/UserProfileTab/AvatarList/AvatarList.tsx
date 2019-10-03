@@ -51,7 +51,6 @@ export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
   const isSelf = navigation.getParam("isSelf");
-  console.log(isSelf);
   const [username, setUsername] = useState<string>(
     navigation.getParam("username") || me.user.username
   );

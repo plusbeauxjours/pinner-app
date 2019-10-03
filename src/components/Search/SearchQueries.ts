@@ -29,3 +29,22 @@ export const SEARCH = gql`
   ${COUNTRY_FRAGMENT}
   ${CONTINENT_FRAGMENT}
 `;
+
+export const CREATE_CITY = gql`
+  mutation CreateCity($cityId: String!) {
+    createCity(cityId: $cityId) {
+      ok
+      cityId
+      countryCode
+      continentCode
+    }
+  }
+`;
+
+export const GET_CITY_PHOTO = gql`
+  query GetCityPhoto($cityId: String) {
+    getCityPhoto(cityId: $cityId) {
+      photo
+    }
+  }
+`;

@@ -28,8 +28,6 @@ export interface IAutocompleteProps {
   options?: IGoogleProps;
 }
 
-const cors = "https://cors-anywhere.herokuapp.com/";
-
 export default ({
   apiKey,
   query,
@@ -37,7 +35,6 @@ export default ({
   debounceMs = 400,
   options = {}
 }: IAutocompleteProps) => {
-  console.log(query);
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const id = uuid();
   const sessionToken = React.useRef<string>(id);
@@ -67,7 +64,6 @@ export default ({
   const debouncedFn = React.useRef<any>(null);
 
   React.useEffect(() => {
-    console.log("hiimhere");
     if (initialRender.current === false) {
       initialRender.current = true;
       return;
@@ -101,7 +97,7 @@ export default ({
       const location = options.location ? `&location=${options.location}` : "";
       const radius = options.radius ? `&radius=${options.radius}` : "";
 
-      const url = `${cors}https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}${types}${language}${location}${radius}${strictbounds}${offset}&key=${apiKey}&sessiontoken=${sessionToken.current}`;
+      const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}${types}${language}${location}${radius}${strictbounds}${offset}&key=${apiKey}&sessiontoken=${sessionToken.current}`;
       fetch(url, { signal: abortSignal.current })
         .then(data => data.json())
         .then(data => {
@@ -166,7 +162,6 @@ const reducer = (
     payload?: any;
   }
 ) => {
-  console.log(action.type);
   switch (action.type) {
     case "LOADING":
       return {

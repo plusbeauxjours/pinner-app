@@ -108,7 +108,6 @@ export default ({ navigation }) => {
   if (profileLoading || countriesLoading) {
     return <Loader />;
   } else {
-    console.log(profileData);
     const {
       countryProfile: {
         count = null,

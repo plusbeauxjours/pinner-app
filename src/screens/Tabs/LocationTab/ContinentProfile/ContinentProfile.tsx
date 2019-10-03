@@ -82,7 +82,6 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
-  console.log(navigation);
   if (profileLoading) {
     return <Loader />;
   } else {
