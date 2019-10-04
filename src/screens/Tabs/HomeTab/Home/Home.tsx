@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
@@ -18,6 +18,7 @@ import {
   RecommendLocationsVariables
 } from "../../../../types/api";
 
+const Text = styled.Text``;
 const Container = styled.View``;
 
 const UserContainer = styled.View``;
@@ -41,6 +42,8 @@ export default ({ navigation }) => {
   const location = useLocation();
   const [refreshing, setRefreshing] = useState(false);
   const [cityId, setCityId] = useState(location.currentCityId);
+  const [recommendUsers, setRecommendUsers] = useState([]);
+  const [recommendLocations, setRecommendLocations] = useState([]);
   const {
     data: recommendUserData,
     loading: recommendUserLoading,
@@ -73,6 +76,21 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
+  const chunk = arr => {
+    let chunks = [],
+      i = 0,
+      n = arr.length;
+    while (i < n) {
+      chunks.push(arr.slice(i, (i += 3)));
+    }
+    return chunks;
+  };
+  useEffect(() => {
+    setRecommendUsers(chunk(recommendUserData.recommendUsers.users));
+    setRecommendLocations(
+      chunk(recommendLocationData.recommendLocations.cities)
+    );
+  });
   return (
     <ScrollView
       refreshControl={
@@ -83,57 +101,38 @@ export default ({ navigation }) => {
         <Loader />
       ) : (
         <Container>
-          {recommendUserData.recommendUsers.users &&
-            recommendUserData.recommendUsers.users.length !== 0 && (
-              <Item>
-                <Title>RECOMMEND USERS</Title>
-                <UserContainer>
-                  <Swiper
-                    style={{ height: 135 }}
-                    paginationStyle={{ bottom: -15 }}
-                  >
-                    {recommendUserData.recommendUsers.users.map(
-                      (user, index) => {
+          <Item>
+            <Title>RECOMMEND USERS</Title>
+            <UserContainer>
+              <Swiper
+                style={{ height: 135 }}
+                paginationStyle={{ bottom: -15 }}
+                showsPagination={false}
+              >
+                {recommendUsers.map((users, index) => {
+                  return (
+                    <UserColumn key={index}>
+                      {users.map((user, index) => {
                         return (
-                          <UserColumn key={index}>
-                            <Touchable
-                              onPress={() =>
-                                navigation.push("UserProfileTabs", {
-                                  username: user.username,
-                                  isSelf: user.isSelf
-                                })
-                              }
-                            >
-                              <UserRow user={user} type={"user"} />
-                            </Touchable>
-                            <Touchable
-                              onPress={() =>
-                                navigation.push("UserProfileTabs", {
-                                  username: user.username,
-                                  isSelf: user.isSelf
-                                })
-                              }
-                            >
-                              <UserRow user={user} type={"user"} />
-                            </Touchable>
-                            <Touchable
-                              onPress={() =>
-                                navigation.push("UserProfileTabs", {
-                                  username: user.username,
-                                  isSelf: user.isSelf
-                                })
-                              }
-                            >
-                              <UserRow user={user} type={"user"} />
-                            </Touchable>
-                          </UserColumn>
+                          <Touchable
+                            key={index}
+                            onPress={() =>
+                              navigation.push("UserProfileTabs", {
+                                username: user.username,
+                                isSelf: user.isSelf
+                              })
+                            }
+                          >
+                            <UserRow user={user} type={"user"} />
+                          </Touchable>
                         );
-                      }
-                    )}
-                  </Swiper>
-                </UserContainer>
-              </Item>
-            )}
+                      })}
+                    </UserColumn>
+                  );
+                })}
+              </Swiper>
+            </UserContainer>
+          </Item>
           {recommendLocationData.recommendLocations &&
             recommendLocationData.recommendLocations.cities.length !== 0 && (
               <Item>
@@ -142,49 +141,31 @@ export default ({ navigation }) => {
                   <Swiper
                     style={{ height: 135 }}
                     paginationStyle={{ bottom: -15 }}
+                    showsPagination={false}
                   >
-                    {recommendLocationData.recommendLocations.cities.map(
-                      (city, index) => (
+                    {recommendLocations.map((locations, index) => {
+                      return (
                         <UserColumn key={index}>
-                          <Touchable
-                            onPress={() =>
-                              navigation.push("CityProfileTabs", {
-                                cityId: city.cityId,
-                                countryCode: city.country.countryCode,
-                                continentCode:
-                                  city.country.continent.continentCode
-                              })
-                            }
-                          >
-                            <UserRow city={city} type={"city"} />
-                          </Touchable>
-                          <Touchable
-                            onPress={() =>
-                              navigation.push("CityProfileTabs", {
-                                cityId: city.cityId,
-                                countryCode: city.country.countryCode,
-                                continentCode:
-                                  city.country.continent.continentCode
-                              })
-                            }
-                          >
-                            <UserRow city={city} type={"city"} />
-                          </Touchable>
-                          <Touchable
-                            onPress={() =>
-                              navigation.push("CityProfileTabs", {
-                                cityId: city.cityId,
-                                countryCode: city.country.countryCode,
-                                continentCode:
-                                  city.country.continent.continentCode
-                              })
-                            }
-                          >
-                            <UserRow city={city} type={"city"} />
-                          </Touchable>
+                          {locations.map((city, index) => {
+                            return (
+                              <Touchable
+                                key={index}
+                                onPress={() =>
+                                  navigation.push("CityProfileTabs", {
+                                    cityId: city.cityId,
+                                    countryCode: city.country.countryCode,
+                                    continentCode:
+                                      city.country.continent.continentCode
+                                  })
+                                }
+                              >
+                                <UserRow city={city} type={"city"} />
+                              </Touchable>
+                            );
+                          })}
                         </UserColumn>
-                      )
-                    )}
+                      );
+                    })}
                   </Swiper>
                 </UserContainer>
               </Item>
