@@ -32,6 +32,7 @@ export const CITY_PROFILE = gql`
           countryName
           countryPhoto
           countryCode
+          countryEmoji
           continent {
             ...ContinentParts
           }

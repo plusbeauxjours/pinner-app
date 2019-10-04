@@ -623,6 +623,7 @@ export interface CityProfile_cityProfile_city_country {
   countryName: string | null;
   countryPhoto: string | null;
   countryCode: string | null;
+  countryEmoji: string | null;
   continent: CityProfile_cityProfile_city_country_continent | null;
 }
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { RefreshControl, ScrollView, Image } from "react-native";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
@@ -24,6 +25,7 @@ import { NearCities, NearCitiesVariables } from "../../../../types/api";
 import { SLACK_REPORT_LOCATIONS } from "../../../../sharedQueries";
 import CityLikeBtn from "../../../../components/CityLikeBtn";
 import constants from "../../../../../constants";
+import mapStyles from "../../../../styles/mapStyles";
 
 const Container = styled.View``;
 
@@ -62,9 +64,10 @@ export default ({ navigation }) => {
   );
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [payload, setPayload] = useState<string>();
-  const [nearCities, setNearCities] = useState([]);
-  const [samenameCities, setSamenameCities] = useState([]);
-  const [usersBefore, setsersBefore] = useState([]);
+  const [nearCities, setNearCities] = useState<any>([]);
+  const [samenameCities, setSamenameCities] = useState<any>([]);
+  const [usersBefore, setsersBefore] = useState<any>([]);
+  const [mapOpen, setMapOpen] = useState<boolean>(false);
   const [slackReportLocationsFn] = useMutation<
     SlackReportLocations,
     SlackReportLocationsVariables
@@ -152,19 +155,45 @@ export default ({ navigation }) => {
         <Container>
           {city && (
             <View>
-              <Image
-                style={{
-                  height: constants.width - 30,
-                  width: constants.width - 30,
-                  borderRadius: 3
-                }}
-                source={
-                  city.cityPhoto && {
-                    uri: city.cityPhoto
-                  }
-                }
-              />
+              {mapOpen ? (
+                <Touchable onPress={() => setMapOpen(false)}>
+                  <MapView
+                    provider={PROVIDER_GOOGLE}
+                    style={{
+                      height: constants.width - 30,
+                      width: constants.width - 30,
+                      borderRadius: 3
+                    }}
+                    initialRegion={{
+                      latitude: city.latitude,
+                      longitude: city.longitude,
+                      latitudeDelta: 0.05,
+                      longitudeDelta: 0.05
+                    }}
+                    rotateEnabled={false}
+                    customMapStyle={mapStyles}
+                  />
+                </Touchable>
+              ) : (
+                <Touchable onPress={() => setMapOpen(true)}>
+                  <Image
+                    style={{
+                      height: constants.width - 30,
+                      width: constants.width - 30,
+                      borderRadius: 3
+                    }}
+                    source={
+                      city.cityPhoto && {
+                        uri: city.cityPhoto
+                      }
+                    }
+                  />
+                </Touchable>
+              )}
               <Bold>{city.cityName}</Bold>
+              <Text>
+                {city.country.countryName} {city.country.countryEmoji}
+              </Text>
               {count && count !== 0 ? (
                 <Text>
                   You've been to {city.cityName} {count}
