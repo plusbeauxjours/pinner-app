@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RefreshControl, ScrollView, Image } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -55,6 +55,7 @@ export default ({ navigation }) => {
   );
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [payload, setPayload] = useState<string>();
+  const [sameContinents, setSameContinents] = useState([]);
   const {
     data: profileData,
     loading: profileLoading,
@@ -82,6 +83,21 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
+  const chunk = arr => {
+    let chunks = [],
+      i = 0,
+      n = arr.length;
+    while (i < n) {
+      chunks.push(arr.slice(i, (i += 3)));
+    }
+    return chunks;
+  };
+  useEffect(() => {
+    console.log("continent changed");
+    if (profileData && profileData.continentProfile.continents.length !== 0) {
+      setSameContinents(chunk(profileData.continentProfile.continents));
+    }
+  }, [continentCode]);
   if (profileLoading) {
     return <Loader />;
   } else {
@@ -131,46 +147,37 @@ export default ({ navigation }) => {
                 <Swiper
                   style={{ height: 135 }}
                   paginationStyle={{ bottom: -15 }}
+                  loop={false}
                 >
-                  {continents.map((continent, index) => {
-                    return (
-                      <UserColumn key={index}>
-                        <Touchable
-                          onPress={() => {
-                            if (continentCode !== continent.continentCode) {
-                              navigation.push("ContinentProfile", {
-                                continentCode: continent.continentCode
-                              });
-                            }
-                          }}
-                        >
-                          <UserRow continent={continent} type={"continent"} />
-                        </Touchable>
-                        <Touchable
-                          onPress={() => {
-                            if (continentCode !== continent.continentCode) {
-                              navigation.push("ContinentProfile", {
-                                continentCode: continent.continentCode
-                              });
-                            }
-                          }}
-                        >
-                          <UserRow continent={continent} type={"continent"} />
-                        </Touchable>
-                        <Touchable
-                          onPress={() => {
-                            if (continentCode !== continent.continentCode) {
-                              navigation.push("ContinentProfile", {
-                                continentCode: continent.continentCode
-                              });
-                            }
-                          }}
-                        >
-                          <UserRow continent={continent} type={"continent"} />
-                        </Touchable>
-                      </UserColumn>
-                    );
-                  })}
+                  {sameContinents &&
+                    sameContinents.length !== 0 &&
+                    sameContinents.map((continents, index) => {
+                      return (
+                        <UserColumn key={index}>
+                          {continents.map((continent: any, index: any) => {
+                            return (
+                              <Touchable
+                                key={index}
+                                onPress={() => {
+                                  if (
+                                    continentCode !== continent.continentCode
+                                  ) {
+                                    navigation.push("ContinentProfile", {
+                                      continentCode: continent.continentCode
+                                    });
+                                  }
+                                }}
+                              >
+                                <UserRow
+                                  continent={continent}
+                                  type={"continent"}
+                                />
+                              </Touchable>
+                            );
+                          })}
+                        </UserColumn>
+                      );
+                    })}
                 </Swiper>
               </UserContainer>
             </Item>

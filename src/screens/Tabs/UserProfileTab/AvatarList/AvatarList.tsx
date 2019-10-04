@@ -144,7 +144,6 @@ export default ({ navigation }) => {
             <Button title="CLOSE AVATAR" onPress={() => closeModal()} />
           </Modal>
           <View>
-            <Bold>AvatarList</Bold>
             <FlatList
               data={avatarData.getAvatars.avatars}
               renderItem={({ item }) => (

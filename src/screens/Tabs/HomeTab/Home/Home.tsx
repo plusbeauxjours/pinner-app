@@ -18,7 +18,6 @@ import {
   RecommendLocationsVariables
 } from "../../../../types/api";
 
-const Text = styled.Text``;
 const Container = styled.View``;
 
 const UserContainer = styled.View``;
@@ -41,7 +40,7 @@ export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
   const [refreshing, setRefreshing] = useState(false);
-  const [cityId, setCityId] = useState(location.currentCityId);
+  const cityId = location.currentCityId;
   const [recommendUsers, setRecommendUsers] = useState([]);
   const [recommendLocations, setRecommendLocations] = useState([]);
   const {
@@ -86,20 +85,24 @@ export default ({ navigation }) => {
     return chunks;
   };
   useEffect(() => {
-    setRecommendUsers(chunk(recommendUserData.recommendUsers.users));
-    setRecommendLocations(
-      chunk(recommendLocationData.recommendLocations.cities)
-    );
-  });
-  return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      {recommendUserLoading || recommendLocationLoading || coffeeLoading ? (
-        <Loader />
-      ) : (
+    if (recommendUserData.recommendUsers.users.length !== 0) {
+      setRecommendUsers(chunk(recommendUserData.recommendUsers.users));
+    }
+    if (recommendLocationData.recommendLocations.cities.length !== 0) {
+      setRecommendLocations(
+        chunk(recommendLocationData.recommendLocations.cities)
+      );
+    }
+  }, []);
+  if (recommendUserLoading || recommendLocationLoading || coffeeLoading) {
+    return <Loader />;
+  } else {
+    return (
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <Container>
           <Item>
             <Title>RECOMMEND USERS</Title>
@@ -107,29 +110,30 @@ export default ({ navigation }) => {
               <Swiper
                 style={{ height: 135 }}
                 paginationStyle={{ bottom: -15 }}
-                showsPagination={false}
+                loop={false}
               >
-                {recommendUsers.map((users, index) => {
-                  return (
-                    <UserColumn key={index}>
-                      {users.map((user, index) => {
-                        return (
-                          <Touchable
-                            key={index}
-                            onPress={() =>
-                              navigation.push("UserProfileTabs", {
-                                username: user.username,
-                                isSelf: user.isSelf
-                              })
-                            }
-                          >
-                            <UserRow user={user} type={"user"} />
-                          </Touchable>
-                        );
-                      })}
-                    </UserColumn>
-                  );
-                })}
+                {recommendUsers.length !== 0 &&
+                  recommendUsers.map((users, index) => {
+                    return (
+                      <UserColumn key={index}>
+                        {users.map((user: any, index: any) => {
+                          return (
+                            <Touchable
+                              key={index}
+                              onPress={() =>
+                                navigation.push("UserProfileTabs", {
+                                  username: user.username,
+                                  isSelf: user.isSelf
+                                })
+                              }
+                            >
+                              <UserRow user={user} type={"user"} />
+                            </Touchable>
+                          );
+                        })}
+                      </UserColumn>
+                    );
+                  })}
               </Swiper>
             </UserContainer>
           </Item>
@@ -141,12 +145,12 @@ export default ({ navigation }) => {
                   <Swiper
                     style={{ height: 135 }}
                     paginationStyle={{ bottom: -15 }}
-                    showsPagination={false}
+                    loop={false}
                   >
                     {recommendLocations.map((locations, index) => {
                       return (
                         <UserColumn key={index}>
-                          {locations.map((city, index) => {
+                          {locations.map((city: any, index: any) => {
                             return (
                               <Touchable
                                 key={index}
@@ -191,7 +195,7 @@ export default ({ navigation }) => {
               </Item>
             )}
         </Container>
-      )}
-    </ScrollView>
-  );
+      </ScrollView>
+    );
+  }
 };

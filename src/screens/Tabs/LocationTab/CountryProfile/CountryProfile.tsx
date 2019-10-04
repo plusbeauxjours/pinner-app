@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RefreshControl, ScrollView, Image } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -65,6 +65,7 @@ export default ({ navigation }) => {
   console.log("location=========", location.currentCountryCode);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [payload, setPayload] = useState<string>();
+  const [continentCountries, setContinentCountries] = useState([]);
   const [slackReportLocationsFn] = useMutation<
     SlackReportLocations,
     SlackReportLocationsVariables
@@ -100,11 +101,20 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
-  // useEffect(() => {
-  //   setCountryCode(
-  //     navigation.getParam("countryCode") || location.currentCountryCode
-  //   );
-  // }, [navigation]);
+  const chunk = arr => {
+    let chunks = [],
+      i = 0,
+      n = arr.length;
+    while (i < n) {
+      chunks.push(arr.slice(i, (i += 3)));
+    }
+    return chunks;
+  };
+  useEffect(() => {
+    if (countriesData.getCountries.countries.length !== 0) {
+      setContinentCountries(chunk(countriesData.getCountries.countries));
+    }
+  }, [countryCode]);
   if (profileLoading || countriesLoading) {
     return <Loader />;
   } else {
@@ -116,7 +126,6 @@ export default ({ navigation }) => {
         cities = null
       } = {}
     } = profileData;
-    const { getCountries: { countries = null } = {} } = countriesData;
     return (
       <ScrollView
         refreshControl={
@@ -150,50 +159,38 @@ export default ({ navigation }) => {
               ) : null}
             </View>
           )}
-          {countries.length !== 0 && (
+          {continentCountries.length !== 0 && (
             <Item>
               {/* <Title>{country.continent.continentName}</Title> */}
               <UserContainer>
                 <Swiper
                   style={{ height: 135 }}
                   paginationStyle={{ bottom: -15 }}
+                  loop={false}
                 >
-                  {countries.map((country, index) => {
-                    return (
-                      <UserColumn key={index}>
-                        <Touchable
-                          onPress={() =>
-                            navigation.push("CountryProfileTabs", {
-                              countryCode: country.countryCode,
-                              continentCode: country.continent.continentCode
-                            })
-                          }
-                        >
-                          <UserRow country={country} type={"country"} />
-                        </Touchable>
-                        <Touchable
-                          onPress={() =>
-                            navigation.push("CountryProfileTabs", {
-                              countryCode: country.countryCode,
-                              continentCode: country.continent.continentCode
-                            })
-                          }
-                        >
-                          <UserRow country={country} type={"country"} />
-                        </Touchable>
-                        <Touchable
-                          onPress={() =>
-                            navigation.push("CountryProfileTabs", {
-                              countryCode: country.countryCode,
-                              continentCode: country.continent.continentCode
-                            })
-                          }
-                        >
-                          <UserRow country={country} type={"country"} />
-                        </Touchable>
-                      </UserColumn>
-                    );
-                  })}
+                  {continentCountries.length !== 0 &&
+                    continentCountries.map((countries, index) => {
+                      return (
+                        <UserColumn key={index}>
+                          {countries.map((country: any, index: any) => {
+                            return (
+                              <Touchable
+                                key={index}
+                                onPress={() =>
+                                  navigation.push("CountryProfileTabs", {
+                                    countryCode: country.countryCode,
+                                    continentCode:
+                                      country.continent.continentCode
+                                  })
+                                }
+                              >
+                                <UserRow country={country} type={"country"} />
+                              </Touchable>
+                            );
+                          })}
+                        </UserColumn>
+                      );
+                    })}
                 </Swiper>
               </UserContainer>
             </Item>

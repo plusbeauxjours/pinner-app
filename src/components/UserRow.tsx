@@ -46,6 +46,9 @@ const TripItems = styled.View`
   flex-direction: row-reverse;
   justify-content: space-between;
 `;
+const DistanceGreyText = styled(GreyText)`
+  margin-right: 20;
+`;
 
 interface IProps {
   user?: any;
@@ -200,6 +203,37 @@ const UserRow: React.FC<IProps> = ({
             cityId={city.cityId}
             likeCount={city.likeCount}
           />
+        </Container>
+      );
+    case "nearCity":
+      return (
+        <Container>
+          <Header>
+            <Touchable>
+              <Image
+                style={{ height: 40, width: 40, borderRadius: 5 }}
+                source={
+                  city.cityThumbnail && {
+                    uri: city.cityThumbnail
+                  }
+                }
+              />
+            </Touchable>
+            <Touchable>
+              <HeaderUserContainer>
+                <Bold>{city.cityName}</Bold>
+                <Location>{city.country.countryName}</Location>
+              </HeaderUserContainer>
+            </Touchable>
+          </Header>
+          <Items>
+            <CityLikeBtn
+              isLiked={city.isLiked}
+              cityId={city.cityId}
+              likeCount={city.likeCount}
+            />
+            <DistanceGreyText>{city.distance} km</DistanceGreyText>
+          </Items>
         </Container>
       );
     case "userProfileCity":
