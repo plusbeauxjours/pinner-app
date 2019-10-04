@@ -26,6 +26,17 @@ const stackFactory = initialRoute =>
 
 export default createBottomTabNavigator(
   {
+    Profile: {
+      screen: stackFactory(UserProfileNavigation),
+      navigationOptions: {
+        tabBarIcon: ({ focused }) => (
+          <NavIcon
+            focused={focused}
+            name={Platform.OS === "ios" ? "ios-person" : "md-person"}
+          />
+        )
+      }
+    },
     Home: {
       screen: stackFactory(HomeNavigation),
       navigationOptions: {
@@ -58,7 +69,7 @@ export default createBottomTabNavigator(
           />
         )
       }
-    },
+    }
     // Notifications: {
     //   screen: stackFactory(Notifications, {
     //     title: "Notifications"
@@ -80,17 +91,6 @@ export default createBottomTabNavigator(
     //     )
     //   }
     // },
-    Profile: {
-      screen: stackFactory(UserProfileNavigation),
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            name={Platform.OS === "ios" ? "ios-person" : "md-person"}
-          />
-        )
-      }
-    }
   },
   {
     animationEnabled: true,
