@@ -50,10 +50,10 @@ const Container = styled.View`
 export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
-  const isSelf = navigation.getParam("isSelf");
   const [username, setUsername] = useState<string>(
     navigation.getParam("username") || me.user.username
   );
+  const isSelf = navigation.getParam("isSelf") || me.user.username === username;
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<any>({});

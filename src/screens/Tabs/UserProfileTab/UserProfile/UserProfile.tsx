@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { RefreshControl, ScrollView, Image, FlatList } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
@@ -32,7 +32,7 @@ import {
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
 import { theme } from "../../../../styles/theme";
-import constants from "../../../../../constants";
+import constants, { BACKEND_URL } from "../../../../../constants";
 import { GET_COFFEES } from "../Coffees/CoffeesQueries";
 import { GetCoffees, GetCoffeesVariables } from "../../../../types/api";
 
@@ -61,12 +61,12 @@ const ItemContainer = styled.View`
   flex-direction: row;
 `;
 const Header = styled.View`
-  flex: 1;
   height: 300;
   background-color: ${theme.lightGreyColor};
 `;
 const UserNameContainer = styled.View`
   margin-left: 15;
+  bottom: 10;
   align-items: flex-start;
 `;
 const UserName = styled.Text`
@@ -170,6 +170,11 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
+
+  useEffect(
+    () => setUsername(navigation.getParam("username") || me.user.username),
+    [navigation]
+  );
   if (profileLoading || tripLoading || coffeeLoading) {
     return <Loader />;
   } else {
@@ -183,19 +188,28 @@ export default ({ navigation }) => {
         }
       >
         <Header>
-          <Image
-            style={{
-              height: 150,
-              width: 150,
-              borderRadius: 75,
-              zIndex: 3
-            }}
-            source={
-              user.profile.avatarUrl && {
-                uri: user.profile.avatarUrl
-              }
+          <Touchable
+            onPress={() =>
+              navigation.push("AvatarList", {
+                username: user.username,
+                isSelf: user.profile.isSelf
+              })
             }
-          />
+          >
+            <Image
+              resizeMode={"contain"}
+              style={{
+                height: 150,
+                width: 150,
+                borderRadius: 75
+              }}
+              source={
+                user.profile.avatarUrl
+                  ? { uri: `${BACKEND_URL}/media/${user.profile.avatarUrl}` }
+                  : require(`../../../../Images/avatars/earth1.png`)
+              }
+            />
+          </Touchable>
           <UserNameContainer>
             <UserName>
               {user.username.length > 24

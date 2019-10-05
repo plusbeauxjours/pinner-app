@@ -129,6 +129,7 @@ export default createStackNavigator(
     UserProfileTabs,
     AvatarDetail,
     EditProfile,
+    AvatarList,
     Cities,
     Countries,
     Continents,
