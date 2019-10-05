@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import moment from "moment";
-import { RefreshControl, ScrollView, Image } from "react-native";
+import { RefreshControl, ScrollView, Image, FlatList } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
@@ -32,6 +32,9 @@ import {
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
 import { theme } from "../../../../styles/theme";
+import constants from "../../../../../constants";
+import { GET_COFFEES } from "../Coffees/CoffeesQueries";
+import { GetCoffees, GetCoffeesVariables } from "../../../../types/api";
 
 const View = styled.View`
   justify-content: center;
@@ -44,6 +47,17 @@ const Bold = styled.Text`
   font-size: 12px;
 `;
 const Item = styled.View`
+  flex-direction: column;
+  align-items: center;
+  width: ${constants.width / 4 - 10};
+  height: ${constants.width / 5 - 10};
+`;
+const DisptanceItem = styled(Item)`
+  width: ${constants.width / 2 - 20};
+`;
+const ItemContainer = styled.View`
+  padding: 15px;
+  flex-wrap: wrap;
   flex-direction: row;
 `;
 const Header = styled.View`
@@ -52,12 +66,12 @@ const Header = styled.View`
   background-color: ${theme.lightGreyColor};
 `;
 const UserNameContainer = styled.View`
+  margin-left: 15;
   align-items: flex-start;
 `;
 const UserName = styled.Text`
   font-weight: 500;
   font-size: 34;
-  margin-left: 15;
 `;
 const Touchable = styled.TouchableOpacity``;
 
@@ -101,6 +115,16 @@ export default ({ navigation }) => {
   } = useQuery<GetTrips, GetTripsVariables>(GET_TRIPS, {
     variables: { username: navigation.getParam("username") || me.user.username }
   });
+  const {
+    data: coffeeData,
+    loading: coffeeLoading,
+    refetch: coffeeRefetch
+  } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
+    variables: {
+      userName: navigation.getParam("username") || me.user.username,
+      location: "profile"
+    }
+  });
   const [addTripFn] = useMutation<AddTrip, AddTripVariables>(ADD_TRIP, {
     variables: {
       cityId,
@@ -139,17 +163,19 @@ export default ({ navigation }) => {
       setRefreshing(true);
       await profileRefetch();
       await tripRefetch();
+      await coffeeRefetch();
     } catch (e) {
       console.log(e);
     } finally {
       setRefreshing(false);
     }
   };
-  if (profileLoading || tripLoading) {
+  if (profileLoading || tripLoading || coffeeLoading) {
     return <Loader />;
   } else {
     const { userProfile: { user = null } = {} } = profileData;
     const { getTrips: { trip = null } = {} } = tripData;
+    const { getCoffees: { coffees = null } = {} } = coffeeData;
     return (
       <ScrollView
         refreshControl={
@@ -176,237 +202,268 @@ export default ({ navigation }) => {
                 ? user.username.substring(0, 24) + "..."
                 : user.username}
             </UserName>
+            {user.profile.isSelf && (
+              <Item>
+                <Touchable
+                  onPress={() =>
+                    navigation.push("EditProfile", {
+                      ...user,
+                      profileRefetch
+                    })
+                  }
+                >
+                  <Bold>EditProfile</Bold>
+                </Touchable>
+              </Item>
+            )}
           </UserNameContainer>
         </Header>
         <View>
-          {user.profile.gender && (
-            <Item>
-              {(() => {
-                switch (user.profile.gender) {
-                  case "MALE":
-                    return <UserName>M</UserName>;
-                  case "FEMALE":
-                    return <UserName>F</UserName>;
-                  case "OTHER":
-                    return <UserName>O</UserName>;
-                  default:
-                    return null;
-                }
-              })()}
-              <Bold>GENDER</Bold>
-            </Item>
-          )}
-          {user.profile.isSelf && (
-            <Item>
-              <Touchable
-                onPress={() =>
-                  navigation.push("EditProfile", {
-                    ...user,
-                    profileRefetch
-                  })
-                }
-              >
-                <Bold>EditProfile</Bold>
-              </Touchable>
-            </Item>
-          )}
           <Text>{user.profile.bio}</Text>
-          {user.profile.distance !== 0 && (
-            <Item>
-              <UserName>{user.profile.distance}</UserName>
-              <Bold>KM</Bold>
-            </Item>
-          )}
-          {user.profile.isHideCoffees ? (
-            <>
-              {user.profile.coffeeCount === 1 ? (
-                <Item>
-                  <UserName>{user.profile.coffeeCount}</UserName>
-                  <Bold>COFFEE🔒</Bold>
-                </Item>
-              ) : (
-                <Item>
-                  <UserName>{user.profile.coffeeCount}</UserName>
-                  <Bold>COFFEES🔒</Bold>
-                </Item>
-              )}
-            </>
-          ) : (
-            <>
-              <Touchable
-                onPress={() => navigation.push("Coffees", { username })}
-              >
+          <ItemContainer>
+            {user.profile.distance !== 0 && (
+              <DisptanceItem>
+                <UserName>{user.profile.distance}</UserName>
+                <Bold>KM</Bold>
+              </DisptanceItem>
+            )}
+            {trip && trip.length === 1 ? (
+              <Item>
+                <UserName>{user.profile.tripCount}</UserName>
+                <Bold>TRIP</Bold>
+              </Item>
+            ) : (
+              <Item>
+                <UserName>{user.profile.tripCount}</UserName>
+                <Bold>TRIPS</Bold>
+              </Item>
+            )}
+            {user.profile.isHideCoffees ? (
+              <>
                 {user.profile.coffeeCount === 1 ? (
                   <Item>
                     <UserName>{user.profile.coffeeCount}</UserName>
-                    <Bold>COFFEE</Bold>
+                    <Bold>COFFEE🔒</Bold>
                   </Item>
                 ) : (
                   <Item>
                     <UserName>{user.profile.coffeeCount}</UserName>
-                    <Bold>COFFEES</Bold>
+                    <Bold>COFFEES🔒</Bold>
                   </Item>
                 )}
-              </Touchable>
-            </>
-          )}
+              </>
+            ) : (
+              <>
+                <Touchable
+                  onPress={() => navigation.push("Coffees", { username })}
+                >
+                  {user.profile.coffeeCount === 1 ? (
+                    <Item>
+                      <UserName>{user.profile.coffeeCount}</UserName>
+                      <Bold>COFFEE</Bold>
+                    </Item>
+                  ) : (
+                    <Item>
+                      <UserName>{user.profile.coffeeCount}</UserName>
+                      <Bold>COFFEES</Bold>
+                    </Item>
+                  )}
+                </Touchable>
+              </>
+            )}
 
-          {user.profile.isHideCities ? (
-            <>
-              {user.profile.cityCount === 1 ? (
-                <Item>
-                  <UserName>{user.profile.cityCount}</UserName>
-                  <Bold>CITY🔒</Bold>
-                </Item>
-              ) : (
-                <Item>
-                  <UserName>{user.profile.cityCount}</UserName>
-                  <Bold>CITIES🔒</Bold>
-                </Item>
-              )}
-            </>
-          ) : (
-            <>
-              <Touchable
-                onPress={() => navigation.push("Cities", { username })}
-              >
+            {user.profile.isHideCities ? (
+              <>
                 {user.profile.cityCount === 1 ? (
                   <Item>
                     <UserName>{user.profile.cityCount}</UserName>
-                    <Bold>CITY</Bold>
+                    <Bold>CITY🔒</Bold>
                   </Item>
                 ) : (
                   <Item>
                     <UserName>{user.profile.cityCount}</UserName>
-                    <Bold>CITIES</Bold>
+                    <Bold>CITIES🔒</Bold>
                   </Item>
                 )}
-              </Touchable>
-            </>
-          )}
-          {user.profile.isHideCountries ? (
-            <>
-              {user.profile.countryCount === 1 ? (
-                <Item>
-                  <UserName>{user.profile.countryCount}</UserName>
-                  <Bold>COUNTRY🔒</Bold>
-                </Item>
-              ) : (
-                <Item>
-                  <UserName>{user.profile.countryCount}</UserName>
-                  <Bold>COUNTRIES🔒</Bold>
-                </Item>
-              )}
-            </>
-          ) : (
-            <>
-              <Touchable
-                onPress={() => navigation.push("Countries", { username })}
-              >
+              </>
+            ) : (
+              <>
+                <Touchable
+                  onPress={() => navigation.push("Cities", { username })}
+                >
+                  {user.profile.cityCount === 1 ? (
+                    <Item>
+                      <UserName>{user.profile.cityCount}</UserName>
+                      <Bold>CITY</Bold>
+                    </Item>
+                  ) : (
+                    <Item>
+                      <UserName>{user.profile.cityCount}</UserName>
+                      <Bold>CITIES</Bold>
+                    </Item>
+                  )}
+                </Touchable>
+              </>
+            )}
+            {user.profile.isHideCountries ? (
+              <>
                 {user.profile.countryCount === 1 ? (
                   <Item>
                     <UserName>{user.profile.countryCount}</UserName>
-                    <Bold>COUNTRY</Bold>
+                    <Bold>COUNTRY🔒</Bold>
                   </Item>
                 ) : (
                   <Item>
                     <UserName>{user.profile.countryCount}</UserName>
-                    <Bold>COUNTRIES</Bold>
+                    <Bold>COUNTRIES🔒</Bold>
                   </Item>
                 )}
-              </Touchable>
-            </>
-          )}
-          {user.profile.isHideContinents ? (
-            <>
-              {user.profile.continentCount === 1 ? (
-                <Item>
-                  <UserName>{user.profile.continentCount}</UserName>
-                  <Bold>CONTINENT🔒</Bold>
-                </Item>
-              ) : (
-                <Item>
-                  <UserName>{user.profile.continentCount}</UserName>
-                  <Bold>CONTINENTS🔒</Bold>
-                </Item>
-              )}
-            </>
-          ) : (
-            <>
-              <Touchable
-                onPress={() => navigation.push("Continents", { username })}
-              >
+              </>
+            ) : (
+              <>
+                <Touchable
+                  onPress={() => navigation.push("Countries", { username })}
+                >
+                  {user.profile.countryCount === 1 ? (
+                    <Item>
+                      <UserName>{user.profile.countryCount}</UserName>
+                      <Bold>COUNTRY</Bold>
+                    </Item>
+                  ) : (
+                    <Item>
+                      <UserName>{user.profile.countryCount}</UserName>
+                      <Bold>COUNTRIES</Bold>
+                    </Item>
+                  )}
+                </Touchable>
+              </>
+            )}
+            {user.profile.isHideContinents ? (
+              <>
                 {user.profile.continentCount === 1 ? (
                   <Item>
                     <UserName>{user.profile.continentCount}</UserName>
-                    <Bold>CONTINENT</Bold>
+                    <Bold>CONTINENT🔒</Bold>
                   </Item>
                 ) : (
                   <Item>
                     <UserName>{user.profile.continentCount}</UserName>
-                    <Bold>CONTINENTS</Bold>
+                    <Bold>CONTINENTS🔒</Bold>
                   </Item>
                 )}
+              </>
+            ) : (
+              <>
+                <Touchable
+                  onPress={() => navigation.push("Continents", { username })}
+                >
+                  {user.profile.continentCount === 1 ? (
+                    <Item>
+                      <UserName>{user.profile.continentCount}</UserName>
+                      <Bold>CONTINENT</Bold>
+                    </Item>
+                  ) : (
+                    <Item>
+                      <UserName>{user.profile.continentCount}</UserName>
+                      <Bold>CONTINENTS</Bold>
+                    </Item>
+                  )}
+                </Touchable>
+              </>
+            )}
+            {user.profile.gender && (
+              <Item>
+                {(() => {
+                  switch (user.profile.gender) {
+                    case "MALE":
+                      return <UserName>M</UserName>;
+                    case "FEMALE":
+                      return <UserName>F</UserName>;
+                    case "OTHER":
+                      return <UserName>O</UserName>;
+                    default:
+                      return null;
+                  }
+                })()}
+                <Bold>GENDER</Bold>
+              </Item>
+            )}
+            {user.profile.nationality && (
+              <Touchable
+                onPress={() =>
+                  navigation.push("CountryProfileTabs", {
+                    countryCode: user.profile.nationality.countryCode,
+                    continentCode:
+                      user.profile.nationality.continent.continentCode
+                  })
+                }
+              >
+                <Item>
+                  <UserName>{user.profile.nationality.countryEmoji}</UserName>
+                  <Bold>NATIONALITY </Bold>
+                </Item>
               </Touchable>
+            )}
+            {user.profile.residence && (
+              <Touchable
+                onPress={() =>
+                  navigation.push("CountryProfileTabs", {
+                    countryCode: user.profile.residence.countryCode,
+                    continentCode:
+                      user.profile.residence.continent.continentCode
+                  })
+                }
+              >
+                <Item>
+                  <UserName>{user.profile.residence.countryEmoji}</UserName>
+                  <Bold>RESIDENCE </Bold>
+                </Item>
+              </Touchable>
+            )}
+            {console.log(coffees)}
+            {user.profile.isSelf && coffees && coffees.length !== 0 && (
+              <Touchable
+                onPress={() =>
+                  navigation.push("CoffeeDetail", {
+                    ////
+                    ////
+                    ////
+                    ////
+                    //// COFFEEDETAIL
+                    ////
+                    ////
+                    ////
+                    ////
+                  })
+                }
+              >
+                <Item>
+                  <UserName>☕️</UserName>
+                  <Bold>COFFEE </Bold>
+                </Item>
+              </Touchable>
+            )}
+          </ItemContainer>
+          {!user.profile.isSelf && user.profile.isHideTrips ? (
+            <Bold>EditProfile</Bold>
+          ) : (
+            <>
+              {trip.map((i, index) => (
+                <Touchable
+                  key={index}
+                  onPress={() =>
+                    navigation.push("CityProfileTabs", {
+                      cityId: i.city.cityId,
+                      countryCode: i.city.country.countryCode,
+                      continentCode: i.city.country.continent.continentCode
+                    })
+                  }
+                >
+                  <UserRow trip={i} type={"trip"} />
+                </Touchable>
+              ))}
             </>
           )}
-          {user.profile.nationality && (
-            <Touchable
-              onPress={() =>
-                navigation.push("CountryProfileTabs", {
-                  countryCode: user.profile.nationality.countryCode,
-                  continentCode:
-                    user.profile.nationality.continent.continentCode
-                })
-              }
-            >
-              <Item>
-                <UserName>{user.profile.nationality.countryEmoji}</UserName>
-                <Bold>NATIONALITY </Bold>
-              </Item>
-            </Touchable>
-          )}
-          {user.profile.residence && (
-            <Touchable
-              onPress={() =>
-                navigation.push("CountryProfileTabs", {
-                  countryCode: user.profile.residence.countryCode,
-                  continentCode: user.profile.residence.continent.continentCode
-                })
-              }
-            >
-              <Item>
-                <UserName>{user.profile.residence.countryEmoji}</UserName>
-                <Bold>RESIDENCE </Bold>
-              </Item>
-            </Touchable>
-          )}
-
-          {trip && trip.length === 1 ? (
-            <Item>
-              <UserName>{user.profile.tripCount}</UserName>
-              <Bold>TRIP</Bold>
-            </Item>
-          ) : (
-            <Item>
-              <UserName>{user.profile.tripCount}</UserName>
-              <Bold>TRIPS</Bold>
-            </Item>
-          )}
-          {trip.map((i, index) => (
-            <Touchable
-              key={index}
-              onPress={() =>
-                navigation.push("CityProfileTabs", {
-                  cityId: i.city.cityId,
-                  countryCode: i.city.country.countryCode,
-                  continentCode: i.city.country.continent.continentCode
-                })
-              }
-            >
-              <UserRow trip={i} type={"trip"} />
-            </Touchable>
-          ))}
         </View>
       </ScrollView>
     );

@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { COUNTRY_FRAGMENT } from "../../../../fragmentQueries";
+import { COUNTRY_FRAGMENT, COFFEE_FRAGMENT } from "../../../../fragmentQueries";
 
 export const GET_USER = gql`
   query UserProfile($username: String!) {
@@ -183,4 +183,27 @@ export const SLACK_REPORT_USERS = gql`
       ok
     }
   }
+`;
+
+export const GET_COFFEES = gql`
+  query GetCoffees(
+    $cityId: String
+    $countryCode: String
+    $continentCode: String
+    $userName: String
+    $location: String!
+  ) {
+    getCoffees(
+      cityId: $cityId
+      countryCode: $countryCode
+      continentCode: $continentCode
+      userName: $userName
+      location: $location
+    ) {
+      coffees {
+        ...CoffeeParts
+      }
+    }
+  }
+  ${COFFEE_FRAGMENT}
 `;

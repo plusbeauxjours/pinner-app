@@ -148,15 +148,15 @@ export default ({ navigation }) => {
               data={avatarData.getAvatars.avatars}
               renderItem={({ item }) => (
                 <Container
-                  style={{ flex: 1, flexDirection: "column", margin: 1 }}
+                  style={{ flex: 1, flexDirection: "column", margin: 2 }}
                 >
                   {item.isMain && isSelf && <Text>M</Text>}
                   <Touchable onPress={() => openModal(item)}>
                     <Image
                       style={{
-                        height: constants.width / 3 - 2,
-                        width: constants.width / 3 - 2,
-                        borderRadius: 8
+                        height: constants.width / 3 - 4,
+                        width: constants.width / 3 - 4,
+                        borderRadius: 3
                       }}
                       source={
                         item.thumbnail && {
