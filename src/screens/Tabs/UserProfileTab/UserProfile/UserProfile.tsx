@@ -56,24 +56,30 @@ const DisptanceItem = styled(Item)`
   width: ${constants.width / 2 - 20};
 `;
 const ItemContainer = styled.View`
-  padding: 15px;
+  padding: 15px 15px 0 15px;
   flex-wrap: wrap;
   flex-direction: row;
 `;
 const Header = styled.View`
-  height: 300;
+  height: 250;
+  justify-content: center;
+  align-items: center;
   background-color: ${theme.lightGreyColor};
 `;
 const UserNameContainer = styled.View`
-  margin-left: 15;
-  bottom: 10;
-  align-items: flex-start;
+  position: absolute;
+  bottom: 5;
+  align-self: flex-start;
+  margin-left: 10;
+`;
+const Touchable = styled.TouchableOpacity``;
+const ImageTouchable = styled(Touchable)`
+  margin-bottom: 30;
 `;
 const UserName = styled.Text`
   font-weight: 500;
   font-size: 34;
 `;
-const Touchable = styled.TouchableOpacity``;
 
 export default ({ navigation }) => {
   const me = useMe();
@@ -188,7 +194,7 @@ export default ({ navigation }) => {
         }
       >
         <Header>
-          <Touchable
+          <ImageTouchable
             onPress={() =>
               navigation.push("AvatarList", {
                 username: user.username,
@@ -209,14 +215,14 @@ export default ({ navigation }) => {
                   : require(`../../../../Images/avatars/earth1.png`)
               }
             />
-          </Touchable>
+          </ImageTouchable>
           <UserNameContainer>
             <UserName>
               {user.username.length > 24
                 ? user.username.substring(0, 24) + "..."
                 : user.username}
             </UserName>
-            {user.profile.isSelf && (
+            {/* {user.profile.isSelf && (
               <Item>
                 <Touchable
                   onPress={() =>
@@ -229,7 +235,7 @@ export default ({ navigation }) => {
                   <Bold>EditProfile</Bold>
                 </Touchable>
               </Item>
-            )}
+            )} */}
           </UserNameContainer>
         </Header>
         <View>
@@ -434,7 +440,6 @@ export default ({ navigation }) => {
                 </Item>
               </Touchable>
             )}
-            {console.log(coffees)}
             {user.profile.isSelf && coffees && coffees.length !== 0 && (
               <Touchable
                 onPress={() =>
@@ -459,7 +464,7 @@ export default ({ navigation }) => {
             )}
           </ItemContainer>
           {!user.profile.isSelf && user.profile.isHideTrips ? (
-            <Bold>EditProfile</Bold>
+            <Bold>Trips are hideen by {user.username}</Bold>
           ) : (
             <>
               {trip.map((i, index) => (

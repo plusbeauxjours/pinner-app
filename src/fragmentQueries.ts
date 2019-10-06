@@ -29,10 +29,10 @@ export const CITY_FRAGMENT = gql`
     country {
       countryName
       countryCode
-      continent {
-        continentCode
-        continentName
-      }
+      # continent {
+      # continentCode
+      # continentName
+      # }
     }
     likeCount
     isLiked

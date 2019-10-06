@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { RefreshControl, ScrollView, Image } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useQuery, useMutation } from "react-apollo-hooks";
@@ -26,6 +26,7 @@ import { SLACK_REPORT_LOCATIONS } from "../../../../sharedQueries";
 import CityLikeBtn from "../../../../components/CityLikeBtn";
 import constants from "../../../../../constants";
 import mapStyles from "../../../../styles/mapStyles";
+import { countries } from "../../../../../countryData";
 
 const Container = styled.View``;
 
@@ -64,9 +65,6 @@ export default ({ navigation }) => {
   );
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [payload, setPayload] = useState<string>();
-  const [nearCities, setNearCities] = useState<any>([]);
-  const [samenameCities, setSamenameCities] = useState<any>([]);
-  const [usersBefore, setsersBefore] = useState<any>([]);
   const [mapOpen, setMapOpen] = useState<boolean>(false);
   const [slackReportLocationsFn] = useMutation<
     SlackReportLocations,
@@ -90,7 +88,8 @@ export default ({ navigation }) => {
     loading: nearCitiesLoading,
     refetch: nearCitiesRefetch
   } = useQuery<NearCities, NearCitiesVariables>(NEAR_CITIES, {
-    variables: { cityId }
+    variables: { cityId },
+    fetchPolicy: "network-only"
   });
   const {
     data: samenameCitiesData,
@@ -121,20 +120,6 @@ export default ({ navigation }) => {
     }
     return chunks;
   };
-  useEffect(() => {
-    if (nearCitiesData && nearCitiesData.nearCities.cities.length !== 0) {
-      setNearCities(chunk(nearCitiesData.nearCities.cities));
-    }
-    if (
-      samenameCitiesData &&
-      samenameCitiesData.getSamenameCities.cities.length !== 0
-    ) {
-      setSamenameCities(chunk(samenameCitiesData.getSamenameCities.cities));
-    }
-    if (profileData && profileData.cityProfile.usersBefore.length !== 0) {
-      setsersBefore(chunk(profileData.cityProfile.usersBefore));
-    }
-  }, [cityId]);
   if (profileLoading || nearCitiesLoading || samenameCitiesLoading) {
     return <Loader />;
   } else {
@@ -143,9 +128,14 @@ export default ({ navigation }) => {
         count = null,
         hasNextPage = null,
         city = null,
+        usersBefore = null,
         usersNow = null
       } = {}
     } = profileData;
+    const {
+      getSamenameCities: { cities: samenameCities = null } = {}
+    } = samenameCitiesData;
+    const { nearCities: { cities: nearCities = null } = {} } = nearCitiesData;
     return (
       <ScrollView
         refreshControl={
@@ -212,35 +202,34 @@ export default ({ navigation }) => {
               <Title>NEAR CITIES</Title>
               <UserContainer>
                 <Swiper
-                  style={{ height: 135 }}
+                  style={{ height: nearCities.length < 3 ? 90 : 135 }}
                   paginationStyle={{ bottom: -15 }}
                   loop={false}
                 >
-                  {nearCities &&
-                    nearCities.length !== 0 &&
-                    nearCities.map((cities, index) => {
-                      return (
-                        <UserColumn key={index}>
-                          {cities.map((city: any, index: any) => {
-                            return (
-                              <Touchable
-                                key={index}
-                                onPress={() =>
-                                  navigation.push("CityProfileTabs", {
-                                    cityId: city.cityId,
-                                    countryCode: city.country.countryCode,
-                                    continentCode:
-                                      city.country.continent.continentCode
-                                  })
-                                }
-                              >
-                                <UserRow city={city} type={"nearCity"} />
-                              </Touchable>
-                            );
-                          })}
-                        </UserColumn>
-                      );
-                    })}
+                  {chunk(nearCities).map((cities, index) => {
+                    return (
+                      <UserColumn key={index}>
+                        {cities.map((city: any, index: any) => {
+                          return (
+                            <Touchable
+                              key={index}
+                              onPress={() =>
+                                navigation.push("CityProfileTabs", {
+                                  cityId: city.cityId,
+                                  countryCode: city.country.countryCode,
+                                  continentCode: countries.find(
+                                    i => i.code === city.country.countryCode
+                                  ).continent
+                                })
+                              }
+                            >
+                              <UserRow city={city} type={"nearCity"} />
+                            </Touchable>
+                          );
+                        })}
+                      </UserColumn>
+                    );
+                  })}
                 </Swiper>
               </UserContainer>
             </Item>
@@ -250,74 +239,72 @@ export default ({ navigation }) => {
               <Title>SAMENAME CITIES</Title>
               <UserContainer>
                 <Swiper
-                  style={{ height: 135 }}
+                  style={{ height: samenameCities.length < 3 ? 90 : 135 }}
                   paginationStyle={{ bottom: -15 }}
                   loop={false}
                 >
-                  {samenameCities.length !== 0 &&
-                    samenameCities.map((cities, index) => {
-                      return (
-                        <UserColumn key={index}>
-                          {cities.map((city: any, index: any) => {
-                            return (
-                              <Touchable
-                                key={index}
-                                onPress={() =>
-                                  navigation.push("CityProfileTabs ", {
-                                    cityId: city.cityId,
-                                    countryCode: city.country.countryCode,
-                                    continentCode:
-                                      city.country.continent.continentCode
-                                  })
-                                }
-                              >
-                                <UserRow city={city} type={"nearCity"} />
-                              </Touchable>
-                            );
-                          })}
-                        </UserColumn>
-                      );
-                    })}
+                  {chunk(samenameCities).map((cities, index) => {
+                    return (
+                      <UserColumn key={index}>
+                        {cities.map((city: any, index: any) => {
+                          return (
+                            <Touchable
+                              key={index}
+                              onPress={() =>
+                                navigation.push("CityProfileTabs ", {
+                                  cityId: city.cityId,
+                                  countryCode: city.country.countryCode,
+                                  continentCode: countries.find(
+                                    i => i.code === city.country.countryCode
+                                  ).continent
+                                })
+                              }
+                            >
+                              <UserRow city={city} type={"nearCity"} />
+                            </Touchable>
+                          );
+                        })}
+                      </UserColumn>
+                    );
+                  })}
                 </Swiper>
               </UserContainer>
             </Item>
           )}
-          {console.log(usersBefore)}
           {usersBefore && usersBefore.length !== 0 && (
             <Item>
               <Title>USERS BEFORE</Title>
               <UserContainer>
                 <Swiper
-                  style={{ height: 135 }}
+                  style={{ height: usersBefore.length < 3 ? 90 : 135 }}
                   paginationStyle={{ bottom: -15 }}
                   loop={false}
                 >
-                  {usersBefore.length !== 0 &&
-                    usersBefore.map((users, index) => {
-                      return (
-                        <UserColumn key={index}>
-                          {users.map((user: any, index: any) => {
-                            return (
-                              <Touchable
-                                key={index}
-                                onPress={() =>
-                                  navigation.push("UserProfileTabs", {
-                                    username: user.actor.profile.username,
-                                    isSelf: user.actor.profile.isSelf
-                                  })
-                                }
-                              >
-                                <UserRow
-                                  user={user.actor.profile}
-                                  naturalTime={user.naturalTime}
-                                  type={"userBefore"}
-                                />
-                              </Touchable>
-                            );
-                          })}
-                        </UserColumn>
-                      );
-                    })}
+                  {chunk(usersBefore).map((users, index) => {
+                    return (
+                      <UserColumn key={index}>
+                        {users.map((user: any, index: any) => {
+                          return (
+                            <Touchable
+                              key={index}
+                              onPress={() =>
+                                navigation.push("UserProfileTabs", {
+                                  username: user.actor.profile.username,
+                                  isSelf: user.actor.profile.isSelf
+                                })
+                              }
+                            >
+                              <UserRow
+                                user={user.actor.profile}
+                                naturalTime={user.naturalTime}
+                                type={"userBefore"}
+                              />
+                            </Touchable>
+                          );
+                        })}
+                      </UserColumn>
+                    );
+                  })}
                 </Swiper>
               </UserContainer>
             </Item>

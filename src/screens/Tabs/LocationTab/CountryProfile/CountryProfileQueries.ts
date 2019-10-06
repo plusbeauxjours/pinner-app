@@ -26,7 +26,24 @@ export const COUNTRY_PROFILE = gql`
         }
       }
       cities {
-        ...CityParts
+        id
+        latitude
+        longitude
+        cityName
+        cityId
+        cityPhoto
+        cityThumbnail
+        distance
+        country {
+          countryName
+          countryCode
+          continent {
+            continentCode
+            continentName
+          }
+        }
+        likeCount
+        isLiked
       }
     }
   }

@@ -20,7 +20,24 @@ export const RECOMMEND_LOCATIONS = gql`
       page
       hasNextPage
       cities {
-        ...CityParts
+        id
+        latitude
+        longitude
+        cityName
+        cityId
+        cityPhoto
+        cityThumbnail
+        distance
+        country {
+          countryName
+          countryCode
+          continent {
+            continentCode
+            continentName
+          }
+        }
+        likeCount
+        isLiked
       }
     }
   }

@@ -20,6 +20,7 @@ import {
 import { COUNTRY_PROFILE, GET_COUNTRIES } from "./CountryProfileQueries";
 import constants from "../../../../../constants";
 import mapStyles from "../../../../styles/mapStyles";
+import { countries as countryData } from "../../../../../countryData";
 
 const Container = styled.View``;
 
@@ -62,12 +63,8 @@ export default ({ navigation }) => {
   const [countryCode, setCountryCode] = useState<string>(
     navigation.getParam("countryCode") || location.currentCountryCode
   );
-  // console.log("navigation=========", navigation.getParam("countryCode"));
-  // console.log("state=========", countryCode);
-  // console.log("location=========", location.currentCountryCode);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [payload, setPayload] = useState<string>();
-  const [continentCountries, setContinentCountries] = useState([]);
   const [mapOpen, setMapOpen] = useState<boolean>(false);
   const [slackReportLocationsFn] = useMutation<
     SlackReportLocations,
@@ -113,11 +110,6 @@ export default ({ navigation }) => {
     }
     return chunks;
   };
-  useEffect(() => {
-    if (countriesData.getCountries.countries.length !== 0) {
-      setContinentCountries(chunk(countriesData.getCountries.countries));
-    }
-  }, [countryCode]);
   if (profileLoading || countriesLoading) {
     return <Loader />;
   } else {
@@ -129,6 +121,7 @@ export default ({ navigation }) => {
         cities = null
       } = {}
     } = profileData;
+    const { getCountries: { countries = null } = {} } = countriesData;
     return (
       <ScrollView
         refreshControl={
@@ -186,7 +179,7 @@ export default ({ navigation }) => {
               ) : null}
             </View>
           )}
-          {continentCountries.length !== 0 && (
+          {countries && countries.length !== 0 && (
             <Item>
               {/* <Title>{country.continent.continentName}</Title> */}
               <UserContainer>
@@ -195,19 +188,18 @@ export default ({ navigation }) => {
                   paginationStyle={{ bottom: -15 }}
                   loop={false}
                 >
-                  {continentCountries.length !== 0 &&
-                    continentCountries.map((countries, index) => {
+                  {countries.length !== 0 &&
+                    chunk(countries).map((countryItem, index) => {
                       return (
                         <UserColumn key={index}>
-                          {countries.map((country: any, index: any) => {
+                          {countryItem.map((country: any, index: any) => {
                             return (
                               <Touchable
                                 key={index}
                                 onPress={() =>
                                   navigation.push("CountryProfileTabs", {
                                     countryCode: country.countryCode,
-                                    continentCode:
-                                      country.continent.continentCode
+                                    continentCode: country.continentCode
                                   })
                                 }
                               >
@@ -222,27 +214,30 @@ export default ({ navigation }) => {
               </UserContainer>
             </Item>
           )}
-          {/* {cities.length !== 0 && (
-              <Item>
-                <Title>
-                  {country.cityCount}
-                  {country.cityCount === 1 ? " CITY" : " CITIES"}
-                </Title>
-                {cities.map((city, index) => (
-                  <Touchable
-                    onPress={() =>
-                      navigation.push("CityProfileTabs", {
-                        cityId: city.cityId,
-                        countryCode: city.country.countryCode,
-                        continentCode: city.country.continent.continentCode
-                      })
-                    }
-                  >
-                    <UserRow key={index} city={city} type={"city"} />
-                  </Touchable>
-                ))}
-              </Item>
-            )} */}
+          {cities && cities.length !== 0 && (
+            <Item>
+              <Title>
+                {country.cityCount}
+                {country.cityCount === 1 ? " CITY" : " CITIES"}
+              </Title>
+              {cities.map((city, index) => (
+                <Touchable
+                  key={index}
+                  onPress={() =>
+                    navigation.push("CityProfileTabs", {
+                      cityId: city.cityId,
+                      countryCode: city.country.countryCode,
+                      continentCode: countryData.find(
+                        i => i.code === city.country.countryCode
+                      ).continent
+                    })
+                  }
+                >
+                  <UserRow city={city} type={"city"} />
+                </Touchable>
+              ))}
+            </Item>
+          )}
         </Container>
       </ScrollView>
     );

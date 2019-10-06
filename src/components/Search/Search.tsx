@@ -18,6 +18,7 @@ import {
 import keys from "../../../keys";
 import useGoogleAutocomplete from "../../hooks/useGoogleAutocomplete";
 import SearchCityPhoto from "../SearchCityPhoto";
+import { theme } from "../../styles/theme";
 
 const Text = styled.Text``;
 const View = styled.View`
@@ -114,7 +115,7 @@ const Search = ({ navigation }) => {
   return (
     <>
       <Modal
-        style={{ margin: 0 }}
+        style={{ margin: 0, alignItems: "flex-start" }}
         isVisible={modalOpen}
         backdropColor={"white"}
         onBackdropPress={() => setModalOpen(false)}
@@ -122,15 +123,19 @@ const Search = ({ navigation }) => {
         onModalHide={() => setSearch("")}
         propagateSwipe={true}
         scrollHorizontal={true}
+        backdropOpacity={0.9}
       >
         <TextInput
           style={{
-            width: constants.width,
+            alignSelf: "center",
+            width: constants.width - 30,
             top: 200,
             backgroundColor: "transparent",
             textAlign: "center",
             fontSize: 30,
-            position: "absolute"
+            position: "absolute",
+            borderBottomWidth: 1,
+            borderBottomColor: `${theme.darkGreyColor}`
           }}
           autoFocus={true}
           value={navigation.value}
@@ -144,7 +149,7 @@ const Search = ({ navigation }) => {
             setModalOpen(false);
           }}
         >
-          <ScrollView style={{ marginTop: 250, marginBottom: 25 }}>
+          <ScrollView style={{ marginTop: 237, marginBottom: 25 }}>
             {loading || createCityLoading ? (
               <Loader />
             ) : (

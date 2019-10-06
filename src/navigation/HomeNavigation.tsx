@@ -38,7 +38,7 @@ const UserProfileTabs = createMaterialTopTabNavigator(
     tabBarPosition: "bottom",
     tabBarOptions: {
       style: {
-        backgroundColor: "white"
+        display: "none"
       },
       activeTintColor: "#000",
       inactiveTintColor: "#d1cece",
@@ -72,7 +72,7 @@ const CountryProfileTabs = createMaterialTopTabNavigator(
     tabBarPosition: "bottom",
     tabBarOptions: {
       style: {
-        backgroundColor: "white"
+        display: "none"
       },
       activeTintColor: "#000",
       inactiveTintColor: "#d1cece",
@@ -113,7 +113,7 @@ const CityProfileTabs = createMaterialTopTabNavigator(
     tabBarPosition: "bottom",
     tabBarOptions: {
       style: {
-        backgroundColor: "white"
+        display: "none"
       },
       activeTintColor: "#000",
       inactiveTintColor: "#d1cece",
@@ -154,7 +154,7 @@ const HomeTabs = createMaterialTopTabNavigator(
     tabBarPosition: "bottom",
     tabBarOptions: {
       style: {
-        backgroundColor: "white"
+        display: "none"
       },
       activeTintColor: "#000",
       inactiveTintColor: "#d1cece",

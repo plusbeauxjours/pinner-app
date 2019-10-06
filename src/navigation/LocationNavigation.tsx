@@ -35,7 +35,7 @@ export const UserProfileTabs = createMaterialTopTabNavigator(
     tabBarPosition: "bottom",
     tabBarOptions: {
       style: {
-        backgroundColor: "white"
+        display: "none"
       },
       activeTintColor: "#000",
       inactiveTintColor: "#d1cece",
@@ -69,7 +69,7 @@ export const CountryProfileTabs = createMaterialTopTabNavigator(
     tabBarPosition: "bottom",
     tabBarOptions: {
       style: {
-        backgroundColor: "white"
+        display: "none"
       },
       activeTintColor: "#000",
       inactiveTintColor: "#d1cece",
@@ -110,7 +110,7 @@ export const CityProfileTabs = createMaterialTopTabNavigator(
     tabBarPosition: "bottom",
     tabBarOptions: {
       style: {
-        backgroundColor: "white"
+        display: "none"
       },
       activeTintColor: "#000",
       inactiveTintColor: "#d1cece",

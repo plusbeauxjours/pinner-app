@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
@@ -41,8 +41,6 @@ export default ({ navigation }) => {
   const location = useLocation();
   const [refreshing, setRefreshing] = useState(false);
   const cityId = location.currentCityId;
-  const [recommendUsers, setRecommendUsers] = useState([]);
-  const [recommendLocations, setRecommendLocations] = useState([]);
   const {
     data: recommendUserData,
     loading: recommendUserLoading,
@@ -84,19 +82,16 @@ export default ({ navigation }) => {
     }
     return chunks;
   };
-  useEffect(() => {
-    if (recommendUserData.recommendUsers.users.length !== 0) {
-      setRecommendUsers(chunk(recommendUserData.recommendUsers.users));
-    }
-    if (recommendLocationData.recommendLocations.cities.length !== 0) {
-      setRecommendLocations(
-        chunk(recommendLocationData.recommendLocations.cities)
-      );
-    }
-  }, []);
   if (recommendUserLoading || recommendLocationLoading || coffeeLoading) {
     return <Loader />;
   } else {
+    const {
+      recommendUsers: { users: recommendUsers = null } = {}
+    } = recommendUserData;
+    const {
+      recommendLocations: { cities: recommendLocations = null } = {}
+    } = recommendLocationData;
+    const { getCoffees: { coffees = null } = {} } = coffeeData;
     return (
       <ScrollView
         refreshControl={
@@ -104,16 +99,16 @@ export default ({ navigation }) => {
         }
       >
         <Container>
-          <Item>
-            <Title>RECOMMEND USERS</Title>
-            <UserContainer>
-              <Swiper
-                style={{ height: 135 }}
-                paginationStyle={{ bottom: -15 }}
-                loop={false}
-              >
-                {recommendUsers.length !== 0 &&
-                  recommendUsers.map((users, index) => {
+          {recommendUsers && recommendUsers.length !== 0 && (
+            <Item>
+              <Title>RECOMMEND USERS</Title>
+              <UserContainer>
+                <Swiper
+                  style={{ height: recommendUsers.length < 3 ? 90 : 135 }}
+                  paginationStyle={{ bottom: -15 }}
+                  loop={false}
+                >
+                  {chunk(recommendUsers).map((users, index) => {
                     return (
                       <UserColumn key={index}>
                         {users.map((user: any, index: any) => {
@@ -134,66 +129,61 @@ export default ({ navigation }) => {
                       </UserColumn>
                     );
                   })}
-              </Swiper>
-            </UserContainer>
-          </Item>
-          {recommendLocationData.recommendLocations &&
-            recommendLocationData.recommendLocations.cities.length !== 0 && (
-              <Item>
-                <Title>RECOMMEND LOCATIONS</Title>
-                <UserContainer>
-                  <Swiper
-                    style={{ height: 135 }}
-                    paginationStyle={{ bottom: -15 }}
-                    loop={false}
-                  >
-                    {recommendLocations.map((locations, index) => {
-                      return (
-                        <UserColumn key={index}>
-                          {locations.map((city: any, index: any) => {
-                            return (
-                              <Touchable
-                                key={index}
-                                onPress={() =>
-                                  navigation.push("CityProfileTabs", {
-                                    cityId: city.cityId,
-                                    countryCode: city.country.countryCode,
-                                    continentCode:
-                                      city.country.continent.continentCode
-                                  })
-                                }
-                              >
-                                <UserRow city={city} type={"city"} />
-                              </Touchable>
-                            );
-                          })}
-                        </UserColumn>
-                      );
-                    })}
-                  </Swiper>
-                </UserContainer>
-              </Item>
-            )}
-          {coffeeData.getCoffees.coffees &&
-            coffeeData.getCoffees.coffees.length !== 0 && (
-              <Item>
-                <Title>NEED SOME COFFEE NOW</Title>
-                <UserContainer>
-                  <Swiper
-                    style={{ height: 135 }}
-                    paginationStyle={{ bottom: -15 }}
-                  >
-                    {coffeeData.getCoffees.coffees.map(coffee => (
-                      <UserRow
-                        key={coffee.id}
-                        coffee={coffee}
-                        type={"coffee"}
-                      />
-                    ))}
-                  </Swiper>
-                </UserContainer>
-              </Item>
-            )}
+                </Swiper>
+              </UserContainer>
+            </Item>
+          )}
+          {recommendLocations && recommendLocations.length !== 0 && (
+            <Item>
+              <Title>RECOMMEND LOCATIONS</Title>
+              <UserContainer>
+                <Swiper
+                  style={{ height: recommendLocations.length < 3 ? 90 : 135 }}
+                  paginationStyle={{ bottom: -15 }}
+                  loop={false}
+                >
+                  {chunk(recommendLocations).map((locations, index) => {
+                    return (
+                      <UserColumn key={index}>
+                        {locations.map((city: any, index: any) => {
+                          return (
+                            <Touchable
+                              key={index}
+                              onPress={() =>
+                                navigation.push("CityProfileTabs", {
+                                  cityId: city.cityId,
+                                  countryCode: city.country.countryCode,
+                                  continentCode:
+                                    city.country.continent.continentCode
+                                })
+                              }
+                            >
+                              <UserRow city={city} type={"city"} />
+                            </Touchable>
+                          );
+                        })}
+                      </UserColumn>
+                    );
+                  })}
+                </Swiper>
+              </UserContainer>
+            </Item>
+          )}
+          {coffees && coffees.length !== 0 && (
+            <Item>
+              <Title>NEED SOME COFFEE NOW</Title>
+              <UserContainer>
+                <Swiper
+                  style={{ height: 135 }}
+                  paginationStyle={{ bottom: -15 }}
+                >
+                  {coffees.map(coffee => (
+                    <UserRow key={coffee.id} coffee={coffee} type={"coffee"} />
+                  ))}
+                </Swiper>
+              </UserContainer>
+            </Item>
+          )}
         </Container>
       </ScrollView>
     );

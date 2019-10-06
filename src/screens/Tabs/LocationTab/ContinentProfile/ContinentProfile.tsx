@@ -92,12 +92,6 @@ export default ({ navigation }) => {
     }
     return chunks;
   };
-  useEffect(() => {
-    console.log("continent changed");
-    if (profileData && profileData.continentProfile.continents.length !== 0) {
-      setSameContinents(chunk(profileData.continentProfile.continents));
-    }
-  }, [continentCode]);
   if (profileLoading) {
     return <Loader />;
   } else {
@@ -140,7 +134,7 @@ export default ({ navigation }) => {
               ) : null}
             </View>
           )}
-          {countries && countries.length !== 0 && (
+          {continents && continents.length !== 0 && (
             <Item>
               <Title>CONTINENTS</Title>
               <UserContainer>
@@ -149,35 +143,31 @@ export default ({ navigation }) => {
                   paginationStyle={{ bottom: -15 }}
                   loop={false}
                 >
-                  {sameContinents &&
-                    sameContinents.length !== 0 &&
-                    sameContinents.map((continents, index) => {
-                      return (
-                        <UserColumn key={index}>
-                          {continents.map((continent: any, index: any) => {
-                            return (
-                              <Touchable
-                                key={index}
-                                onPress={() => {
-                                  if (
-                                    continentCode !== continent.continentCode
-                                  ) {
-                                    navigation.push("ContinentProfile", {
-                                      continentCode: continent.continentCode
-                                    });
-                                  }
-                                }}
-                              >
-                                <UserRow
-                                  continent={continent}
-                                  type={"continent"}
-                                />
-                              </Touchable>
-                            );
-                          })}
-                        </UserColumn>
-                      );
-                    })}
+                  {chunk(continents).map((continentItem, index) => {
+                    return (
+                      <UserColumn key={index}>
+                        {continentItem.map((continent: any, index: any) => {
+                          return (
+                            <Touchable
+                              key={index}
+                              onPress={() => {
+                                if (continentCode !== continent.continentCode) {
+                                  navigation.push("ContinentProfile", {
+                                    continentCode: continent.continentCode
+                                  });
+                                }
+                              }}
+                            >
+                              <UserRow
+                                continent={continent}
+                                type={"continent"}
+                              />
+                            </Touchable>
+                          );
+                        })}
+                      </UserColumn>
+                    );
+                  })}
                 </Swiper>
               </UserContainer>
             </Item>

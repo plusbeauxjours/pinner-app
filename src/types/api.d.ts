@@ -670,17 +670,10 @@ export interface CityProfileVariables {
 // GraphQL query operation: GetSamenameCities
 // ====================================================
 
-export interface GetSamenameCities_getSamenameCities_cities_country_continent {
-  __typename: "ContinentType";
-  continentCode: string | null;
-  continentName: string | null;
-}
-
 export interface GetSamenameCities_getSamenameCities_cities_country {
   __typename: "CountryType";
   countryName: string | null;
   countryCode: string | null;
-  continent: GetSamenameCities_getSamenameCities_cities_country_continent | null;
 }
 
 export interface GetSamenameCities_getSamenameCities_cities {
@@ -719,17 +712,10 @@ export interface GetSamenameCitiesVariables {
 // GraphQL query operation: NearCities
 // ====================================================
 
-export interface NearCities_nearCities_cities_country_continent {
-  __typename: "ContinentType";
-  continentCode: string | null;
-  continentName: string | null;
-}
-
 export interface NearCities_nearCities_cities_country {
   __typename: "CountryType";
   countryName: string | null;
   countryCode: string | null;
-  continent: NearCities_nearCities_cities_country_continent | null;
 }
 
 export interface NearCities_nearCities_cities {
@@ -1295,17 +1281,10 @@ export interface MarkAsMainVariables {
 // GraphQL query operation: FrequentVisits
 // ====================================================
 
-export interface FrequentVisits_frequentVisits_cities_country_continent {
-  __typename: "ContinentType";
-  continentCode: string | null;
-  continentName: string | null;
-}
-
 export interface FrequentVisits_frequentVisits_cities_country {
   __typename: "CountryType";
   countryName: string | null;
   countryCode: string | null;
-  continent: FrequentVisits_frequentVisits_cities_country_continent | null;
 }
 
 export interface FrequentVisits_frequentVisits_cities {
@@ -2275,17 +2254,10 @@ export interface ProfileParts {
 // GraphQL fragment: CityParts
 // ====================================================
 
-export interface CityParts_country_continent {
-  __typename: "ContinentType";
-  continentCode: string | null;
-  continentName: string | null;
-}
-
 export interface CityParts_country {
   __typename: "CountryType";
   countryName: string | null;
   countryCode: string | null;
-  continent: CityParts_country_continent | null;
 }
 
 export interface CityParts {
