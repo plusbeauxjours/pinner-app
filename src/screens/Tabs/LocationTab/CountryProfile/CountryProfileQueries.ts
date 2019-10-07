@@ -1,9 +1,5 @@
 import gql from "graphql-tag";
-import {
-  CITY_FRAGMENT,
-  COUNTRY_FRAGMENT,
-  CONTINENT_FRAGMENT
-} from "../../../../fragmentQueries";
+import { COUNTRY_FRAGMENT } from "../../../../fragmentQueries";
 
 export const COUNTRY_PROFILE = gql`
   query CountryProfile($page: Int, $countryCode: String!) {
@@ -22,7 +18,11 @@ export const COUNTRY_PROFILE = gql`
         totalLikeCount
         cityCount
         continent {
-          ...ContinentParts
+          id
+          continentName
+          continentCode
+          continentPhoto
+          continentThumbnail
         }
       }
       cities {
@@ -37,18 +37,16 @@ export const COUNTRY_PROFILE = gql`
         country {
           countryName
           countryCode
-          continent {
-            continentCode
-            continentName
-          }
+          # continent {
+          #   continentCode
+          #   continentName
+          # }
         }
         likeCount
         isLiked
       }
     }
   }
-  ${CITY_FRAGMENT}
-  ${CONTINENT_FRAGMENT}
 `;
 
 export const GET_COUNTRIES = gql`

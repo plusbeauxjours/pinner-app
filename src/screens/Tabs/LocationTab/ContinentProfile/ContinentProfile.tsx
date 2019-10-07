@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { RefreshControl, ScrollView, Image } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -15,7 +15,7 @@ import {
 } from "../../../../types/api";
 import { SLACK_REPORT_LOCATIONS } from "../../../../sharedQueries";
 import { CONTINENT_PROFILE } from "./ContinentProfileQueries";
-import { countries } from "../../../../../countryData";
+import { countries as countryData } from "../../../../../countryData";
 import constants from "../../../../../constants";
 
 const Container = styled.View``;
@@ -51,7 +51,7 @@ export default ({ navigation }) => {
   const location = useLocation();
   const [continentCode, setContinentCode] = useState<string>(
     navigation.getParam("continentCode") ||
-      countries.find(i => i.code === location.currentCountryCode).continent
+      countryData.find(i => i.code === location.currentCountryCode).continent
   );
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [payload, setPayload] = useState<string>();
@@ -178,7 +178,7 @@ export default ({ navigation }) => {
                 {continent.countryCount}
                 {continent.countryCount === 1 ? " COUNTRY" : " COUNTRIES"}
               </Title>
-              {countries.map((country, index) => (
+              {countries.map((country: any, index: any) => (
                 <Touchable
                   key={index}
                   onPress={() => {

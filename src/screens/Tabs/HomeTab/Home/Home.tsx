@@ -9,6 +9,7 @@ import { useLocation } from "../../../../context/LocationContext";
 import { ScrollView, RefreshControl } from "react-native";
 import Swiper from "react-native-swiper";
 import { GET_COFFEES } from "../../../../sharedQueries";
+import { COUNTRY_PROFILE } from "../../LocationTab/CountryProfile/CountryProfileQueries";
 import {
   GetCoffees,
   GetCoffeesVariables,
@@ -46,6 +47,15 @@ export default ({ navigation }) => {
     loading: recommendUserLoading,
     refetch: recommendUserRefetch
   } = useQuery<RecommendUsers, RecommendUsersVariables>(RECOMMEND_USERS);
+  const {
+    data: profileData,
+    loading: profileLoading,
+    refetch: profileRefetch
+  } = useQuery(COUNTRY_PROFILE, {
+    variables: { countryCode: "KR" },
+    fetchPolicy: "network-only"
+  });
+  console.log(profileData && profileData);
   const {
     data: recommendLocationData,
     loading: recommendLocationLoading,

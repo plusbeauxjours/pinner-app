@@ -467,7 +467,7 @@ export default ({ navigation }) => {
             <Bold>Trips are hideen by {user.username}</Bold>
           ) : (
             <>
-              {trip.map((i, index) => (
+              {trip.map((i: any, index: any) => (
                 <Touchable
                   key={index}
                   onPress={() =>

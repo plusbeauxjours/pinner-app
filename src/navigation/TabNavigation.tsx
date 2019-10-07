@@ -23,20 +23,8 @@ const stackFactory = initialRoute =>
       }
     }
   });
-
 export default createBottomTabNavigator(
   {
-    Profile: {
-      screen: stackFactory(UserProfileNavigation),
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            name={Platform.OS === "ios" ? "ios-person" : "md-person"}
-          />
-        )
-      }
-    },
     Home: {
       screen: stackFactory(HomeNavigation),
       navigationOptions: {
@@ -66,6 +54,17 @@ export default createBottomTabNavigator(
           <NavIcon
             focused={focused}
             name={Platform.OS === "ios" ? "ios-add" : "md-add"}
+          />
+        )
+      }
+    },
+    Profile: {
+      screen: stackFactory(UserProfileNavigation),
+      navigationOptions: {
+        tabBarIcon: ({ focused }) => (
+          <NavIcon
+            focused={focused}
+            name={Platform.OS === "ios" ? "ios-person" : "md-person"}
           />
         )
       }

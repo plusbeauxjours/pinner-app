@@ -76,13 +76,16 @@ export default ({ navigation }) => {
       payload
     }
   });
+  console.log(countryCode);
   const {
     data: profileData,
     loading: profileLoading,
     refetch: profileRefetch
-  } = useQuery<CountryProfile, CountryProfileVariables>(COUNTRY_PROFILE, {
-    variables: { countryCode }
+  } = useQuery(COUNTRY_PROFILE, {
+    variables: { countryCode },
+    fetchPolicy: "network-only"
   });
+  console.log(countryCode, profileData, profileLoading);
   const {
     data: countriesData,
     loading: countriesLoading,
@@ -181,7 +184,7 @@ export default ({ navigation }) => {
           )}
           {countries && countries.length !== 0 && (
             <Item>
-              {/* <Title>{country.continent.continentName}</Title> */}
+              <Title>{country.continent.continentName}</Title>
               <UserContainer>
                 <Swiper
                   style={{ height: 135 }}
@@ -220,7 +223,7 @@ export default ({ navigation }) => {
                 {country.cityCount}
                 {country.cityCount === 1 ? " CITY" : " CITIES"}
               </Title>
-              {cities.map((city, index) => (
+              {cities.map((city: any, index: any) => (
                 <Touchable
                   key={index}
                   onPress={() =>

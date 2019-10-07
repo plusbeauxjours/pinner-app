@@ -197,7 +197,7 @@ export default ({ navigation }) => {
               />
             </View>
           )}
-          {nearCities && nearCities.length !== 0 && (
+          {nearCities.length !== 0 && (
             <Item>
               <Title>NEAR CITIES</Title>
               <UserContainer>
@@ -234,7 +234,7 @@ export default ({ navigation }) => {
               </UserContainer>
             </Item>
           )}
-          {samenameCities && samenameCities.length !== 0 && (
+          {samenameCities.length !== 0 && (
             <Item>
               <Title>SAMENAME CITIES</Title>
               <UserContainer>
@@ -271,7 +271,7 @@ export default ({ navigation }) => {
               </UserContainer>
             </Item>
           )}
-          {usersBefore && usersBefore.length !== 0 && (
+          {usersBefore.length !== 0 && (
             <Item>
               <Title>USERS BEFORE</Title>
               <UserContainer>
