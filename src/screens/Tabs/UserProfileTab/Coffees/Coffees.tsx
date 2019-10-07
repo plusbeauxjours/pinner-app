@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { ScrollView, RefreshControl } from "react-native";
+import { RefreshControl } from "react-native";
 import { GetCoffees, GetCoffeesVariables } from "../../../../types/api";
 import { useQuery } from "react-apollo-hooks";
 import { GET_COFFEES } from "./CoffeesQueries";
@@ -13,13 +13,20 @@ const View = styled.View`
   justify-content: center;
   align-items: center;
   flex: 1;
+  background-color: ${props => props.theme.bgColor};
 `;
 const Bold = styled.Text`
   font-weight: 500;
   font-size: 20;
+  color: ${props => props.theme.color};
 `;
 
-const Text = styled.Text``;
+const Text = styled.Text`
+  color: ${props => props.theme.color};
+`;
+const ScrollView = styled.ScrollView`
+  background-color: ${props => props.theme.bgColor};
+`;
 
 export default ({ navigation }) => {
   const me = useMe();

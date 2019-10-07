@@ -10,7 +10,9 @@ const ThemeProvider = ({ isDarkMode: isDarkModeProp, children }) => {
   const themeObject = isDarkMode ? darkTheme : lightTheme;
   return (
     <ThemeContext.Provider value={{ isDarkMode, setDarkMode }}>
-      <BaseThemeProvider theme={themeObject}>{children}</BaseThemeProvider>
+      <BaseThemeProvider theme={themeObject} isDarkMode={isDarkMode}>
+        {children}
+      </BaseThemeProvider>
     </ThemeContext.Provider>
   );
 };

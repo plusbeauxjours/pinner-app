@@ -22,6 +22,7 @@ const IconContainer = styled.View`
 `;
 const Text = styled.Text`
   margin-left: 10px;
+  color: ${props => props.theme.color};
 `;
 
 interface IProps {
@@ -66,7 +67,7 @@ const CityLikeBtn: React.FC<IProps> = ({
       <IconContainer>
         <Ionicons
           size={16}
-          color={isLiked ? theme.blueColor : theme.darkBlueColor}
+          color={isLiked ? theme.blueColor : "#999"}
           name={
             Platform.OS === "ios"
               ? isLiked

@@ -22,18 +22,22 @@ const HeaderUserContainer = styled.View`
 `;
 const Bold = styled.Text`
   font-weight: 500;
+  color: ${props => props.theme.color};
 `;
 const Location = styled.Text`
   font-size: 12px;
+  color: ${props => props.theme.color};
 `;
 const Header = styled.View`
   flex: 2;
   flex-direction: row;
 `;
-const Text = styled.Text``;
+const Text = styled.Text`
+  color: ${props => props.theme.color};
+`;
 const GreyText = styled(Text)`
   margin-left: 15px;
-  color: grey;
+  color: ${props => props.theme.greyColor};
 `;
 const Items = styled.View`
   flex: 1;

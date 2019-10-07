@@ -29,10 +29,12 @@ export default createBottomTabNavigator(
       screen: stackFactory(HomeNavigation),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            name={Platform.OS === "ios" ? "ios-home" : "md-home"}
-          />
+          <>
+            <NavIcon
+              focused={focused}
+              name={Platform.OS === "ios" ? "ios-home" : "md-home"}
+            />
+          </>
         )
       }
     },

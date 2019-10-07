@@ -11,6 +11,6 @@ const Container = styled.View`
 
 export default () => (
   <Container>
-    <ActivityIndicator color={theme.darkGreyColor} />
+    <ActivityIndicator color={`${props => props.theme.color}`} />
   </Container>
 );

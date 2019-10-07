@@ -6,7 +6,7 @@ import { useQuery, useMutation } from "react-apollo-hooks";
 import { GET_MATCHES } from "./MatchQueries";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
-import { ScrollView, RefreshControl } from "react-native";
+import { RefreshControl } from "react-native";
 import { MARK_AS_READ_MATCH } from "./MatchQueries";
 import {
   GetMatches,
@@ -15,7 +15,9 @@ import {
   MarkAsReadMatchVariables
 } from "../../../../types/api";
 
-const Container = styled.View``;
+const Container = styled.View`
+  background-color: ${props => props.theme.bgColor};
+`;
 
 const UserContainer = styled.View``;
 
@@ -28,6 +30,16 @@ const Title = styled.Text`
   font-size: 18px;
   padding-left: 15px;
   margin-bottom: 5px;
+  color: ${props => props.theme.color};
+`;
+const ScrollView = styled.ScrollView`
+  background-color: ${props => props.theme.bgColor};
+`;
+const LoaderContainer = styled.View`
+  flex: 1;
+  background-color: ${props => props.theme.bgColor};
+  justify-content: center;
+  align-items: center;
 `;
 
 export default () => {
@@ -81,7 +93,11 @@ export default () => {
     }
   };
   if (matchLoading) {
-    return <Loader />;
+    return (
+      <LoaderContainer>
+        <Loader />
+      </LoaderContainer>
+    );
   } else if (matchData) {
     return (
       <ScrollView

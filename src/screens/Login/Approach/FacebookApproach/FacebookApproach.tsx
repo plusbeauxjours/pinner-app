@@ -16,6 +16,7 @@ const FBContainer = styled.View`
   padding-top: 25px;
   border-top-width: 1px;
   border-style: solid;
+  background-color: ${props => props.theme.bgColor};
 `;
 
 export default () => {

@@ -6,7 +6,7 @@ import { useQuery } from "react-apollo-hooks";
 import { RECOMMEND_USERS, RECOMMEND_LOCATIONS } from "./HomeQueries";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
-import { ScrollView, RefreshControl } from "react-native";
+import { RefreshControl } from "react-native";
 import Swiper from "react-native-swiper";
 import { GET_COFFEES } from "../../../../sharedQueries";
 import {
@@ -18,7 +18,10 @@ import {
   RecommendLocationsVariables
 } from "../../../../types/api";
 
-const Container = styled.View``;
+const Container = styled.View`
+  flex: 1;
+  background-color: ${props => props.theme.bgColor};
+`;
 
 const UserContainer = styled.View``;
 
@@ -33,8 +36,18 @@ const Title = styled.Text`
   font-size: 18px;
   padding-left: 15px;
   margin-bottom: 5px;
+  color: ${props => props.theme.color};
 `;
 const Touchable = styled.TouchableOpacity``;
+const ScrollView = styled.ScrollView`
+  background-color: ${props => props.theme.bgColor};
+`;
+const LoaderContainer = styled.View`
+  flex: 1;
+  background-color: ${props => props.theme.bgColor};
+  justify-content: center;
+  align-items: center;
+`;
 
 export default ({ navigation }) => {
   const me = useMe();
@@ -83,7 +96,11 @@ export default ({ navigation }) => {
     return chunks;
   };
   if (recommendUserLoading || recommendLocationLoading || coffeeLoading) {
-    return <Loader />;
+    return (
+      <LoaderContainer>
+        <Loader />
+      </LoaderContainer>
+    );
   } else {
     const {
       recommendUsers: { users: recommendUsers = null } = {}

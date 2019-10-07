@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RefreshControl, ScrollView, Image } from "react-native";
+import { RefreshControl, Image } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
@@ -18,12 +18,17 @@ import { CONTINENT_PROFILE } from "./ContinentProfileQueries";
 import { countries as countryData } from "../../../../../countryData";
 import constants from "../../../../../constants";
 
-const Container = styled.View``;
+const Container = styled.View`
+  background-color: ${props => props.theme.bgColor};
+`;
 
-const Text = styled.Text``;
+const Text = styled.Text`
+  color: ${props => props.theme.color};
+`;
 const Bold = styled.Text`
   font-weight: 500;
   font-size: 34;
+  color: ${props => props.theme.color};
 `;
 
 const View = styled.View`
@@ -43,8 +48,18 @@ const Title = styled.Text`
   font-size: 18px;
   padding-left: 15px;
   margin-bottom: 5px;
+  color: ${props => props.theme.color};
 `;
 const Touchable = styled.TouchableOpacity``;
+const ScrollView = styled.ScrollView`
+  background-color: ${props => props.theme.bgColor};
+`;
+const LoaderContainer = styled.View`
+  flex: 1;
+  background-color: ${props => props.theme.bgColor};
+  justify-content: center;
+  align-items: center;
+`;
 
 export default ({ navigation }) => {
   const me = useMe();
@@ -93,7 +108,11 @@ export default ({ navigation }) => {
     return chunks;
   };
   if (profileLoading) {
-    return <Loader />;
+    return (
+      <LoaderContainer>
+        <Loader />
+      </LoaderContainer>
+    );
   } else {
     const {
       continentProfile: {

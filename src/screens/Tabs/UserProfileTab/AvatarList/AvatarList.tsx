@@ -1,13 +1,7 @@
 import React, { useState } from "react";
 import Modal from "react-native-modal";
 import { useQuery, useMutation } from "react-apollo-hooks";
-import {
-  ScrollView,
-  RefreshControl,
-  FlatList,
-  Image,
-  Button
-} from "react-native";
+import { RefreshControl, FlatList, Image, Button } from "react-native";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
@@ -33,18 +27,25 @@ import { Platform } from "react-native";
 
 const View = styled.View`
   flex: 1;
+  background-color: ${props => props.theme.bgColor};
 `;
 
-const Text = styled.Text``;
+const Text = styled.Text`
+  color: ${props => props.theme.color};
+`;
 const Bold = styled.Text`
   font-weight: 500;
   font-size: 20;
+  color: ${props => props.theme.color};
 `;
 
 const Touchable = styled.TouchableOpacity``;
 const Container = styled.View`
   justify-content: center;
   flex-direction: row;
+`;
+const ScrollView = styled.ScrollView`
+  background-color: ${props => props.theme.bgColor};
 `;
 
 export default ({ navigation }) => {

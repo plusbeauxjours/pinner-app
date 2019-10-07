@@ -28,10 +28,8 @@ interface IThemeInterface {
 const {
   default: styled,
   css,
-  createGlobalStyle,
-  keyframes,
   ThemeProvider
 } = styledComponents as ThemedStyledComponentsModule<IThemeInterface>;
 
-export { css, createGlobalStyle, keyframes, ThemeProvider };
+export { css, ThemeProvider };
 export default styled;

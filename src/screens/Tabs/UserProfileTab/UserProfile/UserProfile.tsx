@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
-import { RefreshControl, ScrollView, Image, FlatList } from "react-native";
+import { RefreshControl, Image } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
@@ -31,7 +31,6 @@ import {
 } from "./UserProfileQueries";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
-import { theme } from "../../../../styles/theme";
 import constants, { BACKEND_URL } from "../../../../../constants";
 import { GET_COFFEES } from "../Coffees/CoffeesQueries";
 import { GetCoffees, GetCoffeesVariables } from "../../../../types/api";
@@ -40,11 +39,16 @@ const View = styled.View`
   justify-content: center;
   align-items: center;
   flex: 1;
+  background-color: ${props => props.theme.bgColor};
+  color: ${props => props.theme.color};
 `;
 
-const Text = styled.Text``;
+const Text = styled.Text`
+  color: ${props => props.theme.color};
+`;
 const Bold = styled.Text`
   font-size: 12px;
+  color: ${props => props.theme.color};
 `;
 const Item = styled.View`
   flex-direction: column;
@@ -64,7 +68,7 @@ const Header = styled.View`
   height: 250;
   justify-content: center;
   align-items: center;
-  background-color: ${theme.lightGreyColor};
+  background-color: ${props => props.theme.headerColor};
 `;
 const UserNameContainer = styled.View`
   position: absolute;
@@ -78,7 +82,17 @@ const ImageTouchable = styled(Touchable)`
 `;
 const UserName = styled.Text`
   font-weight: 500;
-  font-size: 34;
+  font-size: 30;
+  color: ${props => props.theme.color};
+`;
+const ScrollView = styled.ScrollView`
+  background-color: ${props => props.theme.bgColor};
+`;
+const LoaderContainer = styled.View`
+  flex: 1;
+  background-color: ${props => props.theme.bgColor};
+  justify-content: center;
+  align-items: center;
 `;
 
 export default ({ navigation }) => {
@@ -182,7 +196,11 @@ export default ({ navigation }) => {
     [navigation]
   );
   if (profileLoading || tripLoading || coffeeLoading) {
-    return <Loader />;
+    return (
+      <LoaderContainer>
+        <Loader />
+      </LoaderContainer>
+    );
   } else {
     const { userProfile: { user = null } = {} } = profileData;
     const { getTrips: { trip = null } = {} } = tripData;
@@ -222,7 +240,7 @@ export default ({ navigation }) => {
                 ? user.username.substring(0, 24) + "..."
                 : user.username}
             </UserName>
-            {/* {user.profile.isSelf && (
+            {user.profile.isSelf && (
               <Item>
                 <Touchable
                   onPress={() =>
@@ -235,7 +253,7 @@ export default ({ navigation }) => {
                   <Bold>EditProfile</Bold>
                 </Touchable>
               </Item>
-            )} */}
+            )}
           </UserNameContainer>
         </Header>
         <View>

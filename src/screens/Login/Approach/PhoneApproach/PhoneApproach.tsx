@@ -15,9 +15,12 @@ const View = styled.View`
   justify-content: center;
   align-items: center;
   flex: 1;
+  background-color: ${props => props.theme.bgColor};
 `;
 
-const Text = styled.Text``;
+const Text = styled.Text`
+  color: ${props => props.theme.color};
+`;
 
 export default ({ navigation }) => {
   const phoneNumberInput = useInput("");

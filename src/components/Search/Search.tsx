@@ -20,7 +20,9 @@ import useGoogleAutocomplete from "../../hooks/useGoogleAutocomplete";
 import SearchCityPhoto from "../SearchCityPhoto";
 import { theme } from "../../styles/theme";
 
-const Text = styled.Text``;
+const Text = styled.Text`
+  color: ${props => props.theme.color};
+`;
 const View = styled.View`
   justify-content: center;
   align-items: center;
@@ -51,15 +53,23 @@ const HeaderUserContainer = styled.View`
 
 const Bold = styled.Text`
   font-weight: 500;
+  color: ${props => props.theme.color};
 `;
 
 const Location = styled.Text`
   font-size: 12px;
+  color: ${props => props.theme.color};
 `;
 
 const Header = styled.View`
   flex: 2;
   flex-direction: row;
+`;
+const LoaderContainer = styled.View`
+  flex: 1;
+  background-color: ${props => props.theme.bgColor};
+  justify-content: center;
+  align-items: center;
 `;
 
 const Search = ({ navigation }) => {
@@ -135,7 +145,8 @@ const Search = ({ navigation }) => {
             fontSize: 30,
             position: "absolute",
             borderBottomWidth: 1,
-            borderBottomColor: `${theme.darkGreyColor}`
+            borderBottomColor: `${theme.darkGreyColor}`,
+            color: `${theme.darkGreyColor}`
           }}
           autoFocus={true}
           value={navigation.value}
@@ -151,7 +162,9 @@ const Search = ({ navigation }) => {
         >
           <ScrollView style={{ marginTop: 237, marginBottom: 25 }}>
             {loading || createCityLoading ? (
-              <Loader />
+              <LoaderContainer>
+                <Loader />
+              </LoaderContainer>
             ) : (
               <>
                 {data &&

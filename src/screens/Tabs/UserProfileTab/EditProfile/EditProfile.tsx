@@ -29,26 +29,29 @@ import {
   StartEditEmailVerification,
   StartEditEmailVerificationVariables
 } from "../../../../types/api";
-import { theme } from "../../../../styles/theme";
 import NavIcon from "../../../../components/NavIcon";
 import { GET_USER } from "../UserProfile/UserProfileQueries";
 import { UserProfileVariables } from "../../../../types/api";
-import { ScrollView, RefreshControl, Platform } from "react-native";
+import { RefreshControl, Platform } from "react-native";
 
 const View = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
   padding: 15px;
+  background-color: ${props => props.theme.bgColor};
 `;
 
 const ToggleContainer = styled.View``;
-const ToggleText = styled.Text``;
+const ToggleText = styled.Text`
+  color: ${props => props.theme.color};
+`;
 
 const Text = styled.Text``;
 const Bold = styled.Text`
   font-weight: 500;
   font-size: 20;
+  color: ${props => props.theme.color};
 `;
 const Item = styled.View`
   margin-top: 15px;
@@ -60,6 +63,17 @@ const ToggleIcon = styled.TouchableOpacity``;
 const ExplainText = styled.Text`
   font-size: 12px;
   font-weight: 100;
+  color: ${props => props.theme.color};
+`;
+const ScrollView = styled.ScrollView`
+  background-color: ${props => props.theme.bgColor};
+`;
+
+const LoaderContainer = styled.View`
+  flex: 1;
+  background-color: ${props => props.theme.bgColor};
+  justify-content: center;
+  align-items: center;
 `;
 
 export default ({ navigation }) => {
@@ -224,7 +238,9 @@ export default ({ navigation }) => {
       }
     >
       {loading ? (
-        <Loader />
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
       ) : (
         <View>
           <Bold>EditProfile</Bold>
@@ -244,6 +260,7 @@ export default ({ navigation }) => {
                       ? "md-radio-button-on"
                       : "md-radio-button-off"
                   }
+                  color={"#999"}
                 />
               </ToggleIcon>
             </Item>
@@ -267,6 +284,7 @@ export default ({ navigation }) => {
                       ? "md-radio-button-on"
                       : "md-radio-button-off"
                   }
+                  color={"#999"}
                 />
               </ToggleIcon>
             </Item>
@@ -289,6 +307,7 @@ export default ({ navigation }) => {
                       ? "md-radio-button-on"
                       : "md-radio-button-off"
                   }
+                  color={"#999"}
                 />
               </ToggleIcon>
             </Item>
@@ -311,6 +330,7 @@ export default ({ navigation }) => {
                       ? "md-radio-button-on"
                       : "md-radio-button-off"
                   }
+                  color={"#999"}
                 />
               </ToggleIcon>
             </Item>
@@ -333,12 +353,14 @@ export default ({ navigation }) => {
                       ? "md-radio-button-on"
                       : "md-radio-button-off"
                   }
+                  color={"#999"}
                 />
               </ToggleIcon>
             </Item>
             <ExplainText>
               If you set your coutries hide, only you can see countries where
-              You've been to before, otherwise only number of countries is shown.
+              You've been to before, otherwise only number of countries is
+              shown.
             </ExplainText>
 
             <Item>
@@ -355,12 +377,14 @@ export default ({ navigation }) => {
                       ? "md-radio-button-on"
                       : "md-radio-button-off"
                   }
+                  color={"#999"}
                 />
               </ToggleIcon>
             </Item>
             <ExplainText>
               If you set your coutries hide, only you can see countries where
-              You've been to before, otherwise only number of countries is shown.
+              You've been to before, otherwise only number of countries is
+              shown.
             </ExplainText>
 
             <Item>
@@ -379,6 +403,7 @@ export default ({ navigation }) => {
                       ? "md-radio-button-on"
                       : "md-radio-button-off"
                   }
+                  color={"#999"}
                 />
               </ToggleIcon>
             </Item>
