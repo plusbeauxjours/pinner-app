@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { RefreshControl, ScrollView, Image } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useQuery, useMutation } from "react-apollo-hooks";
@@ -76,16 +76,13 @@ export default ({ navigation }) => {
       payload
     }
   });
-  console.log(countryCode);
   const {
     data: profileData,
     loading: profileLoading,
     refetch: profileRefetch
-  } = useQuery(COUNTRY_PROFILE, {
-    variables: { countryCode },
-    fetchPolicy: "network-only"
+  } = useQuery<CountryProfile, CountryProfileVariables>(COUNTRY_PROFILE, {
+    variables: { countryCode }
   });
-  console.log(countryCode, profileData, profileLoading);
   const {
     data: countriesData,
     loading: countriesLoading,

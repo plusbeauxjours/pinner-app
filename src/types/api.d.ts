@@ -844,17 +844,10 @@ export interface CountryProfile_countryProfile_country {
   continent: CountryProfile_countryProfile_country_continent | null;
 }
 
-export interface CountryProfile_countryProfile_cities_country_continent {
-  __typename: "ContinentType";
-  continentCode: string | null;
-  continentName: string | null;
-}
-
 export interface CountryProfile_countryProfile_cities_country {
   __typename: "CountryType";
   countryName: string | null;
   countryCode: string | null;
-  continent: CountryProfile_countryProfile_cities_country_continent | null;
 }
 
 export interface CountryProfile_countryProfile_cities {
