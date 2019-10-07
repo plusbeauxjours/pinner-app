@@ -32,7 +32,14 @@ import {
 import NavIcon from "../../../../components/NavIcon";
 import { GET_USER } from "../UserProfile/UserProfileQueries";
 import { UserProfileVariables } from "../../../../types/api";
-import { RefreshControl, Platform } from "react-native";
+import {
+  RefreshControl,
+  Platform,
+  TextInput,
+  ActivityIndicator
+} from "react-native";
+import constants from "../../../../../constants";
+import { countries } from "../../../../../countryData";
 
 const View = styled.View`
   flex: 1;
@@ -47,10 +54,14 @@ const ToggleText = styled.Text`
   color: ${props => props.theme.color};
 `;
 
-const Text = styled.Text``;
+const Text = styled.Text`
+  font-size: 12px;
+`;
 const Bold = styled.Text`
   font-weight: 500;
   font-size: 20;
+  text-align: center;
+  margin-top: 10px;
   color: ${props => props.theme.color};
 `;
 const Item = styled.View`
@@ -60,6 +71,7 @@ const Item = styled.View`
 `;
 
 const ToggleIcon = styled.TouchableOpacity``;
+const Touchable = styled.TouchableOpacity``;
 const ExplainText = styled.Text`
   font-size: 12px;
   font-weight: 100;
@@ -74,6 +86,13 @@ const LoaderContainer = styled.View`
   background-color: ${props => props.theme.bgColor};
   justify-content: center;
   align-items: center;
+`;
+const ButtonContainer = styled.View`
+  border: 0.5px #999;
+  padding: 10px;
+  border-radius: 4px;
+  width: ${constants.width / 6};
+  height: 20px;
 `;
 
 export default ({ navigation }) => {
@@ -123,6 +142,9 @@ export default ({ navigation }) => {
   const [countryPhoneNumber, setCountryPhoneNumber] = useState<string>(
     profile.countryPhoneNumber
   );
+  const [countryPhoneCode, setCountryPhoneCode] = useState<string>(
+    profile.countryPhoneCode
+  );
 
   const [editProfileFn] = useMutation<EditProfile, EditProfileVariables>(
     EDIT_PROFILE,
@@ -138,7 +160,11 @@ export default ({ navigation }) => {
       }
     }
   );
-  const [deleteProfileFn] = useMutation<DeleteProfile>(DELETE_PROFILE);
+  const [submitModal, setSubmitModal] = useState<boolean>(false);
+  const [deleteModal, setDeleteModal] = useState<boolean>(false);
+  const [deleteProfileFn, { loading: deladeLoading }] = useMutation<
+    DeleteProfile
+  >(DELETE_PROFILE);
   const [startEditPhoneVerificationFn] = useMutation<
     StartEditPhoneVerification,
     StartEditPhoneVerificationVariables
@@ -243,9 +269,184 @@ export default ({ navigation }) => {
         </LoaderContainer>
       ) : (
         <View>
-          <Bold>EditProfile</Bold>
-          <Bold>{me.user.username}</Bold>
+          <Bold>EDIT PROFILE</Bold>
           <ToggleContainer>
+            <Item>
+              <ToggleText>USERNAME</ToggleText>
+              <TextInput
+                style={{
+                  width: constants.width / 2,
+                  backgroundColor: "transparent",
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#999",
+                  color: "#999"
+                }}
+                value={username}
+                returnKeyType="done"
+                onChangeText={text => setUsername(text)}
+                autoCorrect={false}
+              />
+            </Item>
+            <ExplainText>
+              Default username is automatically generated. Set your own username
+              here. Your username cannot be any combination of numbers or
+              symbols.
+            </ExplainText>
+            <Item>
+              <ToggleText>NATIONALITY</ToggleText>
+              <TextInput
+                style={{
+                  width: constants.width / 2,
+                  backgroundColor: "transparent",
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#999",
+                  color: "#999"
+                }}
+                value={navigation.value}
+                returnKeyType="done"
+                onChangeText={text => setUsername(text)}
+                autoCorrect={false}
+              />
+            </Item>
+            <ExplainText>Your Nationality to match</ExplainText>
+            <Item>
+              <ToggleText>RESIDENCE</ToggleText>
+              <TextInput
+                style={{
+                  width: constants.width / 2,
+                  backgroundColor: "transparent",
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#999",
+                  color: "#999"
+                }}
+                value={navigation.value}
+                returnKeyType="done"
+                onChangeText={text => setUsername(text)}
+                autoCorrect={false}
+              />
+            </Item>
+            <ExplainText>Your Residence to match</ExplainText>
+            <Item>
+              <ToggleText>GENDER</ToggleText>
+              <TextInput
+                style={{
+                  width: constants.width / 2,
+                  backgroundColor: "transparent",
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#999",
+                  color: "#999"
+                }}
+                value={navigation.value}
+                returnKeyType="done"
+                onChangeText={text => setUsername(text)}
+                autoCorrect={false}
+              />
+            </Item>
+            <ExplainText>Your gender to match</ExplainText>
+            <Item>
+              <ToggleText>FIRST NAME</ToggleText>
+              <TextInput
+                style={{
+                  width: constants.width / 2,
+                  backgroundColor: "transparent",
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#999",
+                  color: "#999"
+                }}
+                value={firstName}
+                returnKeyType="done"
+                onChangeText={text => setFirstName(text)}
+                autoCorrect={false}
+              />
+            </Item>
+            <ExplainText>Your first name</ExplainText>
+            <Item>
+              <ToggleText>LAST NAME</ToggleText>
+              <TextInput
+                style={{
+                  width: constants.width / 2,
+                  backgroundColor: "transparent",
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#999",
+                  color: "#999"
+                }}
+                value={lastName}
+                returnKeyType="done"
+                onChangeText={text => setLastName(text)}
+                autoCorrect={false}
+              />
+            </Item>
+            <ExplainText>Your last name</ExplainText>
+            <Item>
+              <TextInput
+                style={{
+                  width: constants.width - 30,
+                  backgroundColor: "transparent",
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#999",
+                  color: "#999"
+                }}
+                value={bio}
+                placeholder={"BIO"}
+                returnKeyType="done"
+                onChangeText={text => setBio(text)}
+                autoCorrect={false}
+              />
+            </Item>
+            <ExplainText>
+              Your BIO is displayed on your profile. You can write about who you
+              are and what you're looking for on Pinner. You can also add links
+              to your website and profiles on other websites, like Instagram or
+              your blog for example.
+            </ExplainText>
+            <Item>
+              <ToggleText>SUBMIT</ToggleText>
+              <Touchable onPress={() => setSubmitModal(!submitModal)}>
+                <NavIcon
+                  size={20}
+                  name={
+                    Platform.OS === "ios"
+                      ? deleteModal
+                        ? "ios-radio-button-on"
+                        : "ios-radio-button-off"
+                      : deleteModal
+                      ? "md-radio-button-on"
+                      : "md-radio-button-off"
+                  }
+                  color={"#999"}
+                />
+              </Touchable>
+            </Item>
+            <Item>
+              <ToggleText>PHONE</ToggleText>
+              {countryPhoneCode && countryPhoneNumber && (
+                <ToggleText>
+                  {countryPhoneCode}&nbsp;
+                  {countryPhoneNumber}&nbsp;
+                  {phoneNumber}
+                </ToggleText>
+              )}
+            </Item>
+            {profile.isVerifiedPhoneNumber ? (
+              <ExplainText>
+                Your phone number in&nbsp;
+                {countries.find(i => i.code === countryPhoneNumber).name}
+                {countries.find(i => i.code === countryPhoneNumber).emoji}&nbsp;
+                is already verified.
+              </ExplainText>
+            ) : (
+              <ExplainText>Verify your phone number to login.</ExplainText>
+            )}
+            <Item>
+              <ToggleText>EMAIL</ToggleText>
+              <ToggleText>{profile.emailAddress}</ToggleText>
+            </Item>
+            {profile.isVerifiedPhoneNumber ? (
+              <ExplainText>Your email address is already verified.</ExplainText>
+            ) : (
+              <ExplainText>Verify your email address to login.</ExplainText>
+            )}
+            <Bold>SETTINGS</Bold>
             <Item>
               <ToggleText>DARK MODE</ToggleText>
               <ToggleIcon onPress={toggleTheme}>
@@ -410,6 +611,48 @@ export default ({ navigation }) => {
             <ExplainText>
               If you set auto location report off, the app cannot find where you
               are. Your lacation will be shown on your profile
+            </ExplainText>
+            <Bold>ACCOUNT</Bold>
+             <Item>
+              <ToggleText>LOG OUT</ToggleText>
+              <Touchable onPress={() => setDeleteModal(!deleteModal)}>
+                <NavIcon
+                  size={20}
+                  name={
+                    Platform.OS === "ios"
+                      ? deleteModal
+                        ? "ios-radio-button-on"
+                        : "ios-radio-button-off"
+                      : deleteModal
+                      ? "md-radio-button-on"
+                      : "md-radio-button-off"
+                  }
+                  color={"#999"}
+                />
+              </Touchable>
+            </Item>
+
+            <Item>
+              <ToggleText>DELETE PROFILE</ToggleText>
+              <Touchable onPress={() => setDeleteModal(!deleteModal)}>
+                <NavIcon
+                  size={20}
+                  name={
+                    Platform.OS === "ios"
+                      ? deleteModal
+                        ? "ios-radio-button-on"
+                        : "ios-radio-button-off"
+                      : deleteModal
+                      ? "md-radio-button-on"
+                      : "md-radio-button-off"
+                  }
+                  color={"#999"}
+                />
+              </Touchable>
+            </Item>
+            <ExplainText>
+              Once you delete an account, there is no going back. Please be
+              certain.
             </ExplainText>
           </ToggleContainer>
         </View>

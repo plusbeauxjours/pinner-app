@@ -1,7 +1,6 @@
 import React from "react";
 import { ActivityIndicator } from "react-native";
 import styled from "styled-components";
-import { theme } from "../styles/theme";
 
 const Container = styled.View`
   /* flex: 1; */
