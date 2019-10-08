@@ -72,7 +72,12 @@ const LoaderContainer = styled.View`
   justify-content: center;
   align-items: center;
 `;
-
+const InfoRow = styled.View`
+  width: ${constants.width - 30};
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+`;
 export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
@@ -205,18 +210,21 @@ export default ({ navigation }) => {
               <Text>
                 {city.country.countryName} {city.country.countryEmoji}
               </Text>
-              <Weather latitude={city.latitude} longitude={city.longitude} />
               {count && count !== 0 ? (
                 <Text>
                   You've been to {city.cityName} {count}
                   {count === 1 ? " time" : " times"}
                 </Text>
               ) : null}
-              <CityLikeBtn
-                isLiked={city.isLiked}
-                cityId={city.cityId}
-                likeCount={city.likeCount}
-              />
+              <InfoRow>
+                <Weather latitude={city.latitude} longitude={city.longitude} />
+                <CityLikeBtn
+                  height={"15px"}
+                  isLiked={city.isLiked}
+                  cityId={city.cityId}
+                  likeCount={city.likeCount}
+                />
+              </InfoRow>
             </View>
           )}
           {nearCities.length !== 0 && (

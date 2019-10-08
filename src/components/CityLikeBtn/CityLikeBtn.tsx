@@ -9,9 +9,10 @@ import { theme } from "../../styles/theme";
 import { useMe } from "../../context/MeContext";
 import { useLocation } from "../../context/LocationContext";
 
-const Touchable = styled.TouchableOpacity`
+const Touchable = styled.TouchableOpacity<ITheme>`
+  margin-left: 3px;
   width: 70px;
-  height: 45px;
+  height: ${props => (props.height ? props.height : "45px")};
 `;
 const IconContainer = styled.View`
   flex: 1;
@@ -25,16 +26,22 @@ const Text = styled.Text`
   color: ${props => props.theme.color};
 `;
 
+interface ITheme {
+  height: string;
+}
+
 interface IProps {
   isLiked: boolean;
   cityId: string;
   likeCount: number;
+  height?: string;
 }
 
 const CityLikeBtn: React.FC<IProps> = ({
   isLiked: isLikedProp,
   cityId,
-  likeCount: likeCountProp
+  likeCount: likeCountProp,
+  height
 }) => {
   const me = useMe();
   const location = useLocation();
@@ -63,7 +70,7 @@ const CityLikeBtn: React.FC<IProps> = ({
     setLikeCount(likeCountProp);
   }, [likeCountProp]);
   return (
-    <Touchable onPress={handleLike}>
+    <Touchable onPress={handleLike} height={height}>
       <IconContainer>
         <Ionicons
           size={16}

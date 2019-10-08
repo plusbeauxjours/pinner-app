@@ -3,92 +3,86 @@ import { useWeatherAqi, useWeather } from "../hooks/weatherHelper";
 import Loader from "./Loader";
 import { useState } from "react";
 import styled from "styled-components";
-import constants from "../../constants";
+import SvgUri from "react-native-svg-uri";
 
 const colorMidium = "#FFA500";
 const colorHigh = "#FF4500";
 const colorVeryHigh = "#FF0000";
 
 const Container = styled.View`
+  height: 45px;
   align-items: center;
+  flex-direction: row;
 `;
 
-const WeatherImage = styled.Image`
-  flex: 1;
-  width: 20px;
-  height: 20px;
-  margin-right: 3px;
-`;
 const WeatherInfoContainer = styled.View`
   flex-direction: column;
+  margin-left: 5px;
 `;
 const WeatherInfoRow = styled.View`
   display: flex;
-
   flex-direction: column;
   justify-content: space-between;
   width: 100px;
-  height: 20px;
+  height: 13px;
   flex-wrap: wrap;
 `;
 
-// const TempNumber = styled.div<ITheme>`
-//   display: grid;
-//   grid-template-columns: 1fr 1fr;
-//   grid-gap: 3px;
-//   margin-right: 5px;
-//   font-size: ${props => {
-//     if (props.size === "sm") {
-//       return "8px";
-//     } else if (props.size === "md") {
-//       return "12px";
-//     } else {
-//       return "12px";
-//     }
-//   }};
-//   font-weight: 100;
-//   color: ${props => {
-//     if (-10 <= props.chill && props.aqi <= -5) {
-//       return "#1E90FF";
-//     } else if (-20 <= props.chill && props.aqi < -10) {
-//       return "#0000FF";
-//     } else if (props.aqi < -20) {
-//       return "#00008B";
-//     } else if (30 <= props.temp && props.temp < 35) {
-//       return colorMidium;
-//     } else if (35 <= props.temp && props.temp < 40) {
-//       return colorHigh;
-//     } else if (40 <= props.temp) {
-//       return colorVeryHigh;
-//     } else {
-//       return props.theme.color;
-//     }
-//   }};
-// `;
+const TempNumber = styled.Text<ITheme>`
+  width: 70px;
+  margin-right: 5px;
+  font-size: ${props => {
+    if (props.size === "sm") {
+      return "8px";
+    } else if (props.size === "md") {
+      return "12px";
+    } else {
+      return "12px";
+    }
+  }};
+  font-weight: 400;
+  color: ${props => {
+    if (-10 <= props.chill && props.aqi <= -5) {
+      return "#1E90FF";
+    } else if (-20 <= props.chill && props.aqi < -10) {
+      return "#0000FF";
+    } else if (props.aqi < -20) {
+      return "#00008B";
+    } else if (30 <= props.temp && props.temp < 35) {
+      return colorMidium;
+    } else if (35 <= props.temp && props.temp < 40) {
+      return colorHigh;
+    } else if (40 <= props.temp) {
+      return colorVeryHigh;
+    } else {
+      return props.theme.color;
+    }
+  }};
+`;
 
-// const AqiNumber = styled(TempNumber)`
-//   color: ${props => {
-//     if (100 <= props.aqi && props.aqi < 150) {
-//       return colorMidium;
-//     } else if (150 <= props.aqi && props.aqi < 200) {
-//       return colorHigh;
-//     } else if (200 <= props.aqi) {
-//       return colorVeryHigh;
-//     } else {
-//       return props.theme.color;
-//     }
-//   }};
-// `;
+const AqiNumber = styled(TempNumber)`
+  color: ${props => {
+    if (100 <= props.aqi && props.aqi < 150) {
+      return colorMidium;
+    } else if (150 <= props.aqi && props.aqi < 200) {
+      return colorHigh;
+    } else if (200 <= props.aqi) {
+      return colorVeryHigh;
+    } else {
+      return props.theme.color;
+    }
+  }};
+`;
 
-// const HumidityNumber = styled(TempNumber)`
-//   color: ${props => {
-//     if (40 <= props.humidity && props.humidity < 70) {
-//       return props.theme.color;
-//     } else {
-//       return "#008d62";
-//     }
-//   }};
-// `;
+const HumidityNumber = styled(TempNumber)`
+  color: ${props => {
+    if (40 <= props.humidity && props.humidity < 70) {
+      return props.theme.color;
+    } else {
+      return "#008d62";
+    }
+  }};
+`;
 
 const Text = styled.Text``;
 
@@ -123,55 +117,30 @@ export default ({ latitude, longitude }) => {
   return (
     <Container>
       {icon ? (
-        // <WeatherImage resizeMode={"contain"} source={require(`../Images/weatherIcon/${icon}.svg`)} />
-        <WeatherImage
-          resizeMode={"contain"}
-          source={require("../Images/avatars/earth0.png")}
+        <SvgUri
+          width="25px"
+          height="25px"
+          source={require(`../Images/weatherIcon/01d.svg`)}
         />
       ) : (
         <Loader />
       )}
       <WeatherInfoContainer>
-        {/* <WeatherInfoRow>
-          <Text>{aqi}</Text>
-          <Text>{humidity}</Text>
+        <WeatherInfoRow>
+          <TempNumber temp={Math.round(temp)} chill={Math.round(chill)}>
+            Temp {Math.round(temp)} °C
+          </TempNumber>
+          <TempNumber temp={Math.round(temp)} chill={Math.round(chill)}>
+            Feels {Math.round(chill)} °C
+          </TempNumber>
         </WeatherInfoRow>
         <WeatherInfoRow>
-          <Text>{temp}</Text>
-          <Text>{chill}</Text>
-        </WeatherInfoRow> */}
+          <AqiNumber aqi={aqi}>AQI {aqi}</AqiNumber>
+          <HumidityNumber humidity={humidity}>
+            Humidity {humidity}
+          </HumidityNumber>
+        </WeatherInfoRow>
       </WeatherInfoContainer>
     </Container>
   );
 };
-
-//       <Container>
-//         <WeatherInfo type={type}>
-//           <TempNumber
-//             size={size}
-//             temp={Math.round(temp)}
-//             chill={Math.round(chill)}
-//           >
-//             <p>Temp</p>
-//             <p> {Math.round(temp)} °C</p>
-//           </TempNumber>
-//           <TempNumber
-//             size={size}
-//             temp={Math.round(temp)}
-//             chill={Math.round(chill)}
-//           >
-//             <p>Feels</p>
-//             <p> {Math.round(chill)} °C</p>
-//           </TempNumber>
-//           <AqiNumber size={size} aqi={aqi}>
-//             <p>AQI</p>
-//             <p> {aqi}</p>
-//           </AqiNumber>
-//           <HumidityNumber size={size} humidity={humidity}>
-//             <p>Humidity</p>
-//             <p> {humidity} %</p>
-//           </HumidityNumber>
-//         </WeatherInfo>
-//       </Container>
-//     );
-//   }
