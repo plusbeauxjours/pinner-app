@@ -10,7 +10,6 @@ export const useReverseGeoCode = async (
   const { data } = await axios(URL);
   if (!data.error_message) {
     const { results } = data;
-
     let storableLocation = {
       cityName: "",
       cityId: "",

@@ -613,7 +613,7 @@ export default ({ navigation }) => {
               are. Your lacation will be shown on your profile
             </ExplainText>
             <Bold>ACCOUNT</Bold>
-             <Item>
+            <Item>
               <ToggleText>LOG OUT</ToggleText>
               <Touchable onPress={() => setDeleteModal(!deleteModal)}>
                 <NavIcon

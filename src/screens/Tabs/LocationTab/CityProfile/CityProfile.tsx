@@ -27,6 +27,7 @@ import CityLikeBtn from "../../../../components/CityLikeBtn";
 import constants from "../../../../../constants";
 import mapStyles from "../../../../styles/mapStyles";
 import { countries } from "../../../../../countryData";
+import Weather from "../../../../components/Weather";
 
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -179,6 +180,7 @@ export default ({ navigation }) => {
                       latitudeDelta: 0.05,
                       longitudeDelta: 0.05
                     }}
+                    loadingEnabled={true}
                     rotateEnabled={false}
                     customMapStyle={mapStyles}
                   />
@@ -203,6 +205,7 @@ export default ({ navigation }) => {
               <Text>
                 {city.country.countryName} {city.country.countryEmoji}
               </Text>
+              <Weather latitude={city.latitude} longitude={city.longitude} />
               {count && count !== 0 ? (
                 <Text>
                   You've been to {city.cityName} {count}
