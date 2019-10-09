@@ -68,7 +68,6 @@ export default ({ navigation }) => {
             data.getCoffees.coffees.length !== 0 &&
             data.getCoffees.coffees.map((coffee, index) => (
               <>
-                {console.log(coffee.matchCount)}
                 <UserRow
                   key={index}
                   coffee={coffee}

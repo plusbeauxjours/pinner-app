@@ -31,6 +31,8 @@ const View = styled.View`
 `;
 
 const Text = styled.Text`
+  position: absolute;
+  padding: 5px 0 0 5px;
   color: ${props => props.theme.color};
 `;
 const Bold = styled.Text`
@@ -112,6 +114,7 @@ export default ({ navigation }) => {
       ) : (
         <>
           <Modal
+            style={{ margin: 0 }}
             isVisible={modalOpen}
             onBackdropPress={() => closeModal()}
             onBackButtonPress={() => Platform.OS !== "ios" && closeModal()}
@@ -149,14 +152,13 @@ export default ({ navigation }) => {
               data={avatarData.getAvatars.avatars}
               renderItem={({ item }) => (
                 <Container
-                  style={{ flex: 1, flexDirection: "column", margin: 2 }}
+                  style={{ flex: 1, flexDirection: "column", margin: 0.5 }}
                 >
-                  {item.isMain && isSelf && <Text>M</Text>}
                   <Touchable onPress={() => openModal(item)}>
                     <Image
                       style={{
-                        height: constants.width / 3 - 4,
-                        width: constants.width / 3 - 4,
+                        height: constants.width / 3 - 1,
+                        width: constants.width / 3 - 1,
                         borderRadius: 3
                       }}
                       source={
@@ -165,6 +167,7 @@ export default ({ navigation }) => {
                         }
                       }
                     />
+                    {item.isMain && isSelf && <Text>M</Text>}
                   </Touchable>
                 </Container>
               )}

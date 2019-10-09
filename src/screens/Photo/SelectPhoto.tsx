@@ -3,7 +3,8 @@ import styled from "styled-components";
 import * as Permissions from "expo-permissions";
 import * as MediaLibrary from "expo-media-library";
 import Loader from "../../components/Loader";
-import { Image } from "react-native";
+import { Image, ScrollView } from "react-native";
+import constants from "../../../constants";
 
 const View = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -55,10 +56,29 @@ export default () => {
       ) : (
         <View>
           {hasPermission ? (
-            <Image
-              style={{ width: 100, height: 100 }}
-              source={{ uri: selected.uri }}
-            />
+            <>
+              <Image
+                style={{
+                  width: constants.width,
+                  height: constants.width,
+                  margin: 0.5
+                }}
+                source={{ uri: selected.uri }}
+              />
+              <ScrollView contentContainerStyle={{ flexDirection: "row" }}>
+                {allPhotos.map(photo => (
+                  <Image
+                    key={photo.id}
+                    source={{ uri: photo.uri }}
+                    style={{
+                      width: constants.width / 3 - 0.5,
+                      height: constants.width / 3 - 0.5,
+                      margin: 0.5
+                    }}
+                  />
+                ))}
+              </ScrollView>
+            </>
           ) : null}
         </View>
       )}
