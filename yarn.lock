@@ -2728,6 +2728,10 @@ expo-location@~6.0.0:
   dependencies:
     invariant "^2.2.4"
 
+expo-media-library@~6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/expo-media-library/-/expo-media-library-6.0.0.tgz#e1e818a9a93ea01edf57890cea8cde91358eae76"
+
 expo-permissions@~6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-6.0.0.tgz#2943f1aa98de833b88cea73cf03d18d08957cb68"
