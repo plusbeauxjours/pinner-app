@@ -71,14 +71,12 @@ const Header = styled.View`
   background-color: ${props => props.theme.headerColor};
 `;
 const UserNameContainer = styled.View`
-  position: absolute;
-  bottom: 5;
   align-self: flex-start;
   margin-left: 10;
 `;
 const Touchable = styled.TouchableOpacity``;
 const ImageTouchable = styled(Touchable)`
-  margin-bottom: 30;
+  margin-bottom: 15;
 `;
 const UserName = styled.Text`
   font-weight: 500;
@@ -93,6 +91,12 @@ const LoaderContainer = styled.View`
   background-color: ${props => props.theme.bgColor};
   justify-content: center;
   align-items: center;
+`;
+const EditText = styled.Text`
+  font-size: 12px;
+  height: 12px;
+  font-weight: 100;
+  bottom: 5px;
 `;
 
 export default ({ navigation }) => {
@@ -240,19 +244,28 @@ export default ({ navigation }) => {
                 ? user.username.substring(0, 24) + "..."
                 : user.username}
             </UserName>
-            {user.profile.isSelf && (
-              <Item>
-                <Touchable
-                  onPress={() =>
-                    navigation.push("EditProfile", {
-                      ...user,
-                      profileRefetch
-                    })
-                  }
-                >
-                  <Bold>EditProfile</Bold>
-                </Touchable>
-              </Item>
+            {user.profile.isSelf ? (
+              <Touchable
+                onPress={() =>
+                  navigation.push("EditProfile", {
+                    ...user,
+                    profileRefetch
+                  })
+                }
+              >
+                <EditText>EDIT PROFILE</EditText>
+              </Touchable>
+            ) : (
+              <Touchable
+                onPress={() =>
+                  navigation.push("EditProfile", {
+                    ...user,
+                    profileRefetch
+                  })
+                }
+              >
+                <EditText>REPORT USER</EditText>
+              </Touchable>
             )}
           </UserNameContainer>
         </Header>
