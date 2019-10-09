@@ -1,4 +1,4 @@
-const mapStyles = [
+export const darkMode = [
   {
     featureType: "all",
     elementType: "labels.text.fill",
@@ -119,4 +119,69 @@ const mapStyles = [
   }
 ];
 
-export default mapStyles;
+export const lightMode = [
+  {
+    featureType: "all",
+    stylers: [
+      {
+        saturation: 0
+      },
+      {
+        hue: "#e7ecf0"
+      }
+    ]
+  },
+  {
+    featureType: "all",
+    elementType: "labels.icon",
+    stylers: [
+      {
+        visibility: "off"
+      }
+    ]
+  },
+  {
+    featureType: "road",
+    stylers: [
+      {
+        saturation: -70
+      }
+    ]
+  },
+  {
+    featureType: "road",
+    elementType: "labels.text",
+    stylers: [
+      {
+        visibility: "off"
+      }
+    ]
+  },
+  {
+    featureType: "transit",
+    stylers: [
+      {
+        visibility: "off"
+      }
+    ]
+  },
+  {
+    featureType: "poi",
+    stylers: [
+      {
+        visibility: "off"
+      }
+    ]
+  },
+  {
+    featureType: "water",
+    stylers: [
+      {
+        visibility: "simplified"
+      },
+      {
+        saturation: -60
+      }
+    ]
+  }
+];

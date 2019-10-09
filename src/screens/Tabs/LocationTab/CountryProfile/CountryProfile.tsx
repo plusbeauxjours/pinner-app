@@ -19,8 +19,9 @@ import {
 } from "../../../../types/api";
 import { COUNTRY_PROFILE, GET_COUNTRIES } from "./CountryProfileQueries";
 import constants from "../../../../../constants";
-import mapStyles from "../../../../styles/mapStyles";
 import { countries as countryData } from "../../../../../countryData";
+import { useTheme } from "../../../../context/ThemeContext";
+import { darkMode, lightMode } from "../../../../styles/mapStyles";
 
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -78,6 +79,7 @@ const LoaderContainer = styled.View`
 export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
+  const isDarkMode = useTheme();
   const [countryCode, setCountryCode] = useState<string>(
     navigation.getParam("countryCode") || location.currentCountryCode
   );
@@ -154,7 +156,8 @@ export default ({ navigation }) => {
           {country && (
             <View>
               {mapOpen ? (
-                <Touchable onPress={() => setMapOpen(false)}>
+                // <Touchable onPress={() => setMapOpen(false)}>
+                <Touchable>
                   <MapView
                     provider={PROVIDER_GOOGLE}
                     style={{
@@ -169,7 +172,9 @@ export default ({ navigation }) => {
                       longitudeDelta: 10
                     }}
                     rotateEnabled={false}
-                    customMapStyle={mapStyles}
+                    customMapStyle={
+                      isDarkMode && isDarkMode === true ? darkMode : lightMode
+                    }
                   />
                 </Touchable>
               ) : (

@@ -1,4 +1,4 @@
-import React, { useState, createContext } from "react";
+import React, { useState, useContext, createContext } from "react";
 import { ThemeProvider as BaseThemeProvider } from "styled-components";
 
 import { lightTheme, darkTheme } from "../styles/theme";
@@ -16,5 +16,9 @@ const ThemeProvider = ({ isDarkMode: isDarkModeProp, children }) => {
     </ThemeContext.Provider>
   );
 };
-
 export { ThemeContext, ThemeProvider };
+
+export const useTheme = () => {
+  const { isDarkMode } = useContext(ThemeContext);
+  return isDarkMode;
+};

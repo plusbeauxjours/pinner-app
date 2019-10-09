@@ -10,7 +10,7 @@ const colorHigh = "#FF4500";
 const colorVeryHigh = "#FF0000";
 
 const Container = styled.View`
-  height: 45px;
+  height: 40px;
   align-items: center;
   flex-direction: row;
 `;
@@ -84,6 +84,11 @@ const HumidityNumber = styled(TempNumber)`
   }};
 `;
 
+const IconContainer = styled.View`
+  width: 45px;
+  align-items: center;
+`;
+
 const Text = styled.Text``;
 
 interface ITheme {
@@ -116,15 +121,17 @@ export default ({ latitude, longitude }) => {
   }, [latitude, longitude]);
   return (
     <Container>
-      {icon ? (
-        <SvgUri
-          width="25px"
-          height="25px"
-          source={require(`../Images/weatherIcon/01d.svg`)}
-        />
-      ) : (
-        <Loader />
-      )}
+      <IconContainer>
+        {icon ? (
+          <SvgUri
+            width="30px"
+            height="30px"
+            source={require(`../Images/weatherIcon/01d.svg`)}
+          />
+        ) : (
+          <Loader />
+        )}
+      </IconContainer>
       <WeatherInfoContainer>
         <WeatherInfoRow>
           <TempNumber temp={Math.round(temp)} chill={Math.round(chill)}>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RefreshControl, Image } from "react-native";
+import { RefreshControl, Image, AsyncStorage } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -25,9 +25,10 @@ import { NearCities, NearCitiesVariables } from "../../../../types/api";
 import { SLACK_REPORT_LOCATIONS } from "../../../../sharedQueries";
 import CityLikeBtn from "../../../../components/CityLikeBtn";
 import constants from "../../../../../constants";
-import mapStyles from "../../../../styles/mapStyles";
+import { darkMode, lightMode } from "../../../../styles/mapStyles";
 import { countries } from "../../../../../countryData";
 import Weather from "../../../../components/Weather";
+import { useTheme } from "../../../../context/ThemeContext";
 
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -81,6 +82,7 @@ const InfoRow = styled.View`
 export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
+  const isDarkMode = useTheme();
   const [cityId, setCityId] = useState<string>(
     navigation.getParam("cityId") || location.currentCityId
   );
@@ -171,7 +173,8 @@ export default ({ navigation }) => {
           {city && (
             <View>
               {mapOpen ? (
-                <Touchable onPress={() => setMapOpen(false)}>
+                // <Touchable onPress={() => setMapOpen(false)}>
+                <Touchable>
                   <MapView
                     provider={PROVIDER_GOOGLE}
                     style={{
@@ -187,7 +190,9 @@ export default ({ navigation }) => {
                     }}
                     loadingEnabled={true}
                     rotateEnabled={false}
-                    customMapStyle={mapStyles}
+                    customMapStyle={
+                      isDarkMode && isDarkMode === true ? darkMode : lightMode
+                    }
                   />
                 </Touchable>
               ) : (
