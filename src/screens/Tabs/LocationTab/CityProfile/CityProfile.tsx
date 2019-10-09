@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RefreshControl, Image, AsyncStorage } from "react-native";
+import { RefreshControl, Image } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";

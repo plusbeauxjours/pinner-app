@@ -1095,6 +1095,7 @@ export interface RequestCoffee_requestCoffee_coffee {
   naturalTime: string | null;
   target: CoffeeTarget;
   createdAt: any;
+  matchCount: number | null;
 }
 
 export interface RequestCoffee_requestCoffee {
@@ -1370,6 +1371,7 @@ export interface GetCoffees_getCoffees_coffees {
   naturalTime: string | null;
   target: CoffeeTarget;
   createdAt: any;
+  matchCount: number | null;
 }
 
 export interface GetCoffees_getCoffees {
@@ -2370,6 +2372,7 @@ export interface CoffeeParts {
   naturalTime: string | null;
   target: CoffeeTarget;
   createdAt: any;
+  matchCount: number | null;
 }
 
 /* tslint:disable */

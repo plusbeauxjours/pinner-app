@@ -19,6 +19,7 @@ import keys from "../../../keys";
 import useGoogleAutocomplete from "../../hooks/useGoogleAutocomplete";
 import SearchCityPhoto from "../SearchCityPhoto";
 import { theme } from "../../styles/theme";
+import { useTheme } from "../../context/ThemeContext";
 
 const Text = styled.Text`
   color: ${props => props.theme.color};
@@ -67,12 +68,13 @@ const Header = styled.View`
 `;
 const LoaderContainer = styled.View`
   flex: 1;
-  background-color: ${props => props.theme.bgColor};
+  background-color: transparent;
   justify-content: center;
   align-items: center;
 `;
 
 const Search = ({ navigation }) => {
+  const isDarkMode = useTheme();
   const [search, setSearch] = useState<string>("");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [createCityFn, { loading: createCityLoading }] = useMutation<
@@ -127,7 +129,7 @@ const Search = ({ navigation }) => {
       <Modal
         style={{ margin: 0, alignItems: "flex-start" }}
         isVisible={modalOpen}
-        backdropColor={"white"}
+        backdropColor={isDarkMode && isDarkMode === true ? "black" : "white"}
         onBackdropPress={() => setModalOpen(false)}
         onBackButtonPress={() => Platform.OS !== "ios" && setModalOpen(false)}
         onModalHide={() => setSearch("")}
@@ -145,8 +147,8 @@ const Search = ({ navigation }) => {
             fontSize: 30,
             position: "absolute",
             borderBottomWidth: 1,
-            borderBottomColor: `${theme.darkGreyColor}`,
-            color: `${theme.darkGreyColor}`
+            borderBottomColor: "#999",
+            color: isDarkMode && isDarkMode === true ? "white" : "black"
           }}
           autoFocus={true}
           value={navigation.value}

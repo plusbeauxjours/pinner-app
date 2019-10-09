@@ -67,7 +67,14 @@ export default ({ navigation }) => {
           {data.getCoffees.coffees &&
             data.getCoffees.coffees.length !== 0 &&
             data.getCoffees.coffees.map((coffee, index) => (
-              <UserRow key={index} coffee={coffee} type={"userProfileCoffee"} />
+              <>
+                {console.log(coffee.matchCount)}
+                <UserRow
+                  key={index}
+                  coffee={coffee}
+                  type={"userProfileCoffee"}
+                />
+              </>
             ))}
         </View>
       )}

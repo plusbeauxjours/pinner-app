@@ -95,6 +95,7 @@ export const COFFEE_FRAGMENT = gql`
     naturalTime
     target
     createdAt
+    matchCount
   }
 `;
 
