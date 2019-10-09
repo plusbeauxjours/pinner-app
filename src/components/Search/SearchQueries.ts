@@ -21,6 +21,7 @@ export const SEARCH = gql`
     }
     searchContinents(search: $search) {
       continents {
+        countryCount
         ...ContinentParts
       }
     }

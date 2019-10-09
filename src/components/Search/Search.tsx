@@ -23,6 +23,8 @@ import { useTheme } from "../../context/ThemeContext";
 
 const Text = styled.Text`
   color: ${props => props.theme.color};
+  font-size: 9px;
+  margin-left: 15px;
 `;
 const View = styled.View`
   justify-content: center;
@@ -68,9 +70,7 @@ const Header = styled.View`
 `;
 const LoaderContainer = styled.View`
   flex: 1;
-  background-color: transparent;
-  justify-content: center;
-  align-items: center;
+  margin-top: 50;
 `;
 
 const Search = ({ navigation }) => {
@@ -81,10 +81,6 @@ const Search = ({ navigation }) => {
     CreateCity,
     CreateCityVariables
   >(CREATE_CITY);
-  // const [getCityPhotoFn, { loading: getCityPhotoLoading }] = useMutation<
-  //   GetCityPhoto,
-  //   GetCityPhotoVariables
-  // >(GET_CITY_PHOTO, { variables: { cityId } });
   const { data, loading } = useQuery<SearchTerms, SearchTermsVariables>(
     SEARCH,
     {
@@ -164,85 +160,116 @@ const Search = ({ navigation }) => {
           }}
         >
           <ScrollView style={{ marginTop: 237, marginBottom: 25 }}>
-            {loading || createCityLoading ? (
+            {loading || createCityLoading || isLoading ? (
               <LoaderContainer>
                 <Loader />
               </LoaderContainer>
             ) : (
               <>
-                {data &&
-                  data.searchUsers.users.length !== 0 &&
-                  data.searchUsers.users.map(user => (
-                    <Touchable
-                      key={user.profile.id}
-                      onPress={() => {
-                        navigation.push("UserProfileTabs", {
-                          username: user.profile.username,
-                          isSelf: user.profile.isSelf
-                        }),
-                          setModalOpen(false);
-                      }}
-                    >
-                      <UserRow user={user.profile} type={"user"} />
-                    </Touchable>
-                  ))}
+                {data && data.searchUsers.users.length !== 0 && (
+                  <>
+                    {data.searchUsers.users.length === 1 ? (
+                      <Text>USER</Text>
+                    ) : (
+                      <Text>USERS</Text>
+                    )}
+                    {data.searchUsers.users.map(user => (
+                      <Touchable
+                        key={user.profile.id}
+                        onPress={() => {
+                          navigation.push("UserProfileTabs", {
+                            username: user.profile.username,
+                            isSelf: user.profile.isSelf
+                          }),
+                            setModalOpen(false);
+                        }}
+                      >
+                        <UserRow user={user.profile} type={"user"} />
+                      </Touchable>
+                    ))}
+                  </>
+                )}
                 {search !== "" &&
                   results.predictions &&
-                  results.predictions.length !== 0 &&
-                  results.predictions.map(prediction => (
-                    <Touchable
-                      key={prediction.id}
-                      onPress={() => onPress(prediction.place_id)}
-                    >
-                      <Container>
-                        <Header>
-                          <SearchCityPhoto cityId={prediction.place_id} />
-                          <HeaderUserContainer>
-                            <Bold>
-                              {prediction.structured_formatting.main_text}
-                            </Bold>
-                            <Location>
-                              {prediction.structured_formatting.secondary_text
-                                ? prediction.structured_formatting
+                  results.predictions.length !== 0 && (
+                    <>
+                      {results.predictions.length === 1 ? (
+                        <Text>CITY</Text>
+                      ) : (
+                        <Text>CITIES</Text>
+                      )}
+                      {results.predictions.map(prediction => (
+                        <Touchable
+                          key={prediction.id}
+                          onPress={() => onPress(prediction.place_id)}
+                        >
+                          <Container>
+                            <Header>
+                              <SearchCityPhoto cityId={prediction.place_id} />
+                              <HeaderUserContainer>
+                                <Bold>
+                                  {prediction.structured_formatting.main_text}
+                                </Bold>
+                                <Location>
+                                  {prediction.structured_formatting
                                     .secondary_text
-                                : prediction.structured_formatting.main_text}
-                            </Location>
-                          </HeaderUserContainer>
-                        </Header>
-                      </Container>
-                    </Touchable>
-                  ))}
-                {data &&
-                  data.searchCountries.countries.length !== 0 &&
-                  data.searchCountries.countries.map(country => (
-                    <Touchable
-                      key={country.id}
-                      onPress={() => {
-                        navigation.push("CountryProfileTabs", {
-                          countryCode: country.countryCode,
-                          continentCode: country.continent.continentCode
-                        }),
-                          setModalOpen(false);
-                      }}
-                    >
-                      <UserRow country={country} type={"country"} />
-                    </Touchable>
-                  ))}
-                {data &&
-                  data.searchContinents.continents.length !== 0 &&
-                  data.searchContinents.continents.map(continent => (
-                    <Touchable
-                      key={continent.id}
-                      onPress={() => {
-                        navigation.push("ContinentProfile", {
-                          continentCode: continent.continentCode
-                        }),
-                          setModalOpen(false);
-                      }}
-                    >
-                      <UserRow continent={continent} type={"continent"} />
-                    </Touchable>
-                  ))}
+                                    ? prediction.structured_formatting
+                                        .secondary_text
+                                    : prediction.structured_formatting
+                                        .main_text}
+                                </Location>
+                              </HeaderUserContainer>
+                            </Header>
+                          </Container>
+                        </Touchable>
+                      ))}
+                    </>
+                  )}
+                {data && data.searchCountries.countries.length !== 0 && (
+                  <>
+                    {data.searchCountries.countries.length === 1 ? (
+                      <Text>COUNTRY</Text>
+                    ) : (
+                      <Text>COUNTRIES</Text>
+                    )}
+                    {data.searchCountries.countries.map(country => (
+                      <Touchable
+                        key={country.id}
+                        onPress={() => {
+                          navigation.push("CountryProfileTabs", {
+                            countryCode: country.countryCode,
+                            continentCode: country.continent.continentCode
+                          }),
+                            setModalOpen(false);
+                        }}
+                      >
+                        <UserRow country={country} type={"country"} />
+                      </Touchable>
+                    ))}
+                  </>
+                )}
+                {data && data.searchContinents.continents.length !== 0 && (
+                  <>
+                    {data.searchContinents.continents.length === 1 ? (
+                      <Text>CONTINENT</Text>
+                    ) : (
+                      <Text>CONTINENTS</Text>
+                    )}
+                    {data.searchContinents.continents.map(continent => (
+                      <Touchable
+                        key={continent.id}
+                        onPress={() => {
+                          navigation.push("ContinentProfile", {
+                            continentCode: continent.continentCode
+                          }),
+                            setModalOpen(false);
+                        }}
+                      >
+                        <UserRow continent={continent} type={"continent"} />
+                      </Touchable>
+                    ))}
+                  </>
+                )}
               </>
             )}
           </ScrollView>
