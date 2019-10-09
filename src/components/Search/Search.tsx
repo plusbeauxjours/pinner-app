@@ -153,6 +153,7 @@ const Search = ({ navigation }) => {
           autoFocus={true}
           value={navigation.value}
           placeholder={"Search"}
+          placeholderTextColor={"#999"}
           returnKeyType="search"
           onChangeText={onChange}
           autoCorrect={false}
