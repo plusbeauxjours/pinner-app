@@ -17,11 +17,16 @@ const Text = styled.Text`
   color: ${props => props.theme.color};
 `;
 
+const Touchable = styled.TouchableOpacity``;
+
 export default () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [hasPermission, setHasPermission] = useState<boolean>(false);
   const [selected, setSelected] = useState();
   const [allPhotos, setAllPhotos] = useState();
+  const changeSelected = photo => {
+    setSelected(photo);
+  };
   const getPhotos = async () => {
     try {
       const { assets } = await MediaLibrary.getAssetsAsync();
@@ -67,15 +72,21 @@ export default () => {
               />
               <ScrollView contentContainerStyle={{ flexDirection: "row" }}>
                 {allPhotos.map(photo => (
-                  <Image
+                  <Touchable
                     key={photo.id}
-                    source={{ uri: photo.uri }}
-                    style={{
-                      width: constants.width / 3 - 0.5,
-                      height: constants.width / 3 - 0.5,
-                      margin: 0.5
-                    }}
-                  />
+                    onPress={() => changeSelected(photo)}
+                  >
+                    <Image
+                      key={photo.id}
+                      source={{ uri: photo.uri }}
+                      style={{
+                        width: constants.width / 3 - 0.5,
+                        height: constants.width / 3 - 0.5,
+                        opacity: photo.id === selected.id ? 0.3 : 1,
+                        margin: 0.5
+                      }}
+                    />
+                  </Touchable>
                 ))}
               </ScrollView>
             </>

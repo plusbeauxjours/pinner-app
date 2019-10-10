@@ -74,6 +74,9 @@ export default ({ navigation }) => {
     variables: { location: "city", cityId }
   });
 
+  {
+    console.log(recommendLocationData);
+  }
   const onRefresh = async () => {
     try {
       setRefreshing(true);

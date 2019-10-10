@@ -158,8 +158,7 @@ export default ({ navigation }) => {
                     <Image
                       style={{
                         height: constants.width / 3 - 1,
-                        width: constants.width / 3 - 1,
-                        borderRadius: 3
+                        width: constants.width / 3 - 1
                       }}
                       source={
                         item.thumbnail && {

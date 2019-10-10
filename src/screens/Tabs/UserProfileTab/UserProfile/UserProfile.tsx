@@ -18,7 +18,11 @@ import {
   DeleteTripVariables,
   CalculateDistance,
   SlackReportUsers,
-  SlackReportUsersVariables
+  SlackReportUsersVariables,
+  GetCoffees,
+  GetCoffeesVariables,
+  GetSameTrips,
+  GetSameTripsVariables
 } from "../../../../types/api";
 import {
   GET_USER,
@@ -33,12 +37,6 @@ import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
 import constants, { BACKEND_URL } from "../../../../../constants";
 import { GET_COFFEES } from "../Coffees/CoffeesQueries";
-import {
-  GetCoffees,
-  GetCoffeesVariables,
-  GetSameTrips,
-  GetSameTripsVariables
-} from "../../../../types/api";
 import { GET_SAME_TRIPS } from "./UserProfileQueries";
 
 const View = styled.View`
@@ -103,6 +101,7 @@ const TextContainer = styled.View`
   width: ${constants.width - 30};
 `;
 const EditText = styled.Text`
+  color: ${props => props.theme.color};
   font-size: 12px;
   font-weight: 100;
   bottom: 3px;
