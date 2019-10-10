@@ -33,7 +33,13 @@ import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
 import constants, { BACKEND_URL } from "../../../../../constants";
 import { GET_COFFEES } from "../Coffees/CoffeesQueries";
-import { GetCoffees, GetCoffeesVariables } from "../../../../types/api";
+import {
+  GetCoffees,
+  GetCoffeesVariables,
+  GetSameTrips,
+  GetSameTripsVariables
+} from "../../../../types/api";
+import { GET_SAME_TRIPS } from "./UserProfileQueries";
 
 const View = styled.View`
   justify-content: center;
@@ -92,11 +98,14 @@ const LoaderContainer = styled.View`
   justify-content: center;
   align-items: center;
 `;
+const TextContainer = styled.View`
+  flex-wrap: wrap;
+  width: ${constants.width - 30};
+`;
 const EditText = styled.Text`
   font-size: 12px;
-  height: 12px;
   font-weight: 100;
-  bottom: 5px;
+  bottom: 3px;
 `;
 
 export default ({ navigation }) => {
@@ -131,6 +140,16 @@ export default ({ navigation }) => {
     refetch: profileRefetch
   } = useQuery<UserProfile, UserProfileVariables>(GET_USER, {
     variables: { username: navigation.getParam("username") || me.user.username }
+  });
+  const {
+    data: getSameTripsData,
+    loading: getSameTripsLoading,
+    refetch: getSameTripsRefetch
+  } = useQuery<GetSameTrips, GetSameTripsVariables>(GET_SAME_TRIPS, {
+    variables: {
+      username: navigation.getParam("username")
+    },
+    skip: !navigation.getParam("username")
   });
   const {
     data: tripData,
@@ -188,6 +207,7 @@ export default ({ navigation }) => {
       await profileRefetch();
       await tripRefetch();
       await coffeeRefetch();
+      await getSameTripsRefetch();
     } catch (e) {
       console.log(e);
     } finally {
@@ -199,7 +219,7 @@ export default ({ navigation }) => {
     () => setUsername(navigation.getParam("username") || me.user.username),
     [navigation]
   );
-  if (profileLoading || tripLoading || coffeeLoading) {
+  if (profileLoading || tripLoading || coffeeLoading || getSameTripsLoading) {
     return (
       <LoaderContainer>
         <Loader />
@@ -256,16 +276,22 @@ export default ({ navigation }) => {
                 <EditText>EDIT PROFILE</EditText>
               </Touchable>
             ) : (
-              <Touchable
-                onPress={() =>
-                  navigation.push("EditProfile", {
-                    ...user,
-                    profileRefetch
-                  })
-                }
-              >
-                <EditText>REPORT USER</EditText>
-              </Touchable>
+              <>
+                {getSameTripsData && (
+                  <EditText>
+                    You guys have been to
+                    {getSameTripsData.getSameTrips.cities.length !== 0 &&
+                      getSameTripsData.getSameTrips.cities.map(city => (
+                        <EditText key={city.id}>
+                          {" "}
+                          {city.cityName}
+                          {city.country.countryEmoji}
+                        </EditText>
+                      ))}
+                    .
+                  </EditText>
+                )}
+              </>
             )}
           </UserNameContainer>
         </Header>

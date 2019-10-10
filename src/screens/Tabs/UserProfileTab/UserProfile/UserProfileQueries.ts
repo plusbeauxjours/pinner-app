@@ -207,3 +207,18 @@ export const GET_COFFEES = gql`
   }
   ${COFFEE_FRAGMENT}
 `;
+
+export const GET_SAME_TRIPS = gql`
+  query GetSameTrips($username: String!) {
+    getSameTrips(username: $username) {
+      count
+      cities {
+        id
+        cityName
+        country {
+          countryEmoji
+        }
+      }
+    }
+  }
+`;

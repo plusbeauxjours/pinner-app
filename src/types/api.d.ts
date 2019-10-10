@@ -101,6 +101,7 @@ export interface SearchTerms_searchCountries {
 
 export interface SearchTerms_searchContinents_continents {
   __typename: "ContinentType";
+  countryCount: number | null;
   id: string;
   continentName: string | null;
   continentCode: string | null;
@@ -2106,6 +2107,40 @@ export interface SlackReportUsers {
 export interface SlackReportUsersVariables {
   targetUsername: string;
   payload: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GetSameTrips
+// ====================================================
+
+export interface GetSameTrips_getSameTrips_cities_country {
+  __typename: "CountryType";
+  countryEmoji: string | null;
+}
+
+export interface GetSameTrips_getSameTrips_cities {
+  __typename: "CityType";
+  id: string;
+  cityName: string | null;
+  country: GetSameTrips_getSameTrips_cities_country;
+}
+
+export interface GetSameTrips_getSameTrips {
+  __typename: "GetSameTripsResponse";
+  count: number | null;
+  cities: (GetSameTrips_getSameTrips_cities | null)[] | null;
+}
+
+export interface GetSameTrips {
+  getSameTrips: GetSameTrips_getSameTrips;
+}
+
+export interface GetSameTripsVariables {
+  username: string;
 }
 
 /* tslint:disable */
