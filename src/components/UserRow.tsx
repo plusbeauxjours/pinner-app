@@ -34,6 +34,9 @@ const Header = styled.View`
 `;
 const Text = styled.Text`
   color: ${props => props.theme.color};
+  position: absolute;
+  font-size: 9px;
+  padding: 1px 0 0 1px;
 `;
 const GreyText = styled(Text)`
   margin-left: 15px;
@@ -477,7 +480,6 @@ const UserRow: React.FC<IProps> = ({
             <Container onPress={() => onPress(match.id)}>
               <Header>
                 <Touchable>
-                  {!match.isReadByHost && <Text>N</Text>}
                   <Image
                     style={{ height: 40, width: 40, borderRadius: 20 }}
                     source={
@@ -486,6 +488,7 @@ const UserRow: React.FC<IProps> = ({
                       }
                     }
                   />
+                  {!match.isReadByHost && <Text>N</Text>}
                 </Touchable>
                 <Touchable>
                   <HeaderUserContainer>
@@ -502,7 +505,6 @@ const UserRow: React.FC<IProps> = ({
             <Container onPress={() => onPress(match.id)}>
               <Header>
                 <Touchable>
-                  {!match.isReadByGuest && <Text>N</Text>}
                   <Image
                     style={{ height: 35, width: 35, borderRadius: 20 }}
                     source={
@@ -513,6 +515,7 @@ const UserRow: React.FC<IProps> = ({
                         : require(`../Images/avatars/earth1.png`)
                     }
                   />
+                  {!match.isReadByGuest && <Text>N</Text>}
                 </Touchable>
                 <Touchable>
                   <HeaderUserContainer>

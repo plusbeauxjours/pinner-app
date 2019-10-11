@@ -8,7 +8,7 @@ import NavIcon from "../components/NavIcon";
 import HomeNavigation from "./HomeNavigation";
 import LocationNavigation from "./LocationNavigation";
 import PhotoLink from "../components/PhotoLink";
-import RequestCoffee from "../screens/Tabs/RequestCoffeeTab/RequestCoffee";
+import RequestCoffees from "../screens/Tabs/RequestCoffeesTab/RequestCoffees";
 import UserProfileNavigation from "./UserProfileNavigation";
 import Search from "../components/Search";
 
@@ -22,6 +22,7 @@ const stackFactory = initialRoute =>
       }
     }
   });
+
 export default createBottomTabNavigator(
   {
     Home: {
@@ -48,8 +49,8 @@ export default createBottomTabNavigator(
         )
       }
     },
-    Add: {
-      screen: stackFactory(RequestCoffee),
+    RequestCoffees: {
+      screen: stackFactory(RequestCoffees),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
           <NavIcon

@@ -18,7 +18,12 @@ import {
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
 `;
-
+const View = styled.View``;
+const Text = styled.Text`
+  color: ${props => props.theme.color};
+  font-size: 9px;
+  margin-left: 15px;
+`;
 const UserContainer = styled.View``;
 
 const Item = styled.View`
@@ -111,14 +116,52 @@ export default () => {
               <Item>
                 <Title>MATCHES</Title>
                 <UserContainer>
-                  {matchData.getMatches.matches.map(match => (
-                    <UserRow
-                      key={match.id}
-                      match={match}
-                      type={"match"}
-                      onPress={onPress}
-                    />
-                  ))}
+                  {matchData.getMatches.matches.map((match, index, arr) => {
+                    if (index === 0) {
+                      return (
+                        <View key={index}>
+                          <Text>
+                            {arr[index].coffee.city.cityName}
+                            {arr[index].coffee.city.country.countryEmoji}
+                          </Text>
+                          <UserRow
+                            match={match}
+                            type={"match"}
+                            onPress={onPress}
+                          />
+                        </View>
+                      );
+                    } else if (
+                      0 < index &&
+                      index < arr.length - 1 &&
+                      arr[index].coffee.city.cityId !==
+                        arr[index - 1].coffee.city.cityId
+                    ) {
+                      return (
+                        <View key={index}>
+                          <Text>
+                            {arr[index].coffee.city.cityName}
+                            {arr[index].coffee.city.country.countryEmoji}
+                          </Text>
+                          <UserRow
+                            match={match}
+                            type={"match"}
+                            onPress={onPress}
+                          />
+                        </View>
+                      );
+                    } else {
+                      return (
+                        <View key={index}>
+                          <UserRow
+                            match={match}
+                            type={"match"}
+                            onPress={onPress}
+                          />
+                        </View>
+                      );
+                    }
+                  })}
                 </UserContainer>
               </Item>
             )}

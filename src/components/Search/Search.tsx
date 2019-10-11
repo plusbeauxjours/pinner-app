@@ -103,6 +103,7 @@ const Search = ({ navigation }) => {
       setSearch("");
       setModalOpen(false);
     } catch (e) {
+      setSearch("");
       console.log(e);
     }
   };

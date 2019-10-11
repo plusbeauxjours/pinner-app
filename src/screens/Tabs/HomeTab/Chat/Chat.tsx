@@ -11,6 +11,6 @@ const Text = styled.Text``;
 
 export default () => (
   <View>
-    <Text>Chat</Text>
+    <Text>Chat List</Text>
   </View>
 );
