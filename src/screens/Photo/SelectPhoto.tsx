@@ -22,16 +22,20 @@ const Touchable = styled.TouchableOpacity``;
 export default () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [hasPermission, setHasPermission] = useState<boolean>(false);
-  const [selected, setSelected] = useState();
-  const [allPhotos, setAllPhotos] = useState();
+  const [selected, setSelected] = useState<any>({});
+  const [allPhotos, setAllPhotos] = useState<any>();
   const changeSelected = photo => {
-    setSelected(photo);
+    if (selected && photo.id === selected.id) {
+      setSelected({});
+    } else {
+      setSelected(photo);
+    }
   };
   const getPhotos = async () => {
     try {
-      const { assets } = await MediaLibrary.getAssetsAsync();
-      const [firstPhoto] = assets;
-      setSelected(firstPhoto);
+      const { assets } = await MediaLibrary.getAssetsAsync({
+        sortBy: MediaLibrary.SortBy.creationTime
+      });
       setAllPhotos(assets);
     } catch (e) {
       console.log(e);
@@ -62,15 +66,23 @@ export default () => {
         <View>
           {hasPermission ? (
             <>
-              <Image
-                style={{
-                  width: constants.width,
-                  height: constants.width,
-                  margin: 0.5
+              {selected.id && (
+                <Image
+                  style={{
+                    width: constants.width,
+                    height: constants.width,
+                    margin: 0.5
+                  }}
+                  source={{ uri: selected.uri }}
+                />
+              )}
+              <ScrollView
+                contentContainerStyle={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  width: constants.width
                 }}
-                source={{ uri: selected.uri }}
-              />
-              <ScrollView contentContainerStyle={{ flexDirection: "row" }}>
+              >
                 {allPhotos.map(photo => (
                   <Touchable
                     key={photo.id}
@@ -80,8 +92,8 @@ export default () => {
                       key={photo.id}
                       source={{ uri: photo.uri }}
                       style={{
-                        width: constants.width / 3 - 0.5,
-                        height: constants.width / 3 - 0.5,
+                        width: constants.width / 4 - 1,
+                        height: constants.width / 4 - 1,
                         opacity: photo.id === selected.id ? 0.3 : 1,
                         margin: 0.5
                       }}

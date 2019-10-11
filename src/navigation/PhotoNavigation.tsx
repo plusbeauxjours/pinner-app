@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  createMaterialTopTabNavigator,
+  createBottomTabNavigator,
   createStackNavigator
 } from "react-navigation";
 import UploadPhoto from "../screens/Photo/UploadPhoto";
@@ -10,7 +10,7 @@ import { stackStyles } from "./Config";
 import NavIcon from "../components/NavIcon";
 import { Platform } from "react-native";
 
-const PhotoTabs = createMaterialTopTabNavigator(
+const PhotoTabs = createBottomTabNavigator(
   {
     Select: {
       screen: SelectPhoto,
@@ -40,13 +40,12 @@ const PhotoTabs = createMaterialTopTabNavigator(
     swipeEnabled: true,
     tabBarPosition: "bottom",
     tabBarOptions: {
-      indicatorStyle: {
-        display: "none"
-      },
       style: {
-        height: 82,
-        ...stackStyles
+        backgroundColor: "white"
       },
+      activeTintColor: "#000",
+      inactiveTintColor: "#d1cece",
+      upperCaseLabel: false,
       showLabel: false,
       showIcon: true
     }

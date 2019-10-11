@@ -3,7 +3,6 @@ import {
   createBottomTabNavigator,
   createStackNavigator
 } from "react-navigation";
-// import Notifications from "../screens/Tabs/Notifications";
 import { Platform } from "react-native";
 import NavIcon from "../components/NavIcon";
 import HomeNavigation from "./HomeNavigation";

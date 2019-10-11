@@ -73,10 +73,6 @@ export default ({ navigation }) => {
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
     variables: { location: "city", cityId }
   });
-
-  {
-    console.log(recommendLocationData);
-  }
   const onRefresh = async () => {
     try {
       setRefreshing(true);
