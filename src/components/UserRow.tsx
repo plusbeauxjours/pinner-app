@@ -32,11 +32,14 @@ const Header = styled.View`
   flex: 2;
   flex-direction: row;
 `;
-const Text = styled.Text`
+const Mark = styled.Text`
   color: ${props => props.theme.color};
   position: absolute;
   font-size: 9px;
   padding: 1px 0 0 1px;
+`;
+const Text = styled.Text`
+  color: ${props => props.theme.color};
 `;
 const GreyText = styled(Text)`
   margin-left: 15px;
@@ -488,7 +491,7 @@ const UserRow: React.FC<IProps> = ({
                       }
                     }
                   />
-                  {!match.isReadByHost && <Text>N</Text>}
+                  {!match.isReadByHost && <Mark>N</Mark>}
                 </Touchable>
                 <Touchable>
                   <HeaderUserContainer>
@@ -515,7 +518,7 @@ const UserRow: React.FC<IProps> = ({
                         : require(`../Images/avatars/earth1.png`)
                     }
                   />
-                  {!match.isReadByGuest && <Text>N</Text>}
+                  {!match.isReadByGuest && <Mark>N</Mark>}
                 </Touchable>
                 <Touchable>
                   <HeaderUserContainer>
