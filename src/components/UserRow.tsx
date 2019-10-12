@@ -100,7 +100,7 @@ const UserRow: React.FC<IProps> = ({
           <Header>
             <Touchable>
               <Image
-                style={{ height: 35, width: 35, borderRadius: 20 }}
+                style={{ height: 36, width: 36, borderRadius: 18 }}
                 source={
                   user.appAvatarUrl
                     ? { uri: `${BACKEND_URL}/media/${user.appAvatarUrl}` }
@@ -126,7 +126,7 @@ const UserRow: React.FC<IProps> = ({
           <Header>
             <Touchable>
               <Image
-                style={{ height: 35, width: 35, borderRadius: 20 }}
+                style={{ height: 36, width: 36, borderRadius: 18 }}
                 source={
                   user.appAvatarUrl
                     ? { uri: `${BACKEND_URL}/media/${user.appAvatarUrl}` }
@@ -436,11 +436,13 @@ const UserRow: React.FC<IProps> = ({
           <Header>
             <Touchable>
               <Image
-                style={{ height: 40, width: 40, borderRadius: 20 }}
+                style={{ height: 36, width: 36, borderRadius: 18 }}
                 source={
-                  coffee.host.profile.appAvatarUrl && {
-                    uri: `${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`
-                  }
+                  coffee.host.profile.appAvatarUrl
+                    ? {
+                        uri: `${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`
+                      }
+                    : require(`../Images/avatars/earth1.png`)
                 }
               />
             </Touchable>
@@ -491,7 +493,7 @@ const UserRow: React.FC<IProps> = ({
               <Header>
                 <Touchable>
                   <Image
-                    style={{ height: 40, width: 40, borderRadius: 20 }}
+                    style={{ height: 36, width: 36, borderRadius: 18 }}
                     source={
                       match.guest.profile.appAvatarUrl && {
                         uri: `${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`
@@ -516,7 +518,7 @@ const UserRow: React.FC<IProps> = ({
               <Header>
                 <Touchable>
                   <Image
-                    style={{ height: 35, width: 35, borderRadius: 20 }}
+                    style={{ height: 36, width: 36, borderRadius: 18 }}
                     source={
                       match.host.profile.appAvatarUrl
                         ? {

@@ -71,11 +71,11 @@ export default ({ navigation }) => {
     loading: coffeeLoading,
     refetch: coffeeRefetch
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
-    variables: { location: "city", cityId }
+    variables: { location: "city", cityId },
+    fetchPolicy: "network-only"
   });
   console.log(cityId);
   console.log(coffeeData);
-  console.log(recommendLocationData);
   const onRefresh = async () => {
     try {
       setRefreshing(true);
@@ -110,7 +110,7 @@ export default ({ navigation }) => {
     const {
       recommendLocations: { cities: recommendLocations = null } = {}
     } = recommendLocationData;
-    const { getCoffees: { coffees = null } = {} } = coffeeData;
+    const { getCoffees: { coffees = null } = {} } = ({} = coffeeData);
     return (
       <ScrollView
         refreshControl={
@@ -193,12 +193,34 @@ export default ({ navigation }) => {
               <Title>NEED SOME COFFEE NOW</Title>
               <UserContainer>
                 <Swiper
-                  style={{ height: 135 }}
+                  style={{ height: coffees.length < 3 ? 90 : 135 }}
                   paginationStyle={{ bottom: -15 }}
+                  loop={false}
                 >
-                  {/* {coffees.map(coffee => (
-                    <UserRow key={coffee.id} coffee={coffee} type={"coffee"} />
-                  ))} */}
+                  {chunk(coffees).map((coffeeColumn, index) => {
+                    return (
+                      <UserColumn key={index}>
+                        {coffeeColumn.map((coffee: any, index: any) => {
+                          return (
+                            <Touchable
+                              key={index}
+                              onPress={() =>
+                                navigation.push("CoffeeDetail", {
+                                  coffeeId: coffee.uuid
+                                })
+                              }
+                            >
+                              <UserRow
+                                key={coffee.id}
+                                coffee={coffee}
+                                type={"coffee"}
+                              />
+                            </Touchable>
+                          );
+                        })}
+                      </UserColumn>
+                    );
+                  })}
                 </Swiper>
               </UserContainer>
             </Item>

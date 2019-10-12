@@ -81,36 +81,36 @@ export const GET_COFFEES = gql`
       location: $location
     ) {
       coffees {
-        # id
+        id
         uuid
-        #   city {
-        #     cityId
-        #     cityName
-        #     cityThumbnail
-        #     country {
-        #       countryName
-        #     }
-        #   }
-        #   host {
-        #     id
-        #     username
-        #     profile {
-        #       avatarUrl
-        #       appAvatarUrl
-        #       isSelf
-        #       currentCity {
-        #         cityName
-        #         country {
-        #           countryName
-        #         }
-        #       }
-        #     }
-        #   }
-        #   status
-        #   naturalTime
-        #   target
-        #   createdAt
-        #   matchCount
+        city {
+          cityId
+          cityName
+          cityThumbnail
+          country {
+            countryName
+          }
+        }
+        host {
+          id
+          username
+          profile {
+            avatarUrl
+            appAvatarUrl
+            isSelf
+            currentCity {
+              cityName
+              country {
+                countryName
+              }
+            }
+          }
+        }
+        status
+        naturalTime
+        target
+        createdAt
+        matchCount
       }
     }
   }
