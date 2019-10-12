@@ -15,6 +15,7 @@ import { COFFEE_DETAIL, DELETE_COFFEE } from "./CoffeeDetailQueries";
 import { useTheme } from "../../../../context/ThemeContext";
 import constants, { BACKEND_URL } from "../../../../../constants";
 import Loader from "../../../../components/Loader";
+import CoffeeBtn from "../../../../components/CoffeeBtn";
 
 const View = styled.View`
   align-items: center;
@@ -58,12 +59,10 @@ const UserName = styled.Text`
   color: ${props => props.theme.color};
 `;
 const ItemContainer = styled.View`
-  position: absolute;
-  top: 150;
   flex-direction: row;
+  margin-top: 80px;
   justify-content: center;
   width: ${constants.width};
-  height: ${constants.width - 150};
   flex-wrap: wrap;
 `;
 const Item = styled.View`
@@ -77,16 +76,21 @@ const DisptanceItem = styled(Item)`
 `;
 const GreyText = styled.Text`
   color: #999;
+  margin-bottom: 10px;
+`;
+const CoffeeBtnContainer = styled.View`
+  width: ${constants.width};
+  justify-content: center;
+  align-items: center;
   position: absolute;
-  bottom: 90;
+  bottom: 10;
 `;
 export default ({ navigation }) => {
   const me = useMe();
   const isDarkMode = useTheme();
   const location = useLocation();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const coffeeId = "30082cc3-9604-4d5b-a978-34a655ceb4ca";
-  // const coffeeId = navigation.getParam("coffeeId");
+  const coffeeId = navigation.getParam("coffeeId");
   const [countryCode, setCountryCode] = useState<string>(
     location.currentCountryCode
   );
@@ -98,9 +102,9 @@ export default ({ navigation }) => {
     CoffeeDetail,
     CoffeeDetailVariables
   >(COFFEE_DETAIL, {
-    variables: { coffeeId }
+    variables: { coffeeId },
+    fetchPolicy: "network-only"
   });
-  console.log(coffeeDetailData);
   const [delateCoffeeFn] = useMutation<DeleteCoffee, DeleteCoffeeVariables>(
     DELETE_COFFEE,
     { variables: { coffeeId } }
@@ -115,119 +119,124 @@ export default ({ navigation }) => {
       </LoaderContainer>
     );
   } else {
-    const { coffeeDetail: { coffee = null } = {} } = coffeeDetailData;
+    const { coffeeDetail: { coffee = null } = {} } = ({} = coffeeDetailData);
     return (
       <View>
         <Container>
-          <ImageTouchable
-            onPress={() =>
-              navigation.push("UserProfileTabs", {
-                username: coffee.host.profile.username
-              })
-            }
-          >
-            <Image
-              resizeMode={"contain"}
-              style={{
-                height: 150,
-                width: 150,
-                borderRadius: 150 / 2
-              }}
-              source={
-                coffee.host.profile.avatarUrl
-                  ? {
-                      uri: `${BACKEND_URL}/media/${coffee.host.profile.avatarUrl}`
-                    }
-                  : require(`../../../../Images/avatars/earth1.png`)
-              }
-            />
-          </ImageTouchable>
-          <Touchable
-            onPress={() =>
-              navigation.push("UserProfileTabs", {
-                username: coffee.host.profile.username
-              })
-            }
-          >
-            <UserName>
-              {coffee.host.profile.username.length > 24
-                ? coffee.host.profile.username.substring(0, 24) + "..."
-                : coffee.host.profile.username}
-            </UserName>
-            <Text>
-              {coffee.host.profile.currentCity.cityName},&nbsp;
-              {coffee.host.profile.currentCity.country.countryName}
-            </Text>
-          </Touchable>
-          <ItemContainer>
-            <DisptanceItem>
-              <UserName>{coffee.host.profile.distance}</UserName>
-              <Text>KM</Text>
-            </DisptanceItem>
-            {coffee.host.profile.tripCount !== 0 && (
-              <Item>
-                <UserName>{coffee.host.profile.tripCount}</UserName>
-                {coffee.host.profile.tripCount === 1 ? (
-                  <Text>TRIP</Text>
-                ) : (
-                  <Text>TRIPS</Text>
-                )}
-              </Item>
-            )}
-            {coffee.host.profile.coffeeCount !== 0 && (
-              <Item>
-                <UserName>{coffee.host.profile.coffeeCount} </UserName>
-                {coffee.host.profile.coffeeCount === 1 ? (
-                  <Text>COFFEE</Text>
-                ) : (
-                  <Text>COFFEES</Text>
-                )}
-              </Item>
-            )}
-            {coffee.host.profile.gender && (
-              <Item>
-                {(() => {
-                  switch (coffee.host.profile.gender) {
-                    case "MALE":
-                      return <UserName>M</UserName>;
-                    case "FEMALE":
-                      return <UserName>F</UserName>;
-                    case "OTHER":
-                      return <UserName>O</UserName>;
-                    default:
-                      return null;
+          {coffee && (
+            <>
+              <ImageTouchable
+                onPress={() =>
+                  navigation.push("UserProfileTabs", {
+                    username: coffee.host.profile.username
+                  })
+                }
+              >
+                <Image
+                  resizeMode={"contain"}
+                  style={{
+                    height: 150,
+                    width: 150,
+                    borderRadius: 150 / 2
+                  }}
+                  source={
+                    coffee.host.profile.avatarUrl
+                      ? {
+                          uri: `${BACKEND_URL}/media/${coffee.host.profile.avatarUrl}`
+                        }
+                      : require(`../../../../Images/avatars/earth1.png`)
                   }
-                })()}
-                <Text>GENDER</Text>
-              </Item>
-            )}
-            {coffee.host.profile.nationality && (
-              <Item>
-                <UserName>
-                  {coffee.host.profile.nationality.countryEmoji}
-                </UserName>
-                <Text>NATIONALITY </Text>
-              </Item>
-            )}
-            {coffee.host.profile.residence && (
-              <Item>
-                <UserName>
-                  {coffee.host.profile.residence.countryEmoji}
-                </UserName>
-                <Text>RESIDENCE </Text>
-              </Item>
-            )}
-          </ItemContainer>
-          <GreyText>until {coffee.naturalTime}</GreyText>
-          {/* {coffee.status !== "expired" && (
-                <CoffeeBtn
-                  cityId={coffee.city.cityId}
-                  coffeeId={coffee.uuid}
-                  isMatching={coffee.isMatching}
-                  isSelf={coffee.host.profile.isSelf}
-                  from={from}
                 />
-              )} */}
+              </ImageTouchable>
+              <Touchable
+                onPress={() =>
+                  navigation.push("UserProfileTabs", {
+                    username: coffee.host.profile.username
+                  })
+                }
+              >
+                <UserName>
+                  {coffee.host.profile.username.length > 24
+                    ? coffee.host.profile.username.substring(0, 24) + "..."
+                    : coffee.host.profile.username}
+                </UserName>
+                <Text>
+                  {coffee.host.profile.currentCity.cityName},&nbsp;
+                  {coffee.host.profile.currentCity.country.countryName}
+                </Text>
+              </Touchable>
+              <ItemContainer>
+                <DisptanceItem>
+                  <UserName>{coffee.host.profile.distance}</UserName>
+                  <Text>KM</Text>
+                </DisptanceItem>
+                {coffee.host.profile.tripCount !== 0 && (
+                  <Item>
+                    <UserName>{coffee.host.profile.tripCount}</UserName>
+                    {coffee.host.profile.tripCount === 1 ? (
+                      <Text>TRIP</Text>
+                    ) : (
+                      <Text>TRIPS</Text>
+                    )}
+                  </Item>
+                )}
+                {coffee.host.profile.coffeeCount !== 0 && (
+                  <Item>
+                    <UserName>{coffee.host.profile.coffeeCount} </UserName>
+                    {coffee.host.profile.coffeeCount === 1 ? (
+                      <Text>COFFEE</Text>
+                    ) : (
+                      <Text>COFFEES</Text>
+                    )}
+                  </Item>
+                )}
+                {coffee.host.profile.gender && (
+                  <Item>
+                    {(() => {
+                      switch (coffee.host.profile.gender) {
+                        case "MALE":
+                          return <UserName>M</UserName>;
+                        case "FEMALE":
+                          return <UserName>F</UserName>;
+                        case "OTHER":
+                          return <UserName>O</UserName>;
+                        default:
+                          return null;
+                      }
+                    })()}
+                    <Text>GENDER</Text>
+                  </Item>
+                )}
+                {coffee.host.profile.nationality && (
+                  <Item>
+                    <UserName>
+                      {coffee.host.profile.nationality.countryEmoji}
+                    </UserName>
+                    <Text>NATIONALITY </Text>
+                  </Item>
+                )}
+                {coffee.host.profile.residence && (
+                  <Item>
+                    <UserName>
+                      {coffee.host.profile.residence.countryEmoji}
+                    </UserName>
+                    <Text>RESIDENCE </Text>
+                  </Item>
+                )}
+              </ItemContainer>
+              {coffee.status !== "expired" && (
+                <CoffeeBtnContainer>
+                  <GreyText>until {coffee.naturalTime}</GreyText>
+                  <CoffeeBtn
+                    cityId={coffee.city.cityId}
+                    coffeeId={coffee.uuid}
+                    isMatching={coffee.isMatching}
+                    isSelf={coffee.host.profile.isSelf}
+                  />
+                </CoffeeBtnContainer>
+              )}
+            </>
+          )}
         </Container>
       </View>
     );

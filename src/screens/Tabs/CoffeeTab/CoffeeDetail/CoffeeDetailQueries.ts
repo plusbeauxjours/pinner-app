@@ -1,4 +1,5 @@
 import gql from "graphql-tag";
+import { COUNTRY_FRAGMENT } from "../../../..//fragmentQueries";
 
 export const COFFEE_DETAIL = gql`
   query CoffeeDetail($coffeeId: String!) {
@@ -8,6 +9,7 @@ export const COFFEE_DETAIL = gql`
         uuid
         expires
         naturalTime
+        isMatching
         status
         target
         city {
@@ -20,12 +22,21 @@ export const COFFEE_DETAIL = gql`
         host {
           id
           profile {
+            nationality {
+              countryEmoji
+              ...CountryParts
+            }
+            residence {
+              countryEmoji
+              ...CountryParts
+            }
             username
             isSelf
             avatarUrl
             gender
             distance
             coffeeCount
+            tripCount
             currentCity {
               cityId
               cityName
@@ -33,22 +44,12 @@ export const COFFEE_DETAIL = gql`
                 countryName
               }
             }
-            nationality {
-              countryName
-              countryCode
-              countryEmoji
-            }
-            residence {
-              countryName
-              countryCode
-              countryEmoji
-            }
-            tripCount
           }
         }
       }
     }
   }
+  ${COUNTRY_FRAGMENT}
 `;
 
 export const DELETE_COFFEE = gql`

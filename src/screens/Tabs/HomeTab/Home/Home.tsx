@@ -73,6 +73,9 @@ export default ({ navigation }) => {
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
     variables: { location: "city", cityId }
   });
+  console.log(cityId);
+  console.log(coffeeData);
+  console.log(recommendLocationData);
   const onRefresh = async () => {
     try {
       setRefreshing(true);
@@ -193,9 +196,9 @@ export default ({ navigation }) => {
                   style={{ height: 135 }}
                   paginationStyle={{ bottom: -15 }}
                 >
-                  {coffees.map(coffee => (
+                  {/* {coffees.map(coffee => (
                     <UserRow key={coffee.id} coffee={coffee} type={"coffee"} />
-                  ))}
+                  ))} */}
                 </Swiper>
               </UserContainer>
             </Item>

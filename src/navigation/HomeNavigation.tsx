@@ -168,7 +168,6 @@ const HomeTabs = createMaterialTopTabNavigator(
 
 export default createStackNavigator(
   {
-    CoffeeDetail,
     HomeTabs,
     CityProfileTabs,
     UserProfileTabs,
@@ -180,7 +179,8 @@ export default createStackNavigator(
     Cities,
     Countries,
     Continents,
-    Coffees
+    Coffees,
+    CoffeeDetail
   },
   {
     defaultNavigationOptions: {

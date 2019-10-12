@@ -1,5 +1,4 @@
 import gql from "graphql-tag";
-import { COFFEE_FRAGMENT } from "./fragmentQueries";
 
 export const ME = gql`
   query Me {
@@ -82,9 +81,37 @@ export const GET_COFFEES = gql`
       location: $location
     ) {
       coffees {
-        ...CoffeeParts
+        # id
+        uuid
+        #   city {
+        #     cityId
+        #     cityName
+        #     cityThumbnail
+        #     country {
+        #       countryName
+        #     }
+        #   }
+        #   host {
+        #     id
+        #     username
+        #     profile {
+        #       avatarUrl
+        #       appAvatarUrl
+        #       isSelf
+        #       currentCity {
+        #         cityName
+        #         country {
+        #           countryName
+        #         }
+        #       }
+        #     }
+        #   }
+        #   status
+        #   naturalTime
+        #   target
+        #   createdAt
+        #   matchCount
       }
     }
   }
-  ${COFFEE_FRAGMENT}
 `;
