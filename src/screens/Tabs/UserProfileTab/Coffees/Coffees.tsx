@@ -20,7 +20,7 @@ const Bold = styled.Text`
   font-size: 20;
   color: ${props => props.theme.color};
 `;
-
+const Touchable = styled.TouchableOpacity``;
 const Text = styled.Text`
   color: ${props => props.theme.color};
 `;
@@ -67,13 +67,20 @@ export default ({ navigation }) => {
           {data.getCoffees.coffees &&
             data.getCoffees.coffees.length !== 0 &&
             data.getCoffees.coffees.map((coffee, index) => (
-              <>
+              <Touchable
+                key={index}
+                onPress={() =>
+                  navigation.push("CoffeeDetail", {
+                    coffeeId: coffee.uuid
+                  })
+                }
+              >
                 <UserRow
                   key={index}
                   coffee={coffee}
                   type={"userProfileCoffee"}
                 />
-              </>
+              </Touchable>
             ))}
         </View>
       )}

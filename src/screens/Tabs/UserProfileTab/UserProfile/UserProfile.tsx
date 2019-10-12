@@ -282,7 +282,7 @@ export default ({ navigation }) => {
                     {getSameTripsData.getSameTrips.cities.length !== 0 &&
                       getSameTripsData.getSameTrips.cities.map(city => (
                         <EditText key={city.id}>
-                          {" "}
+                          &nbsp;
                           {city.cityName}
                           {city.country.countryEmoji}
                         </EditText>
@@ -303,15 +303,14 @@ export default ({ navigation }) => {
                 <Bold>KM</Bold>
               </DisptanceItem>
             )}
-            {trip && trip.length === 1 ? (
+            {trip && (
               <Item>
                 <UserName>{user.profile.tripCount}</UserName>
-                <Bold>TRIP</Bold>
-              </Item>
-            ) : (
-              <Item>
-                <UserName>{user.profile.tripCount}</UserName>
-                <Bold>TRIPS</Bold>
+                {user.profile.tripCount === 1 ? (
+                  <Text>TRIP</Text>
+                ) : (
+                  <Text>TRIPS</Text>
+                )}
               </Item>
             )}
             {user.profile.coffeeCount !== 0 && (

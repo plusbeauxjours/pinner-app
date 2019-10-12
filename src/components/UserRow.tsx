@@ -32,6 +32,10 @@ const Header = styled.View`
   flex: 2;
   flex-direction: row;
 `;
+const SmallText = styled.Text`
+  font-size: 9px;
+  color: #999;
+`;
 const Mark = styled.Text`
   color: ${props => props.theme.color};
   position: absolute;
@@ -467,10 +471,13 @@ const UserRow: React.FC<IProps> = ({
             </Touchable>
             <Touchable>
               <HeaderUserContainer>
-                <Bold>{coffee.host.username}</Bold>
-                <Location>
-                  {coffee.city.cityName}, {coffee.city.country.countryName}
-                </Location>
+                <Bold>
+                  {coffee.city.cityName}
+                  <SmallText>
+                    &nbsp; | {coffee.target} | {coffee.naturalTime}
+                  </SmallText>
+                </Bold>
+                <Location>{coffee.city.country.countryName}</Location>
               </HeaderUserContainer>
             </Touchable>
           </Header>

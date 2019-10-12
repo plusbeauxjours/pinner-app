@@ -10,6 +10,7 @@ import Cities from "../screens/Tabs/UserProfileTab/Cities";
 import Countries from "../screens/Tabs/UserProfileTab/Countries";
 import Continents from "../screens/Tabs/UserProfileTab/Continents";
 import Coffees from "../screens/Tabs/UserProfileTab/Coffees";
+import CoffeeDetail from "../screens/Tabs/CoffeeTab/CoffeeDetail";
 import UserProfile from "../screens/Tabs/UserProfileTab/UserProfile";
 import EditProfile from "../screens/Tabs/UserProfileTab/EditProfile";
 import AvatarList from "../screens/Tabs/UserProfileTab/AvatarList/index";
@@ -167,6 +168,7 @@ const HomeTabs = createMaterialTopTabNavigator(
 
 export default createStackNavigator(
   {
+    CoffeeDetail,
     HomeTabs,
     CityProfileTabs,
     UserProfileTabs,

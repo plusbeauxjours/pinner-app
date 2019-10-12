@@ -7,6 +7,7 @@ import Cities from "../screens/Tabs/UserProfileTab/Cities";
 import Countries from "../screens/Tabs/UserProfileTab/Countries";
 import Continents from "../screens/Tabs/UserProfileTab/Continents";
 import Coffees from "../screens/Tabs/UserProfileTab/Coffees";
+import CoffeeDetail from "../screens/Tabs/CoffeeTab/CoffeeDetail";
 import CityProfile from "../screens/Tabs/LocationTab/CityProfile";
 import CountryProfile from "../screens/Tabs/LocationTab/CountryProfile";
 import ContinentProfile from "../screens/Tabs/LocationTab/ContinentProfile";
@@ -133,7 +134,8 @@ export default createStackNavigator(
     Cities,
     Countries,
     Continents,
-    Coffees
+    Coffees,
+    CoffeeDetail
   },
   {
     defaultNavigationOptions: {

@@ -8,7 +8,7 @@ import NavIcon from "../components/NavIcon";
 import HomeNavigation from "./HomeNavigation";
 import LocationNavigation from "./LocationNavigation";
 import PhotoLink from "../components/PhotoLink";
-import RequestCoffees from "../screens/Tabs/RequestCoffeesTab/RequestCoffees";
+import RequestCoffees from "../screens/Tabs/CoffeeTab/RequestCoffees";
 import UserProfileNavigation from "./UserProfileNavigation";
 import Search from "../components/Search";
 
