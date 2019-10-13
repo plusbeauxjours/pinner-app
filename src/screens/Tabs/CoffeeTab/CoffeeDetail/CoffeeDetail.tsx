@@ -62,11 +62,13 @@ const ItemContainer = styled.View`
   flex-direction: row;
   margin-top: 80px;
   justify-content: center;
+  align-items: center;
   width: ${constants.width};
   flex-wrap: wrap;
 `;
 const Item = styled.View`
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   width: ${constants.width / 4};
   height: ${constants.width / 5};
@@ -88,14 +90,20 @@ const CoffeeBtnContainer = styled.View`
 
 interface IProps {
   navigation: any;
-  coffeeId: String;
+  coffeeId: string;
+  setModalOpen?: any;
+  isStaying?: boolean;
 }
-const CoffeeDetails: React.FC<IProps> = ({ navigation, coffeeId }) => {
+const CoffeeDetails: React.FC<IProps> = ({
+  navigation,
+  coffeeId,
+  setModalOpen,
+  isStaying
+}) => {
   const me = useMe();
   console.log(coffeeId);
   const isDarkMode = useTheme();
   const location = useLocation();
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [countryCode, setCountryCode] = useState<string>(
     location.currentCountryCode
   );
@@ -114,6 +122,12 @@ const CoffeeDetails: React.FC<IProps> = ({ navigation, coffeeId }) => {
     DELETE_COFFEE,
     { variables: { coffeeId } }
   );
+  const onPress = username => {
+    setModalOpen(false);
+    navigation.push("UserProfileTabs", {
+      username
+    });
+  };
   // useEffect(() => {
   //   setModalOpen(true);
   // }, [coffeeId]);
@@ -131,11 +145,7 @@ const CoffeeDetails: React.FC<IProps> = ({ navigation, coffeeId }) => {
           {coffee && (
             <>
               <ImageTouchable
-                onPress={() =>
-                  navigation.push("UserProfileTabs", {
-                    username: coffee.host.profile.username
-                  })
-                }
+                onPress={() => onPress(coffee.host.profile.username)}
               >
                 <Image
                   resizeMode={"contain"}
@@ -153,13 +163,7 @@ const CoffeeDetails: React.FC<IProps> = ({ navigation, coffeeId }) => {
                   }
                 />
               </ImageTouchable>
-              <Touchable
-                onPress={() =>
-                  navigation.push("UserProfileTabs", {
-                    username: coffee.host.profile.username
-                  })
-                }
-              >
+              <Touchable onPress={() => onPress(coffee.host.profile.username)}>
                 <UserName>
                   {coffee.host.profile.username.length > 24
                     ? coffee.host.profile.username.substring(0, 24) + "..."
@@ -171,10 +175,12 @@ const CoffeeDetails: React.FC<IProps> = ({ navigation, coffeeId }) => {
                 </Text>
               </Touchable>
               <ItemContainer>
-                <DisptanceItem>
-                  <UserName>{coffee.host.profile.distance}</UserName>
-                  <Text>KM</Text>
-                </DisptanceItem>
+                {coffee.host.profile.distance !== 0 && (
+                  <DisptanceItem>
+                    <UserName>{coffee.host.profile.distance}</UserName>
+                    <Text>KM</Text>
+                  </DisptanceItem>
+                )}
                 {coffee.host.profile.tripCount !== 0 && (
                   <Item>
                     <UserName>{coffee.host.profile.tripCount}</UserName>
@@ -185,7 +191,7 @@ const CoffeeDetails: React.FC<IProps> = ({ navigation, coffeeId }) => {
                     )}
                   </Item>
                 )}
-                {coffee.host.profile.coffeeCount !== 0 && (
+                {/* {coffee.host.profile.coffeeCount !== 0 && (
                   <Item>
                     <UserName>{coffee.host.profile.coffeeCount} </UserName>
                     {coffee.host.profile.coffeeCount === 1 ? (
@@ -194,7 +200,7 @@ const CoffeeDetails: React.FC<IProps> = ({ navigation, coffeeId }) => {
                       <Text>COFFEES</Text>
                     )}
                   </Item>
-                )}
+                )} */}
                 {coffee.host.profile.gender && (
                   <Item>
                     {(() => {
@@ -229,7 +235,7 @@ const CoffeeDetails: React.FC<IProps> = ({ navigation, coffeeId }) => {
                   </Item>
                 )}
               </ItemContainer>
-              {coffee.status !== "expired" && (
+              {coffee.status !== "expired" && isStaying && (
                 <CoffeeBtnContainer>
                   <GreyText>until {coffee.naturalTime}</GreyText>
                   <CoffeeBtn

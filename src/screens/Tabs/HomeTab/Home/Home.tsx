@@ -132,7 +132,7 @@ export default ({ navigation }) => {
           scrollHorizontal={true}
           backdropOpacity={0.9}
         >
-          <CoffeeDetail coffeeId={coffeeId} />
+          <CoffeeDetail coffeeId={coffeeId} setModalOpen={setModalOpen} isStaying={true}/>
         </Modal>
         <ScrollView
           refreshControl={

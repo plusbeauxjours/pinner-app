@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RefreshControl, Image } from "react-native";
+import { RefreshControl, Image, Platform } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -21,14 +21,16 @@ import {
   NEAR_CITIES
 } from "./CityProfileQueries";
 import Swiper from "react-native-swiper";
-import { NearCities, NearCitiesVariables } from "../../../../types/api";
-import { SLACK_REPORT_LOCATIONS } from "../../../../sharedQueries";
+import { NearCities, NearCitiesVariables, GetCoffees, GetCoffeesVariables } from '../../../../types/api';
+import { SLACK_REPORT_LOCATIONS, GET_COFFEES } from '../../../../sharedQueries';
 import CityLikeBtn from "../../../../components/CityLikeBtn";
 import constants from "../../../../../constants";
 import { darkMode, lightMode } from "../../../../styles/mapStyles";
 import { countries } from "../../../../../countryData";
 import Weather from "../../../../components/Weather";
 import { useTheme } from "../../../../context/ThemeContext";
+import Modal from "react-native-modal";
+import CoffeeDetail from "../../CoffeeTab/CoffeeDetail";
 
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -86,6 +88,9 @@ export default ({ navigation }) => {
   const [cityId, setCityId] = useState<string>(
     navigation.getParam("cityId") || location.currentCityId
   );
+  const isStaying = cityId === location.currentCityId;
+  const [coffeeId, setCoffeeId] = useState<string>("");
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [payload, setPayload] = useState<string>();
   const [mapOpen, setMapOpen] = useState<boolean>(false);
@@ -122,17 +127,31 @@ export default ({ navigation }) => {
     GET_SAMENAME_CITIES,
     { variables: { cityId } }
   );
+  const {
+    data: coffeeData,
+    loading: coffeeLoading,
+    refetch: coffeeRefetch
+  } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
+    variables: { location: "city", cityId },
+    fetchPolicy: "network-only"
+  });
   const onRefresh = async () => {
     try {
       setRefreshing(true);
       await profileRefetch();
       await samenameCitiesRefetch();
       await nearCitiesRefetch();
+      await coffeeRefetch()
     } catch (e) {
       console.log(e);
     } finally {
       setRefreshing(false);
     }
+  };
+
+  const onPress = coffeeId => {
+    setModalOpen(true);
+    setCoffeeId(coffeeId);
   };
   const chunk = arr => {
     let chunks = [],
@@ -143,7 +162,7 @@ export default ({ navigation }) => {
     }
     return chunks;
   };
-  if (profileLoading || nearCitiesLoading || samenameCitiesLoading) {
+  if (profileLoading || nearCitiesLoading || samenameCitiesLoading||coffeeLoading) {
     return (
       <LoaderContainer>
         <Loader />
@@ -163,206 +182,264 @@ export default ({ navigation }) => {
       getSamenameCities: { cities: samenameCities = null } = {}
     } = samenameCitiesData;
     const { nearCities: { cities: nearCities = null } = {} } = nearCitiesData;
+    const { getCoffees: { coffees = null } = {} } = ({} = coffeeData);
     return (
-      <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        <Container>
-          {city && (
-            <View>
-              {mapOpen ? (
-                // <Touchable onPress={() => setMapOpen(false)}>
-                <Touchable>
-                  <MapView
-                    provider={PROVIDER_GOOGLE}
-                    style={{
-                      height: constants.width - 30,
-                      width: constants.width - 30,
-                      borderRadius: 3
-                    }}
-                    initialRegion={{
-                      latitude: city.latitude,
-                      longitude: city.longitude,
-                      latitudeDelta: 0.05,
-                      longitudeDelta: 0.05
-                    }}
-                    loadingEnabled={true}
-                    rotateEnabled={false}
-                    customMapStyle={
-                      isDarkMode && isDarkMode === true ? darkMode : lightMode
-                    }
-                  />
-                </Touchable>
-              ) : (
-                <Touchable onPress={() => setMapOpen(true)}>
-                  <Image
-                    style={{
-                      height: constants.width - 30,
-                      width: constants.width - 30,
-                      borderRadius: 3
-                    }}
-                    source={
-                      city.cityPhoto && {
-                        uri: city.cityPhoto
+      <>
+        <Modal
+          style={{ margin: 0, alignItems: "flex-start" }}
+          isVisible={modalOpen}
+          backdropColor={isDarkMode && isDarkMode === true ? "black" : "white"}
+          onBackdropPress={() => setModalOpen(false)}
+          onBackButtonPress={() =>
+            Platform.OS !== "ios" && setModalOpen(isStaying)
+          }
+          onModalHide={() => setModalOpen(false)}
+          propagateSwipe={true}
+          scrollHorizontal={true}
+          backdropOpacity={0.9}
+        >
+          <CoffeeDetail
+            coffeeId={coffeeId}
+            setModalOpen={setModalOpen}
+            isStaying={true}
+          />
+        </Modal>
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          <Container>
+            {city && (
+              <View>
+                {mapOpen ? (
+                  // <Touchable onPress={() => setMapOpen(false)}>
+                  <Touchable>
+                    <MapView
+                      provider={PROVIDER_GOOGLE}
+                      style={{
+                        height: constants.width - 30,
+                        width: constants.width - 30,
+                        borderRadius: 3
+                      }}
+                      initialRegion={{
+                        latitude: city.latitude,
+                        longitude: city.longitude,
+                        latitudeDelta: 0.05,
+                        longitudeDelta: 0.05
+                      }}
+                      loadingEnabled={true}
+                      rotateEnabled={false}
+                      customMapStyle={
+                        isDarkMode && isDarkMode === true ? darkMode : lightMode
                       }
-                    }
-                  />
-                </Touchable>
-              )}
-              <Bold>{city.cityName}</Bold>
-              <Text>
-                {city.country.countryName} {city.country.countryEmoji}
-              </Text>
-              {count && count !== 0 ? (
+                    />
+                  </Touchable>
+                ) : (
+                  <Touchable onPress={() => setMapOpen(true)}>
+                    <Image
+                      style={{
+                        height: constants.width - 30,
+                        width: constants.width - 30,
+                        borderRadius: 3
+                      }}
+                      source={
+                        city.cityPhoto && {
+                          uri: city.cityPhoto
+                        }
+                      }
+                    />
+                  </Touchable>
+                )}
+                <Bold>{city.cityName}</Bold>
                 <Text>
-                  You've been to {city.cityName} {count}
-                  {count === 1 ? " time" : " times"}
+                  {city.country.countryName} {city.country.countryEmoji}
                 </Text>
-              ) : null}
-              <InfoRow>
-                <Weather latitude={city.latitude} longitude={city.longitude} />
-                <CityLikeBtn
-                  height={"15px"}
-                  isLiked={city.isLiked}
-                  cityId={city.cityId}
-                  likeCount={city.likeCount}
-                />
-              </InfoRow>
-            </View>
-          )}
-          {nearCities.length !== 0 && (
-            <Item>
-              <Title>NEAR CITIES</Title>
-              <UserContainer>
-                <Swiper
-                  style={{ height: nearCities.length < 3 ? 90 : 135 }}
-                  paginationStyle={{ bottom: -15 }}
-                  loop={false}
-                >
-                  {chunk(nearCities).map((cities, index) => {
-                    return (
-                      <UserColumn key={index}>
-                        {cities.map((city: any, index: any) => {
-                          return (
-                            <Touchable
-                              key={index}
-                              onPress={() =>
-                                navigation.push("CityProfileTabs", {
-                                  cityId: city.cityId,
-                                  countryCode: city.country.countryCode,
-                                  continentCode: countries.find(
-                                    i => i.code === city.country.countryCode
-                                  ).continent
-                                })
-                              }
-                            >
-                              <UserRow city={city} type={"nearCity"} />
-                            </Touchable>
-                          );
-                        })}
-                      </UserColumn>
-                    );
-                  })}
-                </Swiper>
-              </UserContainer>
-            </Item>
-          )}
-          {samenameCities.length !== 0 && (
-            <Item>
-              <Title>SAMENAME CITIES</Title>
-              <UserContainer>
-                <Swiper
-                  style={{ height: samenameCities.length < 3 ? 90 : 135 }}
-                  paginationStyle={{ bottom: -15 }}
-                  loop={false}
-                >
-                  {chunk(samenameCities).map((cities, index) => {
-                    return (
-                      <UserColumn key={index}>
-                        {cities.map((city: any, index: any) => {
-                          return (
-                            <Touchable
-                              key={index}
-                              onPress={() =>
-                                navigation.push("CityProfileTabs ", {
-                                  cityId: city.cityId,
-                                  countryCode: city.country.countryCode,
-                                  continentCode: countries.find(
-                                    i => i.code === city.country.countryCode
-                                  ).continent
-                                })
-                              }
-                            >
-                              <UserRow city={city} type={"nearCity"} />
-                            </Touchable>
-                          );
-                        })}
-                      </UserColumn>
-                    );
-                  })}
-                </Swiper>
-              </UserContainer>
-            </Item>
-          )}
-          {usersBefore.length !== 0 && (
-            <Item>
-              <Title>USERS BEFORE</Title>
-              <UserContainer>
-                <Swiper
-                  style={{ height: usersBefore.length < 3 ? 90 : 135 }}
-                  paginationStyle={{ bottom: -15 }}
-                  loop={false}
-                >
-                  {chunk(usersBefore).map((users, index) => {
-                    return (
-                      <UserColumn key={index}>
-                        {users.map((user: any, index: any) => {
-                          return (
-                            <Touchable
-                              key={index}
-                              onPress={() =>
-                                navigation.push("UserProfileTabs", {
-                                  username: user.actor.profile.username,
-                                  isSelf: user.actor.profile.isSelf
-                                })
-                              }
-                            >
-                              <UserRow
-                                user={user.actor.profile}
-                                naturalTime={user.naturalTime}
-                                type={"userBefore"}
-                              />
-                            </Touchable>
-                          );
-                        })}
-                      </UserColumn>
-                    );
-                  })}
-                </Swiper>
-              </UserContainer>
-            </Item>
-          )}
-          {usersNow && usersNow.length !== 0 && (
-            <Item>
-              <Title>USERS NOW</Title>
-              {usersNow.map((user, index) => (
-                <Touchable
-                  key={index}
-                  onPress={() =>
-                    navigation.push("UserProfileTabs", {
-                      username: user.username
-                    })
-                  }
-                >
-                  <UserRow user={user} type={"user"} />
-                </Touchable>
-              ))}
-            </Item>
-          )}
-        </Container>
-      </ScrollView>
+                {count && count !== 0 ? (
+                  <Text>
+                    You've been to {city.cityName} {count}
+                    {count === 1 ? " time" : " times"}
+                  </Text>
+                ) : null}
+                <InfoRow>
+                  <Weather
+                    latitude={city.latitude}
+                    longitude={city.longitude}
+                  />
+                  <CityLikeBtn
+                    height={"15px"}
+                    isLiked={city.isLiked}
+                    cityId={city.cityId}
+                    likeCount={city.likeCount}
+                  />
+                </InfoRow>
+              </View>
+            )}
+            {nearCities.length !== 0 && (
+              <Item>
+                <Title>NEAR CITIES</Title>
+                <UserContainer>
+                  <Swiper
+                    style={{ height: nearCities.length < 3 ? 90 : 135 }}
+                    paginationStyle={{ bottom: -15 }}
+                    loop={false}
+                  >
+                    {chunk(nearCities).map((cities, index) => {
+                      return (
+                        <UserColumn key={index}>
+                          {cities.map((city: any, index: any) => {
+                            return (
+                              <Touchable
+                                key={index}
+                                onPress={() =>
+                                  navigation.push("CityProfileTabs", {
+                                    cityId: city.cityId,
+                                    countryCode: city.country.countryCode,
+                                    continentCode: countries.find(
+                                      i => i.code === city.country.countryCode
+                                    ).continent
+                                  })
+                                }
+                              >
+                                <UserRow city={city} type={"nearCity"} />
+                              </Touchable>
+                            );
+                          })}
+                        </UserColumn>
+                      );
+                    })}
+                  </Swiper>
+                </UserContainer>
+              </Item>
+            )}
+            {samenameCities.length !== 0 && (
+              <Item>
+                <Title>SAMENAME CITIES</Title>
+                <UserContainer>
+                  <Swiper
+                    style={{ height: samenameCities.length < 3 ? 90 : 135 }}
+                    paginationStyle={{ bottom: -15 }}
+                    loop={false}
+                  >
+                    {chunk(samenameCities).map((cities, index) => {
+                      return (
+                        <UserColumn key={index}>
+                          {cities.map((city: any, index: any) => {
+                            return (
+                              <Touchable
+                                key={index}
+                                onPress={() =>
+                                  navigation.push("CityProfileTabs ", {
+                                    cityId: city.cityId,
+                                    countryCode: city.country.countryCode,
+                                    continentCode: countries.find(
+                                      i => i.code === city.country.countryCode
+                                    ).continent
+                                  })
+                                }
+                              >
+                                <UserRow city={city} type={"nearCity"} />
+                              </Touchable>
+                            );
+                          })}
+                        </UserColumn>
+                      );
+                    })}
+                  </Swiper>
+                </UserContainer>
+              </Item>
+            )}
+            {coffees && coffees.length !== 0 && (
+              <Item>
+                <Title>NEED SOME COFFEE NOW</Title>
+                <UserContainer>
+                  <Swiper
+                    style={{ height: coffees.length < 3 ? 90 : 135 }}
+                    paginationStyle={{ bottom: -15 }}
+                    loop={false}
+                  >
+                    {chunk(coffees).map((coffeeColumn, index) => {
+                      return (
+                        <UserColumn key={index}>
+                          {coffeeColumn.map((coffee: any, index: any) => {
+                            return (
+                              <Touchable
+                                key={index}
+                                onPress={() => onPress(coffee.uuid)}
+                              >
+                                <UserRow
+                                  key={coffee.id}
+                                  coffee={coffee}
+                                  type={"coffee"}
+                                />
+                              </Touchable>
+                            );
+                          })}
+                        </UserColumn>
+                      );
+                    })}
+                  </Swiper>
+                </UserContainer>
+              </Item>
+            )}
+            {usersBefore.length !== 0 && (
+              <Item>
+                <Title>USERS BEFORE</Title>
+                <UserContainer>
+                  <Swiper
+                    style={{ height: usersBefore.length < 3 ? 90 : 135 }}
+                    paginationStyle={{ bottom: -15 }}
+                    loop={false}
+                  >
+                    {chunk(usersBefore).map((users, index) => {
+                      return (
+                        <UserColumn key={index}>
+                          {users.map((user: any, index: any) => {
+                            return (
+                              <Touchable
+                                key={index}
+                                onPress={() =>
+                                  navigation.push("UserProfileTabs", {
+                                    username: user.actor.profile.username,
+                                    isSelf: user.actor.profile.isSelf
+                                  })
+                                }
+                              >
+                                <UserRow
+                                  user={user.actor.profile}
+                                  naturalTime={user.naturalTime}
+                                  type={"userBefore"}
+                                />
+                              </Touchable>
+                            );
+                          })}
+                        </UserColumn>
+                      );
+                    })}
+                  </Swiper>
+                </UserContainer>
+              </Item>
+            )}
+            {usersNow && usersNow.length !== 0 && (
+              <Item>
+                <Title>USERS NOW</Title>
+                {usersNow.map((user, index) => (
+                  <Touchable
+                    key={index}
+                    onPress={() =>
+                      navigation.push("UserProfileTabs", {
+                        username: user.username
+                      })
+                    }
+                  >
+                    <UserRow user={user} type={"user"} />
+                  </Touchable>
+                ))}
+              </Item>
+            )}
+          </Container>
+        </ScrollView>
+      </>
     );
   }
 };
