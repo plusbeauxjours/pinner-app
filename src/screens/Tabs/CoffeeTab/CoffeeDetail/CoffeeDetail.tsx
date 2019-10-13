@@ -17,6 +17,7 @@ import constants, { BACKEND_URL } from "../../../../../constants";
 import Loader from "../../../../components/Loader";
 import CoffeeBtn from "../../../../components/CoffeeBtn";
 import { withNavigation } from "react-navigation";
+import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 
 const View = styled.View`
   align-items: center;
@@ -147,21 +148,30 @@ const CoffeeDetails: React.FC<IProps> = ({
               <ImageTouchable
                 onPress={() => onPress(coffee.host.profile.username)}
               >
-                <Image
-                  resizeMode={"contain"}
-                  style={{
-                    height: 150,
-                    width: 150,
-                    borderRadius: 150 / 2
-                  }}
-                  source={
-                    coffee.host.profile.avatarUrl
-                      ? {
-                          uri: `${BACKEND_URL}/media/${coffee.host.profile.avatarUrl}`
-                        }
-                      : require(`../../../../Images/avatars/earth1.png`)
-                  }
-                />
+                {coffee.host.profile.avatarUrl ? (
+                  <ProgressiveImage
+                    style={{
+                      height: 150,
+                      width: 150,
+                      borderRadius: 150 / 2
+                    }}
+                    tint={isDarkMode ? "dark" : "light"}
+                    preview={{
+                      uri: `${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`
+                    }}
+                    uri={`${BACKEND_URL}/media/${coffee.host.profile.avatarUrl}`}
+                  />
+                ) : (
+                  <ProgressiveImage
+                    style={{
+                      height: 150,
+                      width: 150,
+                      borderRadius: 150 / 2
+                    }}
+                    preview={require(`../../../../Images/thumbnails/earth1.png`)}
+                    uri={require(`../../../../Images/avatars/earth1.png`)}
+                  />
+                )}
               </ImageTouchable>
               <Touchable onPress={() => onPress(coffee.host.profile.username)}>
                 <UserName>

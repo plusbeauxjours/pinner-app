@@ -33,6 +33,7 @@ export const COFFEE_DETAIL = gql`
             username
             isSelf
             avatarUrl
+            appAvatarUrl
             gender
             distance
             coffeeCount

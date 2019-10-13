@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
-import { RefreshControl, Platform } from "react-native";
+import { RefreshControl, Platform, Image } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
@@ -41,7 +41,6 @@ import { GET_SAME_TRIPS } from "./UserProfileQueries";
 import Modal from "react-native-modal";
 import CoffeeDetail from "../../CoffeeTab/CoffeeDetail";
 import { useTheme } from "../../../../context/ThemeContext";
-import { Image } from "react-native-expo-image-cache";
 
 const View = styled.View`
   justify-content: center;
