@@ -16,11 +16,11 @@ import { useTheme } from "../../../../context/ThemeContext";
 import constants, { BACKEND_URL } from "../../../../../constants";
 import Loader from "../../../../components/Loader";
 import CoffeeBtn from "../../../../components/CoffeeBtn";
+import { withNavigation } from "react-navigation";
 
 const View = styled.View`
   align-items: center;
   justify-content: center;
-  flex: 1;
 `;
 const Container = styled.View`
   width: ${constants.width};
@@ -85,12 +85,17 @@ const CoffeeBtnContainer = styled.View`
   position: absolute;
   bottom: 10;
 `;
-export default ({ navigation }) => {
+
+interface IProps {
+  navigation: any;
+  coffeeId: String;
+}
+const CoffeeDetails: React.FC<IProps> = ({ navigation, coffeeId }) => {
   const me = useMe();
+  console.log(coffeeId);
   const isDarkMode = useTheme();
   const location = useLocation();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const coffeeId = navigation.getParam("coffeeId");
   const [countryCode, setCountryCode] = useState<string>(
     location.currentCountryCode
   );
@@ -242,3 +247,5 @@ export default ({ navigation }) => {
     );
   }
 };
+
+export default withNavigation(CoffeeDetails);

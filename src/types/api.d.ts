@@ -175,6 +175,7 @@ export interface MatchVariables {
 export interface UnMatch_unMatch_coffee_city_country {
   __typename: "CountryType";
   countryName: string | null;
+  countryCode: string | null;
 }
 
 export interface UnMatch_unMatch_coffee_city {
@@ -537,14 +538,40 @@ export interface CoffeeDetail_coffeeDetail_coffee_city {
   country: CoffeeDetail_coffeeDetail_coffee_city_country;
 }
 
+export interface CoffeeDetail_coffeeDetail_coffee_host_profile_nationality_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
 export interface CoffeeDetail_coffeeDetail_coffee_host_profile_nationality {
   __typename: "CountryType";
   countryEmoji: string | null;
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryPhoto: string | null;
+  countryThumbnail: string | null;
+  cityCount: number | null;
+  continent: CoffeeDetail_coffeeDetail_coffee_host_profile_nationality_continent | null;
+}
+
+export interface CoffeeDetail_coffeeDetail_coffee_host_profile_residence_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
 }
 
 export interface CoffeeDetail_coffeeDetail_coffee_host_profile_residence {
   __typename: "CountryType";
   countryEmoji: string | null;
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryPhoto: string | null;
+  countryThumbnail: string | null;
+  cityCount: number | null;
+  continent: CoffeeDetail_coffeeDetail_coffee_host_profile_residence_continent | null;
 }
 
 export interface CoffeeDetail_coffeeDetail_coffee_host_profile_currentCity_country {
@@ -639,6 +666,7 @@ export interface DeleteCoffeeVariables {
 export interface RequestCoffee_requestCoffee_coffee_city_country {
   __typename: "CountryType";
   countryName: string | null;
+  countryCode: string | null;
 }
 
 export interface RequestCoffee_requestCoffee_coffee_city {
@@ -1641,6 +1669,7 @@ export interface FrequentVisitsVariables {
 
 export interface GetCoffees_getCoffees_coffees_city_country {
   __typename: "CountryType";
+  countryCode: string | null;
   countryName: string | null;
 }
 
@@ -2677,6 +2706,7 @@ export interface ContinentParts {
 export interface CoffeeParts_city_country {
   __typename: "CountryType";
   countryName: string | null;
+  countryCode: string | null;
 }
 
 export interface CoffeeParts_city {

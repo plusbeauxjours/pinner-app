@@ -6,7 +6,7 @@ import { useQuery } from "react-apollo-hooks";
 import { RECOMMEND_USERS, RECOMMEND_LOCATIONS } from "./HomeQueries";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
-import { RefreshControl } from "react-native";
+import { RefreshControl, Platform } from "react-native";
 import Swiper from "react-native-swiper";
 import { GET_COFFEES } from "../../../../sharedQueries";
 import {
@@ -17,6 +17,9 @@ import {
   RecommendLocations,
   RecommendLocationsVariables
 } from "../../../../types/api";
+import CoffeeDetail from "../../CoffeeTab/CoffeeDetail";
+import Modal from "react-native-modal";
+import { useTheme } from "../../../../context/ThemeContext";
 
 const Container = styled.View`
   flex: 1;
@@ -52,7 +55,10 @@ const LoaderContainer = styled.View`
 export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
-  const [refreshing, setRefreshing] = useState(false);
+  const isDarkMode = useTheme();
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [coffeeId, setCoffeeId] = useState<string>("");
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const cityId = location.currentCityId;
   const {
     data: recommendUserData,
@@ -74,8 +80,6 @@ export default ({ navigation }) => {
     variables: { location: "city", cityId },
     fetchPolicy: "network-only"
   });
-  console.log(cityId);
-  console.log(coffeeData);
   const onRefresh = async () => {
     try {
       setRefreshing(true);
@@ -87,6 +91,10 @@ export default ({ navigation }) => {
     } finally {
       setRefreshing(false);
     }
+  };
+  const onPress = coffeeId => {
+    setModalOpen(true);
+    setCoffeeId(coffeeId);
   };
   const chunk = arr => {
     let chunks = [],
@@ -112,121 +120,132 @@ export default ({ navigation }) => {
     } = recommendLocationData;
     const { getCoffees: { coffees = null } = {} } = ({} = coffeeData);
     return (
-      <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        <Container>
-          {recommendUsers && recommendUsers.length !== 0 && (
-            <Item>
-              <Title>RECOMMEND USERS</Title>
-              <UserContainer>
-                <Swiper
-                  style={{ height: recommendUsers.length < 3 ? 90 : 135 }}
-                  paginationStyle={{ bottom: -15 }}
-                  loop={false}
-                >
-                  {chunk(recommendUsers).map((users, index) => {
-                    return (
-                      <UserColumn key={index}>
-                        {users.map((user: any, index: any) => {
-                          return (
-                            <Touchable
-                              key={index}
-                              onPress={() =>
-                                navigation.push("UserProfileTabs", {
-                                  username: user.username,
-                                  isSelf: user.isSelf
-                                })
-                              }
-                            >
-                              <UserRow user={user} type={"user"} />
-                            </Touchable>
-                          );
-                        })}
-                      </UserColumn>
-                    );
-                  })}
-                </Swiper>
-              </UserContainer>
-            </Item>
-          )}
-          {recommendLocations && recommendLocations.length !== 0 && (
-            <Item>
-              <Title>RECOMMEND LOCATIONS</Title>
-              <UserContainer>
-                <Swiper
-                  style={{ height: recommendLocations.length < 3 ? 90 : 135 }}
-                  paginationStyle={{ bottom: -15 }}
-                  loop={false}
-                >
-                  {chunk(recommendLocations).map((locations, index) => {
-                    return (
-                      <UserColumn key={index}>
-                        {locations.map((city: any, index: any) => {
-                          return (
-                            <Touchable
-                              key={index}
-                              onPress={() =>
-                                navigation.push("CityProfileTabs", {
-                                  cityId: city.cityId,
-                                  countryCode: city.country.countryCode,
-                                  continentCode:
-                                    city.country.continent.continentCode
-                                })
-                              }
-                            >
-                              <UserRow city={city} type={"city"} />
-                            </Touchable>
-                          );
-                        })}
-                      </UserColumn>
-                    );
-                  })}
-                </Swiper>
-              </UserContainer>
-            </Item>
-          )}
-          {coffees && coffees.length !== 0 && (
-            <Item>
-              <Title>NEED SOME COFFEE NOW</Title>
-              <UserContainer>
-                <Swiper
-                  style={{ height: coffees.length < 3 ? 90 : 135 }}
-                  paginationStyle={{ bottom: -15 }}
-                  loop={false}
-                >
-                  {chunk(coffees).map((coffeeColumn, index) => {
-                    return (
-                      <UserColumn key={index}>
-                        {coffeeColumn.map((coffee: any, index: any) => {
-                          return (
-                            <Touchable
-                              key={index}
-                              onPress={() =>
-                                navigation.push("CoffeeDetail", {
-                                  coffeeId: coffee.uuid
-                                })
-                              }
-                            >
-                              <UserRow
-                                key={coffee.id}
-                                coffee={coffee}
-                                type={"coffee"}
-                              />
-                            </Touchable>
-                          );
-                        })}
-                      </UserColumn>
-                    );
-                  })}
-                </Swiper>
-              </UserContainer>
-            </Item>
-          )}
-        </Container>
-      </ScrollView>
+      <>
+        <Modal
+          style={{ margin: 0, alignItems: "flex-start" }}
+          isVisible={modalOpen}
+          backdropColor={isDarkMode && isDarkMode === true ? "black" : "white"}
+          onBackdropPress={() => setModalOpen(false)}
+          onBackButtonPress={() => Platform.OS !== "ios" && setModalOpen(false)}
+          onModalHide={() => setModalOpen(false)}
+          propagateSwipe={true}
+          scrollHorizontal={true}
+          backdropOpacity={0.9}
+        >
+          <CoffeeDetail coffeeId={coffeeId} />
+        </Modal>
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          <Container>
+            {recommendUsers && recommendUsers.length !== 0 && (
+              <Item>
+                <Title>RECOMMEND USERS</Title>
+                <UserContainer>
+                  <Swiper
+                    style={{ height: recommendUsers.length < 3 ? 90 : 135 }}
+                    paginationStyle={{ bottom: -15 }}
+                    loop={false}
+                  >
+                    {chunk(recommendUsers).map((users, index) => {
+                      return (
+                        <UserColumn key={index}>
+                          {users.map((user: any, index: any) => {
+                            return (
+                              <Touchable
+                                key={index}
+                                onPress={() =>
+                                  navigation.push("UserProfileTabs", {
+                                    username: user.username,
+                                    isSelf: user.isSelf
+                                  })
+                                }
+                              >
+                                <UserRow user={user} type={"user"} />
+                              </Touchable>
+                            );
+                          })}
+                        </UserColumn>
+                      );
+                    })}
+                  </Swiper>
+                </UserContainer>
+              </Item>
+            )}
+            {recommendLocations && recommendLocations.length !== 0 && (
+              <Item>
+                <Title>RECOMMEND LOCATIONS</Title>
+                <UserContainer>
+                  <Swiper
+                    style={{ height: recommendLocations.length < 3 ? 90 : 135 }}
+                    paginationStyle={{ bottom: -15 }}
+                    loop={false}
+                  >
+                    {chunk(recommendLocations).map((locations, index) => {
+                      return (
+                        <UserColumn key={index}>
+                          {locations.map((city: any, index: any) => {
+                            return (
+                              <Touchable
+                                key={index}
+                                onPress={() =>
+                                  navigation.push("CityProfileTabs", {
+                                    cityId: city.cityId,
+                                    countryCode: city.country.countryCode,
+                                    continentCode:
+                                      city.country.continent.continentCode
+                                  })
+                                }
+                              >
+                                <UserRow city={city} type={"city"} />
+                              </Touchable>
+                            );
+                          })}
+                        </UserColumn>
+                      );
+                    })}
+                  </Swiper>
+                </UserContainer>
+              </Item>
+            )}
+            {coffees && coffees.length !== 0 && (
+              <Item>
+                <Title>NEED SOME COFFEE NOW</Title>
+                <UserContainer>
+                  <Swiper
+                    style={{ height: coffees.length < 3 ? 90 : 135 }}
+                    paginationStyle={{ bottom: -15 }}
+                    loop={false}
+                  >
+                    {chunk(coffees).map((coffeeColumn, index) => {
+                      return (
+                        <UserColumn key={index}>
+                          {coffeeColumn.map((coffee: any, index: any) => {
+                            return (
+                              <Touchable
+                                key={index}
+                                onPress={() => onPress(coffee.uuid)}
+                              >
+                                <UserRow
+                                  key={coffee.id}
+                                  coffee={coffee}
+                                  type={"coffee"}
+                                />
+                              </Touchable>
+                            );
+                          })}
+                        </UserColumn>
+                      );
+                    })}
+                  </Swiper>
+                </UserContainer>
+              </Item>
+            )}
+          </Container>
+        </ScrollView>
+      </>
     );
   }
 };

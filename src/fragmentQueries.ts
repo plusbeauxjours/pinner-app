@@ -74,6 +74,7 @@ export const COFFEE_FRAGMENT = gql`
       cityThumbnail
       country {
         countryName
+        countryCode
       }
     }
     host {

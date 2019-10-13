@@ -88,6 +88,7 @@ export const GET_COFFEES = gql`
           cityName
           cityThumbnail
           country {
+            countryCode
             countryName
           }
         }

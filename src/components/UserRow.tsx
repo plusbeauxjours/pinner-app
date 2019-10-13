@@ -495,16 +495,18 @@ const UserRow: React.FC<IProps> = ({
                   <Image
                     style={{ height: 36, width: 36, borderRadius: 18 }}
                     source={
-                      match.guest.profile.appAvatarUrl && {
-                        uri: `${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`
-                      }
+                      match.guest.profile.appAvatarUrl
+                        ? {
+                            uri: `${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`
+                          }
+                        : require(`../Images/avatars/earth1.png`)
                     }
                   />
                   {!match.isReadByHost && <Mark>N</Mark>}
                 </Touchable>
                 <Touchable>
                   <HeaderUserContainer>
-                    <Bold>{match.coffee.guest.profile.username}</Bold>
+                    <Bold>{match.guest.profile.username}</Bold>
                     <Location>
                       {match.coffee.city.cityName},{" "}
                       {match.coffee.city.country.countryName}

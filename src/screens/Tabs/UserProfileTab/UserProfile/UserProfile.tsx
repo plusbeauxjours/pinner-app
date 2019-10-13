@@ -57,14 +57,14 @@ const Bold = styled.Text`
 const Item = styled.View`
   flex-direction: column;
   align-items: center;
-  width: ${constants.width / 4 - 10};
+  width: ${constants.width / 4};
   height: ${constants.width / 5 - 10};
 `;
 const DisptanceItem = styled(Item)`
   width: ${constants.width / 2 - 20};
 `;
 const ItemContainer = styled.View`
-  padding: 15px 15px 0 15px;
+  /* padding: 15px 15px 0 15px; */
   flex-wrap: wrap;
   flex-direction: row;
 `;

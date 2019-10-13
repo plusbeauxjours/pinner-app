@@ -8,6 +8,7 @@ import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
+import { countries } from "../../../../../countryData";
 
 const View = styled.View`
   justify-content: center;
@@ -78,9 +79,12 @@ export default ({ navigation }) => {
                 <Touchable
                   key={index}
                   onPress={() =>
-                    navigation.push("CountryProfileTabs", {
+                    navigation.push("CityProfileTabs", {
+                      cityId: city.cityId,
                       countryCode: city.country.countryCode,
-                      continentCode: city.country.continent.continentCode
+                      continentCode: countries.find(
+                        i => i.code === city.country.countryCode
+                      ).continent
                     })
                   }
                 >

@@ -68,26 +68,31 @@ const CoffeeBtn: React.FC<IProps> = ({
   };
   return (
     <>
-      {!isSelf && isMatching ? (
-        <Touchable disabled={unMatchLoading} onPress={unmatch}>
-          <Container>
-            {unMatchLoading ? (
-              <ActivityIndicator color={"#999"} />
-            ) : (
-              <Text>UNMATCH</Text>
-            )}
-          </Container>
-        </Touchable>
-      ) : (
-        <Touchable disabled={matchLoading} onPress={match}>
-          <Container>
-            {matchLoading ? (
-              <ActivityIndicator color={"#999"} />
-            ) : (
-              <Text>JOIN</Text>
-            )}
-          </Container>
-        </Touchable>
+      {isSelf ? null : (
+        <>
+          {console.log(isMatching)}
+          {!isSelf && isMatching ? (
+            <Touchable disabled={unMatchLoading} onPress={unmatch}>
+              <Container>
+                {unMatchLoading ? (
+                  <ActivityIndicator color={"#999"} />
+                ) : (
+                  <Text>UNMATCH</Text>
+                )}
+              </Container>
+            </Touchable>
+          ) : (
+            <Touchable disabled={matchLoading} onPress={match}>
+              <Container>
+                {matchLoading ? (
+                  <ActivityIndicator color={"#999"} />
+                ) : (
+                  <Text>JOIN</Text>
+                )}
+              </Container>
+            </Touchable>
+          )}
+        </>
       )}
     </>
   );
