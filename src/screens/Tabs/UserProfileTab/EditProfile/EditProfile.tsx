@@ -494,7 +494,7 @@ export default ({ navigation }) => {
               only number of trips and your trip distance are shown.
             </ExplainText>
 
-            <Item>
+            {/* <Item>
               <ToggleText>HIDE COFFEES</ToggleText>
               <ToggleIcon onPress={() => onPressToggleIcon("HIDE_COFFEES")}>
                 <NavIcon
@@ -515,7 +515,7 @@ export default ({ navigation }) => {
             <ExplainText>
               If you set your coffees hide, only you can see you coffees
               request, otherwise only number of coffees request is shown.
-            </ExplainText>
+            </ExplainText> */}
 
             <Item>
               <ToggleText>HIDE CITIES</ToggleText>
@@ -560,7 +560,7 @@ export default ({ navigation }) => {
             </Item>
             <ExplainText>
               If you set your coutries hide, only you can see countries where
-              You've been to before, otherwise only number of countries is
+              you've been before, otherwise only number of countries is
               shown.
             </ExplainText>
 
@@ -584,7 +584,7 @@ export default ({ navigation }) => {
             </Item>
             <ExplainText>
               If you set your coutries hide, only you can see countries where
-              You've been to before, otherwise only number of countries is
+              you've been before, otherwise only number of countries is
               shown.
             </ExplainText>
 

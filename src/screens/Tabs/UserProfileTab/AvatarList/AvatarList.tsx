@@ -24,6 +24,8 @@ import {
 import Loader from "../../../../components/Loader";
 import constants, { BACKEND_URL } from "../../../../../constants";
 import { Platform } from "react-native";
+import { Image as ProgressiveImage } from "react-native-expo-image-cache";
+import { useTheme } from "../../../../context/ThemeContext";
 
 const View = styled.View`
   flex: 1;
@@ -52,6 +54,7 @@ const ScrollView = styled.ScrollView`
 
 export default ({ navigation }) => {
   const me = useMe();
+  const isDarkMode = useTheme();
   const location = useLocation();
   const [username, setUsername] = useState<string>(
     navigation.getParam("username") || me.user.username
@@ -114,22 +117,29 @@ export default ({ navigation }) => {
       ) : (
         <>
           <Modal
-            style={{ margin: 0 }}
+            style={{ margin: 0, alignItems: "center" }}
             isVisible={modalOpen}
-            onBackdropPress={() => closeModal()}
-            onBackButtonPress={() => Platform.OS !== "ios" && closeModal()}
+            backdropColor={
+              isDarkMode && isDarkMode === true ? "black" : "white"
+            }
+            onBackdropPress={() => setModalOpen(false)}
+            onBackButtonPress={() =>
+              Platform.OS !== "ios" && setModalOpen(false)
+            }
+            onModalHide={() => setModalOpen(false)}
+            propagateSwipe={true}
+            scrollHorizontal={true}
+            backdropOpacity={0.9}
           >
-            <Image
+            <ProgressiveImage
               style={{
                 height: constants.width,
                 width: constants.width,
                 padding: 0,
                 margin: 0
               }}
-              resizeMode={"contain"}
-              source={{
-                uri: `${BACKEND_URL}/media/${avatar.image}`
-              }}
+              preview={{ uri: `${BACKEND_URL}/media/${avatar.thumbnail}` }}
+              uri={`${BACKEND_URL}/media/${avatar.image}`}
             />
             {isSelf && !avatar.isMain && (
               <Button
