@@ -20,6 +20,7 @@ import {
 import CoffeeDetail from "../../CoffeeTab/CoffeeDetail";
 import Modal from "react-native-modal";
 import { useTheme } from "../../../../context/ThemeContext";
+import constants from "../../../../../constants";
 
 const Container = styled.View`
   flex: 1;
@@ -122,7 +123,10 @@ export default ({ navigation }) => {
     return (
       <>
         <Modal
-          style={{ margin: 0, alignItems: "flex-start" }}
+          style={{
+            margin: 0,
+            alignItems: "flex-start"
+          }}
           isVisible={modalOpen}
           backdropColor={isDarkMode && isDarkMode === true ? "black" : "white"}
           onBackdropPress={() => setModalOpen(false)}
@@ -131,8 +135,18 @@ export default ({ navigation }) => {
           propagateSwipe={true}
           scrollHorizontal={true}
           backdropOpacity={0.9}
+          animationIn="zoomInDown"
+          animationOut="zoomOutUp"
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropTransitionInTiming={200}
+          backdropTransitionOutTiming={200}
         >
-          <CoffeeDetail coffeeId={coffeeId} setModalOpen={setModalOpen} isStaying={true}/>
+          <CoffeeDetail
+            coffeeId={coffeeId}
+            setModalOpen={setModalOpen}
+            isStaying={true}
+          />
         </Modal>
         <ScrollView
           refreshControl={
