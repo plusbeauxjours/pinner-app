@@ -250,6 +250,12 @@ export default ({ navigation }) => {
           propagateSwipe={true}
           scrollHorizontal={true}
           backdropOpacity={0.9}
+          animationIn="zoomInDown"
+          animationOut="zoomOutUp"
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropTransitionInTiming={200}
+          backdropTransitionOutTiming={200}
         >
           <CoffeeDetail coffeeId={coffeeId} setModalOpen={setModalOpen} />
         </Modal>

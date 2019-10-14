@@ -101,7 +101,6 @@ const CoffeeDetails: React.FC<IProps> = ({
   isStaying
 }) => {
   const me = useMe();
-  console.log(coffeeId);
   const isDarkMode = useTheme();
   const location = useLocation();
   const [countryCode, setCountryCode] = useState<string>(

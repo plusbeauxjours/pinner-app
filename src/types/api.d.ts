@@ -593,6 +593,7 @@ export interface CoffeeDetail_coffeeDetail_coffee_host_profile {
   username: string | null;
   isSelf: boolean | null;
   avatarUrl: string | null;
+  appAvatarUrl: string | null;
   gender: ProfileGender | null;
   distance: number | null;
   coffeeCount: number | null;
@@ -1295,6 +1296,7 @@ export interface CountryProfile_countryProfile_cities {
 
 export interface CountryProfile_countryProfile {
   __typename: "CountryProfileResponse";
+  page: number | null;
   count: number | null;
   hasNextPage: boolean | null;
   country: CountryProfile_countryProfile_country | null;

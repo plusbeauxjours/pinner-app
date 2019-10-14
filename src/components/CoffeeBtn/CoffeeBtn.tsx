@@ -70,7 +70,6 @@ const CoffeeBtn: React.FC<IProps> = ({
     <>
       {isSelf ? null : (
         <>
-          {console.log(isMatching)}
           {!isSelf && isMatching ? (
             <Touchable disabled={unMatchLoading} onPress={unmatch}>
               <Container>

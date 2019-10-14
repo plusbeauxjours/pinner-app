@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RefreshControl, Image } from "react-native";
+import { RefreshControl, Image, FlatList, ListView } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -22,6 +22,7 @@ import constants from "../../../../../constants";
 import { countries as countryData } from "../../../../../countryData";
 import { useTheme } from "../../../../context/ThemeContext";
 import { darkMode, lightMode } from "../../../../styles/mapStyles";
+import InfiniteScrollView from "react-native-infinite-scroll-view";
 
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -99,7 +100,8 @@ export default ({ navigation }) => {
   const {
     data: profileData,
     loading: profileLoading,
-    refetch: profileRefetch
+    refetch: profileRefetch,
+    fetchMore: profileFetchMore
   } = useQuery<CountryProfile, CountryProfileVariables>(COUNTRY_PROFILE, {
     variables: { countryCode }
   });
@@ -121,6 +123,31 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
+  const loadMore = page => {
+    profileFetchMore({
+      variables: {
+        page,
+        countryCode
+      },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        if (!fetchMoreResult) {
+          return previousResult;
+        }
+        const data = {
+          countryProfile: {
+            ...previousResult.countryProfile,
+            cities: [
+              ...previousResult.countryProfile.cities,
+              ...fetchMoreResult.countryProfile.cities
+            ],
+            page: fetchMoreResult.countryProfile.page,
+            hasNextPage: fetchMoreResult.countryProfile.hasNextPage
+          }
+        };
+        return data;
+      }
+    });
+  };
   const chunk = arr => {
     let chunks = [],
       i = 0,
@@ -140,6 +167,7 @@ export default ({ navigation }) => {
     const {
       countryProfile: {
         count = null,
+        page = null,
         hasNextPage = null,
         country = null,
         cities = null
@@ -241,28 +269,39 @@ export default ({ navigation }) => {
               </UserContainer>
             </Item>
           )}
-          {cities && cities.length !== 0 && (
+          {cities && cities.length !== 0 && hasNextPage && (
             <Item>
               <Title>
                 {country.cityCount}
                 {country.cityCount === 1 ? " CITY" : " CITIES"}
               </Title>
-              {cities.map((city: any, index: any) => (
-                <Touchable
-                  key={index}
-                  onPress={() =>
-                    navigation.push("CityProfileTabs", {
-                      cityId: city.cityId,
-                      countryCode: city.country.countryCode,
-                      continentCode: countryData.find(
-                        i => i.code === city.country.countryCode
-                      ).continent
-                    })
-                  }
-                >
-                  <UserRow city={city} type={"city"} />
-                </Touchable>
-              ))}
+              <FlatList
+                data={cities}
+                renderItem={({ item, index }) => {
+                  return (
+                    <Touchable
+                      key={index}
+                      onPress={() =>
+                        navigation.push("CityProfileTabs", {
+                          cityId: item.cityId,
+                          countryCode: item.country.countryCode,
+                          continentCode: countryData.find(
+                            i => i.code === item.country.countryCode
+                          ).continent
+                        })
+                      }
+                    >
+                      {console.log(index, item.cityName)}
+                      <UserRow city={item} type={"city"} />
+                    </Touchable>
+                  );
+                }}
+                renderScrollComponent={props => (
+                  <InfiniteScrollView {...props} />
+                )}
+                onEndReached={() => hasNextPage && loadMore(page)}
+                onEndReachedThreshold={0.8}
+              />
             </Item>
           )}
         </Container>

@@ -21,8 +21,13 @@ import {
   NEAR_CITIES
 } from "./CityProfileQueries";
 import Swiper from "react-native-swiper";
-import { NearCities, NearCitiesVariables, GetCoffees, GetCoffeesVariables } from '../../../../types/api';
-import { SLACK_REPORT_LOCATIONS, GET_COFFEES } from '../../../../sharedQueries';
+import {
+  NearCities,
+  NearCitiesVariables,
+  GetCoffees,
+  GetCoffeesVariables
+} from "../../../../types/api";
+import { SLACK_REPORT_LOCATIONS, GET_COFFEES } from "../../../../sharedQueries";
 import CityLikeBtn from "../../../../components/CityLikeBtn";
 import constants from "../../../../../constants";
 import { darkMode, lightMode } from "../../../../styles/mapStyles";
@@ -141,7 +146,7 @@ export default ({ navigation }) => {
       await profileRefetch();
       await samenameCitiesRefetch();
       await nearCitiesRefetch();
-      await coffeeRefetch()
+      await coffeeRefetch();
     } catch (e) {
       console.log(e);
     } finally {
@@ -162,7 +167,12 @@ export default ({ navigation }) => {
     }
     return chunks;
   };
-  if (profileLoading || nearCitiesLoading || samenameCitiesLoading||coffeeLoading) {
+  if (
+    profileLoading ||
+    nearCitiesLoading ||
+    samenameCitiesLoading ||
+    coffeeLoading
+  ) {
     return (
       <LoaderContainer>
         <Loader />
@@ -197,6 +207,12 @@ export default ({ navigation }) => {
           propagateSwipe={true}
           scrollHorizontal={true}
           backdropOpacity={0.9}
+          animationIn="zoomInDown"
+          animationOut="zoomOutUp"
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropTransitionInTiming={200}
+          backdropTransitionOutTiming={200}
         >
           <CoffeeDetail
             coffeeId={coffeeId}
