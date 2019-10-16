@@ -12,8 +12,8 @@ const Text = styled.Text`
   color: ${props => props.theme.color};
 `;
 
-export default () => (
+export default ({ navigation }) => (
   <View>
-    <Text>Upload</Text>
+    <Text>Upload {navigation.getParam("photo").uri}</Text>
   </View>
 );
