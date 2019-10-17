@@ -44,10 +44,7 @@ const Bold = styled.Text`
 `;
 
 const Touchable = styled.TouchableOpacity``;
-const Container = styled.View`
-  justify-content: center;
-  flex-direction: row;
-`;
+const Container = styled.View``;
 const ScrollView = styled.ScrollView`
   background-color: ${props => props.theme.bgColor};
 `;
@@ -163,8 +160,6 @@ export default ({ navigation }) => {
               renderItem={({ item }) => (
                 <Container
                   style={{
-                    flex: 1,
-                    flexDirection: "column",
                     margin: 0.5
                   }}
                 >
