@@ -8,6 +8,7 @@ import { theme } from "../../styles/theme";
 import { UPLOAD_AVATAR } from "../Tabs/UserProfileTab/AvatarList/AvatarListQueries";
 import { UploadAvatar, UploadAvatarVariables } from "../../types/api";
 import Loader from "../../components/Loader";
+import { ReactNativeFile } from "apollo-upload-client";
 
 const View = styled.View`
   justify-content: center;
@@ -48,26 +49,30 @@ const Text = styled.Text`
 
 export default ({ navigation }) => {
   const [loading, setIsLoadding] = useState(false);
-  const [fileUrl, setFileUrl] = useState("");
-  const captionInput = useInput("");
-  const locationInput = useInput("");
-  {
-    console.log(fileUrl);
-  }
+  const photo = navigation.getParam("photo");
+  const captionInput = useInput("d");
+  const locationInput = useInput("d");
   const [UploadAvatarFn, { loading: uploadLoading }] = useMutation<
     UploadAvatar,
     UploadAvatarVariables
-  >(UPLOAD_AVATAR, { variables: { file: fileUrl } });
+  >(UPLOAD_AVATAR, {});
   const handleSubmit = async () => {
     if (captionInput.value === "" || locationInput.value === "") {
       Alert.alert("All fileds are required");
     } else {
-      let reader = new FileReader();
-      UploadAvatarFn();
-      reader.onloadend = () => {
-        setFileUrl(navigation.getParam("photo"));
-      };
-      reader.readAsDataURL(fileUrl);
+      // let file = { uri: photo.path, type: 'image/jpeg', name: photo.fileName }
+      // const data = new FormData(); data.append('file',file)
+      console.log(photo);
+      const name = photo.filename;
+      const [, type] = name.split(".");
+      console.log(type.toLowerCase());
+      const file = new ReactNativeFile({
+        uri: photo.uri,
+        type: type.toLowerCase(),
+        name
+      });
+      console.log(file);
+      UploadAvatarFn({ variables: { file } });
     }
   };
   if (uploadLoading) {
