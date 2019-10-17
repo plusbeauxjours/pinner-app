@@ -9,6 +9,8 @@ import TakePhoto from "../screens/Photo/TakePhoto";
 import { stackStyles } from "./Config";
 import NavIcon from "../components/NavIcon";
 import { Platform } from "react-native";
+import { theme } from "../styles/theme";
+import Search from "../components/Search/index";
 
 const PhotoTabs = createBottomTabNavigator(
   {
