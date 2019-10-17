@@ -1,9 +1,13 @@
 import React, { useState } from "react";
+import { useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { Image, ActivityIndicator, Alert } from "react-native";
 import useInput from "../../hooks/useInput";
 import constants from "../../../constants";
 import { theme } from "../../styles/theme";
+import { UPLOAD_AVATAR } from "../Tabs/UserProfileTab/AvatarList/AvatarListQueries";
+import { UploadAvatar, UploadAvatarVariables } from "../../types/api";
+import Loader from "../../components/Loader";
 
 const View = styled.View`
   justify-content: center;
@@ -47,43 +51,65 @@ export default ({ navigation }) => {
   const [fileUrl, setFileUrl] = useState("");
   const captionInput = useInput("");
   const locationInput = useInput("");
+  {
+    console.log(fileUrl);
+  }
+  const [UploadAvatarFn, { loading: uploadLoading }] = useMutation<
+    UploadAvatar,
+    UploadAvatarVariables
+  >(UPLOAD_AVATAR, { variables: { file: fileUrl } });
   const handleSubmit = async () => {
     if (captionInput.value === "" || locationInput.value === "") {
       Alert.alert("All fileds are required");
+    } else {
+      let reader = new FileReader();
+      UploadAvatarFn();
+      reader.onloadend = () => {
+        setFileUrl(navigation.getParam("photo"));
+      };
+      reader.readAsDataURL(fileUrl);
     }
   };
-  return (
-    <View>
-      <Container>
-        <Image
-          source={{ uri: navigation.getParam("photo").uri }}
-          style={{ height: 80, width: 80, marginRight: 30 }}
-        />
-        <Form>
-          <STextInput
-            onChangeText={captionInput.onChange}
-            value={captionInput.value}
-            placeholder="Caption"
-            multiline={true}
-            placeholderTextColor={"#999"}
+  if (uploadLoading) {
+    return (
+      <View>
+        <Loader />
+      </View>
+    );
+  } else {
+    return (
+      <View>
+        <Container>
+          <Image
+            source={{ uri: navigation.getParam("photo").uri }}
+            style={{ height: 80, width: 80, marginRight: 30 }}
           />
-          <STextInput
-            onChangeText={locationInput.onChange}
-            value={locationInput.value}
-            placeholder="Location"
-            multiline={true}
-            placeholderTextColor={"#999"}
-          />
-          <Button onPress={handleSubmit}>
-            {loading ? (
-              <ActivityIndicator color="white" />
-            ) : (
-              <Text>Upload</Text>
-            )}
-          </Button>
-        </Form>
-      </Container>
-      <Text>Upload {navigation.getParam("photo").uri}</Text>
-    </View>
-  );
+          <Form>
+            <STextInput
+              onChangeText={captionInput.onChange}
+              value={captionInput.value}
+              placeholder="Caption"
+              multiline={true}
+              placeholderTextColor={"#999"}
+            />
+            <STextInput
+              onChangeText={locationInput.onChange}
+              value={locationInput.value}
+              placeholder="Location"
+              multiline={true}
+              placeholderTextColor={"#999"}
+            />
+            <Button onPress={handleSubmit}>
+              {loading ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text>Upload</Text>
+              )}
+            </Button>
+          </Form>
+        </Container>
+        <Text>Upload {navigation.getParam("photo").uri}</Text>
+      </View>
+    );
+  }
 };

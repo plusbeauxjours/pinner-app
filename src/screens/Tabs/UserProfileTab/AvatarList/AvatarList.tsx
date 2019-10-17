@@ -162,7 +162,11 @@ export default ({ navigation }) => {
               data={avatarData.getAvatars.avatars}
               renderItem={({ item }) => (
                 <Container
-                  style={{ flex: 1, flexDirection: "column", margin: 0.5 }}
+                  style={{
+                    flex: 1,
+                    flexDirection: "column",
+                    margin: 0.5
+                  }}
                 >
                   <Touchable onPress={() => openModal(item)}>
                     <Image
