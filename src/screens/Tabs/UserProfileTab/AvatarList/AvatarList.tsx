@@ -5,17 +5,10 @@ import { RefreshControl, FlatList, Image, Button } from "react-native";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
-import {
-  GET_AVATARS,
-  UPLOAD_AVATAR,
-  DELETE_AVATAR,
-  MARK_AS_MAIN
-} from "./AvatarListQueries";
+import { GET_AVATARS, DELETE_AVATAR, MARK_AS_MAIN } from "./AvatarListQueries";
 import {
   GetAvatars,
   GetAvatarsVariables,
-  UploadAvatar,
-  UploadAvatarVariables,
   DeleteAvatar,
   DeleteAvatarVariables,
   MarkAsMain,
@@ -53,15 +46,11 @@ export default ({ navigation }) => {
   const me = useMe();
   const isDarkMode = useTheme();
   const location = useLocation();
-  const [username, setUsername] = useState<string>(
-    navigation.getParam("username") || me.user.username
-  );
+  const username = navigation.getParam("username") || me.user.username;
   const isSelf = navigation.getParam("isSelf") || me.user.username === username;
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<any>({});
-  const [file, setFile] = useState();
-  const [imagePreviewUrl, setImagePreviewUrl] = useState();
   const {
     data: avatarData,
     loading: avatarLoading,
@@ -69,10 +58,6 @@ export default ({ navigation }) => {
   } = useQuery<GetAvatars, GetAvatarsVariables>(GET_AVATARS, {
     variables: { userName: username }
   });
-  const [uploadAvatarFn, { loading: uploadLoading }] = useMutation<
-    UploadAvatar,
-    UploadAvatarVariables
-  >(UPLOAD_AVATAR, { variables: { file } });
   const [deleteAvatarFn, { loading: deleteAvatarLoading }] = useMutation<
     DeleteAvatar,
     DeleteAvatarVariables

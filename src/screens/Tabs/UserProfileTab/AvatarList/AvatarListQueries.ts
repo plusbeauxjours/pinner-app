@@ -15,24 +15,6 @@ export const GET_AVATARS = gql`
   }
 `;
 
-export const UPLOAD_AVATAR = gql`
-  mutation UploadAvatar($file: Upload!) {
-    uploadAvatar(file: $file) {
-      ok
-      preAvatarUUID
-      newAvatarUUID
-      avatar {
-        id
-        uuid
-        image
-        isMain
-        likeCount
-        thumbnail
-      }
-    }
-  }
-`;
-
 export const DELETE_AVATAR = gql`
   mutation DeleteAvatar($uuid: String!) {
     deleteAvatar(uuid: $uuid) {

@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Modal from "react-native-modal";
-import { Platform, TextInput, ScrollView } from "react-native";
+import {
+  Platform,
+  TextInput,
+  ScrollView,
+  KeyboardAvoidingView
+} from "react-native";
 import constants from "../../../constants";
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery, useMutation } from "react-apollo-hooks";
@@ -166,7 +171,7 @@ const Search = ({ navigation }) => {
                 <Loader />
               </LoaderContainer>
             ) : (
-              <>
+              <KeyboardAvoidingView enabled behavior="padding">
                 {data && data.searchUsers.users.length !== 0 && (
                   <>
                     {data.searchUsers.users.length === 1 ? (
@@ -271,7 +276,7 @@ const Search = ({ navigation }) => {
                     ))}
                   </>
                 )}
-              </>
+              </KeyboardAvoidingView>
             )}
           </ScrollView>
         </Touchable>

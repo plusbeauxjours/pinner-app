@@ -5,10 +5,10 @@ import { Image, ActivityIndicator, Alert } from "react-native";
 import useInput from "../../hooks/useInput";
 import constants from "../../../constants";
 import { theme } from "../../styles/theme";
-import { UPLOAD_AVATAR } from "../Tabs/UserProfileTab/AvatarList/AvatarListQueries";
 import { UploadAvatar, UploadAvatarVariables } from "../../types/api";
 import Loader from "../../components/Loader";
 import { ReactNativeFile } from "apollo-upload-client";
+import { UPLOAD_AVATAR } from "../../sharedQueries";
 
 const View = styled.View`
   justify-content: center;
@@ -36,7 +36,7 @@ const STextInput = styled.TextInput`
 
 const Button = styled.TouchableOpacity`
   background-color: ${props => props.theme.blueColor};
-  /* padding: 10px; */
+  padding: 10px;
   border-radius: 4px;
   align-items: center;
   justify-content: center;
@@ -52,27 +52,24 @@ export default ({ navigation }) => {
   const photo = navigation.getParam("photo");
   const captionInput = useInput("d");
   const locationInput = useInput("d");
-  const [UploadAvatarFn, { loading: uploadLoading }] = useMutation<
-    UploadAvatar,
-    UploadAvatarVariables
-  >(UPLOAD_AVATAR, {});
-  const handleSubmit = async () => {
+  const [
+    UploadAvatarFn,
+    { data: uploadData, loading: uploadLoading }
+  ] = useMutation<UploadAvatar, UploadAvatarVariables>(UPLOAD_AVATAR);
+  const handleSubmit = () => {
     if (captionInput.value === "" || locationInput.value === "") {
       Alert.alert("All fileds are required");
     } else {
-      // let file = { uri: photo.path, type: 'image/jpeg', name: photo.fileName }
-      // const data = new FormData(); data.append('file',file)
-      console.log(photo);
       const name = photo.filename;
       const [, type] = name.split(".");
-      console.log(type.toLowerCase());
       const file = new ReactNativeFile({
         uri: photo.uri,
         type: type.toLowerCase(),
         name
       });
-      console.log(file);
       UploadAvatarFn({ variables: { file } });
+      console.log("done");
+      navigation.pop();
     }
   };
   if (uploadLoading) {

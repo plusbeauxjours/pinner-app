@@ -93,9 +93,11 @@ export default ({ navigation }) => {
                   source={{ uri: selected.uri }}
                 />
               )}
-              <Button onPress={handleSelected}>
-                <Text>Select Photo</Text>
-              </Button>
+              {selected.length !== 0 && (
+                <Button onPress={handleSelected}>
+                  <Text>Select Photo</Text>
+                </Button>
+              )}
               <ScrollView
                 contentContainerStyle={{
                   flexDirection: "row",

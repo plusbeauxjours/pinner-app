@@ -1532,40 +1532,6 @@ export interface GetAvatarsVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: UploadAvatar
-// ====================================================
-
-export interface UploadAvatar_uploadAvatar_avatar {
-  __typename: "AvatarType";
-  id: string;
-  uuid: any | null;
-  image: string | null;
-  isMain: boolean;
-  likeCount: number | null;
-  thumbnail: string | null;
-}
-
-export interface UploadAvatar_uploadAvatar {
-  __typename: "UploadAvatarResponse";
-  ok: boolean | null;
-  preAvatarUUID: string | null;
-  newAvatarUUID: string | null;
-  avatar: UploadAvatar_uploadAvatar_avatar | null;
-}
-
-export interface UploadAvatar {
-  uploadAvatar: UploadAvatar_uploadAvatar;
-}
-
-export interface UploadAvatarVariables {
-  file: any;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
 // GraphQL mutation operation: DeleteAvatar
 // ====================================================
 
@@ -2595,6 +2561,40 @@ export interface ReportLocationVariables {
   currentCityId?: string | null;
   currentCityName: string;
   currentCountryCode: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: UploadAvatar
+// ====================================================
+
+export interface UploadAvatar_uploadAvatar_avatar {
+  __typename: "AvatarType";
+  id: string;
+  uuid: any | null;
+  image: string | null;
+  isMain: boolean;
+  likeCount: number | null;
+  thumbnail: string | null;
+}
+
+export interface UploadAvatar_uploadAvatar {
+  __typename: "UploadAvatarResponse";
+  ok: boolean | null;
+  preAvatarUUID: string | null;
+  newAvatarUUID: string | null;
+  avatar: UploadAvatar_uploadAvatar_avatar | null;
+}
+
+export interface UploadAvatar {
+  uploadAvatar: UploadAvatar_uploadAvatar;
+}
+
+export interface UploadAvatarVariables {
+  file: any;
 }
 
 /* tslint:disable */

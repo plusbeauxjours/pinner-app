@@ -116,3 +116,21 @@ export const GET_COFFEES = gql`
     }
   }
 `;
+
+export const UPLOAD_AVATAR = gql`
+  mutation UploadAvatar($file: Upload!) {
+    uploadAvatar(file: $file) {
+      ok
+      preAvatarUUID
+      newAvatarUUID
+      avatar {
+        id
+        uuid
+        image
+        isMain
+        likeCount
+        thumbnail
+      }
+    }
+  }
+`;
