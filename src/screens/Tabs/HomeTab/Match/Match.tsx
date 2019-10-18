@@ -47,7 +47,7 @@ const LoaderContainer = styled.View`
   align-items: center;
 `;
 
-export default () => {
+export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
   const [refreshing, setRefreshing] = useState(false);
@@ -80,6 +80,10 @@ export default () => {
   const onPress = (matchId: string) => {
     MarkAsReadMatchFn({
       variables: { matchId }
+    });
+    navigation.push("Chat", {
+      chatId: matchId,
+      lastMessage: "hi"
     });
   };
   const {
