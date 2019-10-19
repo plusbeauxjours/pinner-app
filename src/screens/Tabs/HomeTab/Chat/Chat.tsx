@@ -19,6 +19,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { GiftedChat } from "react-native-gifted-chat";
 import firebaseSvc from "../../../../../Fire";
+import CustomView from "./CustomView";
 
 const View = styled.View`
   justify-content: center;
@@ -37,6 +38,10 @@ class Chat extends React.Component<any, IState> {
     messages: []
   };
 
+  public renderCustomView = props => {
+    return <CustomView {...props} />;
+  };
+
   get user() {
     return {
       name: "koko",
@@ -50,6 +55,7 @@ class Chat extends React.Component<any, IState> {
         messages={this.state.messages}
         onSend={firebaseSvc.send}
         user={this.user}
+        renderCustomView={this.renderCustomView}
       />
     );
   }
