@@ -22,6 +22,7 @@ import firebaseSvc from "../../../../../Fire";
 import CustomView from "./CustomView";
 
 const View = styled.View`
+  background-color: ${props => props.theme.bgColor};
   justify-content: center;
   align-items: center;
   flex: 1;

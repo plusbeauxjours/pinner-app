@@ -3,12 +3,12 @@ import { Platform, Linking, TouchableOpacity } from "react-native";
 import { MapView } from "expo";
 import styled from "styled-components";
 
-const MapView = styled.MapView`
-  width: 250;
-  height: 150;
-  border-radius: 13;
-  margin: 3;
-`;
+// const MapView = styled.MapView`
+//   width: 250;
+//   height: 150;
+//   border-radius: 13;
+//   margin: 3;
+// `;
 
 export default ({ currentMessage }) => {
   const onMapPress = () => {
@@ -38,6 +38,12 @@ export default ({ currentMessage }) => {
             longitude: currentMessage.location.longitude,
             latitudeDelta: 0.05,
             longitudeDelta: 0.025
+          }}
+          style={{
+            width: 250,
+            height: 250,
+            borderRadius: 13,
+            margin: 3
           }}
           scrollEnabled={false}
           zoomEnabled={false}
