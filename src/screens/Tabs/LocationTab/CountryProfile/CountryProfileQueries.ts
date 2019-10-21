@@ -34,7 +34,7 @@ export const COUNTRY_PROFILE = gql`
         cityId
         cityPhoto
         cityThumbnail
-        distance
+        # distance
         country {
           countryName
           countryCode

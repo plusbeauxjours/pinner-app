@@ -9,6 +9,8 @@ import { AsyncStorage } from "react-native";
 interface IState {
   currentLat: number;
   currentLng: number;
+  currentCityLat: number;
+  currentCityLng: number;
   currentCityId: string;
   currentCityName: string;
   currentCountryCode: string;
@@ -20,6 +22,8 @@ export const LocationProvider = ({ children }) => {
   const [location, setLocation] = useState<IState>({
     currentLat: 0,
     currentLng: 0,
+    currentCityLat: 0,
+    currentCityLng: 0,
     currentCityId: "",
     currentCityName: "",
     currentCountryCode: ""
@@ -35,8 +39,10 @@ export const LocationProvider = ({ children }) => {
     if (address) {
       const cityInfo = await useReversePlaceId(address.storableLocation.cityId);
       setLocation({
-        currentLat: cityInfo.storableLocation.latitude,
-        currentLng: cityInfo.storableLocation.longitude,
+        currentLat: latitude,
+        currentLng: longitude,
+        currentCityLat: cityInfo.storableLocation.latitude,
+        currentCityLng: cityInfo.storableLocation.longitude,
         currentCityId: address.storableLocation.cityId,
         currentCityName: address.storableLocation.cityName,
         currentCountryCode: address.storableLocation.countryCode
@@ -56,8 +62,8 @@ export const LocationProvider = ({ children }) => {
     ReportLocationVariables
   >(REPORT_LOCATION, {
     variables: {
-      currentLat: location.currentLat,
-      currentLng: location.currentLng,
+      currentLat: location.currentCityLat,
+      currentLng: location.currentCityLng,
       currentCityId: location.currentCityId,
       currentCityName: location.currentCityName,
       currentCountryCode: location.currentCountryCode

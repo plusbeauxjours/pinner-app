@@ -269,7 +269,7 @@ export default ({ navigation }) => {
               </UserContainer>
             </Item>
           )}
-          {cities && cities.length !== 0 && hasNextPage && (
+          {cities && cities.length !== 0 && (
             <Item>
               <Title>
                 {country.cityCount}
