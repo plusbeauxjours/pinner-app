@@ -139,13 +139,6 @@ const HomeTabs = createMaterialTopTabNavigator(
         header: null,
         mode: "modal"
       }
-    },
-    Chat: {
-      screen: Chat,
-      navigationOptions: {
-        header: null,
-        mode: "modal"
-      }
     }
   },
   {
@@ -179,6 +172,7 @@ export default createStackNavigator(
     Countries,
     Continents,
     Coffees,
+    Chat
   },
   {
     defaultNavigationOptions: {

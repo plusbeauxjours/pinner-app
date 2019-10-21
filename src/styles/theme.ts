@@ -28,7 +28,8 @@ const lightTheme = {
   thumbShadowColor: "rgba(0, 0, 0, 0.5)",
   hoverColor: "#b7b7b7",
   iconColor: "#999",
-  shadowColor: "rgba(207, 207, 207, 0.6)"
+  shadowColor: "rgba(207, 207, 207, 0.6)",
+  primaryColor: "#3f51b5"
 };
 
 const darkTheme = {
@@ -48,7 +49,8 @@ const darkTheme = {
   thumbShadowColor: "rgba(0, 0, 0, 0.5)",
   hoverColor: "#6b6b6b",
   iconColor: "#999",
-  shadowColor: "rgba(55, 55, 55, 0.25)"
+  shadowColor: "rgba(55, 55, 55, 0.25)",
+  primaryColor: "#3f51b5"
 };
 
 export { theme, lightTheme, darkTheme };

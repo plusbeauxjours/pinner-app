@@ -2489,6 +2489,7 @@ export interface Me_me_user_profile_currentCity {
 
 export interface Me_me_user_profile {
   __typename: "ProfileType";
+  id: string;
   gender: ProfileGender | null;
   residence: Me_me_user_profile_residence | null;
   nationality: Me_me_user_profile_nationality | null;

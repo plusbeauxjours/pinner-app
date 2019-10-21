@@ -291,7 +291,6 @@ export default ({ navigation }) => {
                         })
                       }
                     >
-                      {console.log(index, item.cityName)}
                       <UserRow city={item} type={"city"} />
                     </Touchable>
                   );

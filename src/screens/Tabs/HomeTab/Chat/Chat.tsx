@@ -15,11 +15,13 @@
 //   </View>
 // );
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { GiftedChat } from "react-native-gifted-chat";
+import { GiftedChat, Bubble } from "react-native-gifted-chat";
 import firebaseSvc from "../../../../../Fire";
 import CustomView from "./CustomView";
+import database from "../../../../../Fire";
+import Loader from "../../../../components/Loader";
 
 const View = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -30,47 +32,98 @@ const View = styled.View`
 
 const Text = styled.Text``;
 
-interface IState {
-  messages: any;
-}
+export default function Chat({ navigation }) {
+  const chatId = navigation.getParam("chatId");
+  const userId = navigation.getParam("userId");
+  const userName = navigation.getParam("userName");
+  const [loading, setLoading] = useState(false);
+  const [messages, setMessages] = useState([]);
 
-class Chat extends React.Component<any, IState> {
-  public state = {
-    messages: []
+  useEffect(() => {
+    fetchMessages();
+    listenOnChangeMessages();
+  }, []);
+
+  const fetchMessages = async () => {
+    await database
+      .ref("messages")
+      .child(chatId)
+      .on("value", snap => {
+        let messages = [];
+        snap.forEach(message => {
+          messages.push(message.val());
+        });
+        setMessages(messages);
+      });
+    setMessages(messages);
+    setLoading(true);
   };
 
-  public renderCustomView = props => {
-    return <CustomView {...props} />;
+  const listenOnChangeMessages = () => {
+    database
+      .ref("messages")
+      .child(chatId)
+      .on("value", snap => {
+        let messages = [];
+        snap.forEach(message => {
+          messages.push(message.val());
+        });
+        setMessages(messages);
+      });
   };
 
-  get user() {
-    return {
-      name: "koko",
-      _id: "PRMBJ6vZ8bQxwooqXwSq4SXFo8J3"
-    };
-  }
+  const onSend = nMess => {
+    const newMessage = nMess[0];
+    console.log(newMessage);
+    const { user } = newMessage;
+    user._id = userId;
+    user.name = userName;
+    setMessages(GiftedChat.append(messages, nMess));
+    console.log(chatId);
+    database
+      .ref("messages")
+      .child(chatId)
+      .push({
+        ...nMess[0],
+        createdAt: new Date().getTime()
+      });
+  };
 
-  public render() {
-    return (
+  return (
+    (loading && (
       <GiftedChat
-        messages={this.state.messages}
-        onSend={firebaseSvc.send}
-        user={this.user}
-        renderCustomView={this.renderCustomView}
+        messages={messages}
+        onSend={messages => onSend(messages)}
+        user={{
+          _id: userId
+        }}
+        inverted={false}
       />
-    );
-  }
-
-  public componentDidMount() {
-    firebaseSvc.on(message =>
-      this.setState(previousState => ({
-        messages: GiftedChat.append(previousState.messages, message)
-      }))
-    );
-  }
-  public componentWillUnmount() {
-    firebaseSvc.off();
-  }
+    )) || (
+      <View>
+        <Loader />
+      </View>
+    )
+    // <View style={{ flex: 1 }}>
+    //   {Platform.OS === "android" ? (
+    //     <KeyboardAvoidingView behavior="padding" enabled>
+    //       <GiftedChat
+    //         messages={this.state.messages}
+    //         onSend={messages => onSend(messages)}
+    //         user={{
+    //           _id: 1
+    //         }}
+    //       />
+    //     </KeyboardAvoidingView>
+    //   ) : (
+    //     <GiftedChat
+    //       messages={this.state.messages}
+    //       onSend={messages => onSend(messages)}
+    //       user={{
+    //         _id: 1
+    //       }}
+    //     />
+    //   )}
+    // </View>
+  );
 }
-
-export default Chat;

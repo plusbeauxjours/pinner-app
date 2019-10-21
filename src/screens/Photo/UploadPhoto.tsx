@@ -68,7 +68,6 @@ export default ({ navigation }) => {
         name
       });
       UploadAvatarFn({ variables: { file } });
-      console.log("done");
       navigation.pop();
     }
   };

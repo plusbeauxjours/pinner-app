@@ -6,6 +6,7 @@ export const ME = gql`
       user {
         username
         profile {
+          id
           gender
           residence {
             countryCode

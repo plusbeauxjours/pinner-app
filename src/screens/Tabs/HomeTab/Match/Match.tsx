@@ -6,7 +6,7 @@ import { useQuery, useMutation } from "react-apollo-hooks";
 import { GET_MATCHES } from "./MatchQueries";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
-import { RefreshControl } from "react-native";
+import { RefreshControl, TouchableOpacity } from "react-native";
 import { MARK_AS_READ_MATCH } from "./MatchQueries";
 import {
   GetMatches,
@@ -18,6 +18,7 @@ import {
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
 `;
+const Touchable = styled.TouchableOpacity``;
 const View = styled.View``;
 const Text = styled.Text`
   color: ${props => props.theme.color};
@@ -128,11 +129,21 @@ export default ({ navigation }) => {
                             {arr[index].coffee.city.cityName}
                             {arr[index].coffee.city.country.countryEmoji}
                           </Text>
-                          <UserRow
-                            match={match}
-                            type={"match"}
-                            onPress={onPress}
-                          />
+                          <Touchable
+                            onPress={() =>
+                              navigation.push("Chat", {
+                                chatId: match.id,
+                                userId: me.user.profile.id,
+                                userName: me.user.username
+                              })
+                            }
+                          >
+                            <UserRow
+                              match={match}
+                              type={"match"}
+                              onPress={onPress}
+                            />
+                          </Touchable>
                         </View>
                       );
                     } else if (
@@ -147,22 +158,41 @@ export default ({ navigation }) => {
                             {arr[index].coffee.city.cityName}
                             {arr[index].coffee.city.country.countryEmoji}
                           </Text>
-                          <UserRow
-                            match={match}
-                            type={"match"}
-                            onPress={onPress}
-                          />
+                          <Touchable
+                            onPress={() =>
+                              navigation.push("Chat", {
+                                chatId: match.id,
+                                userId: me.user.profile.id,
+                                userName: me.user.username
+                              })
+                            }
+                          >
+                            <UserRow
+                              match={match}
+                              type={"match"}
+                              onPress={onPress}
+                            />
+                          </Touchable>
                         </View>
                       );
                     } else {
                       return (
-                        <View key={index}>
+                        <Touchable
+                          key={index}
+                          onPress={() =>
+                            navigation.push("Chat", {
+                              chatId: match.id,
+                              userId: me.user.profile.id,
+                              userName: me.user.username
+                            })
+                          }
+                        >
                           <UserRow
                             match={match}
                             type={"match"}
                             onPress={onPress}
                           />
-                        </View>
+                        </Touchable>
                       );
                     }
                   })}
