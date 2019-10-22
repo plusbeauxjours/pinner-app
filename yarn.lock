@@ -3003,6 +3003,10 @@ expo-font@~6.0.1:
   dependencies:
     fontfaceobserver "^2.1.0"
 
+expo-image-picker@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/expo-image-picker/-/expo-image-picker-7.0.0.tgz#e4a5a52bd6f9655f75ecf3cc866aa9bb0c99e24b"
+
 expo-keep-awake@~6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/expo-keep-awake/-/expo-keep-awake-6.0.0.tgz#e0d6d1263c6a73488272a62aef98312ab25cab1f"
@@ -5684,6 +5688,16 @@ react-native-gifted-chat@^0.11.2:
     react-native-maps "~0.25.0"
     react-native-parsed-text "https://github.com/EvanBacon/react-native-parsed-text.git"
     uuid "3.3.3"
+
+react-native-image-pan-zoom@^2.1.9:
+  version "2.1.11"
+  resolved "https://registry.yarnpkg.com/react-native-image-pan-zoom/-/react-native-image-pan-zoom-2.1.11.tgz#61bcb69219d95e76a9797d23e4a2e8e0bd654ae9"
+
+react-native-image-zoom-viewer@^2.2.26:
+  version "2.2.26"
+  resolved "https://registry.yarnpkg.com/react-native-image-zoom-viewer/-/react-native-image-zoom-viewer-2.2.26.tgz#c6f070abb094cfbe1b3b7d8a38ad979a5facbdc5"
+  dependencies:
+    react-native-image-pan-zoom "^2.1.9"
 
 react-native-infinite-scroll-view@^0.4.5:
   version "0.4.5"

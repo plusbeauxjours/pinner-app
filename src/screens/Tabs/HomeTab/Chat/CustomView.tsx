@@ -12,7 +12,7 @@ export default ({ currentMessage }) => {
   const onMapPress = () => {
     const { latitude, longitude } = currentMessage.location;
     const url = Platform.select({
-      ios: `http://maps.apple.com/?ll=${latitude},${longitude}`,
+      ios: `http://maps.apple.com/?ll=${latitude},${longitude}&q=*`,
       android: `http://maps.google.com/?q=${latitude},${longitude}`
     });
     Linking.canOpenURL(url)

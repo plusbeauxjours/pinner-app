@@ -134,7 +134,11 @@ export default ({ navigation }) => {
                               navigation.push("Chat", {
                                 chatId: match.id,
                                 userId: me.user.profile.id,
-                                userName: me.user.username
+                                userName: me.user.username,
+                                userUrl: me.user.profile.appAvatarUrl,
+                                targetName: match.isHost
+                                  ? match.guest.profile.username
+                                  : match.host.profile.username
                               })
                             }
                           >
@@ -163,7 +167,11 @@ export default ({ navigation }) => {
                               navigation.push("Chat", {
                                 chatId: match.id,
                                 userId: me.user.profile.id,
-                                userName: me.user.username
+                                userName: me.user.username,
+                                userUrl: me.user.profile.appAvatarUrl,
+                                targetName: match.isHost
+                                  ? match.guest.profile.username
+                                  : match.host.profile.username
                               })
                             }
                           >
@@ -184,12 +192,10 @@ export default ({ navigation }) => {
                               chatId: match.id,
                               userId: me.user.profile.id,
                               userName: me.user.username,
+                              userUrl: me.user.profile.appAvatarUrl,
                               targetName: match.isHost
                                 ? match.guest.profile.username
-                                : match.host.profile.username,
-                              targetUrl: match.isHost
-                                ? match.guest.profile.appAvatarUrl
-                                : match.host.profile.appAvatarUrl
+                                : match.host.profile.username
                             })
                           }
                         >

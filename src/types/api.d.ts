@@ -1288,7 +1288,6 @@ export interface CountryProfile_countryProfile_cities {
   cityId: string | null;
   cityPhoto: string | null;
   cityThumbnail: string | null;
-  distance: number | null;
   country: CountryProfile_countryProfile_cities_country;
   likeCount: number | null;
   isLiked: boolean | null;
