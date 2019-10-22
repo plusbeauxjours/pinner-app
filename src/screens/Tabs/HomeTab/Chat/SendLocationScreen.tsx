@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import styled from "../../../../styles/typed-components";
 import { useLocation } from "../../../../context/LocationContext";
 import { Ionicons } from "@expo/vector-icons";
-import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-import constants from "../../../../../constants";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useTheme } from "../../../../context/ThemeContext";
 import { darkMode, lightMode } from "../../../../styles/mapStyles";
+import { Platform } from "react-native";
 
 const MarkerContainer = styled.View`
   position: absolute;
@@ -21,10 +21,16 @@ const MarkerContainer = styled.View`
 const View = styled.View`
   flex: 1;
 `;
-
-const Button = styled.Button`
-  height: 30px;
-  border: 0.5px solid ${props => props.theme.borderColor};
+const Touchable = styled.TouchableOpacity`
+  height: 45px;
+  justify-content: center;
+  align-items: center;
+  background-color: #3897f0;
+`;
+const Text = styled.Text`
+  font-size: 16;
+  font-weight: 600;
+  color: white;
 `;
 
 export default ({ navigation }) => {
@@ -33,7 +39,6 @@ export default ({ navigation }) => {
   const LONGITUDE_DELTA = 0.01;
   const isDarkMode = useTheme();
   const location = useLocation();
-  const [paddingTop, setPaddingTop] = useState<number>(0);
   const [ready, setReady] = useState<boolean>(false);
   const [region, setRegion] = useState({
     latitude: location.currentLat,
@@ -49,14 +54,10 @@ export default ({ navigation }) => {
     }
   };
 
-  const onCancel = () => {
-    navigation.goBack();
-  };
-
   const onSend = () => {
-    const { longitude, latitude } = region;
+    const { latitude, longitude } = region;
     navigation.state.params.onSend({
-      location: { longitude, latitude }
+      location: { latitude, longitude }
     });
     navigation.goBack();
   };
@@ -97,7 +98,6 @@ export default ({ navigation }) => {
         }}
         initialRegion={region}
         showsUserLocation={true}
-        followsUserLocation={true}
         showsMyLocationButton={true}
         onMapReady={onMapReady}
         loadingEnabled={true}
@@ -107,15 +107,19 @@ export default ({ navigation }) => {
           isDarkMode && isDarkMode === true ? darkMode : lightMode
         }
       >
-        <Marker
-          description={"Tab to Send this Location."}
-          onPress={onSend}
-          coordinate={{
-            latitude: region.latitude,
-            longitude: region.longitude
-          }}
-        />
+        <MarkerContainer pointerEvents="none" onPress={onSend}>
+          <Ionicons
+            name={Platform.OS === "ios" ? "ios-pin" : "md-pin"}
+            size={40}
+            color={"#3897f0"}
+            pointerEvents="none"
+            containerStyle={{ marginBottom: 30 }}
+          />
+        </MarkerContainer>
       </MapView>
+      <Touchable onPress={onSend}>
+        <Text>Tap To Send This Location</Text>
+      </Touchable>
     </View>
   );
 };
