@@ -11,8 +11,120 @@ const firebaseConfig = {
   appId: keys.REACT_APP_FIREBASE_APP_ID,
   measurementId: keys.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
-firebase.initializeApp(firebaseConfig);
+const fb_app = firebase.initializeApp(firebaseConfig);
+const fb_db = firebase.database().ref();
 
-const database = firebase.database();
+export const database = firebase.database();
 
-export default database;
+export interface UserChatMessage {
+  _id: string;
+  name: string;
+  avatar?: string;
+}
+
+export interface ChatMessage {
+  _id: string;
+  text?: string;
+  createdAt: Date;
+  user: UserChatMessage;
+  image?: string;
+}
+
+export interface GalleryImage {
+  image: string;
+  created: string;
+  author: string;
+  label: string;
+}
+
+export const image_upload = async (
+  image_path: string,
+  folder: string,
+  name: string
+) => {
+  const blob = await urlToBlob(image_path);
+  const ref: any = firebase
+    .storage()
+    .ref(folder)
+    .child(name);
+  const result = await ref.put(blob);
+  return result.ref;
+};
+
+export const image_upload_chat = async (
+  chat_id: string,
+  image_path: string,
+  resolution: "full" | "high" | "low"
+) => {
+  const result = await image_upload(
+    image_path,
+    `chat_pictures/${chat_id}/${Date()}`,
+    resolution
+  );
+  return result.fullPath;
+};
+
+function urlToBlob(url: string) {
+  return new Promise((resolve, reject) => {
+    let xhr = new XMLHttpRequest();
+    xhr.onerror = reject;
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        resolve(xhr.response);
+      }
+    };
+    xhr.open("GET", url);
+    xhr.responseType = "blob"; // convert type
+    xhr.send();
+  });
+}
+
+export const chat_leave = (
+  chat_id: string,
+  user_id: string,
+  user_name: string
+) => {
+  let new_key = fb_db.ref.child("messages").push().key;
+  let message = {
+    _id: new_key,
+    text: `User ${user_name} left`,
+    createdAt: new Date(),
+    system: true
+  };
+  let updates = {};
+  updates[`/members/${chat_id}/${user_id}/member`] = false;
+  updates[`/chats/${chat_id}/lastMessage/`] = message.text;
+  updates[`/messages/${chat_id}/${new_key}/`] = message;
+  return fb_db.ref.update(updates);
+};
+
+export const get_new_key = (child: string) => {
+  if (!child) {
+    child = "messages";
+  }
+  let new_key = fb_db.ref.child(child).push().key;
+  return new_key;
+};
+
+export const chat_send = (chat_id: string, message: ChatMessage) => {
+  let new_key;
+  if (!message._id) {
+    new_key = fb_db.ref.child("messages").push().key;
+    message._id = new_key;
+  } else {
+    new_key = message._id;
+  }
+  let updates = {};
+  if (message.text) {
+    updates[
+      `/chats/${chat_id}/lastMessage/`
+    ] = `${message.user.name}: ${message.text}`;
+  } else {
+    updates[
+      `/chats/${chat_id}/lastMessage/`
+    ] = `${message.user.name}: ${message.image}`;
+  }
+
+  updates[`/messages/${chat_id}/${new_key}/`] = message;
+  return fb_db.ref.update(updates);
+};

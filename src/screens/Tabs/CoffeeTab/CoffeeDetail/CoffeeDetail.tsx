@@ -127,9 +127,6 @@ const CoffeeDetails: React.FC<IProps> = ({
       username
     });
   };
-  // useEffect(() => {
-  //   setModalOpen(true);
-  // }, [coffeeId]);
   if (coffeeDetailLoading) {
     return (
       <LoaderContainer>

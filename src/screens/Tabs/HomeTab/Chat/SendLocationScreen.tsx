@@ -83,7 +83,7 @@ export default ({ navigation }) => {
   };
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(handleGeoSuccess, handleGeoError);
-  });
+  }, []);
 
   return (
     <View>

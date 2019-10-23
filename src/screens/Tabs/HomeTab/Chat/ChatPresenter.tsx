@@ -1,20 +1,13 @@
 import React from "react";
-import uuid from "uuid";
 import styled from "styled-components";
 import { GiftedChat, Actions, MessageImage } from "react-native-gifted-chat";
 import ImageViewer from "react-native-image-zoom-viewer";
 import Modal from "react-native-modal";
-import { withNavigation, NavigationScreenProp } from "react-navigation";
 import { ScreenOrientation, Video } from "expo";
-import * as ImagePicker from "expo-image-picker";
-import * as Permissions from "expo-permissions";
-import CustomView from "./CustomView";
-import database from "../../../../../Fire";
 import Loader from "../../../../components/Loader";
 import { Platform, KeyboardAvoidingView, Image } from "react-native";
-import NavIcon from "../../../../components/NavIcon";
-import constants, { BACKEND_URL } from "../../../../../constants";
 import { useTheme } from "../../../../context/ThemeContext";
+import KeyboardSpacer from "react-native-keyboard-spacer";
 
 const View = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -35,8 +28,7 @@ interface IProps {
   userId: string;
   userName: string;
   userUrl: string;
-  Avatar: string;
-  targetName: string;
+  userAvatarUrl: string;
   nowShowing: string;
   imageUrls: any;
   modalOpen: boolean;
@@ -50,6 +42,9 @@ interface IProps {
   renderMessageImage: any;
   renderActions: any;
   closeModalOpen: () => void;
+  leaveChat: () => void;
+  pickFromCamera: any;
+  pickFromGallery: any;
 }
 
 const ChatPresenter: React.FunctionComponent<IProps> = ({
@@ -57,8 +52,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   userId,
   userName,
   userUrl,
-  Avatar,
-  targetName,
+  userAvatarUrl,
   nowShowing,
   imageUrls,
   modalOpen,
@@ -71,7 +65,10 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   renderMessageVideo,
   renderMessageImage,
   renderActions,
-  closeModalOpen
+  closeModalOpen,
+  leaveChat,
+  pickFromCamera,
+  pickFromGallery
 }) => {
   const isDarkMode = useTheme();
   if (loading) {
@@ -94,24 +91,24 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
           scrollHorizontal={true}
           backdropOpacity={0.9}
         >
-          {nowShowing == "photo" && (
-            <ImageViewer
-              imageUrls={imageUrls}
-              enablePreload={true}
-              saveToLocalByLongPress={true}
-              loadingRender={() => {
-                return <Loader />;
-              }}
-              onSave={() => alert("Image Saved to Gallery")}
-              onSwipeDown={async () => {
-                await ScreenOrientation.lockAsync(
-                  ScreenOrientation.OrientationLock.PORTRAIT_UP
-                );
-                closeModalOpen();
-              }}
-              enableSwipeDown={true}
-            />
-          )}
+          {/* {nowShowing == "photo" && ( */}
+          <ImageViewer
+            imageUrls={imageUrls}
+            enablePreload={true}
+            saveToLocalByLongPress={true}
+            loadingRender={() => {
+              return <Loader />;
+            }}
+            onSave={() => alert("Image Saved to Gallery")}
+            onSwipeDown={async () => {
+              await ScreenOrientation.lockAsync(
+                ScreenOrientation.OrientationLock.PORTRAIT_UP
+              );
+              closeModalOpen();
+            }}
+            enableSwipeDown={true}
+          />
+          {/* )}
           {nowShowing == "video" && (
             <View
               style={{
@@ -133,7 +130,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                 style={{ width: 300, height: 300 }}
               />
             </View>
-          )}
+          )} */}
         </Modal>
         <ChatContainer>
           {Platform.OS === "android" ? (
@@ -143,7 +140,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                 onSend={messages => onSend(messages)}
                 user={{
                   _id: userId,
-                  avatar: Avatar
+                  avatar: userAvatarUrl
                 }}
                 renderCustomView={renderCustomView}
                 renderActions={renderActions}
@@ -155,6 +152,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                 renderMessageImage={renderMessageImage}
                 // renderMessageVideo={renderMessageVideo}
               />
+              <KeyboardSpacer />
             </KeyboardAvoidingView>
           ) : (
             <GiftedChat
@@ -162,7 +160,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
               onSend={messages => onSend(messages)}
               user={{
                 _id: userId,
-                avatar: Avatar
+                avatar: userAvatarUrl
               }}
               renderCustomView={renderCustomView}
               renderActions={renderActions}
