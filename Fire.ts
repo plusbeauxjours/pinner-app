@@ -61,7 +61,7 @@ export const image_upload_chat = async (
     `chat_pictures/${chat_id}/${Date()}`,
     resolution
   );
-  return result.fullPath;
+  return result.getDownloadURL();
 };
 
 function urlToBlob(url: string) {

@@ -1,6 +1,6 @@
 import React from "react";
 import uuid from "uuid";
-import { GiftedChat, Actions } from "react-native-gifted-chat";
+import { GiftedChat, Actions, MessageImage } from "react-native-gifted-chat";
 import { withNavigation, NavigationScreenProp } from "react-navigation";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
@@ -68,7 +68,7 @@ class ChatContainer extends React.Component<IProps, IState> {
       modalOpen: false,
       loading: false,
       messages: [],
-      resolution: "high"
+      resolution: "low"
     };
   }
 
@@ -148,30 +148,6 @@ class ChatContainer extends React.Component<IProps, IState> {
     );
   };
 
-  public handleAddPhoto = async () => {
-    const { userId, userAvatarUrl, userName, messages, chatId } = this.state;
-    const { cancelled, uri }: any = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images
-    });
-    if (!cancelled) {
-      const newMessages = [
-        {
-          _id: uuid.v4(),
-          createdAt: new Date().getTime(),
-          image: uri,
-          text: "",
-          user: { _id: userId, avatar: userAvatarUrl, name: userName }
-        }
-      ];
-      this.setState({ messages: GiftedChat.append(messages, newMessages) });
-      database
-        .ref("messages")
-        .child(chatId)
-        .push({
-          ...newMessages[0]
-        });
-    }
-  };
   public leaveChat = () => {
     chat_leave(this.state.chatId, this.state.userId, this.state.userName);
     this.props.navigation.navigate("ActiveChatsScreen");
