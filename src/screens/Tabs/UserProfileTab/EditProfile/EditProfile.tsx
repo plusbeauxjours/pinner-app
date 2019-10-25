@@ -40,6 +40,7 @@ import {
 } from "react-native";
 import constants from "../../../../../constants";
 import { countries } from "../../../../../countryData";
+import { useLogOut } from "../../../../context/AuthContext";
 
 const View = styled.View`
   flex: 1;
@@ -193,6 +194,7 @@ export default ({ navigation }) => {
       emailAddress: ""
     }
   });
+  const logOut = useLogOut();
   const [toggleSettingsFn] = useMutation<
     ToggleSettings,
     ToggleSettingsVariables
@@ -560,8 +562,7 @@ export default ({ navigation }) => {
             </Item>
             <ExplainText>
               If you set your coutries hide, only you can see countries where
-              you've been before, otherwise only number of countries is
-              shown.
+              you've been before, otherwise only number of countries is shown.
             </ExplainText>
 
             <Item>
@@ -584,8 +585,7 @@ export default ({ navigation }) => {
             </Item>
             <ExplainText>
               If you set your coutries hide, only you can see countries where
-              you've been before, otherwise only number of countries is
-              shown.
+              you've been before, otherwise only number of countries is shown.
             </ExplainText>
 
             <Item>
@@ -615,7 +615,7 @@ export default ({ navigation }) => {
             <Bold>ACCOUNT</Bold>
             <Item>
               <ToggleText>LOG OUT</ToggleText>
-              <Touchable onPress={() => setDeleteModal(!deleteModal)}>
+              <Touchable onPress={() => logOut()}>
                 <NavIcon
                   size={20}
                   name={

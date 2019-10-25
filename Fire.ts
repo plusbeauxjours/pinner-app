@@ -76,7 +76,7 @@ function urlToBlob(url: string) {
       }
     };
     xhr.open("GET", url);
-    xhr.responseType = "blob"; // convert type
+    xhr.responseType = "blob";
     xhr.send();
   });
 }
