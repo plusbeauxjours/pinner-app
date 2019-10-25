@@ -162,6 +162,7 @@ export default ({ navigation }) => {
     }
   );
   const [submitModal, setSubmitModal] = useState<boolean>(false);
+  const [logoutModal, setLogoutModal] = useState<boolean>(false);
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [deleteProfileFn, { loading: deladeLoading }] = useMutation<
     DeleteProfile
@@ -408,10 +409,10 @@ export default ({ navigation }) => {
                   size={20}
                   name={
                     Platform.OS === "ios"
-                      ? deleteModal
+                      ? submitModal
                         ? "ios-radio-button-on"
                         : "ios-radio-button-off"
-                      : deleteModal
+                      : submitModal
                       ? "md-radio-button-on"
                       : "md-radio-button-off"
                   }
