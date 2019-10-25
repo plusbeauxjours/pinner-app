@@ -868,7 +868,7 @@
     ts-node "^8"
     tslib "^1"
 
-"@expo/react-native-action-sheet@^3.1.0":
+"@expo/react-native-action-sheet@^3.1.0", "@expo/react-native-action-sheet@^3.2.0":
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/@expo/react-native-action-sheet/-/react-native-action-sheet-3.2.0.tgz#1254adf0f633f557dfc343324fb7e39f293badf4"
   dependencies:

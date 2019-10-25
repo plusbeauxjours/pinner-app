@@ -167,16 +167,15 @@ export default ({ navigation }) => {
                   }}
                 >
                   <Touchable onPress={() => openModal(item)}>
-                    <Image
+                    <ProgressiveImage
                       style={{
                         height: constants.width / 3 - 1,
                         width: constants.width / 3 - 1
                       }}
-                      source={
-                        item.thumbnail && {
-                          uri: `${BACKEND_URL}/media/${item.thumbnail}`
-                        }
-                      }
+                      preview={{
+                        uri: `${BACKEND_URL}/media/${item.thumbnail}`
+                      }}
+                      uri={`${BACKEND_URL}/media/${item.thumbnail}`}
                     />
                     {item.isMain && isSelf && <Text>M</Text>}
                   </Touchable>

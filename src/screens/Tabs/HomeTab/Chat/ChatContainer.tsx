@@ -1,6 +1,6 @@
 import React from "react";
 import uuid from "uuid";
-import { GiftedChat, Actions, MessageImage } from "react-native-gifted-chat";
+import { GiftedChat, Actions } from "react-native-gifted-chat";
 import { withNavigation, NavigationScreenProp } from "react-navigation";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
