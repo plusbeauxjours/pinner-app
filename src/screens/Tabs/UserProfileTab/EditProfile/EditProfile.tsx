@@ -41,6 +41,7 @@ import {
 import constants from "../../../../../constants";
 import { countries } from "../../../../../countryData";
 import { useLogOut } from "../../../../context/AuthContext";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 
 const View = styled.View`
   flex: 1;
@@ -97,6 +98,10 @@ const ButtonContainer = styled.View`
 `;
 
 export default ({ navigation }) => {
+  const logOut = useLogOut();
+  const { showActionSheetWithOptions } = useActionSheet();
+  const destructiveButtonIndex = 0;
+  const cancelButtonIndex = 1;
   const profileRefetch = navigation.getParam("profileRefetch");
   const profile = navigation.getParam("profile");
   const me = useMe();
@@ -162,8 +167,57 @@ export default ({ navigation }) => {
     }
   );
   const [submitModal, setSubmitModal] = useState<boolean>(false);
+  const options = ["Yes", "No"];
+  const onSubmit = () => {
+    showActionSheetWithOptions(
+      {
+        options,
+        destructiveButtonIndex,
+        cancelButtonIndex
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) {
+          console.log("yes");
+        } else {
+          null;
+        }
+      }
+    );
+  };
   const [logoutModal, setLogoutModal] = useState<boolean>(false);
+  const onLogout = () => {
+    showActionSheetWithOptions(
+      {
+        options,
+        destructiveButtonIndex,
+        cancelButtonIndex
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) {
+          logOut();
+        } else {
+          null;
+        }
+      }
+    );
+  };
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
+  const onDelete = () => {
+    showActionSheetWithOptions(
+      {
+        options,
+        destructiveButtonIndex,
+        cancelButtonIndex
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) {
+          console.log("yes");
+        } else {
+          null;
+        }
+      }
+    );
+  };
   const [deleteProfileFn, { loading: deladeLoading }] = useMutation<
     DeleteProfile
   >(DELETE_PROFILE);
@@ -195,7 +249,7 @@ export default ({ navigation }) => {
       emailAddress: ""
     }
   });
-  const logOut = useLogOut();
+
   const [toggleSettingsFn] = useMutation<
     ToggleSettings,
     ToggleSettingsVariables
@@ -404,7 +458,7 @@ export default ({ navigation }) => {
             </ExplainText>
             <Item>
               <ToggleText>SUBMIT</ToggleText>
-              <Touchable onPress={() => setSubmitModal(!submitModal)}>
+              <Touchable onPress={() => onSubmit()}>
                 <NavIcon
                   size={20}
                   name={
@@ -616,15 +670,15 @@ export default ({ navigation }) => {
             <Bold>ACCOUNT</Bold>
             <Item>
               <ToggleText>LOG OUT</ToggleText>
-              <Touchable onPress={() => logOut()}>
+              <Touchable onPress={() => onLogout()}>
                 <NavIcon
                   size={20}
                   name={
                     Platform.OS === "ios"
-                      ? deleteModal
+                      ? logoutModal
                         ? "ios-radio-button-on"
                         : "ios-radio-button-off"
-                      : deleteModal
+                      : logoutModal
                       ? "md-radio-button-on"
                       : "md-radio-button-off"
                   }
@@ -635,7 +689,7 @@ export default ({ navigation }) => {
 
             <Item>
               <ToggleText>DELETE PROFILE</ToggleText>
-              <Touchable onPress={() => setDeleteModal(!deleteModal)}>
+              <Touchable onPress={() => onDelete()}>
                 <NavIcon
                   size={20}
                   name={
