@@ -92,20 +92,32 @@ class ChatContainer extends React.Component<IProps, IState> {
     this.setState({ loading: false });
   };
 
-  public onSend = newMessages => {
-    const { userId, userName, chatId, messages } = this.state;
-    const newMessage = newMessages[0];
-    const { user } = newMessage;
-    user._id = userId;
-    user.name = userName;
-    this.setState({ messages: GiftedChat.append(messages, newMessages) });
-    database
-      .ref("messages")
-      .child(chatId)
-      .push({
-        ...newMessages[0],
-        createdAt: new Date().getTime()
-      });
+  // public onSend = newMessages => {
+  //   const { userId, userName, chatId, messages } = this.state;
+  //   const newMessage = newMessages[0];
+  //   const { user } = newMessage;
+  //   user._id = userId;
+  //   user.name = userName;
+  //   this.setState({ messages: GiftedChat.append(messages, newMessages) });
+  //   database
+  //     .ref("messages")
+  //     .child(chatId)
+  //     .push({
+  //       ...newMessages[0],
+  //       createdAt: new Date().getTime()
+  //     });
+  // };
+
+  public onSend = (messages = []) => {
+    let msg = messages[0];
+    if (msg) {
+      msg._id = get_new_key("messages");
+      msg.user.name = this.state.userName;
+      chat_send(this.state.chatId, msg);
+      this.setState(previousState => ({
+        messages: GiftedChat.append(previousState.messages, msg)
+      }));
+    }
   };
 
   public renderActionsIcon = () => (

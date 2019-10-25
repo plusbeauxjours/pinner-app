@@ -91,7 +91,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
               padding: 0,
               margin: 0
             }}
-            saveToLocalByLongPress={true}
             renderImage={() => {
               return (
                 <ProgressiveImage
@@ -107,7 +106,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                 />
               );
             }}
-            onSave={() => alert("Image Saved to Gallery")}
             onSwipeDown={async () => {
               await ScreenOrientation.lockAsync(
                 ScreenOrientation.OrientationLock.PORTRAIT_UP

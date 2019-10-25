@@ -112,7 +112,6 @@ export default ({ navigation }) => {
                 padding: 0,
                 margin: 0
               }}
-              saveToLocalByLongPress={true}
               renderImage={() => {
                 return (
                   <ProgressiveImage
@@ -130,7 +129,6 @@ export default ({ navigation }) => {
                   />
                 );
               }}
-              onSave={() => alert("Image Saved to Gallery")}
               onSwipeDown={async () => {
                 await ScreenOrientation.lockAsync(
                   ScreenOrientation.OrientationLock.PORTRAIT_UP
