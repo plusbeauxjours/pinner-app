@@ -30,7 +30,6 @@ const STextInput = styled.TextInput`
   margin-bottom: 10px;
   border: 0px solid ${theme.lightGreyColor};
   border-bottom-width: 1px;
-  border-bottom: 10px;
   width: ${constants.width - 180};
 `;
 

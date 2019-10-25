@@ -300,7 +300,7 @@ export default ({ navigation }) => {
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
                   >
-                    {chunk(nearCities).map((cities, index) => {
+                    {chunk(nearCities).map((cities, index: any) => {
                       return (
                         <UserColumn key={index}>
                           {cities.map((city: any, index: any) => {
@@ -337,7 +337,7 @@ export default ({ navigation }) => {
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
                   >
-                    {chunk(samenameCities).map((cities, index) => {
+                    {chunk(samenameCities).map((cities, index: any) => {
                       return (
                         <UserColumn key={index}>
                           {cities.map((city: any, index: any) => {
@@ -374,7 +374,7 @@ export default ({ navigation }) => {
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
                   >
-                    {chunk(coffees).map((coffeeColumn, index) => {
+                    {chunk(coffees).map((coffeeColumn, index: any) => {
                       return (
                         <UserColumn key={index}>
                           {coffeeColumn.map((coffee: any, index: any) => {
@@ -407,7 +407,7 @@ export default ({ navigation }) => {
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
                   >
-                    {chunk(usersBefore).map((users, index) => {
+                    {chunk(usersBefore).map((users, index: any) => {
                       return (
                         <UserColumn key={index}>
                           {users.map((user: any, index: any) => {
@@ -439,7 +439,7 @@ export default ({ navigation }) => {
             {usersNow && usersNow.length !== 0 && (
               <Item>
                 <Title>USERS NOW</Title>
-                {usersNow.map((user, index) => (
+                {usersNow.map((user, index: any) => (
                   <Touchable
                     key={index}
                     onPress={() =>

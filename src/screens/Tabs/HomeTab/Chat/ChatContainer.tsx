@@ -43,7 +43,7 @@ interface IState {
   targetName: string;
   hasPermission: boolean;
   nowShowing: string;
-  imageUrls: any;
+  imageUrl: string;
   modalOpen: boolean;
   loading: boolean;
   messages: any;
@@ -64,7 +64,7 @@ class ChatContainer extends React.Component<IProps, IState> {
       targetName: this.props.navigation.getParam("targetName"),
       hasPermission: false,
       nowShowing: "",
-      imageUrls: "",
+      imageUrl: "",
       modalOpen: false,
       loading: false,
       messages: [],
@@ -127,7 +127,7 @@ class ChatContainer extends React.Component<IProps, IState> {
   public renderMessageVideo = () => {};
 
   public openImageViewer = images => {
-    this.setState({ modalOpen: true, imageUrls: images });
+    this.setState({ modalOpen: true, imageUrl: images[0].url });
   };
 
   public renderMessageImage = props => {
@@ -330,7 +330,7 @@ class ChatContainer extends React.Component<IProps, IState> {
       loading,
       modalOpen,
       nowShowing,
-      imageUrls,
+      imageUrl,
       messages,
       userId,
       userAvatarUrl,
@@ -343,7 +343,7 @@ class ChatContainer extends React.Component<IProps, IState> {
         loading={loading}
         modalOpen={modalOpen}
         nowShowing={nowShowing}
-        imageUrls={imageUrls}
+        imageUrl={imageUrl}
         messages={messages}
         userId={userId}
         userAvatarUrl={userAvatarUrl}

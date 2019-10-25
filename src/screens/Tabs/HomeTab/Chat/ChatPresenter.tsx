@@ -2,12 +2,12 @@ import React from "react";
 import styled from "styled-components";
 import { GiftedChat, Actions, MessageImage } from "react-native-gifted-chat";
 import ImageViewer from "react-native-image-zoom-viewer";
-import Modal from "react-native-modal";
 import { ScreenOrientation, Video } from "expo";
 import Loader from "../../../../components/Loader";
-import { Platform, KeyboardAvoidingView, Image } from "react-native";
-import { useTheme } from "../../../../context/ThemeContext";
+import { Platform, KeyboardAvoidingView, Image, Modal } from "react-native";
 import KeyboardSpacer from "react-native-keyboard-spacer";
+import { Image as ProgressiveImage } from "react-native-expo-image-cache";
+import constants from "../../../../../constants";
 
 const View = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -17,6 +17,7 @@ const View = styled.View`
 `;
 const ChatContainer = styled.View`
   flex: 1;
+  height: ${constants.height};
   background-color: ${props => props.theme.bgColor};
 `;
 
@@ -30,7 +31,7 @@ interface IProps {
   userUrl: string;
   userAvatarUrl: string;
   nowShowing: string;
-  imageUrls: any;
+  imageUrl: any;
   modalOpen: boolean;
   loading: boolean;
   messages: any;
@@ -54,7 +55,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   userUrl,
   userAvatarUrl,
   nowShowing,
-  imageUrls,
+  imageUrl,
   modalOpen,
   loading,
   messages,
@@ -70,7 +71,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   pickFromCamera,
   pickFromGallery
 }) => {
-  const isDarkMode = useTheme();
   if (loading) {
     return (
       <View>
@@ -80,24 +80,32 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   } else {
     return (
       <>
-        <Modal
-          style={{ margin: 0, alignItems: "center" }}
-          isVisible={modalOpen}
-          backdropColor={isDarkMode && isDarkMode === true ? "black" : "white"}
-          onBackdropPress={() => closeModalOpen()}
-          onBackButtonPress={() => Platform.OS !== "ios" && closeModalOpen()}
-          onModalHide={() => closeModalOpen()}
-          propagateSwipe={true}
-          scrollHorizontal={true}
-          backdropOpacity={0.9}
-        >
-          {/* {nowShowing == "photo" && ( */}
+        {/* {nowShowing == "photo" && ( */}
+        <Modal visible={modalOpen} transparent={true}>
           <ImageViewer
-            imageUrls={imageUrls}
+            imageUrls={[{ url: imageUrl }]}
             enablePreload={true}
+            style={{
+              height: constants.width,
+              width: constants.width,
+              padding: 0,
+              margin: 0
+            }}
             saveToLocalByLongPress={true}
-            loadingRender={() => {
-              return <Loader />;
+            renderImage={() => {
+              return (
+                <ProgressiveImage
+                  style={{
+                    height: constants.width,
+                    width: constants.width,
+                    padding: 0,
+                    margin: 0,
+                    position: "absolute"
+                  }}
+                  preview={{ uri: imageUrl }}
+                  uri={imageUrl}
+                />
+              );
             }}
             onSave={() => alert("Image Saved to Gallery")}
             onSwipeDown={async () => {
@@ -107,6 +115,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
               closeModalOpen();
             }}
             enableSwipeDown={true}
+            renderIndicator={() => {}}
           />
           {/* )}
           {nowShowing == "video" && (

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Modal from "react-native-modal";
 import { useQuery, useMutation } from "react-apollo-hooks";
-import { RefreshControl, FlatList, Image, Button } from "react-native";
+import { ScreenOrientation } from "expo";
+import { RefreshControl, FlatList, Image, Button, Modal } from "react-native";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
@@ -19,10 +19,12 @@ import constants, { BACKEND_URL } from "../../../../../constants";
 import { Platform } from "react-native";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import { useTheme } from "../../../../context/ThemeContext";
+import ImageViewer from "react-native-image-zoom-viewer";
 
 const View = styled.View`
   flex: 1;
-  background-color: ${props => props.theme.bgColor};
+  justify-content: center;
+  align-items: center;
 `;
 
 const Text = styled.Text`
@@ -37,7 +39,9 @@ const Bold = styled.Text`
 `;
 
 const Touchable = styled.TouchableOpacity``;
-const Container = styled.View``;
+const Container = styled.View`
+  background-color: ${props => props.theme.bgColor};
+`;
 const ScrollView = styled.ScrollView`
   background-color: ${props => props.theme.bgColor};
 `;
@@ -98,32 +102,46 @@ export default ({ navigation }) => {
         <Loader />
       ) : (
         <>
-          <Modal
-            style={{ margin: 0, alignItems: "center" }}
-            isVisible={modalOpen}
-            backdropColor={
-              isDarkMode && isDarkMode === true ? "black" : "white"
-            }
-            onBackdropPress={() => setModalOpen(false)}
-            onBackButtonPress={() =>
-              Platform.OS !== "ios" && setModalOpen(false)
-            }
-            onModalHide={() => setModalOpen(false)}
-            propagateSwipe={true}
-            scrollHorizontal={true}
-            backdropOpacity={0.9}
-          >
-            <ProgressiveImage
+          <Modal visible={modalOpen} transparent={true}>
+            <ImageViewer
+              imageUrls={[{ url: `${BACKEND_URL}/media/${avatar.image}` }]}
+              enablePreload={true}
               style={{
                 height: constants.width,
                 width: constants.width,
                 padding: 0,
                 margin: 0
               }}
-              preview={{ uri: `${BACKEND_URL}/media/${avatar.thumbnail}` }}
-              uri={`${BACKEND_URL}/media/${avatar.image}`}
+              saveToLocalByLongPress={true}
+              renderImage={() => {
+                return (
+                  <ProgressiveImage
+                    style={{
+                      height: constants.width,
+                      width: constants.width,
+                      padding: 0,
+                      margin: 0,
+                      position: "absolute"
+                    }}
+                    preview={{
+                      uri: `${BACKEND_URL}/media/${avatar.thumbnail}`
+                    }}
+                    uri={`${BACKEND_URL}/media/${avatar.image}`}
+                  />
+                );
+              }}
+              onSave={() => alert("Image Saved to Gallery")}
+              onSwipeDown={async () => {
+                await ScreenOrientation.lockAsync(
+                  ScreenOrientation.OrientationLock.PORTRAIT_UP
+                );
+                closeModal();
+              }}
+              enableSwipeDown={true}
+              // renderIndicator={() => {}}
             />
-            {isSelf && !avatar.isMain && (
+          </Modal>
+          {/* {isSelf && !avatar.isMain && (
               <Button
                 title="DELETE AVATAR"
                 onPress={() => deleteAvatar(avatar.uuid)}
@@ -138,8 +156,8 @@ export default ({ navigation }) => {
               />
             )}
             <Button title="CLOSE AVATAR" onPress={() => closeModal()} />
-          </Modal>
-          <View>
+          </Modal> */}
+          <Container>
             <FlatList
               data={avatarData.getAvatars.avatars}
               renderItem={({ item }) => (
@@ -167,7 +185,7 @@ export default ({ navigation }) => {
               numColumns={3}
               keyExtractor={item => item.id}
             />
-          </View>
+          </Container>
         </>
       )}
     </ScrollView>

@@ -48,7 +48,6 @@ export default ({ navigation }) => {
   });
 
   const onMapReady = () => {
-    console.log("nania");
     if (!ready) {
       setReady(true);
     }
