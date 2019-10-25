@@ -138,7 +138,7 @@ export default ({ navigation }) => {
                 closeModal();
               }}
               enableSwipeDown={true}
-              // renderIndicator={() => {}}
+              renderIndicator={() => {}}
             />
           </Modal>
           {/* {isSelf && !avatar.isMain && (

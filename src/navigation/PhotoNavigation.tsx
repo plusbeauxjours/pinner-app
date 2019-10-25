@@ -58,12 +58,12 @@ export default createStackNavigator(
   {
     PhotoTabs,
     UploadPhoto
-  },
-  {
-    defaultNavigationOptions: {
-      headerStyle: {
-        ...stackStyles
-      }
-    }
   }
+  // {
+  //   defaultNavigationOptions: {
+  //     headerStyle: {
+  //       ...stackStyles
+  //     }
+  //   }
+  // }
 );

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import uuid from "uuid/v4";
 import * as Permissions from "expo-permissions";
-import * as MediaLibrary from "expo-media-library";
-import Loader from "../../components/Loader";
-import { Image, ScrollView } from "react-native";
-import constants from "../../../constants";
+import { useMutation } from "react-apollo-hooks";
 import { theme } from "../../styles/theme";
+import * as ImagePicker from "expo-image-picker";
+import * as ImageManipulator from "expo-image-manipulator";
+import { UploadAvatar, UploadAvatarVariables } from "../../types/api";
+import { UPLOAD_AVATAR } from "../../sharedQueries";
+import { ReactNativeFile } from "apollo-upload-client";
 
 const View = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -35,22 +38,53 @@ const Text = styled.Text`
 
 export default ({ navigation }) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [hasPermission, setHasPermission] = useState<boolean>(false);
-  const [selected, setSelected] = useState<any>({});
-  const [allPhotos, setAllPhotos] = useState<any>();
-  const changeSelected = photo => {
-    if (selected && photo.id === selected.id) {
-      setSelected({});
+  const [
+    UploadAvatarFn,
+    { data: uploadData, loading: uploadLoading }
+  ] = useMutation<UploadAvatar, UploadAvatarVariables>(UPLOAD_AVATAR);
+  const image_resize = async (
+    uri: string,
+    orig_width: number,
+    orig_height: number
+  ) => {
+    if (orig_width > 960 || orig_height > 720) {
+      let manipResult;
+      if (orig_width / 960 >= orig_height / 720) {
+        manipResult = await ImageManipulator.manipulateAsync(uri, [
+          { resize: { width: 960 } }
+        ]);
+      } else {
+        manipResult = await ImageManipulator.manipulateAsync(uri, [
+          { resize: { height: 720 } }
+        ]);
+      }
+      return manipResult.uri;
     } else {
-      setSelected(photo);
+      return uri;
     }
   };
-  const getPhotos = async () => {
+  const pickFromGallery = async () => {
     try {
-      const { assets } = await MediaLibrary.getAssetsAsync({
-        sortBy: MediaLibrary.SortBy.creationTime
+      let result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true
       });
-      setAllPhotos(assets);
+
+      if (result.cancelled !== true) {
+        const resized_uri = await image_resize(
+          result.uri,
+          result.width,
+          result.height
+        );
+        const name = uuid();
+        const [, type] = resized_uri.split(".");
+        const file = new ReactNativeFile({
+          uri: resized_uri,
+          type: type.toLowerCase(),
+          name
+        });
+        UploadAvatarFn({ variables: { file } });
+        navigation.pop();
+      }
     } catch (e) {
       console.log(e);
     } finally {
@@ -61,72 +95,15 @@ export default ({ navigation }) => {
     try {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       if (status === "granted") {
-        setHasPermission(true);
-        getPhotos();
+        pickFromGallery();
       }
     } catch (e) {
       console.log(e);
-      setHasPermission(false);
     }
   };
-  const handleSelected = () => {
-    navigation.navigate("UploadPhoto", { photo: selected });
-  };
+
   useEffect(() => {
     askPermission();
   }, []);
-  return (
-    <View>
-      {loading ? (
-        <Loader />
-      ) : (
-        <View>
-          {hasPermission ? (
-            <>
-              {selected.id && (
-                <Image
-                  style={{
-                    width: constants.width,
-                    height: constants.width,
-                    margin: 0.5
-                  }}
-                  source={{ uri: selected.uri }}
-                />
-              )}
-              {selected.length !== 0 && (
-                <Button onPress={handleSelected}>
-                  <Text>Select Photo</Text>
-                </Button>
-              )}
-              <ScrollView
-                contentContainerStyle={{
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  width: constants.width
-                }}
-              >
-                {allPhotos.map(photo => (
-                  <Touchable
-                    key={photo.id}
-                    onPress={() => changeSelected(photo)}
-                  >
-                    <Image
-                      key={photo.id}
-                      source={{ uri: photo.uri }}
-                      style={{
-                        width: constants.width / 4 - 1,
-                        height: constants.width / 4 - 1,
-                        opacity: photo.id === selected.id ? 0.3 : 1,
-                        margin: 0.5
-                      }}
-                    />
-                  </Touchable>
-                ))}
-              </ScrollView>
-            </>
-          ) : null}
-        </View>
-      )}
-    </View>
-  );
+  return null;
 };

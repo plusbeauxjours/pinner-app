@@ -170,13 +170,13 @@ const UserRow: React.FC<IProps> = ({
           </Header>
           <Items>
             <TripItems>
-              {trip.endDate && (
-                <GreyText>{moment(trip.endDate).format("MMM Do YY")}</GreyText>
-              )}
               {trip.startDate && (
                 <GreyText>
                   {moment(trip.startDate).format("MMM Do YY")}
                 </GreyText>
+              )}
+              {trip.endDate && (
+                <GreyText>{moment(trip.endDate).format("MMM Do YY")}</GreyText>
               )}
             </TripItems>
             {trip.diffDays && (

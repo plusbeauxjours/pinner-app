@@ -9,6 +9,7 @@ import { UploadAvatar, UploadAvatarVariables } from "../../types/api";
 import Loader from "../../components/Loader";
 import { ReactNativeFile } from "apollo-upload-client";
 import { UPLOAD_AVATAR } from "../../sharedQueries";
+import uuid from "uuid/v4";
 
 const View = styled.View`
   justify-content: center;
@@ -59,10 +60,10 @@ export default ({ navigation }) => {
     if (captionInput.value === "" || locationInput.value === "") {
       Alert.alert("All fileds are required");
     } else {
-      const name = photo.filename;
-      const [, type] = name.split(".");
+      const name = uuid();
+      const [, type] = photo.split(".");
       const file = new ReactNativeFile({
-        uri: photo.uri,
+        uri: photo,
         type: type.toLowerCase(),
         name
       });
