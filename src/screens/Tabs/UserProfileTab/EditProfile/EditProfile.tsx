@@ -169,6 +169,7 @@ export default ({ navigation }) => {
   const [submitModal, setSubmitModal] = useState<boolean>(false);
   const options = ["Yes", "No"];
   const onSubmit = () => {
+    setSubmitModal(true);
     showActionSheetWithOptions(
       {
         options,
@@ -178,14 +179,16 @@ export default ({ navigation }) => {
       buttonIndex => {
         if (buttonIndex === 0) {
           console.log("yes");
+          setSubmitModal(false);
         } else {
-          null;
+          setSubmitModal(false);
         }
       }
     );
   };
   const [logoutModal, setLogoutModal] = useState<boolean>(false);
   const onLogout = () => {
+    setLogoutModal(true);
     showActionSheetWithOptions(
       {
         options,
@@ -195,14 +198,17 @@ export default ({ navigation }) => {
       buttonIndex => {
         if (buttonIndex === 0) {
           logOut();
+          setLogoutModal(false);
         } else {
           null;
+          setLogoutModal(false);
         }
       }
     );
   };
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const onDelete = () => {
+    setDeleteModal(true);
     showActionSheetWithOptions(
       {
         options,
@@ -212,8 +218,10 @@ export default ({ navigation }) => {
       buttonIndex => {
         if (buttonIndex === 0) {
           console.log("yes");
+          setDeleteModal(false);
         } else {
           null;
+          setDeleteModal(false);
         }
       }
     );
