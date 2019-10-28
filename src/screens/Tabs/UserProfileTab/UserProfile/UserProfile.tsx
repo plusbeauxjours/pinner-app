@@ -53,6 +53,10 @@ const View = styled.View`
 const Text = styled.Text`
   color: ${props => props.theme.color};
 `;
+const BioText = styled(Text)`
+  margin-top: 10px;
+  margin-bottom: 10px;
+`;
 const Bold = styled.Text`
   font-size: 12px;
   color: ${props => props.theme.color};
@@ -138,7 +142,6 @@ export default ({ navigation }) => {
     tripStartDate: null,
     tripEndDate: null
   });
-  console.log(me.user.username);
   const {
     data: profileData,
     loading: profileLoading,
@@ -225,10 +228,10 @@ export default ({ navigation }) => {
     setCoffeeId(coffeeId);
   };
 
-  useEffect(
-    () => setUsername(navigation.getParam("username") || me.user.username),
-    [navigation]
-  );
+  // useEffect(
+  //   () => setUsername(navigation.getParam("username") || me.user.username),
+  //   [navigation]
+  // );
   if (profileLoading || tripLoading || coffeeLoading || getSameTripsLoading) {
     return (
       <LoaderContainer>
@@ -239,7 +242,6 @@ export default ({ navigation }) => {
     const { userProfile: { user = null } = {} } = profileData;
     const { getTrips: { trip = null } = {} } = tripData;
     const { getCoffees: { coffees = null } = {} } = coffeeData;
-    console.log(profileData);
     return (
       <>
         <Modal
@@ -327,7 +329,7 @@ export default ({ navigation }) => {
             </UserNameContainer>
           </Header>
           <View>
-            <Text>{user.profile.bio}</Text>
+            <BioText>{user.profile.bio}</BioText>
             <ItemContainer>
               {user.profile.distance !== 0 && (
                 <DisptanceItem>

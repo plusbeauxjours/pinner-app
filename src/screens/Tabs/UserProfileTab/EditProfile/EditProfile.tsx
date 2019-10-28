@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useTheme } from "../../../../hooks/useTheme";
@@ -41,6 +41,7 @@ import { countries } from "../../../../../countryData";
 import { useLogOut } from "../../../../context/AuthContext";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Alert } from "react-native";
+import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
 
 const View = styled.View`
   flex: 1;
@@ -64,6 +65,14 @@ const Bold = styled.Text`
   text-align: center;
   margin-top: 10px;
   color: ${props => props.theme.color};
+`;
+const CountryContainer = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+`;
+const CountryItem = styled.View`
+  margin-top: 15px;
+  flex-direction: column;
 `;
 const Item = styled.View`
   margin-top: 15px;
@@ -98,6 +107,7 @@ const ButtonContainer = styled.View`
 
 export default ({ navigation }) => {
   const logOut = useLogOut();
+  const isDarkMode = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
   const destructiveButtonIndex = 0;
   const cancelButtonIndex = 1;
@@ -127,7 +137,6 @@ export default ({ navigation }) => {
   const [residenceCode, setResidenceCode] = useState<string>(
     profile.residence && profile.residence.countryCode
   );
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(theme);
   const [isHideTrips, setIsHideTrips] = useState<boolean>(profile.isHideTrips);
   const [isHideCoffees, setIsHideCoffees] = useState<boolean>(
     profile.isHideCoffees
@@ -157,7 +166,6 @@ export default ({ navigation }) => {
     EditProfile,
     EditProfileVariables
   >(EDIT_PROFILE);
-  console.log("data", data);
   const [submitModal, setSubmitModal] = useState<boolean>(false);
   const options = ["Yes", "No"];
   const onPress = () => {
@@ -209,7 +217,6 @@ export default ({ navigation }) => {
       },
       buttonIndex => {
         if (buttonIndex === 0) {
-          console.log("yes");
           setDeleteModal(false);
         } else {
           null;
@@ -286,6 +293,14 @@ export default ({ navigation }) => {
       }
     }
   });
+  const onSelectNationality = (country: any) => {
+    console.log(country);
+    setNationalityCode(country.cca2);
+  };
+  const onSelectrRsidence = (country: any) => {
+    console.log(country);
+    setResidenceCode(country.cca2);
+  };
   const onPressToggleIcon = async (payload: string) => {
     if (payload === "HIDE_TRIPS") {
       setIsHideTrips(isHideTrips => !isHideTrips);
@@ -337,16 +352,6 @@ export default ({ navigation }) => {
         setIsProfileSubmitted(true);
         if (newUsername || newUsername !== "") {
           {
-            console.log(
-              "now we are here",
-              newUsername,
-              bio,
-              gender,
-              firstName,
-              lastName,
-              nationalityCode,
-              residenceCode
-            );
             await editProfileFn({
               variables: {
                 username: newUsername,
@@ -403,40 +408,43 @@ export default ({ navigation }) => {
               here. Your username cannot be any combination of numbers or
               symbols.
             </ExplainText>
-            <Item>
-              <ToggleText>NATIONALITY</ToggleText>
-              <TextInput
-                style={{
-                  width: constants.width / 2,
-                  backgroundColor: "transparent",
-                  borderBottomWidth: 1,
-                  borderBottomColor: "#999",
-                  color: "#999"
+            <CountryContainer>
+              <CountryItem>
+                <ToggleText>NATIONALITY</ToggleText>
+                <ExplainText>Your Nationality to match</ExplainText>
+              </CountryItem>
+              <CountryPicker
+                theme={theme && DARK_THEME}
+                {...{
+                  countryCode: nationalityCode,
+                  withFilter: true,
+                  withFlag: true,
+                  withCountryNameButton: true,
+                  withAlphaFilter: true,
+                  withEmoji: true,
+                  onSelect: onSelectNationality
                 }}
-                value={navigation.value}
-                returnKeyType="done"
-                onChangeText={text => setResidenceCode(text)}
-                autoCorrect={false}
               />
-            </Item>
-            <ExplainText>Your Nationality to match</ExplainText>
-            <Item>
-              <ToggleText>RESIDENCE</ToggleText>
-              <TextInput
-                style={{
-                  width: constants.width / 2,
-                  backgroundColor: "transparent",
-                  borderBottomWidth: 1,
-                  borderBottomColor: "#999",
-                  color: "#999"
+            </CountryContainer>
+            <CountryContainer>
+              <CountryItem>
+                <ToggleText>RESIDENCE</ToggleText>
+                <ExplainText>Your Residence to match</ExplainText>
+              </CountryItem>
+              <CountryPicker
+                theme={theme && DARK_THEME}
+                {...{
+                  countryCode: residenceCode,
+                  withFilter: true,
+                  withFlag: true,
+                  withCountryNameButton: true,
+                  withAlphaFilter: true,
+                  withEmoji: true,
+                  onSelect: onSelectrRsidence
                 }}
-                value={navigation.value}
-                returnKeyType="done"
-                onChangeText={text => setNationalityCode(text)}
-                autoCorrect={false}
               />
-            </Item>
-            <ExplainText>Your Residence to match</ExplainText>
+            </CountryContainer>
+
             <Item>
               <ToggleText>GENDER</ToggleText>
               <TextInput
@@ -447,7 +455,7 @@ export default ({ navigation }) => {
                   borderBottomColor: "#999",
                   color: "#999"
                 }}
-                value={navigation.value}
+                value={gender}
                 returnKeyType="done"
                 onChangeText={text => setUsername(text)}
                 autoCorrect={false}

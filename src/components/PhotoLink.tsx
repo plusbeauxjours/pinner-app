@@ -31,15 +31,15 @@ export default withNavigation(({ navigation }) => {
     orig_width: number,
     orig_height: number
   ) => {
-    if (orig_width > 960 || orig_height > 720) {
+    if (orig_width > 1280 || orig_height > 960) {
       let manipResult;
-      if (orig_width / 960 >= orig_height / 720) {
+      if (orig_width / 1280 >= orig_height / 960) {
         manipResult = await ImageManipulator.manipulateAsync(uri, [
-          { resize: { width: 960 } }
+          { resize: { width: 1280 } }
         ]);
       } else {
         manipResult = await ImageManipulator.manipulateAsync(uri, [
-          { resize: { height: 720 } }
+          { resize: { height: 960 } }
         ]);
       }
       return manipResult.uri;
