@@ -138,7 +138,7 @@ export default ({ navigation }) => {
     tripStartDate: null,
     tripEndDate: null
   });
-
+  console.log(me.user.username);
   const {
     data: profileData,
     loading: profileLoading,
@@ -152,7 +152,7 @@ export default ({ navigation }) => {
     refetch: getSameTripsRefetch
   } = useQuery<GetSameTrips, GetSameTripsVariables>(GET_SAME_TRIPS, {
     variables: {
-      username: navigation.getParam("username")
+      username: navigation.getParam("username")|| me.user.username 
     },
     skip: !navigation.getParam("username")
   });

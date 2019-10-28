@@ -42,6 +42,7 @@ import constants from "../../../../../constants";
 import { countries } from "../../../../../countryData";
 import { useLogOut } from "../../../../context/AuthContext";
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import { Alert } from "react-native";
 
 const View = styled.View`
   flex: 1;
@@ -108,8 +109,12 @@ export default ({ navigation }) => {
   const location = useLocation();
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const { theme, toggleTheme } = useTheme();
+  const [isProfileSubmitted, setIsProfileSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [username, setUsername] = useState<string>(
+    navigation.getParam("username")
+  );
+  const [newUsername, setNewUsername] = useState<string>(
     navigation.getParam("username")
   );
   const [bio, setBio] = useState<string>(profile.bio);
@@ -152,23 +157,14 @@ export default ({ navigation }) => {
     profile.countryPhoneCode
   );
 
-  const [editProfileFn] = useMutation<EditProfile, EditProfileVariables>(
-    EDIT_PROFILE,
-    {
-      variables: {
-        username,
-        bio,
-        gender,
-        firstName,
-        lastName,
-        nationalityCode,
-        residenceCode
-      }
-    }
-  );
+  const [editProfileFn, { data }] = useMutation<
+    EditProfile,
+    EditProfileVariables
+  >(EDIT_PROFILE);
+  console.log("data", data);
   const [submitModal, setSubmitModal] = useState<boolean>(false);
   const options = ["Yes", "No"];
-  const onSubmit = () => {
+  const onPress = () => {
     setSubmitModal(true);
     showActionSheetWithOptions(
       {
@@ -178,7 +174,7 @@ export default ({ navigation }) => {
       },
       buttonIndex => {
         if (buttonIndex === 0) {
-          console.log("yes");
+          onSubmit();
           setSubmitModal(false);
         } else {
           setSubmitModal(false);
@@ -322,6 +318,59 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
+  const onInputTextChange = (text, state) => {
+    const replaceChar = /[~!@\#$%^&*\()\-=+_'\;<>0-9\/.\`:\"\\,\[\]?|{}]/gi;
+    const item = text
+      .replace(/^\s\s*/, "")
+      .replace(/\s\s*$/, "")
+      .replace(replaceChar, "")
+      .replace(/[^a-z|^A-Z|^0-9]/, "");
+    if (state === "newUsername" && item !== "") {
+      setNewUsername(item);
+    } else if (state === "firstName" && item !== "") {
+      setFirstName(item);
+    } else if (state === "lastName" && item !== "") {
+      setLastName(item);
+    } else {
+      return null;
+    }
+  };
+  const onSubmit = () => {
+    try {
+      if (!isProfileSubmitted) {
+        if (newUsername || newUsername !== "") {
+          {
+            console.log(
+              "now we are here",
+              newUsername,
+              bio,
+              gender,
+              firstName,
+              lastName,
+              nationalityCode,
+              residenceCode
+            );
+            editProfileFn({
+              variables: {
+                username: newUsername,
+                bio,
+                gender,
+                firstName,
+                lastName,
+                nationalityCode,
+                residenceCode
+              }
+            });
+          }
+        }
+      }
+    } catch (e) {
+      console.log(e);
+      Alert.alert("Could not be Verified you");
+    } finally {
+      setIsProfileSubmitted(false);
+    }
+  };
   return (
     <ScrollView
       refreshControl={
@@ -346,9 +395,9 @@ export default ({ navigation }) => {
                   borderBottomColor: "#999",
                   color: "#999"
                 }}
-                value={username}
+                value={newUsername}
                 returnKeyType="done"
-                onChangeText={text => setUsername(text)}
+                onChangeText={text => onInputTextChange(text, "newUsername")}
                 autoCorrect={false}
               />
             </Item>
@@ -369,7 +418,7 @@ export default ({ navigation }) => {
                 }}
                 value={navigation.value}
                 returnKeyType="done"
-                onChangeText={text => setUsername(text)}
+                onChangeText={text => setResidenceCode(text)}
                 autoCorrect={false}
               />
             </Item>
@@ -386,7 +435,7 @@ export default ({ navigation }) => {
                 }}
                 value={navigation.value}
                 returnKeyType="done"
-                onChangeText={text => setUsername(text)}
+                onChangeText={text => setNationalityCode(text)}
                 autoCorrect={false}
               />
             </Item>
@@ -420,7 +469,7 @@ export default ({ navigation }) => {
                 }}
                 value={firstName}
                 returnKeyType="done"
-                onChangeText={text => setFirstName(text)}
+                onChangeText={text => onInputTextChange(text, "firstName")}
                 autoCorrect={false}
               />
             </Item>
@@ -437,7 +486,7 @@ export default ({ navigation }) => {
                 }}
                 value={lastName}
                 returnKeyType="done"
-                onChangeText={text => setLastName(text)}
+                onChangeText={text => onInputTextChange(text, "lastName")}
                 autoCorrect={false}
               />
             </Item>
@@ -451,6 +500,7 @@ export default ({ navigation }) => {
                   borderBottomColor: "#999",
                   color: "#999"
                 }}
+                placeholderTextColor="#999"
                 value={bio}
                 placeholder={"BIO"}
                 returnKeyType="done"
@@ -466,7 +516,7 @@ export default ({ navigation }) => {
             </ExplainText>
             <Item>
               <ToggleText>SUBMIT</ToggleText>
-              <Touchable onPress={() => onSubmit()}>
+              <Touchable onPress={onPress}>
                 <NavIcon
                   size={20}
                   name={
@@ -496,8 +546,8 @@ export default ({ navigation }) => {
               <ExplainText>
                 Your phone number in&nbsp;
                 {countries.find(i => i.code === countryPhoneNumber).name}
-                {countries.find(i => i.code === countryPhoneNumber).emoji}&nbsp;
-                is already verified.
+                {countries.find(i => i.code === countryPhoneNumber).emoji}
+                &nbsp; is already verified.
               </ExplainText>
             ) : (
               <ExplainText>Verify your phone number to login.</ExplainText>
