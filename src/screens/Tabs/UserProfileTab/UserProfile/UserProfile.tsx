@@ -144,7 +144,8 @@ export default ({ navigation }) => {
     loading: profileLoading,
     refetch: profileRefetch
   } = useQuery<UserProfile, UserProfileVariables>(GET_USER, {
-    variables: { username: navigation.getParam("username") || me.user.username }
+    variables: { username },
+    fetchPolicy: "network-only"
   });
   const {
     data: getSameTripsData,
@@ -152,7 +153,7 @@ export default ({ navigation }) => {
     refetch: getSameTripsRefetch
   } = useQuery<GetSameTrips, GetSameTripsVariables>(GET_SAME_TRIPS, {
     variables: {
-      username: navigation.getParam("username")|| me.user.username 
+      username
     },
     skip: !navigation.getParam("username")
   });
@@ -161,7 +162,7 @@ export default ({ navigation }) => {
     loading: tripLoading,
     refetch: tripRefetch
   } = useQuery<GetTrips, GetTripsVariables>(GET_TRIPS, {
-    variables: { username: navigation.getParam("username") || me.user.username }
+    variables: { username }
   });
   const {
     data: coffeeData,
@@ -169,7 +170,7 @@ export default ({ navigation }) => {
     refetch: coffeeRefetch
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
     variables: {
-      userName: navigation.getParam("username") || me.user.username,
+      userName: username,
       location: "profile"
     }
   });
@@ -238,6 +239,7 @@ export default ({ navigation }) => {
     const { userProfile: { user = null } = {} } = profileData;
     const { getTrips: { trip = null } = {} } = tripData;
     const { getCoffees: { coffees = null } = {} } = coffeeData;
+    console.log(profileData);
     return (
       <>
         <Modal

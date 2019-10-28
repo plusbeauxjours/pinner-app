@@ -1,14 +1,10 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useState } from "react";
-import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
 import { useMutation } from "react-apollo-hooks";
 import { RequestCoffee, RequestCoffeeVariables } from "../../../../types/api";
 import { REQUEST_COFFEE } from "./RequestCoffeesQueries";
-import { Platform } from "react-native";
-import Modal from "react-native-modal";
-import { useTheme } from "../../../../context/ThemeContext";
 import { withNavigation } from "react-navigation";
 
 const View = styled.View`
@@ -20,8 +16,6 @@ const View = styled.View`
 const Text = styled.Text``;
 
 const RequestCoffees = ({ navigation }) => {
-  const me = useMe();
-  const isDarkMode = useTheme();
   const location = useLocation();
   const [modalOpen, setModalOpen] = useState<boolean>(true);
   const [countryCode, setCountryCode] = useState<string>(

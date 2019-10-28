@@ -4,8 +4,6 @@ import { RefreshControl } from "react-native";
 import { TopContinents, TopContinentsVariables } from "../../../../types/api";
 import { useQuery } from "react-apollo-hooks";
 import { TOP_CONTINENTS } from "./ContinentsQueries";
-import { useMe } from "../../../../context/MeContext";
-import { useLocation } from "../../../../context/LocationContext";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
 
@@ -36,8 +34,6 @@ const LoaderContainer = styled.View`
 `;
 
 export default ({ navigation }) => {
-  const me = useMe();
-  const location = useLocation();
   const [username, setUsername] = useState<string>(
     navigation.getParam("username")
   );

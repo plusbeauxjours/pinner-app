@@ -1,9 +1,7 @@
-import React, { useEffect } from "react";
-import { Image } from "react-native";
+import React from "react";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useState } from "react";
-import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
 import {
   CoffeeDetail,
@@ -100,7 +98,6 @@ const CoffeeDetails: React.FC<IProps> = ({
   setModalOpen,
   isStaying
 }) => {
-  const me = useMe();
   const isDarkMode = useTheme();
   const location = useLocation();
   const [countryCode, setCountryCode] = useState<string>(

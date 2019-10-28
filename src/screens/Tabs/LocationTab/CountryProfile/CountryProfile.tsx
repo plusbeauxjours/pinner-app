@@ -3,7 +3,6 @@ import { RefreshControl, Image, FlatList, ListView } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
-import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
@@ -78,7 +77,6 @@ const LoaderContainer = styled.View`
 `;
 
 export default ({ navigation }) => {
-  const me = useMe();
   const location = useLocation();
   const isDarkMode = useTheme();
   const [countryCode, setCountryCode] = useState<string>(

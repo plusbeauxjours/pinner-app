@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { RefreshControl, Image } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
-import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
@@ -62,7 +61,6 @@ const LoaderContainer = styled.View`
 `;
 
 export default ({ navigation }) => {
-  const me = useMe();
   const location = useLocation();
   const [continentCode, setContinentCode] = useState<string>(
     navigation.getParam("continentCode") ||

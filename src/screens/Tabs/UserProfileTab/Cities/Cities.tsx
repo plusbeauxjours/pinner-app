@@ -4,8 +4,6 @@ import { RefreshControl } from "react-native";
 import { FrequentVisits, FrequentVisitsVariables } from "../../../../types/api";
 import { useQuery } from "react-apollo-hooks";
 import { FREQUENT_VISITS } from "./CitiesQueries";
-import { useMe } from "../../../../context/MeContext";
-import { useLocation } from "../../../../context/LocationContext";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
 import { countries } from "../../../../../countryData";
@@ -37,8 +35,6 @@ const LoaderContainer = styled.View`
 `;
 
 export default ({ navigation }) => {
-  const me = useMe();
-  const location = useLocation();
   const [username, setUsername] = useState(navigation.getParam("username"));
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const { data, loading, refetch } = useQuery<

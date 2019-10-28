@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { MATCH, UNMATCH } from "./CoffeeBtnQueries";
 import {
   Match,
@@ -9,8 +9,6 @@ import {
 import { useMutation } from "react-apollo";
 import styled from "styled-components";
 import { ActivityIndicator } from "react-native";
-import { useMe } from "../../context/MeContext";
-import { useLocation } from "../../context/LocationContext";
 
 const Touchable = styled.TouchableOpacity`
   width: 100px;
@@ -46,8 +44,6 @@ const CoffeeBtn: React.FC<IProps> = ({
   isSelf,
   isMatching
 }) => {
-  const me = useMe();
-  const location = useLocation();
   const [matchFn, { loading: matchLoading }] = useMutation<
     Match,
     MatchVariables

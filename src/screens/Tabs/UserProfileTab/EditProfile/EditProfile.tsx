@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useTheme } from "../../../../hooks/useTheme";
-import { useMe } from "../../../../context/MeContext";
-import { useLocation } from "../../../../context/LocationContext";
 import {
   EditProfile,
   EditProfileVariables,
@@ -105,8 +103,6 @@ export default ({ navigation }) => {
   const cancelButtonIndex = 1;
   const profileRefetch = navigation.getParam("profileRefetch");
   const profile = navigation.getParam("profile");
-  const me = useMe();
-  const location = useLocation();
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const { theme, toggleTheme } = useTheme();
   const [isProfileSubmitted, setIsProfileSubmitted] = useState<boolean>(false);
@@ -335,9 +331,10 @@ export default ({ navigation }) => {
       return null;
     }
   };
-  const onSubmit = () => {
+  const onSubmit = async () => {
     try {
       if (!isProfileSubmitted) {
+        setIsProfileSubmitted(true);
         if (newUsername || newUsername !== "") {
           {
             console.log(
@@ -350,7 +347,7 @@ export default ({ navigation }) => {
               nationalityCode,
               residenceCode
             );
-            editProfileFn({
+            await editProfileFn({
               variables: {
                 username: newUsername,
                 bio,

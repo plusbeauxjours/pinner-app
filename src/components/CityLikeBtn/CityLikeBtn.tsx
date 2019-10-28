@@ -6,8 +6,6 @@ import styled from "styled-components";
 import { Ionicons } from "@expo/vector-icons";
 import { Platform } from "react-native";
 import { theme } from "../../styles/theme";
-import { useMe } from "../../context/MeContext";
-import { useLocation } from "../../context/LocationContext";
 
 const Touchable = styled.TouchableOpacity<ITheme>`
   margin-left: 3px;
@@ -43,9 +41,6 @@ const CityLikeBtn: React.FC<IProps> = ({
   likeCount: likeCountProp,
   height
 }) => {
-  const me = useMe();
-  const location = useLocation();
-  const [isSubmitted, setSubmitted] = useState(false);
   const [isLiked, setIsLiked] = useState(isLikedProp);
   const [likeCount, setLikeCount] = useState(likeCountProp);
   const [toggleLikeFn, { loading }] = useMutation<

@@ -4,8 +4,6 @@ import { RefreshControl } from "react-native";
 import { GetCoffees, GetCoffeesVariables } from "../../../../types/api";
 import { useQuery } from "react-apollo-hooks";
 import { GET_COFFEES } from "./CoffeesQueries";
-import { useMe } from "../../../../context/MeContext";
-import { useLocation } from "../../../../context/LocationContext";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
 import { countries } from "../../../../../countryData";
@@ -30,8 +28,6 @@ const ScrollView = styled.ScrollView`
 `;
 
 export default ({ navigation }) => {
-  const me = useMe();
-  const location = useLocation();
   const [username, setUsername] = useState(navigation.getParam("username"));
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const { data, loading, refetch } = useQuery<GetCoffees, GetCoffeesVariables>(

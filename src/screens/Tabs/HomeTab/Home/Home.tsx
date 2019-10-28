@@ -4,7 +4,6 @@ import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
 import { useQuery } from "react-apollo-hooks";
 import { RECOMMEND_USERS, RECOMMEND_LOCATIONS } from "./HomeQueries";
-import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
 import { RefreshControl, Platform } from "react-native";
 import Swiper from "react-native-swiper";
@@ -20,7 +19,6 @@ import {
 import CoffeeDetail from "../../CoffeeTab/CoffeeDetail";
 import Modal from "react-native-modal";
 import { useTheme } from "../../../../context/ThemeContext";
-import constants from "../../../../../constants";
 
 const Container = styled.View`
   flex: 1;
@@ -54,7 +52,6 @@ const LoaderContainer = styled.View`
 `;
 
 export default ({ navigation }) => {
-  const me = useMe();
   const location = useLocation();
   const isDarkMode = useTheme();
   const [refreshing, setRefreshing] = useState<boolean>(false);

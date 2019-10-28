@@ -5,7 +5,6 @@ import UserRow from "../../../../components/UserRow";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import { GET_MATCHES } from "./MatchQueries";
 import { useMe } from "../../../../context/MeContext";
-import { useLocation } from "../../../../context/LocationContext";
 import { RefreshControl, TouchableOpacity } from "react-native";
 import { MARK_AS_READ_MATCH } from "./MatchQueries";
 import {
@@ -50,7 +49,6 @@ const LoaderContainer = styled.View`
 
 export default ({ navigation }) => {
   const me = useMe();
-  const location = useLocation();
   const [refreshing, setRefreshing] = useState(false);
   const [MarkAsReadMatchFn] = useMutation<
     MarkAsReadMatch,

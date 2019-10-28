@@ -4,7 +4,6 @@ import { ScreenOrientation } from "expo";
 import { RefreshControl, FlatList, Image, Button, Modal } from "react-native";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
-import { useLocation } from "../../../../context/LocationContext";
 import { GET_AVATARS, DELETE_AVATAR, MARK_AS_MAIN } from "./AvatarListQueries";
 import {
   GetAvatars,
@@ -16,9 +15,7 @@ import {
 } from "../../../../types/api";
 import Loader from "../../../../components/Loader";
 import constants, { BACKEND_URL } from "../../../../../constants";
-import { Platform } from "react-native";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
-import { useTheme } from "../../../../context/ThemeContext";
 import ImageViewer from "react-native-image-zoom-viewer";
 
 const View = styled.View`
@@ -48,8 +45,6 @@ const ScrollView = styled.ScrollView`
 
 export default ({ navigation }) => {
   const me = useMe();
-  const isDarkMode = useTheme();
-  const location = useLocation();
   const username = navigation.getParam("username") || me.user.username;
   const isSelf = navigation.getParam("isSelf") || me.user.username === username;
   const [modalOpen, setModalOpen] = useState<boolean>(false);
