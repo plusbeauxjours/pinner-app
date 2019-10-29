@@ -95,7 +95,7 @@ class ChatContainer extends React.Component<IProps, IState> {
   public onSend = (messages = []) => {
     let msg = messages[0];
     if (msg) {
-      msg._id = get_new_key("messages");
+      // msg._id = get_new_key("messages");
       msg.user.name = this.state.userName;
       chat_send(this.state.chatId, msg);
       this.setState(previousState => ({
