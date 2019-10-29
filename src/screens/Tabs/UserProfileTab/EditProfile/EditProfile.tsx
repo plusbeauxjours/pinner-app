@@ -82,6 +82,7 @@ const Item = styled.View`
   flex-direction: row;
   justify-content: space-between;
 `;
+const GenderView = styled.View``;
 
 const ToggleIcon = styled.TouchableOpacity``;
 const Touchable = styled.TouchableOpacity``;
@@ -113,8 +114,6 @@ export default ({ navigation }) => {
   const isDarkMode = useTheme();
   const { theme, toggleTheme } = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
-  const destructiveButtonIndex = 0;
-  const cancelButtonIndex = 1;
   const profileRefetch = navigation.getParam("profileRefetch");
   const profile = navigation.getParam("profile");
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -164,13 +163,14 @@ export default ({ navigation }) => {
   const [countryPhoneCode, setCountryPhoneCode] = useState<string>(
     profile.countryPhoneCode
   );
-
   const [editProfileFn, { data }] = useMutation<
     EditProfile,
     EditProfileVariables
   >(EDIT_PROFILE);
   const [submitModal, setSubmitModal] = useState<boolean>(false);
   const options = ["Yes", "No"];
+  const destructiveButtonIndex = 0;
+  const cancelButtonIndex = 1;
   const onPress = () => {
     setSubmitModal(true);
     showActionSheetWithOptions(
@@ -375,6 +375,28 @@ export default ({ navigation }) => {
       setIsProfileSubmitted(false);
     }
   };
+  const genders = ["Male", "Female", "Other", "Cancel"];
+  const genderCancelButtonIndex = 3;
+  const onOpenGenderActionSheet = () => {
+    showActionSheetWithOptions(
+      {
+        options: genders,
+        cancelButtonIndex: genderCancelButtonIndex,
+        showSeparators: true
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) {
+          setGender("MALE")
+        } else if (buttonIndex === 1) {
+          setGender("FEMALE")
+        } else if (buttonIndex === 2) {
+          setGender("OTHER")
+        } else {
+          null;
+        }
+      }
+    );
+  };
   return (
     <ScrollView
       refreshControl={
@@ -451,19 +473,11 @@ export default ({ navigation }) => {
 
             <Item>
               <ToggleText>GENDER</ToggleText>
-              <TextInput
-                style={{
-                  width: constants.width / 2,
-                  backgroundColor: "transparent",
-                  borderBottomWidth: 1,
-                  borderBottomColor: "#999",
-                  color: "#999"
-                }}
-                value={gender}
-                returnKeyType="done"
-                onChangeText={text => setUsername(text)}
-                autoCorrect={false}
-              />
+              <Touchable onPress={() => onOpenGenderActionSheet()}>
+                <GenderView>
+                  <Text>{gender}</Text>
+                </GenderView>
+              </Touchable>
             </Item>
             <ExplainText>Your gender to match</ExplainText>
             <Item>
