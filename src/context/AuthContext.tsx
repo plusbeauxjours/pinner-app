@@ -3,7 +3,11 @@ import { AsyncStorage } from "react-native";
 
 export const AuthContext = createContext(null);
 
-export const AuthProvider = ({ isLoggedIn: isLoggedInProp, children }) => {
+export const AuthProvider = ({
+  isLoggedIn: isLoggedInProp,
+  children,
+  client
+}) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(isLoggedInProp);
   const logUserIn = async token => {
     try {

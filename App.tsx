@@ -78,7 +78,7 @@ export default function App() {
     <ApolloHooksProvider client={client}>
       <ApolloProvider client={client}>
         <ThemeProvider isDarkMode={isDarkMode}>
-          <AuthProvider isLoggedIn={isLoggedIn}>
+          <AuthProvider isLoggedIn={isLoggedIn} client={client}>
             <MeProvider>
               <LocationProvider>
                 <ActionSheetProvider>
