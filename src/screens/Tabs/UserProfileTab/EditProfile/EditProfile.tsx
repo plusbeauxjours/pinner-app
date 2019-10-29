@@ -55,9 +55,12 @@ const ToggleContainer = styled.View``;
 const ToggleText = styled.Text`
   color: ${props => props.theme.color};
 `;
-
+const CountryView = styled.View`
+  align-items: center;
+  flex-direction: row;
+`;
 const Text = styled.Text`
-  font-size: 12px;
+  color: ${props => props.theme.color};
 `;
 const Bold = styled.Text`
   font-weight: 500;
@@ -108,13 +111,13 @@ const ButtonContainer = styled.View`
 export default ({ navigation }) => {
   const logOut = useLogOut();
   const isDarkMode = useTheme();
+  const { theme, toggleTheme } = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
   const destructiveButtonIndex = 0;
   const cancelButtonIndex = 1;
   const profileRefetch = navigation.getParam("profileRefetch");
   const profile = navigation.getParam("profile");
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const { theme, toggleTheme } = useTheme();
   const [isProfileSubmitted, setIsProfileSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [username, setUsername] = useState<string>(
@@ -131,10 +134,10 @@ export default ({ navigation }) => {
   const [lastName, setLastName] = useState<string>(
     navigation.getParam("lastName")
   );
-  const [nationalityCode, setNationalityCode] = useState<string>(
+  const [nationalityCode, setNationalityCode] = useState<any>(
     profile.nationality && profile.nationality.countryCode
   );
-  const [residenceCode, setResidenceCode] = useState<string>(
+  const [residenceCode, setResidenceCode] = useState<any>(
     profile.residence && profile.residence.countryCode
   );
   const [isHideTrips, setIsHideTrips] = useState<boolean>(profile.isHideTrips);
@@ -217,6 +220,7 @@ export default ({ navigation }) => {
       },
       buttonIndex => {
         if (buttonIndex === 0) {
+          deleteProfileFn();
           setDeleteModal(false);
         } else {
           null;
@@ -294,11 +298,9 @@ export default ({ navigation }) => {
     }
   });
   const onSelectNationality = (country: any) => {
-    console.log(country);
     setNationalityCode(country.cca2);
   };
   const onSelectrRsidence = (country: any) => {
-    console.log(country);
     setResidenceCode(country.cca2);
   };
   const onPressToggleIcon = async (payload: string) => {
@@ -413,36 +415,38 @@ export default ({ navigation }) => {
                 <ToggleText>NATIONALITY</ToggleText>
                 <ExplainText>Your Nationality to match</ExplainText>
               </CountryItem>
-              <CountryPicker
-                theme={theme && DARK_THEME}
-                {...{
-                  countryCode: nationalityCode,
-                  withFilter: true,
-                  withFlag: true,
-                  withCountryNameButton: true,
-                  withAlphaFilter: true,
-                  withEmoji: true,
-                  onSelect: onSelectNationality
-                }}
-              />
+              <CountryView>
+                <CountryPicker
+                  theme={theme && DARK_THEME}
+                  countryCode={nationalityCode}
+                  withFilter={true}
+                  withFlag={true}
+                  withAlphaFilter={true}
+                  withEmoji={true}
+                  onSelect={onSelectNationality}
+                  withCountryNameButton={true}
+                />
+                <Text>{nationalityCode}</Text>
+              </CountryView>
             </CountryContainer>
             <CountryContainer>
               <CountryItem>
                 <ToggleText>RESIDENCE</ToggleText>
                 <ExplainText>Your Residence to match</ExplainText>
               </CountryItem>
-              <CountryPicker
-                theme={theme && DARK_THEME}
-                {...{
-                  countryCode: residenceCode,
-                  withFilter: true,
-                  withFlag: true,
-                  withCountryNameButton: true,
-                  withAlphaFilter: true,
-                  withEmoji: true,
-                  onSelect: onSelectrRsidence
-                }}
-              />
+              <CountryView>
+                <CountryPicker
+                  theme={theme && DARK_THEME}
+                  countryCode={residenceCode}
+                  withFilter={true}
+                  withFlag={true}
+                  withAlphaFilter={true}
+                  withEmoji={true}
+                  onSelect={onSelectrRsidence}
+                  withCountryNameButton={true}
+                />
+                <Text>{residenceCode}</Text>
+              </CountryView>
             </CountryContainer>
 
             <Item>
