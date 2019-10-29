@@ -45,7 +45,7 @@ const ImageTouchable = styled.TouchableOpacity`
   position: absolute;
   top: -75;
   border-width: 0.5;
-  border-radius: 150/2;
+  border-radius: 75;
   border-color: ${props => props.theme.borderColor};
 `;
 const Text = styled.Text`

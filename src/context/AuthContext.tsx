@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 import { AsyncStorage } from "react-native";
+import { withApollo } from "react-apollo";
 
 export const AuthContext = createContext(null);
 
@@ -39,6 +40,7 @@ export const useLogIn = () => {
   const { logUserIn, isLoggedIn } = useContext(AuthContext);
   return logUserIn;
 };
+
 export const useLogOut = () => {
   const { logUserOut } = useContext(AuthContext);
   return logUserOut;

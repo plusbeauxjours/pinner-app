@@ -8,7 +8,6 @@ import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 import { Ionicons } from "@expo/vector-icons";
-import SelectPhoto from "../screens/Photo/SelectPhoto";
 import { UploadAvatar, UploadAvatarVariables } from "../types/api";
 import { UPLOAD_AVATAR } from "../sharedQueries";
 import { useMutation } from "react-apollo";
@@ -22,10 +21,9 @@ export default withNavigation(({ navigation }) => {
   const { showActionSheetWithOptions } = useActionSheet();
   const options = ["Image From Gallery", "Image From Camera", "Cancel"];
   const cancelButtonIndex = 2;
-  const [
-    UploadAvatarFn,
-    { data: uploadData, loading: uploadLoading }
-  ] = useMutation<UploadAvatar, UploadAvatarVariables>(UPLOAD_AVATAR);
+  const [UploadAvatarFn] = useMutation<UploadAvatar, UploadAvatarVariables>(
+    UPLOAD_AVATAR
+  );
   const image_resize = async (
     uri: string,
     orig_width: number,

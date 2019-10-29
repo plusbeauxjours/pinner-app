@@ -54,8 +54,7 @@ const Text = styled.Text`
   color: ${props => props.theme.color};
 `;
 const BioText = styled(Text)`
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin: 15px;
 `;
 const Bold = styled.Text`
   font-size: 12px;
@@ -228,10 +227,10 @@ export default ({ navigation }) => {
     setCoffeeId(coffeeId);
   };
 
-  // useEffect(
-  //   () => setUsername(navigation.getParam("username") || me.user.username),
-  //   [navigation]
-  // );
+  useEffect(
+    () => setUsername(navigation.getParam("username") || me.user.username),
+    [navigation]
+  );
   if (profileLoading || tripLoading || coffeeLoading || getSameTripsLoading) {
     return (
       <LoaderContainer>

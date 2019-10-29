@@ -30,18 +30,14 @@ import {
 import NavIcon from "../../../../components/NavIcon";
 import { GET_USER } from "../UserProfile/UserProfileQueries";
 import { UserProfileVariables } from "../../../../types/api";
-import {
-  RefreshControl,
-  Platform,
-  TextInput,
-  ActivityIndicator
-} from "react-native";
+import { RefreshControl, Platform, TextInput } from "react-native";
 import constants from "../../../../../constants";
 import { countries } from "../../../../../countryData";
 import { useLogOut } from "../../../../context/AuthContext";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Alert } from "react-native";
 import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
+import { useLocation } from "../../../../context/LocationContext";
 
 const View = styled.View`
   flex: 1;
@@ -111,6 +107,7 @@ const ButtonContainer = styled.View`
 
 export default ({ navigation }) => {
   const logOut = useLogOut();
+  const location = useLocation();
   const isDarkMode = useTheme();
   const { theme, toggleTheme } = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
@@ -134,10 +131,14 @@ export default ({ navigation }) => {
     navigation.getParam("lastName")
   );
   const [nationalityCode, setNationalityCode] = useState<any>(
-    profile.nationality && profile.nationality.countryCode
+    profile.nationality
+      ? profile.nationality.countryCode
+      : location.currentCountryCode
   );
   const [residenceCode, setResidenceCode] = useState<any>(
-    profile.residence && profile.residence.countryCode
+    profile.residence
+      ? profile.residence.countryCode
+      : location.currentCountryCode
   );
   const [isHideTrips, setIsHideTrips] = useState<boolean>(profile.isHideTrips);
   const [isHideCoffees, setIsHideCoffees] = useState<boolean>(
@@ -203,7 +204,6 @@ export default ({ navigation }) => {
           logOut();
           setLogoutModal(false);
         } else {
-          null;
           setLogoutModal(false);
         }
       }
@@ -223,7 +223,6 @@ export default ({ navigation }) => {
           deleteProfileFn();
           setDeleteModal(false);
         } else {
-          null;
           setDeleteModal(false);
         }
       }
@@ -386,11 +385,11 @@ export default ({ navigation }) => {
       },
       buttonIndex => {
         if (buttonIndex === 0) {
-          setGender("MALE")
+          setGender("MALE");
         } else if (buttonIndex === 1) {
-          setGender("FEMALE")
+          setGender("FEMALE");
         } else if (buttonIndex === 2) {
-          setGender("OTHER")
+          setGender("OTHER");
         } else {
           null;
         }
@@ -567,9 +566,10 @@ export default ({ navigation }) => {
             </Item>
             {profile.isVerifiedPhoneNumber ? (
               <ExplainText>
+                {console.log(countryPhoneCode)}
                 Your phone number in&nbsp;
-                {countries.find(i => i.code === countryPhoneNumber).name}
-                {countries.find(i => i.code === countryPhoneNumber).emoji}
+                {countries.find(i => i.code === countryPhoneCode).name}
+                {countries.find(i => i.code === countryPhoneCode).emoji}
                 &nbsp; is already verified.
               </ExplainText>
             ) : (
