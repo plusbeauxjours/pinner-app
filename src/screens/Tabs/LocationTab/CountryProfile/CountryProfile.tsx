@@ -275,10 +275,10 @@ export default ({ navigation }) => {
               </Title>
               <FlatList
                 data={cities}
-                renderItem={({ item, index }) => {
+                renderItem={({ item }) => {
                   return (
                     <Touchable
-                      key={index}
+                      key={item.cityId}
                       onPress={() =>
                         navigation.push("CityProfileTabs", {
                           cityId: item.cityId,
@@ -294,7 +294,7 @@ export default ({ navigation }) => {
                   );
                 }}
                 renderScrollComponent={props => (
-                  <InfiniteScrollView {...props}  />
+                  <InfiniteScrollView {...props} />
                 )}
                 onEndReached={() => hasNextPage && loadMore(page)}
                 onEndReachedThreshold={0.8}

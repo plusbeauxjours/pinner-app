@@ -28,7 +28,6 @@ export const LocationProvider = ({ children }) => {
     currentCityName: "",
     currentCountryCode: ""
   });
-  console.log("123");
   const handleGeoSuccess = (position: Position) => {
     const {
       coords: { latitude, longitude }

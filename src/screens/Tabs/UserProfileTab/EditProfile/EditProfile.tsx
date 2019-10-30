@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
+import Modal from "react-native-modal";
 import { useTheme } from "../../../../hooks/useTheme";
 import {
   EditProfile,
@@ -38,6 +39,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Alert } from "react-native";
 import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
 import { useLocation } from "../../../../context/LocationContext";
+import AuthButton from "../../../../components/AuthButton";
 
 const View = styled.View`
   flex: 1;
@@ -45,6 +47,12 @@ const View = styled.View`
   align-items: center;
   padding: 15px;
   background-color: ${props => props.theme.bgColor};
+`;
+const EditModalContainer = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 60px;
 `;
 
 const ToggleContainer = styled.View``;
@@ -78,8 +86,7 @@ const Item = styled.View`
   flex-direction: row;
   justify-content: space-between;
 `;
-const GenderView = styled.View``;
-
+const EmptyView = styled.View``;
 const ToggleIcon = styled.TouchableOpacity``;
 const Touchable = styled.TouchableOpacity``;
 const ExplainText = styled.Text`
@@ -141,9 +148,9 @@ export default ({ navigation }) => {
       : location.currentCountryCode
   );
   const [isHideTrips, setIsHideTrips] = useState<boolean>(profile.isHideTrips);
-  const [isHideCoffees, setIsHideCoffees] = useState<boolean>(
-    profile.isHideCoffees
-  );
+  // const [isHideCoffees, setIsHideCoffees] = useState<boolean>(
+  //   profile.isHideCoffees
+  // );
   const [isHideCities, setIsHideCities] = useState<boolean>(
     profile.isHideCities
   );
@@ -157,13 +164,23 @@ export default ({ navigation }) => {
     profile.isAutoLocationReport
   );
 
-  const [phoneNumber, setPhoneNumber] = useState<string>(profile.phoneNumber);
-  const [countryPhoneNumber, setCountryPhoneNumber] = useState<string>(
+  const phoneNumber = profile.phoneNumber;
+  const countryPhoneNumber = profile.countryPhoneNumber;
+  const countryPhoneCode = profile.countryPhoneCode;
+  const [newPhoneNumber, setNewPhoneNumber] = useState<string>(
+    profile.phoneNumber
+  );
+  const [newCountryPhoneNumber, setNewCountryPhoneNumber] = useState<string>(
     profile.countryPhoneNumber
   );
-  const [countryPhoneCode, setCountryPhoneCode] = useState<string>(
+  const [newCountryPhoneCode, setNewCountryPhoneCode] = useState<any>(
     profile.countryPhoneCode
   );
+  const [editPhoneModalOpen, setEditPhoneModalOpen] = useState<boolean>(false);
+  const [verifyPhoneModalOpen, setVerifyPhoneModalOpen] = useState<boolean>(
+    false
+  );
+  const [verificationKey, setVerificationKey] = useState<string>("");
   const [editProfileFn, { data }] = useMutation<
     EditProfile,
     EditProfileVariables
@@ -231,13 +248,18 @@ export default ({ navigation }) => {
   const [deleteProfileFn, { loading: deladeLoading }] = useMutation<
     DeleteProfile
   >(DELETE_PROFILE);
-  const [startEditPhoneVerificationFn] = useMutation<
+  const [
+    startEditPhoneVerificationFn,
+    { loading: startEditPhoneVerificationLoading }
+  ] = useMutation<
     StartEditPhoneVerification,
     StartEditPhoneVerificationVariables
   >(START_EDIT_PHONE_VERIFICATION, {
     variables: {
-      phoneNumber,
-      countryPhoneNumber
+      countryPhoneNumber: newCountryPhoneNumber,
+      phoneNumber: newPhoneNumber.startsWith("0")
+        ? newPhoneNumber.substring(1)
+        : newPhoneNumber
     }
   });
   const [completeEditPhoneVerificationFn] = useMutation<
@@ -245,10 +267,10 @@ export default ({ navigation }) => {
     CompleteEditPhoneVerificationVariables
   >(COMPLETE_EDIT_PHONE_VERIFICATION, {
     variables: {
-      key: "",
-      phoneNumber,
+      key: verificationKey,
+      phoneNumber: newPhoneNumber,
       countryPhoneNumber,
-      countryPhoneCode: ""
+      countryPhoneCode: newCountryPhoneCode
     }
   });
   const [startEditEmailVerificationFn] = useMutation<
@@ -302,11 +324,29 @@ export default ({ navigation }) => {
   const onSelectrRsidence = (country: any) => {
     setResidenceCode(country.cca2);
   };
+  const onSelectrEditPhone = (country: any) => {
+    setNewCountryPhoneNumber(
+      countries.find(i => i.code === country.cca2).phone
+    );
+    setNewCountryPhoneCode(country.cca2);
+  };
+  const closeEditPhoneModalOpen = () => {
+    setNewPhoneNumber(profile.phoneNumber);
+    setNewCountryPhoneNumber(profile.countryPhoneNumber);
+    setNewCountryPhoneCode(profile.countryPhoneCode);
+    setEditPhoneModalOpen(false);
+  };
+  const closeVerifyPhoneModalOpen = () => {
+    setVerificationKey("");
+    setNewCountryPhoneNumber(profile.countryPhoneNumber);
+    setNewCountryPhoneCode(profile.countryPhoneCode);
+    setEditPhoneModalOpen(true);
+  };
   const onPressToggleIcon = async (payload: string) => {
     if (payload === "HIDE_TRIPS") {
       setIsHideTrips(isHideTrips => !isHideTrips);
-    } else if (payload === "HIDE_COFFEES") {
-      setIsHideCoffees(isHideCoffees => !isHideCoffees);
+      // } else if (payload === "HIDE_COFFEES") {
+      //   setIsHideCoffees(isHideCoffees => !isHideCoffees);
     } else if (payload === "HIDE_CITIES") {
       setIsHideCities(isHideCities => !isHideCities);
     } else if (payload === "HIDE_COUNTRIES") {
@@ -339,12 +379,42 @@ export default ({ navigation }) => {
       .replace(/[^a-z|^A-Z|^0-9]/, "");
     if (state === "newUsername" && item !== "") {
       setNewUsername(item);
-    } else if (state === "firstName" && item !== "") {
+    } else if (state === "firstName") {
       setFirstName(item);
-    } else if (state === "lastName" && item !== "") {
+    } else if (state === "lastName") {
       setLastName(item);
     } else {
       return null;
+    }
+  };
+  const handlePhoneNumber = async () => {
+    const phone = `${newCountryPhoneNumber}${
+      newPhoneNumber.startsWith("0")
+        ? newPhoneNumber.substring(1)
+        : newPhoneNumber
+    }`;
+    const phoneRegex = /(([+][(]?[0-9]{1,3}[)]?)|([(]?[0-9]{4}[)]?))\s*[)]?[-\s\.]?[(]?[0-9]{1,3}[)]?([-\s\.]?[0-9]{3})([-\s\.]?[0-9]{3,4})/;
+    if (newPhoneNumber === "") {
+      setEditPhoneModalOpen(false);
+      return Alert.alert("Phone number can't be empty");
+    } else if (newCountryPhoneNumber === "") {
+      setEditPhoneModalOpen(false);
+      return Alert.alert("Please choose a country");
+    } else if (!phoneRegex.test(phone)) {
+      setEditPhoneModalOpen(false);
+      return Alert.alert("That phone number is invalid");
+    }
+    const {
+      data: { startEditPhoneVerification }
+    } = await startEditPhoneVerificationFn();
+    console.log(countryPhoneNumber, phoneNumber);
+    if (startEditPhoneVerification.ok) {
+      setEditPhoneModalOpen(false);
+      setVerifyPhoneModalOpen(true);
+      return null;
+    } else {
+      Alert.alert("Please write a valid phone number");
+      setEditPhoneModalOpen(false);
     }
   };
   const onSubmit = async () => {
@@ -407,232 +477,310 @@ export default ({ navigation }) => {
           <Loader />
         </LoaderContainer>
       ) : (
-        <View>
-          <Bold>EDIT PROFILE</Bold>
-          <ToggleContainer>
-            <Item>
-              <ToggleText>USERNAME</ToggleText>
+        <>
+          <Modal
+            isVisible={editPhoneModalOpen}
+            backdropColor={theme ? "black" : "white"}
+            onBackdropPress={() => closeEditPhoneModalOpen()}
+            onBackButtonPress={() =>
+              Platform.OS !== "ios" && closeEditPhoneModalOpen()
+            }
+            propagateSwipe={true}
+            scrollHorizontal={true}
+            backdropOpacity={0.9}
+            onModalHide={() => setEditPhoneModalOpen(false)}
+          >
+            <EditModalContainer>
+              <CountryPicker
+                theme={theme && DARK_THEME}
+                countryCode={countryPhoneCode}
+                withFilter={true}
+                withFlag={true}
+                withAlphaFilter={true}
+                withEmoji={true}
+                onSelect={onSelectrEditPhone}
+                withCallingCodeButton={true}
+              />
+              <Text>{countryPhoneCode}</Text>
               <TextInput
                 style={{
-                  width: constants.width / 2,
+                  width: 130,
                   backgroundColor: "transparent",
                   borderBottomWidth: 1,
                   borderBottomColor: "#999",
-                  color: "#999"
+                  color: theme ? "white" : "black",
+                  marginLeft: 5,
+                  fontSize: 16
                 }}
-                value={newUsername}
-                returnKeyType="done"
-                onChangeText={text => onInputTextChange(text, "newUsername")}
-                autoCorrect={false}
+                placeholder={newPhoneNumber}
+                keyboardType="phone-pad"
+                value={newPhoneNumber}
+                returnKeyType="send"
+                onChangeText={number => setNewPhoneNumber(number)}
               />
-            </Item>
-            <ExplainText>
-              Default username is automatically generated. Set your own username
-              here. Your username cannot be any combination of numbers or
-              symbols.
-            </ExplainText>
-            <CountryContainer>
-              <CountryItem>
-                <ToggleText>NATIONALITY</ToggleText>
-                <ExplainText>Your Nationality to match</ExplainText>
-              </CountryItem>
-              <CountryView>
-                <CountryPicker
-                  theme={theme && DARK_THEME}
-                  countryCode={nationalityCode}
-                  withFilter={true}
-                  withFlag={true}
-                  withAlphaFilter={true}
-                  withEmoji={true}
-                  onSelect={onSelectNationality}
-                  withCountryNameButton={true}
+            </EditModalContainer>
+            <AuthButton
+              loading={startEditPhoneVerificationLoading}
+              onPress={handlePhoneNumber}
+              text="Send SMS"
+            />
+          </Modal>
+          <Modal
+            isVisible={verifyPhoneModalOpen}
+            backdropColor={theme ? "black" : "white"}
+            onBackdropPress={() => setVerifyPhoneModalOpen(false)}
+            onBackButtonPress={() =>
+              Platform.OS !== "ios" && setVerifyPhoneModalOpen(false)
+            }
+            onModalHide={() => closeVerifyPhoneModalOpen()}
+            propagateSwipe={true}
+            scrollHorizontal={true}
+            backdropOpacity={0.9}
+          >
+            <Text> hihi</Text>
+            <TextInput
+              style={{
+                width: constants.width / 2,
+                backgroundColor: "transparent",
+                borderBottomWidth: 1,
+                borderBottomColor: "#999",
+                color: "#999"
+              }}
+              value={verificationKey}
+              keyboardType="phone-pad"
+              returnKeyType="send"
+              onChangeText={number => setVerificationKey(number)}
+              autoCorrect={false}
+            />
+          </Modal>
+          <View>
+            <Bold>EDIT PROFILE</Bold>
+            <ToggleContainer>
+              <Item>
+                <ToggleText>USERNAME</ToggleText>
+                <TextInput
+                  style={{
+                    width: constants.width / 2,
+                    backgroundColor: "transparent",
+                    borderBottomWidth: 1,
+                    borderBottomColor: "#999",
+                    color: "#999"
+                  }}
+                  value={newUsername}
+                  returnKeyType="done"
+                  onChangeText={text => onInputTextChange(text, "newUsername")}
+                  autoCorrect={false}
                 />
-                <Text>{nationalityCode}</Text>
-              </CountryView>
-            </CountryContainer>
-            <CountryContainer>
-              <CountryItem>
-                <ToggleText>RESIDENCE</ToggleText>
-                <ExplainText>Your Residence to match</ExplainText>
-              </CountryItem>
-              <CountryView>
-                <CountryPicker
-                  theme={theme && DARK_THEME}
-                  countryCode={residenceCode}
-                  withFilter={true}
-                  withFlag={true}
-                  withAlphaFilter={true}
-                  withEmoji={true}
-                  onSelect={onSelectrRsidence}
-                  withCountryNameButton={true}
-                />
-                <Text>{residenceCode}</Text>
-              </CountryView>
-            </CountryContainer>
-
-            <Item>
-              <ToggleText>GENDER</ToggleText>
-              <Touchable onPress={() => onOpenGenderActionSheet()}>
-                <GenderView>
-                  <Text>{gender}</Text>
-                </GenderView>
-              </Touchable>
-            </Item>
-            <ExplainText>Your gender to match</ExplainText>
-            <Item>
-              <ToggleText>FIRST NAME</ToggleText>
-              <TextInput
-                style={{
-                  width: constants.width / 2,
-                  backgroundColor: "transparent",
-                  borderBottomWidth: 1,
-                  borderBottomColor: "#999",
-                  color: "#999"
-                }}
-                value={firstName}
-                returnKeyType="done"
-                onChangeText={text => onInputTextChange(text, "firstName")}
-                autoCorrect={false}
-              />
-            </Item>
-            <ExplainText>Your first name</ExplainText>
-            <Item>
-              <ToggleText>LAST NAME</ToggleText>
-              <TextInput
-                style={{
-                  width: constants.width / 2,
-                  backgroundColor: "transparent",
-                  borderBottomWidth: 1,
-                  borderBottomColor: "#999",
-                  color: "#999"
-                }}
-                value={lastName}
-                returnKeyType="done"
-                onChangeText={text => onInputTextChange(text, "lastName")}
-                autoCorrect={false}
-              />
-            </Item>
-            <ExplainText>Your last name</ExplainText>
-            <Item>
-              <TextInput
-                style={{
-                  width: constants.width - 30,
-                  backgroundColor: "transparent",
-                  borderBottomWidth: 1,
-                  borderBottomColor: "#999",
-                  color: "#999"
-                }}
-                placeholderTextColor="#999"
-                value={bio}
-                placeholder={"BIO"}
-                returnKeyType="done"
-                onChangeText={text => setBio(text)}
-                autoCorrect={false}
-              />
-            </Item>
-            <ExplainText>
-              Your BIO is displayed on your profile. You can write about who you
-              are and what you're looking for on Pinner. You can also add links
-              to your website and profiles on other websites, like Instagram or
-              your blog for example.
-            </ExplainText>
-            <Item>
-              <ToggleText>SUBMIT</ToggleText>
-              <Touchable onPress={onPress}>
-                <NavIcon
-                  size={20}
-                  name={
-                    Platform.OS === "ios"
-                      ? submitModal
-                        ? "ios-radio-button-on"
-                        : "ios-radio-button-off"
-                      : submitModal
-                      ? "md-radio-button-on"
-                      : "md-radio-button-off"
-                  }
-                  color={"#999"}
-                />
-              </Touchable>
-            </Item>
-            <Item>
-              <ToggleText>PHONE</ToggleText>
-              {countryPhoneCode && countryPhoneNumber && (
-                <ToggleText>
-                  {countryPhoneCode}&nbsp;
-                  {countryPhoneNumber}&nbsp;
-                  {phoneNumber}
-                </ToggleText>
-              )}
-            </Item>
-            {profile.isVerifiedPhoneNumber ? (
+              </Item>
               <ExplainText>
-                {console.log(countryPhoneCode)}
-                Your phone number in&nbsp;
-                {countries.find(i => i.code === countryPhoneCode).name}
-                {countries.find(i => i.code === countryPhoneCode).emoji}
-                &nbsp; is already verified.
+                Default username is automatically generated. Set your own
+                username here. Your username cannot be any combination of
+                numbers or symbols.
               </ExplainText>
-            ) : (
-              <ExplainText>Verify your phone number to login.</ExplainText>
-            )}
-            <Item>
-              <ToggleText>EMAIL</ToggleText>
-              <ToggleText>{profile.emailAddress}</ToggleText>
-            </Item>
-            {profile.isVerifiedPhoneNumber ? (
-              <ExplainText>Your email address is already verified.</ExplainText>
-            ) : (
-              <ExplainText>Verify your email address to login.</ExplainText>
-            )}
-            <Bold>SETTINGS</Bold>
-            <Item>
-              <ToggleText>DARK MODE</ToggleText>
-              <ToggleIcon onPress={toggleTheme}>
-                <NavIcon
-                  size={20}
-                  name={
-                    Platform.OS === "ios"
-                      ? theme
-                        ? "ios-radio-button-on"
-                        : "ios-radio-button-off"
-                      : theme
-                      ? "md-radio-button-on"
-                      : "md-radio-button-off"
-                  }
-                  color={"#999"}
-                />
-              </ToggleIcon>
-            </Item>
-            {isDarkMode ? (
-              <ExplainText>Set to make light background.</ExplainText>
-            ) : (
-              <ExplainText>Set to make dark background.</ExplainText>
-            )}
+              <CountryContainer>
+                <CountryItem>
+                  <ToggleText>NATIONALITY</ToggleText>
+                  <ExplainText>Your Nationality to match</ExplainText>
+                </CountryItem>
+                <CountryView>
+                  <CountryPicker
+                    theme={theme && DARK_THEME}
+                    countryCode={nationalityCode}
+                    withFilter={true}
+                    withFlag={true}
+                    withAlphaFilter={true}
+                    withEmoji={true}
+                    onSelect={onSelectNationality}
+                    withCountryNameButton={true}
+                  />
+                  <Text>{nationalityCode}</Text>
+                </CountryView>
+              </CountryContainer>
+              <CountryContainer>
+                <CountryItem>
+                  <ToggleText>RESIDENCE</ToggleText>
+                  <ExplainText>Your Residence to match</ExplainText>
+                </CountryItem>
+                <CountryView>
+                  <CountryPicker
+                    theme={theme && DARK_THEME}
+                    countryCode={residenceCode}
+                    withFilter={true}
+                    withFlag={true}
+                    withAlphaFilter={true}
+                    withEmoji={true}
+                    onSelect={onSelectrRsidence}
+                    withCountryNameButton={true}
+                  />
+                  <Text>{residenceCode}</Text>
+                </CountryView>
+              </CountryContainer>
 
-            <Item>
-              <ToggleText>HIDE TRIPS</ToggleText>
-              <ToggleIcon onPress={() => onPressToggleIcon("HIDE_TRIPS")}>
-                <NavIcon
-                  size={20}
-                  name={
-                    Platform.OS === "ios"
-                      ? isHideTrips
-                        ? "ios-radio-button-on"
-                        : "ios-radio-button-off"
-                      : isHideTrips
-                      ? "md-radio-button-on"
-                      : "md-radio-button-off"
-                  }
-                  color={"#999"}
+              <Item>
+                <ToggleText>GENDER</ToggleText>
+                <Touchable onPress={() => onOpenGenderActionSheet()}>
+                  <EmptyView>
+                    <Text>{gender}</Text>
+                  </EmptyView>
+                </Touchable>
+              </Item>
+              <ExplainText>Your gender to match</ExplainText>
+              <Item>
+                <ToggleText>FIRST NAME</ToggleText>
+                <TextInput
+                  style={{
+                    width: constants.width / 2,
+                    backgroundColor: "transparent",
+                    borderBottomWidth: 1,
+                    borderBottomColor: "#999",
+                    color: "#999"
+                  }}
+                  value={firstName}
+                  returnKeyType="done"
+                  onChangeText={text => onInputTextChange(text, "firstName")}
+                  autoCorrect={false}
                 />
-              </ToggleIcon>
-            </Item>
-            <ExplainText>
-              If you set your trips hide, only you can see your trips, otherwise
-              only number of trips and your trip distance are shown.
-            </ExplainText>
+              </Item>
+              <ExplainText>Your first name</ExplainText>
+              <Item>
+                <ToggleText>LAST NAME</ToggleText>
+                <TextInput
+                  style={{
+                    width: constants.width / 2,
+                    backgroundColor: "transparent",
+                    borderBottomWidth: 1,
+                    borderBottomColor: "#999",
+                    color: "#999"
+                  }}
+                  value={lastName}
+                  returnKeyType="done"
+                  onChangeText={text => onInputTextChange(text, "lastName")}
+                  autoCorrect={false}
+                />
+              </Item>
+              <ExplainText>Your last name</ExplainText>
+              <Item>
+                <TextInput
+                  style={{
+                    width: constants.width - 30,
+                    backgroundColor: "transparent",
+                    borderBottomWidth: 1,
+                    borderBottomColor: "#999",
+                    color: "#999"
+                  }}
+                  placeholderTextColor="#999"
+                  value={bio}
+                  placeholder={"BIO"}
+                  returnKeyType="done"
+                  onChangeText={text => setBio(text)}
+                  autoCorrect={false}
+                />
+              </Item>
+              <ExplainText>
+                Your BIO is displayed on your profile. You can write about who
+                you are and what you're looking for on Pinner. You can also add
+                links to your website and profiles on other websites, like
+                Instagram or your blog for example.
+              </ExplainText>
+              <Item>
+                <ToggleText>SUBMIT</ToggleText>
+                <Touchable onPress={onPress}>
+                  <NavIcon
+                    size={20}
+                    name={
+                      Platform.OS === "ios"
+                        ? submitModal
+                          ? "ios-radio-button-on"
+                          : "ios-radio-button-off"
+                        : submitModal
+                        ? "md-radio-button-on"
+                        : "md-radio-button-off"
+                    }
+                    color={"#999"}
+                  />
+                </Touchable>
+              </Item>
+              <Item>
+                <ToggleText>PHONE</ToggleText>
+                {countryPhoneCode && countryPhoneNumber && (
+                  <Touchable onPress={() => setEditPhoneModalOpen(true)}>
+                    <ToggleText>
+                      {countries.find(i => i.code === countryPhoneCode).emoji}
+                      &nbsp;
+                      {countryPhoneNumber}&nbsp;
+                      {phoneNumber}
+                    </ToggleText>
+                  </Touchable>
+                )}
+              </Item>
+              {profile.isVerifiedPhoneNumber ? (
+                <ExplainText>
+                  Your phone number is already verified in&nbsp;
+                  {countries.find(i => i.code === countryPhoneCode).name}.
+                </ExplainText>
+              ) : (
+                <ExplainText>Verify your phone number to login.</ExplainText>
+              )}
+              <Item>
+                <ToggleText>EMAIL</ToggleText>
+                <ToggleText>{profile.emailAddress}</ToggleText>
+              </Item>
+              {profile.isVerifiedPhoneNumber ? (
+                <ExplainText>
+                  Your email address is already verified.
+                </ExplainText>
+              ) : (
+                <ExplainText>Verify your email address to login.</ExplainText>
+              )}
+              <Bold>SETTINGS</Bold>
+              <Item>
+                <ToggleText>DARK MODE</ToggleText>
+                <ToggleIcon onPress={toggleTheme}>
+                  <NavIcon
+                    size={20}
+                    name={
+                      Platform.OS === "ios"
+                        ? theme
+                          ? "ios-radio-button-on"
+                          : "ios-radio-button-off"
+                        : theme
+                        ? "md-radio-button-on"
+                        : "md-radio-button-off"
+                    }
+                    color={"#999"}
+                  />
+                </ToggleIcon>
+              </Item>
+              {isDarkMode ? (
+                <ExplainText>Set to make light background.</ExplainText>
+              ) : (
+                <ExplainText>Set to make dark background.</ExplainText>
+              )}
 
-            {/* <Item>
+              <Item>
+                <ToggleText>HIDE TRIPS</ToggleText>
+                <ToggleIcon onPress={() => onPressToggleIcon("HIDE_TRIPS")}>
+                  <NavIcon
+                    size={20}
+                    name={
+                      Platform.OS === "ios"
+                        ? isHideTrips
+                          ? "ios-radio-button-on"
+                          : "ios-radio-button-off"
+                        : isHideTrips
+                        ? "md-radio-button-on"
+                        : "md-radio-button-off"
+                    }
+                    color={"#999"}
+                  />
+                </ToggleIcon>
+              </Item>
+              <ExplainText>
+                If you set your trips hide, only you can see your trips,
+                otherwise only number of trips and your trip distance are shown.
+              </ExplainText>
+
+              {/* <Item>
               <ToggleText>HIDE COFFEES</ToggleText>
               <ToggleIcon onPress={() => onPressToggleIcon("HIDE_COFFEES")}>
                 <NavIcon
@@ -655,143 +803,146 @@ export default ({ navigation }) => {
               request, otherwise only number of coffees request is shown.
             </ExplainText> */}
 
-            <Item>
-              <ToggleText>HIDE CITIES</ToggleText>
-              <ToggleIcon onPress={() => onPressToggleIcon("HIDE_CITIES")}>
-                <NavIcon
-                  size={20}
-                  name={
-                    Platform.OS === "ios"
-                      ? isHideCities
-                        ? "ios-radio-button-on"
-                        : "ios-radio-button-off"
-                      : isHideCities
-                      ? "md-radio-button-on"
-                      : "md-radio-button-off"
-                  }
-                  color={"#999"}
-                />
-              </ToggleIcon>
-            </Item>
-            <ExplainText>
-              If you set your cities hide, only you can see cities where you've
-              been before, otherwise only number of cities is shown.
-            </ExplainText>
+              <Item>
+                <ToggleText>HIDE CITIES</ToggleText>
+                <ToggleIcon onPress={() => onPressToggleIcon("HIDE_CITIES")}>
+                  <NavIcon
+                    size={20}
+                    name={
+                      Platform.OS === "ios"
+                        ? isHideCities
+                          ? "ios-radio-button-on"
+                          : "ios-radio-button-off"
+                        : isHideCities
+                        ? "md-radio-button-on"
+                        : "md-radio-button-off"
+                    }
+                    color={"#999"}
+                  />
+                </ToggleIcon>
+              </Item>
+              <ExplainText>
+                If you set your cities hide, only you can see cities where
+                you've been before, otherwise only number of cities is shown.
+              </ExplainText>
 
-            <Item>
-              <ToggleText>HIDE COUNTRIES</ToggleText>
-              <ToggleIcon onPress={() => onPressToggleIcon("HIDE_COUNTRIES")}>
-                <NavIcon
-                  size={20}
-                  name={
-                    Platform.OS === "ios"
-                      ? isHideCountries
-                        ? "ios-radio-button-on"
-                        : "ios-radio-button-off"
-                      : isHideCities
-                      ? "md-radio-button-on"
-                      : "md-radio-button-off"
-                  }
-                  color={"#999"}
-                />
-              </ToggleIcon>
-            </Item>
-            <ExplainText>
-              If you set your coutries hide, only you can see countries where
-              you've been before, otherwise only number of countries is shown.
-            </ExplainText>
+              <Item>
+                <ToggleText>HIDE COUNTRIES</ToggleText>
+                <ToggleIcon onPress={() => onPressToggleIcon("HIDE_COUNTRIES")}>
+                  <NavIcon
+                    size={20}
+                    name={
+                      Platform.OS === "ios"
+                        ? isHideCountries
+                          ? "ios-radio-button-on"
+                          : "ios-radio-button-off"
+                        : isHideCities
+                        ? "md-radio-button-on"
+                        : "md-radio-button-off"
+                    }
+                    color={"#999"}
+                  />
+                </ToggleIcon>
+              </Item>
+              <ExplainText>
+                If you set your coutries hide, only you can see countries where
+                you've been before, otherwise only number of countries is shown.
+              </ExplainText>
 
-            <Item>
-              <ToggleText>HIDE CONTINENTS</ToggleText>
-              <ToggleIcon onPress={() => onPressToggleIcon("HIDE_CONTINENTS")}>
-                <NavIcon
-                  size={20}
-                  name={
-                    Platform.OS === "ios"
-                      ? isHideContinents
-                        ? "ios-radio-button-on"
-                        : "ios-radio-button-off"
-                      : isHideContinents
-                      ? "md-radio-button-on"
-                      : "md-radio-button-off"
-                  }
-                  color={"#999"}
-                />
-              </ToggleIcon>
-            </Item>
-            <ExplainText>
-              If you set your coutries hide, only you can see countries where
-              you've been before, otherwise only number of countries is shown.
-            </ExplainText>
+              <Item>
+                <ToggleText>HIDE CONTINENTS</ToggleText>
+                <ToggleIcon
+                  onPress={() => onPressToggleIcon("HIDE_CONTINENTS")}
+                >
+                  <NavIcon
+                    size={20}
+                    name={
+                      Platform.OS === "ios"
+                        ? isHideContinents
+                          ? "ios-radio-button-on"
+                          : "ios-radio-button-off"
+                        : isHideContinents
+                        ? "md-radio-button-on"
+                        : "md-radio-button-off"
+                    }
+                    color={"#999"}
+                  />
+                </ToggleIcon>
+              </Item>
+              <ExplainText>
+                If you set your coutries hide, only you can see countries where
+                you've been before, otherwise only number of countries is shown.
+              </ExplainText>
 
-            <Item>
-              <ToggleText>AUTO LOCATION REPORT</ToggleText>
-              <ToggleIcon
-                onPress={() => onPressToggleIcon("AUTO_LOCATION_REPORT")}
-              >
-                <NavIcon
-                  size={20}
-                  name={
-                    Platform.OS === "ios"
-                      ? isAutoLocationReport
-                        ? "ios-radio-button-on"
-                        : "ios-radio-button-off"
-                      : isAutoLocationReport
-                      ? "md-radio-button-on"
-                      : "md-radio-button-off"
-                  }
-                  color={"#999"}
-                />
-              </ToggleIcon>
-            </Item>
-            <ExplainText>
-              If you set auto location report off, the app cannot find where you
-              are. Your lacation will be shown on your profile
-            </ExplainText>
-            <Bold>ACCOUNT</Bold>
-            <Item>
-              <ToggleText>LOG OUT</ToggleText>
-              <Touchable onPress={() => onLogout()}>
-                <NavIcon
-                  size={20}
-                  name={
-                    Platform.OS === "ios"
-                      ? logoutModal
-                        ? "ios-radio-button-on"
-                        : "ios-radio-button-off"
-                      : logoutModal
-                      ? "md-radio-button-on"
-                      : "md-radio-button-off"
-                  }
-                  color={"#999"}
-                />
-              </Touchable>
-            </Item>
+              <Item>
+                <ToggleText>AUTO LOCATION REPORT</ToggleText>
+                <ToggleIcon
+                  onPress={() => onPressToggleIcon("AUTO_LOCATION_REPORT")}
+                >
+                  <NavIcon
+                    size={20}
+                    name={
+                      Platform.OS === "ios"
+                        ? isAutoLocationReport
+                          ? "ios-radio-button-on"
+                          : "ios-radio-button-off"
+                        : isAutoLocationReport
+                        ? "md-radio-button-on"
+                        : "md-radio-button-off"
+                    }
+                    color={"#999"}
+                  />
+                </ToggleIcon>
+              </Item>
+              <ExplainText>
+                If you set auto location report off, the app cannot find where
+                you are. Your lacation will be shown on your profile
+              </ExplainText>
+              <Bold>ACCOUNT</Bold>
+              <Item>
+                <ToggleText>LOG OUT</ToggleText>
+                <Touchable onPress={() => onLogout()}>
+                  <NavIcon
+                    size={20}
+                    name={
+                      Platform.OS === "ios"
+                        ? logoutModal
+                          ? "ios-radio-button-on"
+                          : "ios-radio-button-off"
+                        : logoutModal
+                        ? "md-radio-button-on"
+                        : "md-radio-button-off"
+                    }
+                    color={"#999"}
+                  />
+                </Touchable>
+              </Item>
 
-            <Item>
-              <ToggleText>DELETE PROFILE</ToggleText>
-              <Touchable onPress={() => onDelete()}>
-                <NavIcon
-                  size={20}
-                  name={
-                    Platform.OS === "ios"
-                      ? deleteModal
-                        ? "ios-radio-button-on"
-                        : "ios-radio-button-off"
-                      : deleteModal
-                      ? "md-radio-button-on"
-                      : "md-radio-button-off"
-                  }
-                  color={"#999"}
-                />
-              </Touchable>
-            </Item>
-            <ExplainText>
-              Once you delete an account, there is no going back. Please be
-              certain.
-            </ExplainText>
-          </ToggleContainer>
-        </View>
+              <Item>
+                <ToggleText>DELETE PROFILE</ToggleText>
+                <Touchable onPress={() => onDelete()}>
+                  <NavIcon
+                    size={20}
+                    name={
+                      Platform.OS === "ios"
+                        ? deleteModal
+                          ? "ios-radio-button-on"
+                          : "ios-radio-button-off"
+                        : deleteModal
+                        ? "md-radio-button-on"
+                        : "md-radio-button-off"
+                    }
+                    color={"#999"}
+                  />
+                </Touchable>
+              </Item>
+              <ExplainText>
+                Once you delete an account, there is no going back. Please be
+                certain.
+              </ExplainText>
+            </ToggleContainer>
+          </View>
+        </>
       )}
     </ScrollView>
   );
