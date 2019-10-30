@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import Modal from "react-native-modal";
+import Toast from "react-native-root-toast";
 import { useTheme } from "../../../../hooks/useTheme";
 import {
   EditProfile,
@@ -262,7 +263,10 @@ export default ({ navigation }) => {
         : newPhoneNumber
     }
   });
-  const [completeEditPhoneVerificationFn] = useMutation<
+  const [
+    completeEditPhoneVerificationFn,
+    { loading: completeEditPhoneVerificationLoading }
+  ] = useMutation<
     CompleteEditPhoneVerification,
     CompleteEditPhoneVerificationVariables
   >(COMPLETE_EDIT_PHONE_VERIFICATION, {
@@ -318,6 +322,16 @@ export default ({ navigation }) => {
       }
     }
   });
+  const toast = (message: string) => {
+    Toast.show(message, {
+      duration: Toast.durations.LONG,
+      position: Toast.positions.BOTTOM,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      delay: 0
+    });
+  };
   const onSelectNationality = (country: any) => {
     setNationalityCode(country.cca2);
   };
@@ -394,28 +408,34 @@ export default ({ navigation }) => {
         : newPhoneNumber
     }`;
     const phoneRegex = /(([+][(]?[0-9]{1,3}[)]?)|([(]?[0-9]{4}[)]?))\s*[)]?[-\s\.]?[(]?[0-9]{1,3}[)]?([-\s\.]?[0-9]{3})([-\s\.]?[0-9]{3,4})/;
-    if (newPhoneNumber === "") {
+    try {
+      if (newPhoneNumber === "") {
+        toast("Phone number can't be empty");
+      } else if (newCountryPhoneNumber === "") {
+        toast("Please choose a country");
+      } else if (!phoneRegex.test(phone)) {
+        toast("That phone number is invalid");
+      } else {
+        const {
+          data: { startEditPhoneVerification }
+        } = await startEditPhoneVerificationFn();
+        console.log(startEditPhoneVerification);
+        if (startEditPhoneVerification) {
+          if (!startEditPhoneVerification.ok) {
+            toast("Could not send you a Key");
+          } else {
+            setVerifyPhoneModalOpen(true);
+          }
+        } else {
+          toast("Please write a valid phone number");
+        }
+      }
+    } finally {
       setEditPhoneModalOpen(false);
-      return Alert.alert("Phone number can't be empty");
-    } else if (newCountryPhoneNumber === "") {
-      setEditPhoneModalOpen(false);
-      return Alert.alert("Please choose a country");
-    } else if (!phoneRegex.test(phone)) {
-      setEditPhoneModalOpen(false);
-      return Alert.alert("That phone number is invalid");
     }
-    const {
-      data: { startEditPhoneVerification }
-    } = await startEditPhoneVerificationFn();
-    console.log(countryPhoneNumber, phoneNumber);
-    if (startEditPhoneVerification.ok) {
-      setEditPhoneModalOpen(false);
-      setVerifyPhoneModalOpen(true);
-      return null;
-    } else {
-      Alert.alert("Please write a valid phone number");
-      setEditPhoneModalOpen(false);
-    }
+  };
+  const handlePhoneVerification = async () => {
+    completeEditPhoneVerificationFn();
   };
   const onSubmit = async () => {
     try {
@@ -488,12 +508,12 @@ export default ({ navigation }) => {
             propagateSwipe={true}
             scrollHorizontal={true}
             backdropOpacity={0.9}
-            onModalHide={() => setEditPhoneModalOpen(false)}
+            onModalHide={() => closeEditPhoneModalOpen()}
           >
             <EditModalContainer>
               <CountryPicker
                 theme={theme && DARK_THEME}
-                countryCode={countryPhoneCode}
+                countryCode={newCountryPhoneCode}
                 withFilter={true}
                 withFlag={true}
                 withAlphaFilter={true}
@@ -501,7 +521,7 @@ export default ({ navigation }) => {
                 onSelect={onSelectrEditPhone}
                 withCallingCodeButton={true}
               />
-              <Text>{countryPhoneCode}</Text>
+              <Text>{newCountryPhoneCode}</Text>
               <TextInput
                 style={{
                   width: 130,
@@ -532,12 +552,10 @@ export default ({ navigation }) => {
             onBackButtonPress={() =>
               Platform.OS !== "ios" && setVerifyPhoneModalOpen(false)
             }
-            onModalHide={() => closeVerifyPhoneModalOpen()}
             propagateSwipe={true}
             scrollHorizontal={true}
             backdropOpacity={0.9}
           >
-            <Text> hihi</Text>
             <TextInput
               style={{
                 width: constants.width / 2,
@@ -551,6 +569,11 @@ export default ({ navigation }) => {
               returnKeyType="send"
               onChangeText={number => setVerificationKey(number)}
               autoCorrect={false}
+            />
+            <AuthButton
+              loading={completeEditPhoneVerificationLoading}
+              onPress={handlePhoneVerification}
+              text="Verify Key"
             />
           </Modal>
           <View>

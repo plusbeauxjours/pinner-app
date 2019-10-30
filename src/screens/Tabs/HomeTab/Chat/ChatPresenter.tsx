@@ -155,7 +155,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                 loadEarlier={true}
                 onLoadEarlier={onLoadEarlier}
                 showAvatarForEveryMessage={true}
-                renderUsernameOnMessage={true}
                 renderMessageImage={renderMessageImage}
                 // renderMessageVideo={renderMessageVideo}
               />
@@ -175,7 +174,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
               loadEarlier={true}
               onLoadEarlier={onLoadEarlier}
               showAvatarForEveryMessage={true}
-              renderUsernameOnMessage={true}
               renderMessageImage={renderMessageImage}
               // renderMessageVideo={renderMessageVideo}
             />
