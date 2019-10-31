@@ -41,6 +41,7 @@ import { GET_SAME_TRIPS } from "./UserProfileQueries";
 import Modal from "react-native-modal";
 import CoffeeDetail from "../../CoffeeTab/CoffeeDetail";
 import { useTheme } from "../../../../context/ThemeContext";
+import { SwipeListView } from "react-native-swipe-list-view";
 
 const View = styled.View`
   justify-content: center;
@@ -226,7 +227,6 @@ export default ({ navigation }) => {
     setModalOpen(true);
     setCoffeeId(coffeeId);
   };
-
   useEffect(
     () => setUsername(navigation.getParam("username") || me.user.username),
     [navigation]
@@ -546,22 +546,26 @@ export default ({ navigation }) => {
             {!user.profile.isSelf && user.profile.isHideTrips ? (
               <Bold>Trips are hideen by {user.username}</Bold>
             ) : (
-              <>
-                {trip.map((i: any, index: any) => (
+              <SwipeListView
+                data={trip}
+                renderItem={data => (
                   <Touchable
-                    key={index}
+                    key={data.item.id}
                     onPress={() =>
                       navigation.push("CityProfileTabs", {
-                        cityId: i.city.cityId,
-                        countryCode: i.city.country.countryCode,
-                        continentCode: i.city.country.continent.continentCode
+                        cityId: data.item.city.cityId,
+                        countryCode: data.item.city.country.countryCode,
+                        continentCode:
+                          data.item.city.country.continent.continentCode
                       })
                     }
                   >
-                    <UserRow trip={i} type={"trip"} />
+                    <UserRow trip={data.item} type={"trip"} />
                   </Touchable>
-                ))}
-              </>
+                )}
+                renderHiddenItem={data => <View />}
+                leftOpenValue={90}
+              />
             )}
           </View>
         </ScrollView>

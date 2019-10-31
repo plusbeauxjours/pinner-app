@@ -58,7 +58,14 @@ const Items = styled.View`
 const TripItems = styled.View`
   flex-wrap: wrap;
   flex-direction: row-reverse;
+  width: 180px;
   justify-content: space-between;
+  align-content: center;
+`;
+const ColumnItems = styled.View`
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 const DistanceGreyText = styled(GreyText)`
   margin-right: 20;
@@ -168,17 +175,7 @@ const UserRow: React.FC<IProps> = ({
               </HeaderUserContainer>
             </Touchable>
           </Header>
-          <Items>
-            <TripItems>
-              {trip.startDate && (
-                <GreyText>
-                  {moment(trip.startDate).format("MMM Do YY")}
-                </GreyText>
-              )}
-              {trip.endDate && (
-                <GreyText>{moment(trip.endDate).format("MMM Do YY")}</GreyText>
-              )}
-            </TripItems>
+          <TripItems>
             {trip.diffDays && (
               <>
                 {trip.diffDays !== 1 ? (
@@ -188,7 +185,17 @@ const UserRow: React.FC<IProps> = ({
                 )}
               </>
             )}
-          </Items>
+            <ColumnItems>
+              {trip.startDate && (
+                <GreyText>
+                  {moment(trip.startDate).format("MMM Do YY")}
+                </GreyText>
+              )}
+              {trip.endDate && (
+                <GreyText>{moment(trip.endDate).format("MMM Do YY")}</GreyText>
+              )}
+            </ColumnItems>
+          </TripItems>
         </Container>
       );
     case "city":

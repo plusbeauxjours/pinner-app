@@ -99,7 +99,7 @@ const EmptyView = styled.View`
   align-items: center;
 `;
 const Void = styled.View`
-  height: 20px;
+  height: 40px;
 `;
 const ToggleIcon = styled.TouchableOpacity``;
 const Touchable = styled.TouchableOpacity``;
