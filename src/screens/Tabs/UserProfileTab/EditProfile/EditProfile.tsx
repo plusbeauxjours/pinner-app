@@ -32,7 +32,12 @@ import {
 import NavIcon from "../../../../components/NavIcon";
 import { GET_USER } from "../UserProfile/UserProfileQueries";
 import { UserProfileVariables } from "../../../../types/api";
-import { RefreshControl, Platform, TextInput } from "react-native";
+import {
+  RefreshControl,
+  Platform,
+  TextInput,
+  ActivityIndicator
+} from "react-native";
 import constants from "../../../../../constants";
 import { countries } from "../../../../../countryData";
 import { useLogOut } from "../../../../context/AuthContext";
@@ -40,7 +45,6 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Alert } from "react-native";
 import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
 import { useLocation } from "../../../../context/LocationContext";
-import AuthButton from "../../../../components/AuthButton";
 
 const View = styled.View`
   flex: 1;
@@ -66,6 +70,10 @@ const CountryView = styled.View`
 `;
 const Text = styled.Text`
   color: ${props => props.theme.color};
+`;
+const Bigtext = styled(Text)`
+  font-weight: 300;
+  font-size: 30;
 `;
 const Bold = styled.Text`
   font-weight: 500;
@@ -106,11 +114,11 @@ const LoaderContainer = styled.View`
   align-items: center;
 `;
 const ButtonContainer = styled.View`
-  border: 0.5px #999;
-  padding: 10px;
-  border-radius: 4px;
-  width: ${constants.width / 6};
-  height: 20px;
+  margin-top: 120;
+`;
+const ModalContainer = styled.View`
+  justify-content: center;
+  align-items: center;
 `;
 
 export default ({ navigation }) => {
@@ -345,16 +353,11 @@ export default ({ navigation }) => {
     setNewCountryPhoneCode(country.cca2);
   };
   const closeEditPhoneModalOpen = () => {
-    setNewPhoneNumber(profile.phoneNumber);
-    setNewCountryPhoneNumber(profile.countryPhoneNumber);
-    setNewCountryPhoneCode(profile.countryPhoneCode);
     setEditPhoneModalOpen(false);
   };
   const closeVerifyPhoneModalOpen = () => {
     setVerificationKey("");
-    setNewCountryPhoneNumber(profile.countryPhoneNumber);
-    setNewCountryPhoneCode(profile.countryPhoneCode);
-    setEditPhoneModalOpen(true);
+    setVerifyPhoneModalOpen(false);
   };
   const onPressToggleIcon = async (payload: string) => {
     if (payload === "HIDE_TRIPS") {
@@ -408,34 +411,37 @@ export default ({ navigation }) => {
         : newPhoneNumber
     }`;
     const phoneRegex = /(([+][(]?[0-9]{1,3}[)]?)|([(]?[0-9]{4}[)]?))\s*[)]?[-\s\.]?[(]?[0-9]{1,3}[)]?([-\s\.]?[0-9]{3})([-\s\.]?[0-9]{3,4})/;
-    try {
-      if (newPhoneNumber === "") {
-        toast("Phone number can't be empty");
-      } else if (newCountryPhoneNumber === "") {
-        toast("Please choose a country");
-      } else if (!phoneRegex.test(phone)) {
-        toast("That phone number is invalid");
-      } else {
-        const {
-          data: { startEditPhoneVerification }
-        } = await startEditPhoneVerificationFn();
-        console.log(startEditPhoneVerification);
-        if (startEditPhoneVerification) {
-          if (!startEditPhoneVerification.ok) {
-            toast("Could not send you a Key");
-          } else {
-            setVerifyPhoneModalOpen(true);
-          }
-        } else {
-          toast("Please write a valid phone number");
-        }
-      }
-    } finally {
-      setEditPhoneModalOpen(false);
+    const {
+      data: { startEditPhoneVerification }
+    } = await startEditPhoneVerificationFn();
+    setEditPhoneModalOpen(false);
+    if (startEditPhoneVerification.ok) {
+      console.log("ok");
+      setTimeout(() => {
+        setVerifyPhoneModalOpen(true);
+      }, 500);
+    } else if (newPhoneNumber === "") {
+      toast("Phone number can't be empty");
+    } else if (newCountryPhoneNumber === "") {
+      toast("Please choose a country");
+    } else if (!phoneRegex.test(phone)) {
+      toast("That phone number is invalid");
+    } else if (!startEditPhoneVerification.ok) {
+      toast("Could not send you a Key");
+    } else {
+      toast("Please write a valid phone number");
     }
   };
   const handlePhoneVerification = async () => {
-    completeEditPhoneVerificationFn();
+    const {
+      data: { completeEditPhoneVerification }
+    } = await completeEditPhoneVerificationFn();
+    setVerifyPhoneModalOpen(false);
+    if (!completeEditPhoneVerification.ok) {
+      toast("Your phone number is verified");
+    } else {
+      toast("Could not be Verified your phone number");
+    }
   };
   const onSubmit = async () => {
     try {
@@ -508,7 +514,7 @@ export default ({ navigation }) => {
             propagateSwipe={true}
             scrollHorizontal={true}
             backdropOpacity={0.9}
-            onModalHide={() => closeEditPhoneModalOpen()}
+            style={{ justifyContent: "center", alignItems: "center" }}
           >
             <EditModalContainer>
               <CountryPicker
@@ -519,62 +525,82 @@ export default ({ navigation }) => {
                 withAlphaFilter={true}
                 withEmoji={true}
                 onSelect={onSelectrEditPhone}
-                withCallingCodeButton={true}
               />
-              <Text>{newCountryPhoneCode}</Text>
+              {/* <Text>{newCountryPhoneCode}</Text> */}
+              <Bigtext>{newCountryPhoneNumber}</Bigtext>
               <TextInput
                 style={{
-                  width: 130,
+                  width: 200,
                   backgroundColor: "transparent",
                   borderBottomWidth: 1,
                   borderBottomColor: "#999",
                   color: theme ? "white" : "black",
                   marginLeft: 5,
-                  fontSize: 16
+                  fontSize: 32,
+                  fontWeight: "300"
                 }}
-                placeholder={newPhoneNumber}
                 keyboardType="phone-pad"
-                value={newPhoneNumber}
                 returnKeyType="send"
                 onChangeText={number => setNewPhoneNumber(number)}
               />
             </EditModalContainer>
-            <AuthButton
-              loading={startEditPhoneVerificationLoading}
-              onPress={handlePhoneNumber}
-              text="Send SMS"
-            />
+            <ButtonContainer>
+              <Touchable
+                disabled={startEditPhoneVerificationLoading}
+                onPress={handlePhoneNumber}
+              >
+                <EmptyView>
+                  {startEditPhoneVerificationLoading ? (
+                    <Loader />
+                  ) : (
+                    <Bigtext>Send SMS</Bigtext>
+                  )}
+                </EmptyView>
+              </Touchable>
+            </ButtonContainer>
           </Modal>
           <Modal
             isVisible={verifyPhoneModalOpen}
             backdropColor={theme ? "black" : "white"}
-            onBackdropPress={() => setVerifyPhoneModalOpen(false)}
+            onBackdropPress={() => closeVerifyPhoneModalOpen()}
             onBackButtonPress={() =>
-              Platform.OS !== "ios" && setVerifyPhoneModalOpen(false)
+              Platform.OS !== "ios" && closeVerifyPhoneModalOpen()
             }
             propagateSwipe={true}
             scrollHorizontal={true}
             backdropOpacity={0.9}
+            style={{ justifyContent: "center", alignItems: "center" }}
           >
             <TextInput
               style={{
-                width: constants.width / 2,
+                width: 200,
                 backgroundColor: "transparent",
                 borderBottomWidth: 1,
                 borderBottomColor: "#999",
-                color: "#999"
+                color: theme ? "white" : "black",
+                marginLeft: 5,
+                fontSize: 32,
+                fontWeight: "300",
+                textAlign: "center"
               }}
-              value={verificationKey}
               keyboardType="phone-pad"
               returnKeyType="send"
               onChangeText={number => setVerificationKey(number)}
-              autoCorrect={false}
             />
-            <AuthButton
-              loading={completeEditPhoneVerificationLoading}
-              onPress={handlePhoneVerification}
-              text="Verify Key"
-            />
+            <ButtonContainer>
+              <Touchable
+                disabled={completeEditPhoneVerificationLoading}
+                onPress={handlePhoneVerification}
+              >
+                <EmptyView>
+                  {completeEditPhoneVerificationLoading ? (
+                    <Loader />
+                  ) : (
+                    <Bigtext>Verify Key</Bigtext>
+                  )}
+                </EmptyView>
+              </Touchable>
+            </ButtonContainer>
           </Modal>
           <View>
             <Bold>EDIT PROFILE</Bold>
