@@ -57,7 +57,6 @@ const EditModalContainer = styled.View`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 60px;
 `;
 
 const ToggleContainer = styled.View``;
@@ -95,7 +94,13 @@ const Item = styled.View`
   flex-direction: row;
   justify-content: space-between;
 `;
-const EmptyView = styled.View``;
+const EmptyView = styled.View`
+  justify-content: center;
+  align-items: center;
+`;
+const Void = styled.View`
+  height: 20px;
+`;
 const ToggleIcon = styled.TouchableOpacity``;
 const Touchable = styled.TouchableOpacity``;
 const ExplainText = styled.Text`
@@ -114,11 +119,15 @@ const LoaderContainer = styled.View`
   align-items: center;
 `;
 const ButtonContainer = styled.View`
-  margin-top: 120;
-`;
-const ModalContainer = styled.View`
   justify-content: center;
   align-items: center;
+  padding: 15px;
+`;
+const SubmitLoaderContainer = styled.View`
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  height: 35px;
 `;
 
 export default ({ navigation }) => {
@@ -545,17 +554,23 @@ export default ({ navigation }) => {
               />
             </EditModalContainer>
             <ButtonContainer>
+              <Text>
+                When you tap Continue, Pinner will send a text with verification
+                code. Message and data rates may apply. The verified phone
+                number can be used to login.
+              </Text>
+              <Void />
               <Touchable
                 disabled={startEditPhoneVerificationLoading}
                 onPress={handlePhoneNumber}
               >
-                <EmptyView>
-                  {startEditPhoneVerificationLoading ? (
+                {startEditPhoneVerificationLoading ? (
+                  <SubmitLoaderContainer>
                     <Loader />
-                  ) : (
-                    <Bigtext>Send SMS</Bigtext>
-                  )}
-                </EmptyView>
+                  </SubmitLoaderContainer>
+                ) : (
+                  <Bigtext>Send SMS</Bigtext>
+                )}
               </Touchable>
             </ButtonContainer>
           </Modal>
