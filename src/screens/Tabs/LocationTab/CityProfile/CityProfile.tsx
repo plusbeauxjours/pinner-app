@@ -38,6 +38,7 @@ import CoffeeDetail from "../../CoffeeTab/CoffeeDetail";
 
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
+  padding: 0 15px 0 15px;
 `;
 
 const Text = styled.Text`
@@ -51,7 +52,7 @@ const Bold = styled.Text`
 
 const View = styled.View`
   justify-content: center;
-  padding: 15px;
+  margin: 15px 0 15px 0;
 `;
 
 const UserContainer = styled.View``;
@@ -65,7 +66,6 @@ const Item = styled.View`
 const Title = styled.Text`
   font-weight: 500;
   font-size: 18px;
-  padding-left: 15px;
   margin-bottom: 5px;
   color: ${props => props.theme.color};
 `;

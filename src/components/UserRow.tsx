@@ -6,12 +6,12 @@ import CityLikeBtn from "./CityLikeBtn/CityLikeBtn";
 import moment from "moment";
 
 const Container = styled.View`
-  padding: 15px;
+  padding: 15px 5px 15px 5px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   height: 45px;
-  width: ${constants.width};
+  width: ${constants.width - 30};
 `;
 const Touchable = styled.View`
   justify-content: center;

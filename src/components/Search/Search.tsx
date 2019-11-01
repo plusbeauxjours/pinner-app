@@ -100,13 +100,13 @@ const Search = ({ navigation }) => {
       result = await createCityFn({
         variables: { cityId }
       });
+      setSearch("");
+      setModalOpen(false);
       await navigation.push("CityProfileTabs", {
         cityId: result.data.createCity.cityId,
         countryCode: result.data.createCity.countryCode,
         continentCode: result.data.createCity.continentCode
       });
-      setSearch("");
-      setModalOpen(false);
     } catch (e) {
       setSearch("");
       console.log(e);
@@ -183,11 +183,11 @@ const Search = ({ navigation }) => {
                       <Touchable
                         key={user.profile.id}
                         onPress={() => {
-                          navigation.push("UserProfileTabs", {
-                            username: user.profile.username,
-                            isSelf: user.profile.isSelf
-                          }),
-                            setModalOpen(false);
+                          setModalOpen(false),
+                            navigation.push("UserProfileTabs", {
+                              username: user.profile.username,
+                              isSelf: user.profile.isSelf
+                            });
                         }}
                       >
                         <UserRow user={user.profile} type={"user"} />
@@ -242,11 +242,11 @@ const Search = ({ navigation }) => {
                       <Touchable
                         key={country.id}
                         onPress={() => {
-                          navigation.push("CountryProfileTabs", {
-                            countryCode: country.countryCode,
-                            continentCode: country.continent.continentCode
-                          }),
-                            setModalOpen(false);
+                          setModalOpen(false),
+                            navigation.push("CountryProfileTabs", {
+                              countryCode: country.countryCode,
+                              continentCode: country.continent.continentCode
+                            });
                         }}
                       >
                         <UserRow country={country} type={"country"} />
@@ -265,10 +265,10 @@ const Search = ({ navigation }) => {
                       <Touchable
                         key={continent.id}
                         onPress={() => {
-                          navigation.push("ContinentProfile", {
-                            continentCode: continent.continentCode
-                          }),
-                            setModalOpen(false);
+                          setModalOpen(false),
+                            navigation.push("ContinentProfile", {
+                              continentCode: continent.continentCode
+                            });
                         }}
                       >
                         <UserRow continent={continent} type={"continent"} />

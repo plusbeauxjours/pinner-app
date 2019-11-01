@@ -49,12 +49,19 @@ import Modal from "react-native-modal";
 import CoffeeDetail from "../../CoffeeTab/CoffeeDetail";
 import { useTheme } from "../../../../context/ThemeContext";
 
-const View = styled.View`
+const Header = styled.View`
+  height: 250;
+  justify-content: center;
+  align-items: center;
+  background-color: ${props => props.theme.headerColor};
+`;
+const Body = styled.View`
   justify-content: center;
   align-items: center;
   flex: 1;
   background-color: ${props => props.theme.bgColor};
   color: ${props => props.theme.color};
+  padding: 0 15px 0 15px;
 `;
 
 const Text = styled.Text`
@@ -70,23 +77,18 @@ const Bold = styled.Text`
 const Item = styled.View`
   flex-direction: column;
   align-items: center;
-  width: ${constants.width / 4};
+  width: ${constants.width / 4 - 7.5};
   height: ${constants.width / 5 - 10};
 `;
 const DisptanceItem = styled(Item)`
-  width: ${constants.width / 2 - 20};
+  width: ${constants.width / 2 - 15};
 `;
 const ItemContainer = styled.View`
-  /* padding: 15px 15px 0 15px; */
   flex-wrap: wrap;
   flex-direction: row;
+  margin-bottom: 10px;
 `;
-const Header = styled.View`
-  height: 250;
-  justify-content: center;
-  align-items: center;
-  background-color: ${props => props.theme.headerColor};
-`;
+
 const UserNameContainer = styled.View`
   align-self: flex-start;
   margin-left: 10;
@@ -120,23 +122,27 @@ const EditText = styled.Text`
   bottom: 3px;
 `;
 const IconContainer = styled.View`
-  flex: 1;
+  width: 40px;
+  height: 40px;
   flex-direction: row;
-  margin-right: 10px;
   justify-content: center;
   align-items: center;
+  border: 0.5px solid ${props => props.theme.borderColor};
+  border-radius: 5px;
 `;
-const TouchableRow = styled(Touchable)`
+const TouchableRow = styled.TouchableOpacity`
   background-color: ${props => props.theme.bgColor};
 `;
 const RowBack = styled.View`
   align-items: center;
   flex: 1;
   flex-direction: row;
-  padding-left: 10;
+  margin-left: 5px;
+  width: 85px;
+  justify-content: space-between;
 `;
 const BackLeftBtn = styled.TouchableOpacity`
-  margin-left: 5px;
+  justify-content: center;
 `;
 export default ({ navigation }) => {
   const me = useMe();
@@ -351,7 +357,7 @@ export default ({ navigation }) => {
               )}
             </UserNameContainer>
           </Header>
-          <View>
+          <Body>
             <BioText>{user.profile.bio}</BioText>
             <ItemContainer>
               {user.profile.distance !== 0 && (
@@ -571,7 +577,7 @@ export default ({ navigation }) => {
               <Bold>Trips are hideen by {user.username}</Bold>
             ) : (
               <SwipeListView
-                useFlatList={true}
+                useFlatList={false}
                 closeOnRowBeginSwipe={true}
                 data={trip}
                 renderItem={data => (
@@ -616,7 +622,7 @@ export default ({ navigation }) => {
                 keyExtractor={item => item.id}
               />
             )}
-          </View>
+          </Body>
         </ScrollView>
       </>
     );
