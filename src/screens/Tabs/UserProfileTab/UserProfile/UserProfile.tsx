@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
-import { RefreshControl, Platform, Image } from "react-native";
+import {
+  RefreshControl,
+  Platform,
+  Image,
+  TouchableOpacity
+} from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
+import { SwipeListView } from "react-native-swipe-list-view";
+import { Ionicons } from "@expo/vector-icons";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
 import {
@@ -41,7 +48,6 @@ import { GET_SAME_TRIPS } from "./UserProfileQueries";
 import Modal from "react-native-modal";
 import CoffeeDetail from "../../CoffeeTab/CoffeeDetail";
 import { useTheme } from "../../../../context/ThemeContext";
-import { SwipeListView } from "react-native-swipe-list-view";
 
 const View = styled.View`
   justify-content: center;
@@ -113,7 +119,25 @@ const EditText = styled.Text`
   font-weight: 100;
   bottom: 3px;
 `;
-
+const IconContainer = styled.View`
+  flex: 1;
+  flex-direction: row;
+  margin-right: 10px;
+  justify-content: center;
+  align-items: center;
+`;
+const TouchableRow = styled(Touchable)`
+  background-color: ${props => props.theme.bgColor};
+`;
+const RowBack = styled.View`
+  align-items: center;
+  flex: 1;
+  flex-direction: row;
+  padding-left: 10;
+`;
+const BackLeftBtn = styled.TouchableOpacity`
+  margin-left: 5px;
+`;
 export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
@@ -547,9 +571,11 @@ export default ({ navigation }) => {
               <Bold>Trips are hideen by {user.username}</Bold>
             ) : (
               <SwipeListView
+                useFlatList={true}
+                closeOnRowBeginSwipe={true}
                 data={trip}
                 renderItem={data => (
-                  <Touchable
+                  <TouchableRow
                     key={data.item.id}
                     onPress={() =>
                       navigation.push("CityProfileTabs", {
@@ -561,10 +587,33 @@ export default ({ navigation }) => {
                     }
                   >
                     <UserRow trip={data.item} type={"trip"} />
-                  </Touchable>
+                  </TouchableRow>
                 )}
-                renderHiddenItem={data => <View />}
+                renderHiddenItem={data => (
+                  <RowBack>
+                    <BackLeftBtn onPress={() => console.log("onPress")}>
+                      {console.log(data)}
+                      <IconContainer>
+                        <Ionicons
+                          size={30}
+                          color={"#999"}
+                          name={Platform.OS === "ios" ? "ios-add" : "md-add"}
+                        />
+                      </IconContainer>
+                    </BackLeftBtn>
+                    <BackLeftBtn onPress={() => console.log("onPress")}>
+                      <IconContainer>
+                        <Ionicons
+                          size={30}
+                          color={"#999"}
+                          name={Platform.OS === "ios" ? "ios-add" : "md-add"}
+                        />
+                      </IconContainer>
+                    </BackLeftBtn>
+                  </RowBack>
+                )}
                 leftOpenValue={90}
+                keyExtractor={item => item.id}
               />
             )}
           </View>
