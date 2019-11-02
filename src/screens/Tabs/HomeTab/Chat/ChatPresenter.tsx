@@ -4,7 +4,7 @@ import { GiftedChat } from "react-native-gifted-chat";
 import ImageViewer from "react-native-image-zoom-viewer";
 import { ScreenOrientation } from "expo";
 import Loader from "../../../../components/Loader";
-import { Platform, KeyboardAvoidingView, Modal } from "react-native";
+import { Platform, KeyboardAvoidingView, Modal, Image } from "react-native";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import constants from "../../../../../constants";
@@ -154,7 +154,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                 onPressAvatar={onPressAvatar}
                 loadEarlier={true}
                 onLoadEarlier={onLoadEarlier}
-                showAvatarForEveryMessage={true}
                 renderMessageImage={renderMessageImage}
                 // renderMessageVideo={renderMessageVideo}
               />
@@ -173,7 +172,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
               onPressAvatar={onPressAvatar}
               loadEarlier={true}
               onLoadEarlier={onLoadEarlier}
-              showAvatarForEveryMessage={true}
               renderMessageImage={renderMessageImage}
               // renderMessageVideo={renderMessageVideo}
             />

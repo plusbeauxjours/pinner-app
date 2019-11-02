@@ -425,7 +425,6 @@ export default ({ navigation }) => {
     } = await startEditPhoneVerificationFn();
     setEditPhoneModalOpen(false);
     if (startEditPhoneVerification.ok) {
-      console.log("ok");
       setTimeout(() => {
         setVerifyPhoneModalOpen(true);
       }, 500);

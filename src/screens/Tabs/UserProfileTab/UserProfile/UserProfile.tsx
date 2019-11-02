@@ -9,7 +9,8 @@ import {
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { SwipeListView } from "react-native-swipe-list-view";
-import { Ionicons } from "@expo/vector-icons";
+import Toast from "react-native-root-toast";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
 import {
@@ -127,18 +128,26 @@ const IconContainer = styled.View`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  border: 0.5px solid ${props => props.theme.borderColor};
+  border: 1px solid ${props => props.theme.borderColor};
   border-radius: 5px;
 `;
 const TouchableRow = styled.TouchableOpacity`
   background-color: ${props => props.theme.bgColor};
+`;
+const TouchableBackRow = styled.View`
+  background-color: ${props => props.theme.bgColor};
+`;
+const SmallText = styled.Text`
+  color: ${props => props.theme.color};
+  font-size: 9px;
 `;
 const RowBack = styled.View`
   align-items: center;
   flex: 1;
   flex-direction: row;
   margin-left: 5px;
-  width: 85px;
+  max-width: 85px;
+  width: 100%;
   justify-content: space-between;
 `;
 const BackLeftBtn = styled.TouchableOpacity`
@@ -172,6 +181,39 @@ export default ({ navigation }) => {
     tripStartDate: null,
     tripEndDate: null
   });
+  const { showActionSheetWithOptions } = useActionSheet();
+  const options = ["Yes", "No"];
+  const destructiveButtonIndex = 0;
+  const cancelButtonIndex = 1;
+  const deleteTrip = id => {
+    showActionSheetWithOptions(
+      {
+        options,
+        destructiveButtonIndex,
+        cancelButtonIndex
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) {
+          deleteTripFn({
+            variables: {
+              moveNotificationId: parseInt(id, 10)
+            }
+          });
+          toast("Trip Deleted");
+        }
+      }
+    );
+  };
+  const toast = (message: string) => {
+    Toast.show(message, {
+      duration: Toast.durations.LONG,
+      position: Toast.positions.BOTTOM,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      delay: 0
+    });
+  };
   const {
     data: profileData,
     loading: profileLoading,
@@ -223,12 +265,7 @@ export default ({ navigation }) => {
     }
   });
   const [deleteTripFn] = useMutation<DeleteTrip, DeleteTripVariables>(
-    DELETE_TRIP,
-    {
-      variables: {
-        moveNotificationId: parseInt(moveNotificationId, 10)
-      }
-    }
+    DELETE_TRIP
   );
   const [calculateDistanceFn] = useMutation<CalculateDistance>(
     CALCULATE_DISTANCE
@@ -580,40 +617,34 @@ export default ({ navigation }) => {
                 useFlatList={false}
                 closeOnRowBeginSwipe={true}
                 data={trip}
+                previewOpenValue={1000}
                 renderItem={data => (
-                  <TouchableRow
-                    key={data.item.id}
-                    onPress={() =>
-                      navigation.push("CityProfileTabs", {
-                        cityId: data.item.city.cityId,
-                        countryCode: data.item.city.country.countryCode,
-                        continentCode:
-                          data.item.city.country.continent.continentCode
-                      })
-                    }
-                  >
-                    <UserRow trip={data.item} type={"trip"} />
-                  </TouchableRow>
+                  <TouchableBackRow key={data.item.id}>
+                    <TouchableRow
+                      onPress={() =>
+                        navigation.push("CityProfileTabs", {
+                          cityId: data.item.city.cityId,
+                          countryCode: data.item.city.country.countryCode,
+                          continentCode:
+                            data.item.city.country.continent.continentCode
+                        })
+                      }
+                    >
+                      <UserRow trip={data.item} type={"trip"} />
+                    </TouchableRow>
+                  </TouchableBackRow>
                 )}
                 renderHiddenItem={data => (
                   <RowBack>
-                    <BackLeftBtn onPress={() => console.log("onPress")}>
+                    <BackLeftBtn onPress={() => console.log(data.item.id)}>
                       {console.log(data)}
                       <IconContainer>
-                        <Ionicons
-                          size={30}
-                          color={"#999"}
-                          name={Platform.OS === "ios" ? "ios-add" : "md-add"}
-                        />
+                        <SmallText>EDIT</SmallText>
                       </IconContainer>
                     </BackLeftBtn>
-                    <BackLeftBtn onPress={() => console.log("onPress")}>
+                    <BackLeftBtn onPress={() => deleteTrip(data.item.id)}>
                       <IconContainer>
-                        <Ionicons
-                          size={30}
-                          color={"#999"}
-                          name={Platform.OS === "ios" ? "ios-add" : "md-add"}
-                        />
+                        <SmallText>DELETE</SmallText>
                       </IconContainer>
                     </BackLeftBtn>
                   </RowBack>
