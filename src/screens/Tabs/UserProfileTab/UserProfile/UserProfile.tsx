@@ -610,9 +610,7 @@ export default ({ navigation }) => {
                   </Touchable>
                 ))}
             </ItemContainer>
-            {!user.profile.isSelf && user.profile.isHideTrips ? (
-              <Bold>Trips are hideen by {user.username}</Bold>
-            ) : (
+            {user.profile.isSelf && (
               <SwipeListView
                 useFlatList={false}
                 closeOnRowBeginSwipe={true}
@@ -652,6 +650,26 @@ export default ({ navigation }) => {
                 leftOpenValue={90}
                 keyExtractor={item => item.id}
               />
+            )}
+            {!user.profile.isSelf && user.profile.isHideTrips ? (
+              <Bold>Trips are hideen by {user.username}</Bold>
+            ) : (
+              <>
+                {trip.map((i: any, index: any) => (
+                  <Touchable
+                    key={index}
+                    onPress={() =>
+                      navigation.push("CityProfileTabs", {
+                        cityId: i.city.cityId,
+                        countryCode: i.city.country.countryCode,
+                        continentCode: i.city.country.continent.continentCode
+                      })
+                    }
+                  >
+                    <UserRow trip={i} type={"trip"} />
+                  </Touchable>
+                ))}
+              </>
             )}
           </Body>
         </ScrollView>
