@@ -635,7 +635,6 @@ export default ({ navigation }) => {
                 renderHiddenItem={data => (
                   <RowBack>
                     <BackLeftBtn onPress={() => console.log(data.item.id)}>
-                      {console.log(data)}
                       <IconContainer>
                         <SmallText>EDIT</SmallText>
                       </IconContainer>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RefreshControl, Image, Platform } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useQuery, useMutation } from "react-apollo-hooks";
@@ -165,6 +165,10 @@ export default ({ navigation }) => {
     }
     return chunks;
   };
+  useEffect(() => {
+    console.log(navigation.getParam("cityId"));
+    setCityId(navigation.getParam("cityId"));
+  }, [navigation]);
   if (
     profileLoading ||
     nearCitiesLoading ||
@@ -342,15 +346,15 @@ export default ({ navigation }) => {
                             return (
                               <Touchable
                                 key={index}
-                                onPress={() =>
-                                  navigation.push("CityProfileTabs ", {
+                                onPress={() => {
+                                  navigation.push("CityProfileTabs", {
                                     cityId: city.cityId,
                                     countryCode: city.country.countryCode,
                                     continentCode: countries.find(
                                       i => i.code === city.country.countryCode
                                     ).continent
-                                  })
-                                }
+                                  });
+                                }}
                               >
                                 <UserRow city={city} type={"nearCity"} />
                               </Touchable>

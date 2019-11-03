@@ -23,6 +23,7 @@ const View = styled.View``;
 const Text = styled.Text`
   color: ${props => props.theme.color};
   font-size: 9px;
+  margin-left: 5px;
 `;
 const UserContainer = styled.View``;
 
