@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import { ScreenOrientation } from "expo";
-import { RefreshControl, FlatList, Image, Button, Modal } from "react-native";
+import { RefreshControl, FlatList, Modal } from "react-native";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
 import { GET_AVATARS, DELETE_AVATAR, MARK_AS_MAIN } from "./AvatarListQueries";
@@ -18,6 +18,8 @@ import constants, { BACKEND_URL } from "../../../../../constants";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import ImageViewer from "react-native-image-zoom-viewer";
 import { useTheme } from "../../../../context/ThemeContext";
+import { Entypo } from "@expo/vector-icons";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 
 const View = styled.View`
   flex: 1;
@@ -43,9 +45,14 @@ const Container = styled.View`
 const ScrollView = styled.ScrollView`
   background-color: ${props => props.theme.bgColor};
 `;
+const FooterIconTouchable = styled.TouchableOpacity`
+  margin-left: 20px;
+  margin-bottom: 20px;
+`;
 export default ({ navigation }) => {
   const me = useMe();
   const isDarkMode = useTheme();
+  const { showActionSheetWithOptions } = useActionSheet();
   const username = navigation.getParam("username") || me.user.username;
   const isSelf = navigation.getParam("isSelf") || me.user.username === username;
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -88,13 +95,52 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
+  const otions = ["Mark As Main", "Delete Avatar", "Cancel"];
+  const cancelButtonIndex = 2;
+  const onPress = () => {
+    showActionSheetWithOptions(
+      {
+        options: otions,
+        cancelButtonIndex: cancelButtonIndex,
+        showSeparators: true
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) {
+          markAsMainFn({ variables: { uuid: avatar.uuid } });
+        } else if (buttonIndex === 1) {
+          onConfirmPress();
+        } else {
+          null;
+        }
+      }
+    );
+  };
+  const confirmOptions = ["Yes", "No"];
+  const destructiveButtonIndex = 0;
+  const confirmCancelButtonIndex = 1;
+  const onConfirmPress = () => {
+    showActionSheetWithOptions(
+      {
+        options: confirmOptions,
+        destructiveButtonIndex,
+        cancelButtonIndex: confirmCancelButtonIndex
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) {
+          deleteAvatar(avatar.uuid);
+        } else {
+          null;
+        }
+      }
+    );
+  };
   return (
     <ScrollView
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      {avatarLoading || deleteAvatarLoading || markAsMainLoading ? (
+      {avatarLoading || deleteAvatarLoading ? (
         <Loader />
       ) : (
         <>
@@ -132,8 +178,20 @@ export default ({ navigation }) => {
                 closeModal();
               }}
               renderFooter={() => {
-                if (isSelf) {
-                  return <Loader />;
+                if (isSelf && !avatar.isMain && !avatarLoading) {
+                  return (
+                    <FooterIconTouchable
+                      onPress={() => {
+                        onPress();
+                      }}
+                    >
+                      <Entypo
+                        size={30}
+                        color={"#999"}
+                        name={"dots-three-horizontal"}
+                      />
+                    </FooterIconTouchable>
+                  );
                 } else {
                   return null;
                 }
