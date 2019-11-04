@@ -9,6 +9,7 @@ export const GET_AVATARS = gql`
         image
         isMain
         likeCount
+        image
         thumbnail
       }
     }

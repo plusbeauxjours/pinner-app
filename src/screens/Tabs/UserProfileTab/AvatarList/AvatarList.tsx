@@ -17,6 +17,7 @@ import Loader from "../../../../components/Loader";
 import constants, { BACKEND_URL } from "../../../../../constants";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import ImageViewer from "react-native-image-zoom-viewer";
+import { useTheme } from "../../../../context/ThemeContext";
 
 const View = styled.View`
   flex: 1;
@@ -42,9 +43,9 @@ const Container = styled.View`
 const ScrollView = styled.ScrollView`
   background-color: ${props => props.theme.bgColor};
 `;
-
 export default ({ navigation }) => {
   const me = useMe();
+  const isDarkMode = useTheme();
   const username = navigation.getParam("username") || me.user.username;
   const isSelf = navigation.getParam("isSelf") || me.user.username === username;
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -130,7 +131,20 @@ export default ({ navigation }) => {
                 );
                 closeModal();
               }}
+              renderFooter={() => {
+                if (isSelf) {
+                  return <Loader />;
+                } else {
+                  return null;
+                }
+              }}
+              backgroundColor={
+                isDarkMode && isDarkMode === true ? "black" : "white"
+              }
               enableSwipeDown={true}
+              loadingRender={() => {
+                return <Loader />;
+              }}
               renderIndicator={() => {}}
             />
           </Modal>
@@ -159,7 +173,12 @@ export default ({ navigation }) => {
                     margin: 0.5
                   }}
                 >
-                  <Touchable onPress={() => openModal(item)}>
+                  <Touchable
+                    disabled={!item.image && true}
+                    onPress={() => {
+                      item.image && openModal(item);
+                    }}
+                  >
                     <ProgressiveImage
                       style={{
                         height: constants.width / 3 - 1,

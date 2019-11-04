@@ -186,7 +186,7 @@ export default ({ navigation }) => {
   const countryPhoneNumber = profile.countryPhoneNumber;
   const countryPhoneCode = profile.countryPhoneCode;
   const [newPhoneNumber, setNewPhoneNumber] = useState<string>(
-    profile.phoneNumber
+    profile.phoneNumber || ""
   );
   const [newCountryPhoneNumber, setNewCountryPhoneNumber] = useState<string>(
     profile.countryPhoneNumber

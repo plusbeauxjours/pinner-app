@@ -3000,6 +3000,10 @@ expo-blur@~6.0.0:
   dependencies:
     prop-types "^15.6.0"
 
+expo-calendar@~6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/expo-calendar/-/expo-calendar-6.0.0.tgz#9590c490b5a09e98f44cd28e775c667de1b05452"
+
 expo-camera@~6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-6.0.0.tgz#74db78874f87de7adcd63db0e96591c331fefd28"
@@ -5896,6 +5900,10 @@ react-native-svg@*:
 react-native-svg@^9.11.1:
   version "9.11.1"
   resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-9.11.1.tgz#b1ccf48de413ff8c4f476f202aaa3893f4c8b59a"
+
+react-native-swipe-list-view@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-swipe-list-view/-/react-native-swipe-list-view-2.0.3.tgz#ab93a56d9f1126a486fa77d99de61ab4d44ba735"
 
 react-native-swiper@^1.5.14:
   version "1.5.14"

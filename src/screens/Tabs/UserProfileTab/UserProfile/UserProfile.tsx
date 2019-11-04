@@ -49,6 +49,7 @@ import { GET_SAME_TRIPS } from "./UserProfileQueries";
 import Modal from "react-native-modal";
 import CoffeeDetail from "../../CoffeeTab/CoffeeDetail";
 import { useTheme } from "../../../../context/ThemeContext";
+import { CalendarList } from "react-native-calendars";
 
 const Header = styled.View`
   height: 250;
@@ -62,15 +63,13 @@ const Body = styled.View`
   flex: 1;
   background-color: ${props => props.theme.bgColor};
   color: ${props => props.theme.color};
-  padding: 0 15px 0 15px;
+  padding: 15px;
 `;
 
 const Text = styled.Text`
   color: ${props => props.theme.color};
 `;
-const BioText = styled(Text)`
-  margin: 15px;
-`;
+const BioText = styled(Text)``;
 const Bold = styled.Text`
   font-size: 12px;
   color: ${props => props.theme.color};
@@ -376,20 +375,20 @@ export default ({ navigation }) => {
                 </Touchable>
               ) : (
                 <>
-                  {getSameTripsData && (
-                    <EditText>
-                      You guys have been to
-                      {getSameTripsData.getSameTrips.cities.length !== 0 &&
-                        getSameTripsData.getSameTrips.cities.map(city => (
+                  {getSameTripsData &&
+                    getSameTripsData.getSameTrips.cities.length !== 0 && (
+                      <EditText>
+                        You guys have been to
+                        {getSameTripsData.getSameTrips.cities.map(city => (
                           <EditText key={city.id}>
                             &nbsp;
                             {city.cityName}
                             {city.country.countryEmoji}
                           </EditText>
                         ))}
-                      .
-                    </EditText>
-                  )}
+                        .
+                      </EditText>
+                    )}
                 </>
               )}
             </UserNameContainer>
