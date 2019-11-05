@@ -35,7 +35,6 @@ const RequestCoffees = ({ navigation }) => {
     setModalOpen(false);
   };
   useEffect(() => {
-    console.log("navigation");
     setModalOpen(true);
   }, []);
   return (

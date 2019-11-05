@@ -165,10 +165,6 @@ export default ({ navigation }) => {
     }
     return chunks;
   };
-  useEffect(() => {
-    console.log(navigation.getParam("cityId"));
-    setCityId(navigation.getParam("cityId"));
-  }, [navigation]);
   if (
     profileLoading ||
     nearCitiesLoading ||
@@ -293,7 +289,7 @@ export default ({ navigation }) => {
                 </InfoRow>
               </View>
             )}
-            {nearCities.length !== 0 && (
+            {nearCities && nearCities.length !== 0 && (
               <Item>
                 <Title>NEAR CITIES</Title>
                 <UserContainer>
@@ -330,7 +326,7 @@ export default ({ navigation }) => {
                 </UserContainer>
               </Item>
             )}
-            {samenameCities.length !== 0 && (
+            {samenameCities && samenameCities.length !== 0 && (
               <Item>
                 <Title>SAMENAME CITIES</Title>
                 <UserContainer>
@@ -400,7 +396,7 @@ export default ({ navigation }) => {
                 </UserContainer>
               </Item>
             )}
-            {usersBefore.length !== 0 && (
+            {usersBefore && usersBefore.length !== 0 && (
               <Item>
                 <Title>USERS BEFORE</Title>
                 <UserContainer>

@@ -161,8 +161,8 @@ const HomeTabs = createMaterialTopTabNavigator(
 
 export default createStackNavigator(
   {
-    HomeTabs,
     UserProfileTabs,
+    HomeTabs,
     CityProfileTabs,
     ContinentProfile,
     CountryProfileTabs,

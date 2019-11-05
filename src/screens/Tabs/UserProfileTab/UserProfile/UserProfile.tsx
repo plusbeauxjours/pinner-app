@@ -4,7 +4,8 @@ import {
   RefreshControl,
   Platform,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  View
 } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -50,6 +51,8 @@ import Modal from "react-native-modal";
 import CoffeeDetail from "../../CoffeeTab/CoffeeDetail";
 import { useTheme } from "../../../../context/ThemeContext";
 import { CalendarList } from "react-native-calendars";
+import { Alert } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 const Header = styled.View`
   height: 250;
@@ -69,7 +72,9 @@ const Body = styled.View`
 const Text = styled.Text`
   color: ${props => props.theme.color};
 `;
-const BioText = styled(Text)``;
+const BioText = styled(Text)`
+  margin-bottom: 15px;
+`;
 const Bold = styled.Text`
   font-size: 12px;
   color: ${props => props.theme.color};
@@ -152,6 +157,18 @@ const RowBack = styled.View`
 const BackLeftBtn = styled.TouchableOpacity`
   justify-content: center;
 `;
+const AddTripBtn = styled.TouchableOpacity`
+  justify-content: center;
+  padding: 5px;
+`;
+const AddTripContainer = styled.View`
+  width: ${constants.width - 40};
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+  border: 0.5px solid ${props => props.theme.borderColor};
+  border-radius: 5px;
+`;
 export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
@@ -160,7 +177,10 @@ export default ({ navigation }) => {
   const [coffeeId, setCoffeeId] = useState<string>("");
   const [cityId, setCityId] = useState<string>(location.currentCityId);
   const [moveNotificationId, setMoveNotificationId] = useState<string>();
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [coffeeModalOpen, setCoffeeModalOpen] = useState<boolean>(false);
+  const [tripModalOpen, setTripModalOpen] = useState<boolean>(false);
+  const [isCalendarMode, setIsCalendarMode] = useState<boolean>(true);
+
   const [username, setUsername] = useState<string>(
     navigation.getParam("username") || me.user.username
   );
@@ -290,13 +310,16 @@ export default ({ navigation }) => {
     }
   };
   const onPress = coffeeId => {
-    setModalOpen(true);
+    setCoffeeModalOpen(true);
     setCoffeeId(coffeeId);
   };
   useEffect(
     () => setUsername(navigation.getParam("username") || me.user.username),
     [navigation]
   );
+  const vacation = { key: "vacation", color: "red", selectedDotColor: "blue" };
+  const massage = { key: "massage", color: "blue", selectedDotColor: "blue" };
+  const workout = { key: "workout", color: "green" };
   if (profileLoading || tripLoading || coffeeLoading || getSameTripsLoading) {
     return (
       <LoaderContainer>
@@ -311,11 +334,13 @@ export default ({ navigation }) => {
       <>
         <Modal
           style={{ margin: 0, alignItems: "flex-start" }}
-          isVisible={modalOpen}
+          isVisible={tripModalOpen}
           backdropColor={isDarkMode && isDarkMode === true ? "black" : "white"}
-          onBackdropPress={() => setModalOpen(false)}
-          onBackButtonPress={() => Platform.OS !== "ios" && setModalOpen(false)}
-          onModalHide={() => setModalOpen(false)}
+          onBackdropPress={() => setTripModalOpen(false)}
+          onBackButtonPress={() =>
+            Platform.OS !== "ios" && setTripModalOpen(false)
+          }
+          onModalHide={() => setTripModalOpen(false)}
           propagateSwipe={true}
           scrollHorizontal={true}
           backdropOpacity={0.9}
@@ -326,7 +351,28 @@ export default ({ navigation }) => {
           backdropTransitionInTiming={200}
           backdropTransitionOutTiming={200}
         >
-          <CoffeeDetail coffeeId={coffeeId} setModalOpen={setModalOpen} />
+          {isCalendarMode ? <Text>Search</Text> : <Text>Calendar</Text>}
+        </Modal>
+        <Modal
+          style={{ margin: 0, alignItems: "flex-start" }}
+          isVisible={coffeeModalOpen}
+          backdropColor={isDarkMode && isDarkMode === true ? "black" : "white"}
+          onBackdropPress={() => setCoffeeModalOpen(false)}
+          onBackButtonPress={() =>
+            Platform.OS !== "ios" && setCoffeeModalOpen(false)
+          }
+          onModalHide={() => setCoffeeModalOpen(false)}
+          propagateSwipe={true}
+          scrollHorizontal={true}
+          backdropOpacity={0.9}
+          animationIn="zoomInDown"
+          animationOut="zoomOutUp"
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropTransitionInTiming={200}
+          backdropTransitionOutTiming={200}
+        >
+          <CoffeeDetail coffeeId={coffeeId} setModalOpen={setCoffeeModalOpen} />
         </Modal>
         <ScrollView
           refreshControl={
@@ -609,6 +655,15 @@ export default ({ navigation }) => {
                   </Touchable>
                 ))}
             </ItemContainer>
+            <AddTripBtn onPress={()=>setTripModalOpen(true)}>
+              <AddTripContainer>
+                <Ionicons
+                  size={36}
+                  color={"#999"}
+                  name={Platform.OS === "ios" ? "ios-add" : "md-add"}
+                />
+              </AddTripContainer>
+            </AddTripBtn>
             {user.profile.isSelf && (
               <SwipeListView
                 useFlatList={false}
