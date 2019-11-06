@@ -14,7 +14,9 @@ import {
   CompleteEditPhoneVerificationVariables,
   ToggleSettings,
   ToggleSettingsVariables,
-  UserProfile
+  UserProfile,
+  StartEditEmailVerification,
+  StartEditEmailVerificationVariables
 } from "../../../../types/api";
 import {
   EDIT_PROFILE,
@@ -25,10 +27,6 @@ import {
   TOGGLE_SETTINGS
 } from "./EditProfileQueries";
 import Loader from "../../../../components/Loader";
-import {
-  StartEditEmailVerification,
-  StartEditEmailVerificationVariables
-} from "../../../../types/api";
 import NavIcon from "../../../../components/NavIcon";
 import { GET_USER } from "../UserProfile/UserProfileQueries";
 import { UserProfileVariables } from "../../../../types/api";
@@ -213,7 +211,8 @@ export default ({ navigation }) => {
       {
         options,
         destructiveButtonIndex,
-        cancelButtonIndex
+        cancelButtonIndex,
+        title: "Are you sure to edit this profile?"
       },
       buttonIndex => {
         if (buttonIndex === 0) {
@@ -232,7 +231,8 @@ export default ({ navigation }) => {
       {
         options,
         destructiveButtonIndex,
-        cancelButtonIndex
+        cancelButtonIndex,
+        title: "Are you sure to logout?"
       },
       buttonIndex => {
         if (buttonIndex === 0) {
@@ -251,7 +251,8 @@ export default ({ navigation }) => {
       {
         options,
         destructiveButtonIndex,
-        cancelButtonIndex
+        cancelButtonIndex,
+        title: "Are you sure to delete this account?"
       },
       buttonIndex => {
         if (buttonIndex === 0) {

@@ -12,6 +12,7 @@ import { SwipeListView } from "react-native-swipe-list-view";
 import Toast from "react-native-root-toast";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Ionicons } from "@expo/vector-icons";
+import { range } from "lodash";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
 import {
@@ -53,12 +54,12 @@ import Modal from "react-native-modal";
 import CoffeeDetail from "../../CoffeeTab/CoffeeDetail";
 import { useTheme } from "../../../../context/ThemeContext";
 import { CalendarList } from "react-native-calendars";
-import { Alert } from "react-native";
 import { CREATE_CITY } from "../../../../components/Search/SearchQueries";
 import { TextInput } from "react-native-gesture-handler";
 import useGoogleAutocomplete from "../../../../hooks/useGoogleAutocomplete";
 import keys from "../../../../../keys";
 import SearchCityPhoto from "../../../../components/SearchCityPhoto";
+import { countries } from "../../../../../countryData";
 
 const Header = styled.View`
   height: 250;
@@ -134,7 +135,6 @@ const EditText = styled.Text`
   color: ${props => props.theme.color};
   font-size: 12px;
   font-weight: 100;
-
 `;
 const IconContainer = styled.View`
   width: 40px;
@@ -180,39 +180,45 @@ const AddTripContainer = styled.View`
   border-radius: 5px;
 `;
 const CalendarContainer = styled.View`
-  height: ${constants.height - 125};
+  height: ${constants.height - 120};
 `;
-const CalendarCityContainer = styled.View`
-flex-direction: row;
-justify-content: center;
-  margin-top: 45px;
-  height: 45px;
-`;
-const TripSubmitBtn = styled.TouchableOpacity``;
-const TripSubmitContainer = styled.View`
-  height: 60px;
+const TripSubmitBtn = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
+  flex: 1;
+  height: 40px;
+  margin: 5px;
+  border: 0.5px solid ${props => props.theme.borderColor};
+  border-radius: 5px;
 `;
+const TripSubmitContainer = styled.View``;
 const TripBtnContainer = styled.View`
   flex-direction: row;
   justify-content: center;
   align-items: center;
   width: ${constants.width};
-  height: 60;
+  padding: 0 10px 0 10px;
+`;
+const CityBold = styled.Text`
+  font-weight: 500;
+  color: ${props => props.theme.color};
 `;
 const TripText = styled.Text`
   font-size: 16;
-  font-weight: 400;
+  font-weight: 500;
   color: ${props => props.theme.color};
 `;
 const SearchCityContainer = styled.View`
   padding: 15px;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   height: 45px;
   width: ${constants.width};
+`;
+const CalendarCityContainer = styled(SearchCityContainer)`
+  justify-content: center;
+  padding: 0;
 `;
 const SearchHeader = styled.View`
   flex: 2;
@@ -251,20 +257,11 @@ export default ({ navigation }) => {
   );
   const [payload, setPayload] = useState<string>();
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [date, setDate] = useState<{
-    startDate: moment.Moment;
-    endDate: moment.Moment;
-  }>({
-    startDate: null,
-    endDate: null
-  });
-  const [tripDate, setTripDate] = useState<{
-    tripStartDate: moment.Moment;
-    tripEndDate: moment.Moment;
-  }>({
-    tripStartDate: null,
-    tripEndDate: null
-  });
+  const [startDate, setStartDate] = useState<moment.Moment>(null);
+  const [endDate, setEndDate] = useState<moment.Moment>(null);
+  const [tripStartDate, setTripStartDate] = useState<moment.Moment>(null);
+  const [tripEndDate, setTripEndDate] = useState<moment.Moment>(null);
+  const [tripMarkedDates, setTripMarkedDates] = useState<any>({});
   const { showActionSheetWithOptions } = useActionSheet();
   const options = ["Yes", "No"];
   const destructiveButtonIndex = 0;
@@ -335,17 +332,17 @@ export default ({ navigation }) => {
   });
   const [addTripFn] = useMutation<AddTrip, AddTripVariables>(ADD_TRIP, {
     variables: {
-      cityId,
-      startDate: date.startDate,
-      endDate: date.endDate
+      cityId: searchCityId,
+      startDate: moment(tripStartDate),
+      endDate: moment(tripEndDate)
     }
   });
   const [editTripFn] = useMutation<EditTrip, EditTripVariables>(EDIT_TRIP, {
     variables: {
       moveNotificationId: parseInt(moveNotificationId, 10),
       cityId,
-      startDate: date.startDate,
-      endDate: date.endDate
+      startDate: moment(startDate),
+      endDate: moment(endDate)
     }
   });
   const [deleteTripFn] = useMutation<DeleteTrip, DeleteTripVariables>(
@@ -364,7 +361,7 @@ export default ({ navigation }) => {
     CreateCity,
     CreateCityVariables
   >(CREATE_CITY);
-  const onSearchPress = async (cityId,cityName, countryName) => {
+  const onSearchPress = async (cityId, cityName, countryName) => {
     let result;
     try {
       result = await createCityFn({
@@ -375,8 +372,8 @@ export default ({ navigation }) => {
       setSearchCityId(result.data.createCity.cityId);
       setSearchCountryCode(result.data.createCity.countryCode);
       setSearchContinentCode(result.data.createCity.continentCode);
-      setSearchCityName(cityName)
-      setSearchCountryName(countryName)
+      setSearchCityName(cityName);
+      setSearchCountryName(countryName);
     } catch (e) {
       setSearch("");
       console.log(e);
@@ -406,10 +403,72 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
+  const onAddTripPress = () => {
+    setTripModalOpen(false);
+    setSearch("");
+    setIsCalendarMode(false);
+    console.log(moment(tripStartDate),moment(tripEndDate))
+    addTripFn();
+  };
+  const onEditTrbvgipPress = moveNotificationId => {
+    setMoveNotificationId(moveNotificationId);
+  };
   const onPress = coffeeId => {
     setCoffeeModalOpen(true);
     setCoffeeId(coffeeId);
   };
+  const onDayPress = day => {
+    if (
+      !tripStartDate ||
+      day.dateString < tripStartDate ||
+      (tripStartDate && tripEndDate)
+    ) {
+      const tripStartDate = day.dateString;
+      const markedDates = {
+        [tripStartDate.toString()]: {
+          color: "#C75454",
+          endingDay: true,
+          startingDay: true,
+          textColor: "white"
+        }
+      };
+      setTripStartDate(tripStartDate);
+      setTripEndDate(null);
+      setTripMarkedDates(markedDates);
+    } else {
+      if (day.dateString !== tripStartDate) {
+        const tripEndDate = day.dateString;
+        const daysInBetween = moment(tripEndDate).diff(tripStartDate, "day");
+        const daysInBetweenMarked = range(daysInBetween).reduce((acc, cur) => {
+          const nextDay = moment(tripStartDate)
+            .add(cur, "day")
+            .format("YYYY-MM-DD");
+          acc[nextDay] = {
+            color: "#C75454",
+            selected: true,
+            textColor: "white"
+          };
+          return acc;
+        }, {});
+        const markedDates = {
+          ...daysInBetweenMarked,
+          [tripStartDate.toString()]: {
+            color: "#C75454",
+            startingDay: true,
+            textColor: "white"
+          },
+          [tripEndDate.toString()]: {
+            color: "#C75454",
+            endingDay: true,
+            textColor: "white"
+          }
+        };
+        setTripEndDate(tripEndDate);
+        setTripMarkedDates(markedDates);
+      }
+    }
+  };
+
   useEffect(
     () => setUsername(navigation.getParam("username") || me.user.username),
     [navigation]
@@ -443,7 +502,7 @@ export default ({ navigation }) => {
           }}
           propagateSwipe={true}
           scrollHorizontal={true}
-          backdropOpacity={0.9}
+          backdropOpacity={0.95}
           animationIn="zoomInDown"
           animationOut="zoomOutUp"
           animationInTiming={200}
@@ -453,69 +512,61 @@ export default ({ navigation }) => {
         >
           {isCalendarMode ? (
             <>
-                <Touchable
-                  onPress={() =>
-                   { navigation.push("CityProfileTabs", {
-                      cityId: searchCityId,
-                      countryCode: searchCountryCode,
-                      continentCode: searchContinentCode
-                    }), setTripModalOpen(false), setSearch(""), setIsCalendarMode(false)}
-                  }
-                >
-              <CalendarCityContainer>
-                  <SearchCityContainer>
-                    <SearchHeader>
-                      <SearchCityPhoto cityId={searchCityId} />
-                      <SearchHeaderUserContainer>
-                        <Bold>{searchCityName}</Bold>
-                        <Location>
-                          {searchCountryName
-                            ? searchCountryName
-                            : searchCityName}
-                        </Location>
-                      </SearchHeaderUserContainer>
-                    </SearchHeader>
-                  </SearchCityContainer>
-              </CalendarCityContainer>
-                </Touchable>
               <CalendarContainer>
                 <CalendarList
-                  current={"2018-05-16"}
                   pastScrollRange={24}
                   futureScrollRange={24}
                   pagingEnabled={true}
-                  onDayPress={day =>
-                    Alert.alert("you've pressed " + day.dateString)
-                  }
+                  markedDates={tripMarkedDates}
+                  onDayPress={onDayPress}
+                  markingType={"period"}
                   theme={{
                     backgroundColor: "transparent",
                     calendarBackground: "transparent",
                     dayTextColor: "#999",
                     selectedDayTextColor: "#ffffff",
-                    todayTextColor: "#999",
+                    todayTextColor:
+                      isDarkMode && isDarkMode === true ? "white" : "black",
                     monthTextColor: "#00adf5",
                     textMonthFontWeight: "bold",
                     selectedDayBackgroundColor: "#00adf5"
                   }}
                 />
               </CalendarContainer>
+              <Touchable
+                onPress={async () => {
+                  await setTripModalOpen(false),
+                    await setIsCalendarMode(false),
+                    await navigation.push("CityProfileTabs", {
+                      cityId: searchCityId,
+                      countryCode: searchCountryCode,
+                      continentCode: searchContinentCode
+                    });
+                }}
+              >
+                <CalendarCityContainer>
+                  <SearchCityPhoto cityId={searchCityId} />
+                  <SearchHeaderUserContainer>
+                    <CityBold>{searchCityName}</CityBold>
+                    <Location>
+                      {searchCountryName
+                        ? countries.find(i => i.code === searchCountryCode).name
+                        : searchCityName}
+                    </Location>
+                  </SearchHeaderUserContainer>
+                </CalendarCityContainer>
+              </Touchable>
               <TripBtnContainer>
                 <TripSubmitBtn
                   onPress={() => {
                     setIsCalendarMode(false);
                   }}
                 >
-                  <TripSubmitContainer>
-                    <TripText>CANCEL</TripText>
-                  </TripSubmitContainer>
+                  <TripText>CANCEL</TripText>
                 </TripSubmitBtn>
-                {tripDate.tripStartDate && tripDate.tripEndDate && (
-                  <TripSubmitBtn>
-                    <TripSubmitContainer>
-                      <TripText>POST</TripText>
-                    </TripSubmitContainer>
-                  </TripSubmitBtn>
-                )}
+                <TripSubmitBtn onPress={() => onAddTripPress()}>
+                  <TripText>POST</TripText>
+                </TripSubmitBtn>
               </TripBtnContainer>
             </>
           ) : (
@@ -571,10 +622,12 @@ export default ({ navigation }) => {
                                 key={prediction.id}
                                 onPress={() =>
                                   onSearchPress(
-                                    prediction.place_id, 
-                                    prediction.structured_formatting.main_text, 
-                                    prediction.structured_formatting.secondary_text
-                                    )}
+                                    prediction.place_id,
+                                    prediction.structured_formatting.main_text,
+                                    prediction.structured_formatting
+                                      .secondary_text
+                                  )
+                                }
                               >
                                 <SearchCityContainer>
                                   <SearchHeader>
@@ -582,12 +635,12 @@ export default ({ navigation }) => {
                                       cityId={prediction.place_id}
                                     />
                                     <SearchHeaderUserContainer>
-                                      <Bold>
+                                      <CityBold>
                                         {
                                           prediction.structured_formatting
                                             .main_text
                                         }
-                                      </Bold>
+                                      </CityBold>
                                       <Location>
                                         {prediction.structured_formatting
                                           .secondary_text
@@ -683,23 +736,23 @@ export default ({ navigation }) => {
                   />
                 </Touchable>
               )}
-              </UserNameContainer>
-                <UserNameContainer>
-                  {getSameTripsData &&
-                    getSameTripsData.getSameTrips.cities.length !== 0 && (
-                      <EditText>
-                        You guys have been to
-                        {getSameTripsData.getSameTrips.cities.map(city => (
-                          <EditText key={city.id}>
-                            &nbsp;
-                            {city.cityName}
-                            {city.country.countryEmoji}
-                          </EditText>
-                        ))}
-                        .
+            </UserNameContainer>
+            <UserNameContainer>
+              {getSameTripsData &&
+                getSameTripsData.getSameTrips.cities.length !== 0 && (
+                  <EditText>
+                    You guys have been to
+                    {getSameTripsData.getSameTrips.cities.map(city => (
+                      <EditText key={city.id}>
+                        &nbsp;
+                        {city.cityName}
+                        {city.country.countryEmoji}
                       </EditText>
-                    )}
-                </UserNameContainer>
+                    ))}
+                    .
+                  </EditText>
+                )}
+            </UserNameContainer>
           </Header>
           <Body>
             <BioText>{user.profile.bio}</BioText>
@@ -917,12 +970,13 @@ export default ({ navigation }) => {
                   </Touchable>
                 ))}
             </ItemContainer>
-            {user.profile.isSelf &&
-            <AddTripBtn onPress={() => setTripModalOpen(true)}>
-              <AddTripContainer>
-                <Bold>ADD TRIP</Bold>
-              </AddTripContainer>
-            </AddTripBtn>}
+            {user.profile.isSelf && (
+              <AddTripBtn onPress={() => setTripModalOpen(true)}>
+                <AddTripContainer>
+                  <TripText>ADD TRIP</TripText>
+                </AddTripContainer>
+              </AddTripBtn>
+            )}
             {(() => {
               switch (user.profile.isSelf) {
                 case false:

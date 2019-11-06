@@ -72,6 +72,7 @@ const Location = styled.Text`
 const Header = styled.View`
   flex: 2;
   flex-direction: row;
+  align-items: center;
 `;
 const LoaderContainer = styled.View`
   flex: 1;
@@ -210,22 +211,18 @@ const Search = ({ navigation }) => {
                           onPress={() => onPress(prediction.place_id)}
                         >
                           <Container>
-                            <Header>
-                              <SearchCityPhoto cityId={prediction.place_id} />
-                              <HeaderUserContainer>
-                                <Bold>
-                                  {prediction.structured_formatting.main_text}
-                                </Bold>
-                                <Location>
-                                  {prediction.structured_formatting
-                                    .secondary_text
-                                    ? prediction.structured_formatting
-                                        .secondary_text
-                                    : prediction.structured_formatting
-                                        .main_text}
-                                </Location>
-                              </HeaderUserContainer>
-                            </Header>
+                            <SearchCityPhoto cityId={prediction.place_id} />
+                            <HeaderUserContainer>
+                              <Bold>
+                                {prediction.structured_formatting.main_text}
+                              </Bold>
+                              <Location>
+                                {prediction.structured_formatting.secondary_text
+                                  ? prediction.structured_formatting
+                                      .secondary_text
+                                  : prediction.structured_formatting.main_text}
+                              </Location>
+                            </HeaderUserContainer>
                           </Container>
                         </Touchable>
                       ))}
