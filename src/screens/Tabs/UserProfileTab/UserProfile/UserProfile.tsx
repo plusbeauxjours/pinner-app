@@ -156,8 +156,7 @@ const SmallText = styled.Text`
   text-align: center;
   font-size: 9px;
 `;
-const CitySmallText = styled(SmallText)`
-`
+const CitySmallText = styled(SmallText)``;
 const RowBack = styled.View`
   align-items: center;
   flex: 1;
@@ -346,9 +345,9 @@ export default ({ navigation }) => {
   const [editTripFn] = useMutation<EditTrip, EditTripVariables>(EDIT_TRIP, {
     variables: {
       moveNotificationId: parseInt(moveNotificationId, 10),
-      cityId,
-      startDate: moment(startDate),
-      endDate: moment(endDate)
+      cityId: searchCityId,
+      startDate: moment(tripStartDate),
+      endDate: moment(tripEndDate)
     }
   });
   const [deleteTripFn] = useMutation<DeleteTrip, DeleteTripVariables>(
@@ -423,15 +422,66 @@ export default ({ navigation }) => {
       toast("Overlapping dates! Please check your trip dates.");
     }
   };
-  const onEditTripPress = ({id, trip, startDate, endDate }) => {
+  const onEditTripPress = async () => {
+    setEditTripModalOpen(false);
+    setSearch("");
+    setIsCalendarMode(false);
+    try {
+      const {
+        data: { editTrip }
+      } = await editTripFn();
+      setTripMarkedDates({});
+      if (editTrip.ok) {
+        toast("Trip Edited");
+      }
+    } catch (e) {
+      toast("Overlapping dates! Please check your trip dates.");
+    }
+  };
+  const onEditBtnPress = (id, trip, tripStartDate, tripEndDate) => {
     setMoveNotificationId(id);
     setEditTripModalOpen(true);
     setIsCalendarMode(true);
     setSearch(trip.city.cityName);
+    setSearchCityId(trip.city.cityId);
     setSearchCityName(trip.city.cityName);
     setSearchCountryCode(trip.city.country.countryCode);
     setSearchCountryName(trip.city.country.countryName);
     setSearchContinentCode(trip.city.country.continent.continentCode);
+    if (tripStartDate && tripEndDate) {
+      const daysInBetween = moment(tripEndDate).diff(tripStartDate, "day");
+      const daysInBetweenMarked = range(daysInBetween).reduce((acc, cur) => {
+        const nextDay = moment(tripStartDate)
+          .add(cur, "day")
+          .format("YYYY-MM-DD");
+        acc[nextDay] = {
+          color: "#C75454",
+          selected: true,
+          textColor: "white"
+        };
+        return acc;
+      }, {});
+      const markedDates = {
+        ...daysInBetweenMarked,
+        [tripStartDate.toString()]: {
+          color: "#C75454",
+          startingDay: true,
+          textColor: "white"
+        },
+        [tripEndDate.toString()]: {
+          color: "#C75454",
+          endingDay: true,
+          textColor: "white"
+        }
+      };
+      setTripStartDate(tripStartDate);
+      setTripEndDate(tripEndDate);
+      setTripMarkedDates(markedDates);
+    } else {
+      setTripMarkedDates({});
+      setTripStartDate(null);
+      setTripEndDate(null);
+    }
   };
   const onPress = coffeeId => {
     setCoffeeModalOpen(true);
@@ -716,6 +766,7 @@ export default ({ navigation }) => {
                     height: "auto",
                     width: "100%"
                   }}
+                  current={tripStartDate && tripStartDate}
                   pastScrollRange={24}
                   futureScrollRange={24}
                   pagingEnabled={true}
@@ -758,7 +809,7 @@ export default ({ navigation }) => {
                 >
                   <TripText>CANCEL</TripText>
                 </TripSubmitBtn>
-                <TripSubmitBtn onPress={() => onAddTripPress()}>
+                <TripSubmitBtn onPress={() => onEditTripPress()}>
                   <TripText>EDIT TRIP</TripText>
                 </TripSubmitBtn>
               </TripBtnContainer>
@@ -1221,16 +1272,14 @@ export default ({ navigation }) => {
                       renderHiddenItem={data => (
                         <RowBack>
                           <BackLeftBtn
-                            onPress={() => { setMoveNotificationId(data.item.id),
-                              setEditTripModalOpen(true),
-                              setIsCalendarMode(true),
-                              setSearch(data.item.city.cityName),
-                              setSearchCityId(data.item.city.cityId),
-                              setSearchCityName(data.item.city.cityName),
-                              setSearchCountryCode(data.item.city.country.countryCode),
-                              setSearchCountryName(data.item.city.country.countryName),
-                              setSearchContinentCode(data.item.city.country.continent.continentCode)}}
-                              
+                            onPress={() =>
+                              onEditBtnPress(
+                                data.item.id,
+                                data.item,
+                                data.item.startDate,
+                                data.item.endDate
+                              )
+                            }
                           >
                             <IconContainer>
                               <SmallText>EDIT TRIP</SmallText>
