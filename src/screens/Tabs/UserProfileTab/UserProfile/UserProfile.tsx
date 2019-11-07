@@ -153,8 +153,11 @@ const TouchableBackRow = styled.View`
 `;
 const SmallText = styled.Text`
   color: ${props => props.theme.color};
+  text-align: center;
   font-size: 9px;
 `;
+const CitySmallText = styled(SmallText)`
+`
 const RowBack = styled.View`
   align-items: center;
   flex: 1;
@@ -234,6 +237,7 @@ const Location = styled.Text`
 `;
 const TripSmallText = styled(SmallText)`
   margin-left: 15px;
+  text-align: auto;
 `;
 export default ({ navigation }) => {
   const me = useMe();
@@ -245,7 +249,8 @@ export default ({ navigation }) => {
   const [cityId, setCityId] = useState<string>(location.currentCityId);
   const [moveNotificationId, setMoveNotificationId] = useState<string>();
   const [coffeeModalOpen, setCoffeeModalOpen] = useState<boolean>(false);
-  const [tripModalOpen, setTripModalOpen] = useState<boolean>(false);
+  const [addTripModalOpen, setAddTripModalOpen] = useState<boolean>(false);
+  const [editTripModalOpen, setEditTripModalOpen] = useState<boolean>(false);
   const [isCalendarMode, setIsCalendarMode] = useState<boolean>(false);
   const [searchCityId, setSearchCityId] = useState<string>("");
   const [searchCityName, setSearchCityName] = useState<string>("");
@@ -271,7 +276,8 @@ export default ({ navigation }) => {
       {
         options,
         destructiveButtonIndex,
-        cancelButtonIndex
+        cancelButtonIndex,
+        title: "Are you sure to delete trip?"
       },
       buttonIndex => {
         if (buttonIndex === 0) {
@@ -402,20 +408,30 @@ export default ({ navigation }) => {
     }
   };
   const onAddTripPress = async () => {
-    setTripModalOpen(false);
+    setAddTripModalOpen(false);
     setSearch("");
     setIsCalendarMode(false);
-    const {
-      data: { addTrip }
-    } = await addTripFn();
-    if (addTrip.ok) {
-      toast("Trip Added");
-    } else {
-      toast("Couldn't Add Trip");
+    try {
+      const {
+        data: { addTrip }
+      } = await addTripFn();
+      setTripMarkedDates({});
+      if (addTrip.ok) {
+        toast("Trip Added");
+      }
+    } catch (e) {
+      toast("Overlapping dates! Please check your trip dates.");
     }
   };
-  const onEditTrbvgipPress = moveNotificationId => {
-    setMoveNotificationId(moveNotificationId);
+  const onEditTripPress = ({id, trip, startDate, endDate }) => {
+    setMoveNotificationId(id);
+    setEditTripModalOpen(true);
+    setIsCalendarMode(true);
+    setSearch(trip.city.cityName);
+    setSearchCityName(trip.city.cityName);
+    setSearchCountryCode(trip.city.country.countryCode);
+    setSearchCountryName(trip.city.country.countryName);
+    setSearchContinentCode(trip.city.country.continent.continentCode);
   };
   const onPress = coffeeId => {
     setCoffeeModalOpen(true);
@@ -491,18 +507,18 @@ export default ({ navigation }) => {
       <>
         <Modal
           style={{ margin: 0, alignItems: "flex-start" }}
-          isVisible={tripModalOpen}
+          isVisible={addTripModalOpen}
           backdropColor={isDarkMode && isDarkMode === true ? "black" : "white"}
           onBackdropPress={() => {
-            setTripModalOpen(false), setSearch(""), setIsCalendarMode(false);
+            setAddTripModalOpen(false), setSearch(""), setIsCalendarMode(false);
           }}
           onBackButtonPress={() => {
-            Platform.OS !== "ios" && setTripModalOpen(false),
+            Platform.OS !== "ios" && setAddTripModalOpen(false),
               setSearch(""),
               setIsCalendarMode(false);
           }}
           onModalHide={() => {
-            setTripModalOpen(false), setSearch(""), setIsCalendarMode(false);
+            setAddTripModalOpen(false), setSearch(""), setIsCalendarMode(false);
           }}
           propagateSwipe={true}
           scrollHorizontal={true}
@@ -557,7 +573,7 @@ export default ({ navigation }) => {
               <TripBtnContainer>
                 <TripSubmitBtn
                   onPress={() => {
-                    setTripModalOpen(false),
+                    setAddTripModalOpen(false),
                       setSearch(""),
                       setIsCalendarMode(false);
                   }}
@@ -565,7 +581,7 @@ export default ({ navigation }) => {
                   <TripText>CANCEL</TripText>
                 </TripSubmitBtn>
                 <TripSubmitBtn onPress={() => onAddTripPress()}>
-                  <TripText>POST</TripText>
+                  <TripText>ADD TRIP</TripText>
                 </TripSubmitBtn>
               </TripBtnContainer>
             </>
@@ -594,7 +610,185 @@ export default ({ navigation }) => {
               />
               <Touchable
                 onPress={() => {
-                  setTripModalOpen(false);
+                  setAddTripModalOpen(false);
+                }}
+              >
+                <ScrollView
+                  style={{
+                    marginTop: 237,
+                    marginBottom: 25,
+                    backgroundColor: "transparent"
+                  }}
+                >
+                  {createCityLoading || isLoading ? (
+                    <Loader />
+                  ) : (
+                    <KeyboardAvoidingView enabled behavior="padding">
+                      {search !== "" &&
+                        results.predictions &&
+                        results.predictions.length !== 0 && (
+                          <>
+                            {results.predictions.length === 1 ? (
+                              <TripSmallText>CITY</TripSmallText>
+                            ) : (
+                              <TripSmallText>CITIES</TripSmallText>
+                            )}
+                            {results.predictions.map(prediction => (
+                              <Touchable
+                                key={prediction.id}
+                                onPress={() =>
+                                  onSearchPress(
+                                    prediction.place_id,
+                                    prediction.structured_formatting.main_text,
+                                    prediction.structured_formatting
+                                      .secondary_text
+                                  )
+                                }
+                              >
+                                <SearchCityContainer>
+                                  <SearchHeader>
+                                    <SearchCityPhoto
+                                      cityId={prediction.place_id}
+                                    />
+                                    <SearchHeaderUserContainer>
+                                      <CityBold>
+                                        {
+                                          prediction.structured_formatting
+                                            .main_text
+                                        }
+                                      </CityBold>
+                                      <Location>
+                                        {prediction.structured_formatting
+                                          .secondary_text
+                                          ? prediction.structured_formatting
+                                              .secondary_text
+                                          : prediction.structured_formatting
+                                              .main_text}
+                                      </Location>
+                                    </SearchHeaderUserContainer>
+                                  </SearchHeader>
+                                </SearchCityContainer>
+                              </Touchable>
+                            ))}
+                          </>
+                        )}
+                    </KeyboardAvoidingView>
+                  )}
+                </ScrollView>
+              </Touchable>
+            </>
+          )}
+        </Modal>
+        <Modal
+          style={{ margin: 0, alignItems: "flex-start" }}
+          isVisible={editTripModalOpen}
+          backdropColor={isDarkMode && isDarkMode === true ? "black" : "white"}
+          onBackdropPress={() => {
+            setEditTripModalOpen(false),
+              setSearch(""),
+              setIsCalendarMode(false);
+          }}
+          onBackButtonPress={() => {
+            Platform.OS !== "ios" && setEditTripModalOpen(false),
+              setSearch(""),
+              setIsCalendarMode(false);
+          }}
+          onModalHide={() => {
+            setEditTripModalOpen(false),
+              setSearch(""),
+              setIsCalendarMode(false);
+          }}
+          propagateSwipe={true}
+          scrollHorizontal={true}
+          backdropOpacity={0.95}
+          animationIn="zoomInDown"
+          animationOut="zoomOutUp"
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropTransitionInTiming={200}
+          backdropTransitionOutTiming={200}
+        >
+          {isCalendarMode ? (
+            <>
+              <CalendarContainer>
+                <CalendarList
+                  style={{
+                    height: "auto",
+                    width: "100%"
+                  }}
+                  pastScrollRange={24}
+                  futureScrollRange={24}
+                  pagingEnabled={true}
+                  markedDates={tripMarkedDates}
+                  onDayPress={onDayPress}
+                  markingType={"period"}
+                  theme={{
+                    backgroundColor: "transparent",
+                    calendarBackground: "transparent",
+                    dayTextColor: "#999",
+                    selectedDayTextColor: "#ffffff",
+                    todayTextColor:
+                      isDarkMode && isDarkMode === true ? "white" : "black",
+                    monthTextColor: "#00adf5",
+                    textMonthFontWeight: "bold",
+                    selectedDayBackgroundColor: "#00adf5"
+                  }}
+                />
+              </CalendarContainer>
+              <Touchable onPress={() => setIsCalendarMode(false)}>
+                <CalendarCityContainer>
+                  <SearchCityPhoto cityId={searchCityId} />
+                  <SearchHeaderUserContainer>
+                    <CityBold>{searchCityName}</CityBold>
+                    <Location>
+                      {searchCountryName
+                        ? countries.find(i => i.code === searchCountryCode).name
+                        : searchCityName}
+                    </Location>
+                  </SearchHeaderUserContainer>
+                </CalendarCityContainer>
+              </Touchable>
+              <TripBtnContainer>
+                <TripSubmitBtn
+                  onPress={() => {
+                    setEditTripModalOpen(false),
+                      setSearch(""),
+                      setIsCalendarMode(false);
+                  }}
+                >
+                  <TripText>CANCEL</TripText>
+                </TripSubmitBtn>
+                <TripSubmitBtn onPress={() => onAddTripPress()}>
+                  <TripText>EDIT TRIP</TripText>
+                </TripSubmitBtn>
+              </TripBtnContainer>
+            </>
+          ) : (
+            <>
+              <TextInput
+                style={{
+                  alignSelf: "center",
+                  width: constants.width - 30,
+                  top: 200,
+                  backgroundColor: "transparent",
+                  textAlign: "center",
+                  fontSize: 30,
+                  position: "absolute",
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#999",
+                  color: isDarkMode && isDarkMode === true ? "white" : "black"
+                }}
+                autoFocus={true}
+                value={search}
+                placeholder={"Search"}
+                placeholderTextColor={"#999"}
+                returnKeyType="search"
+                onChangeText={onChange}
+                autoCorrect={false}
+              />
+              <Touchable
+                onPress={() => {
+                  setEditTripModalOpen(false);
                 }}
               >
                 <ScrollView
@@ -971,7 +1165,7 @@ export default ({ navigation }) => {
                 ))}
             </ItemContainer>
             {user.profile.isSelf && (
-              <AddTripBtn onPress={() => setTripModalOpen(true)}>
+              <AddTripBtn onPress={() => setAddTripModalOpen(true)}>
                 <AddTripContainer>
                   <TripText>ADD TRIP</TripText>
                 </AddTripContainer>
@@ -1027,15 +1221,24 @@ export default ({ navigation }) => {
                       renderHiddenItem={data => (
                         <RowBack>
                           <BackLeftBtn
-                            onPress={() => console.log(data.item.id)}
+                            onPress={() => { setMoveNotificationId(data.item.id),
+                              setEditTripModalOpen(true),
+                              setIsCalendarMode(true),
+                              setSearch(data.item.city.cityName),
+                              setSearchCityId(data.item.city.cityId),
+                              setSearchCityName(data.item.city.cityName),
+                              setSearchCountryCode(data.item.city.country.countryCode),
+                              setSearchCountryName(data.item.city.country.countryName),
+                              setSearchContinentCode(data.item.city.country.continent.continentCode)}}
+                              
                           >
                             <IconContainer>
-                              <SmallText>EDIT</SmallText>
+                              <SmallText>EDIT TRIP</SmallText>
                             </IconContainer>
                           </BackLeftBtn>
                           <BackLeftBtn onPress={() => deleteTrip(data.item.id)}>
                             <IconContainer>
-                              <SmallText>DELETE</SmallText>
+                              <SmallText>DELETE TRIP</SmallText>
                             </IconContainer>
                           </BackLeftBtn>
                         </RowBack>
