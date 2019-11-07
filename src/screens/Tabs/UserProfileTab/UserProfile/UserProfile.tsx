@@ -367,7 +367,6 @@ export default ({ navigation }) => {
       result = await createCityFn({
         variables: { cityId }
       });
-      setSearch("");
       setIsCalendarMode(true);
       setSearchCityId(result.data.createCity.cityId);
       setSearchCountryCode(result.data.createCity.countryCode);
@@ -375,7 +374,6 @@ export default ({ navigation }) => {
       setSearchCityName(cityName);
       setSearchCountryName(countryName);
     } catch (e) {
-      setSearch("");
       console.log(e);
     }
   };
@@ -403,12 +401,18 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
-  const onAddTripPress = () => {
+  const onAddTripPress = async () => {
     setTripModalOpen(false);
     setSearch("");
     setIsCalendarMode(false);
-    console.log(moment(tripStartDate),moment(tripEndDate))
-    addTripFn();
+    const {
+      data: { addTrip }
+    } = await addTripFn();
+    if (addTrip.ok) {
+      toast("Trip Added");
+    } else {
+      toast("Couldn't Add Trip");
+    }
   };
   const onEditTrbvgipPress = moveNotificationId => {
     setMoveNotificationId(moveNotificationId);
@@ -514,6 +518,10 @@ export default ({ navigation }) => {
             <>
               <CalendarContainer>
                 <CalendarList
+                  style={{
+                    height: "auto",
+                    width: "100%"
+                  }}
                   pastScrollRange={24}
                   futureScrollRange={24}
                   pagingEnabled={true}
@@ -533,17 +541,7 @@ export default ({ navigation }) => {
                   }}
                 />
               </CalendarContainer>
-              <Touchable
-                onPress={async () => {
-                  await setTripModalOpen(false),
-                    await setIsCalendarMode(false),
-                    await navigation.push("CityProfileTabs", {
-                      cityId: searchCityId,
-                      countryCode: searchCountryCode,
-                      continentCode: searchContinentCode
-                    });
-                }}
-              >
+              <Touchable onPress={() => setIsCalendarMode(false)}>
                 <CalendarCityContainer>
                   <SearchCityPhoto cityId={searchCityId} />
                   <SearchHeaderUserContainer>
@@ -559,7 +557,9 @@ export default ({ navigation }) => {
               <TripBtnContainer>
                 <TripSubmitBtn
                   onPress={() => {
-                    setIsCalendarMode(false);
+                    setTripModalOpen(false),
+                      setSearch(""),
+                      setIsCalendarMode(false);
                   }}
                 >
                   <TripText>CANCEL</TripText>
@@ -585,7 +585,7 @@ export default ({ navigation }) => {
                   color: isDarkMode && isDarkMode === true ? "white" : "black"
                 }}
                 autoFocus={true}
-                value={navigation.value}
+                value={search}
                 placeholder={"Search"}
                 placeholderTextColor={"#999"}
                 returnKeyType="search"
