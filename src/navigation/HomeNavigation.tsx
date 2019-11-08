@@ -127,15 +127,15 @@ const CityProfileTabs = createMaterialTopTabNavigator(
 
 const HomeTabs = createMaterialTopTabNavigator(
   {
-    Home: {
-      screen: Home,
+    Match: {
+      screen: Match,
       navigationOptions: {
         header: null,
         mode: "modal"
       }
     },
-    Match: {
-      screen: Match,
+    Home: {
+      screen: Home,
       navigationOptions: {
         header: null,
         mode: "modal"
@@ -161,8 +161,8 @@ const HomeTabs = createMaterialTopTabNavigator(
 
 export default createStackNavigator(
   {
-    UserProfileTabs,
     HomeTabs,
+    UserProfileTabs,
     CityProfileTabs,
     ContinentProfile,
     CountryProfileTabs,

@@ -1253,7 +1253,7 @@ export default ({ navigation }) => {
                       closeOnRowBeginSwipe={true}
                       data={trip}
                       previewOpenValue={1000}
-                      renderItem={data => (
+                      renderItem={(data) => (
                         <TouchableBackRow key={data.item.id}>
                           <TouchableRow
                             onPress={() =>

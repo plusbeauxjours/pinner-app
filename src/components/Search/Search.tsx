@@ -29,7 +29,7 @@ import { useTheme } from "../../context/ThemeContext";
 const Text = styled.Text`
   color: ${props => props.theme.color};
   font-size: 9px;
-  margin-left: 15px;
+  margin-left: 5px;
 `;
 const View = styled.View`
   justify-content: center;
@@ -39,6 +39,7 @@ const View = styled.View`
 
 const Container = styled.View`
   padding: 15px;
+  margin-left: 10px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
@@ -78,7 +79,12 @@ const LoaderContainer = styled.View`
   flex: 1;
   margin-top: 50;
 `;
-
+const ImageContainer = styled.View`
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 45px;
+`;
 const Search = ({ navigation }) => {
   const isDarkMode = useTheme();
   const [search, setSearch] = useState<string>("");
@@ -166,7 +172,14 @@ const Search = ({ navigation }) => {
             setModalOpen(false);
           }}
         >
-          <ScrollView style={{ marginTop: 237, marginBottom: 25 }}>
+          <ScrollView
+            style={{
+              width: constants.width - 30,
+              marginTop: 237,
+              marginBottom: 25,
+              marginLeft: 30 / 2
+            }}
+          >
             {loading || createCityLoading || isLoading ? (
               <LoaderContainer>
                 <Loader />
@@ -211,18 +224,24 @@ const Search = ({ navigation }) => {
                           onPress={() => onPress(prediction.place_id)}
                         >
                           <Container>
-                            <SearchCityPhoto cityId={prediction.place_id} />
-                            <HeaderUserContainer>
-                              <Bold>
-                                {prediction.structured_formatting.main_text}
-                              </Bold>
-                              <Location>
-                                {prediction.structured_formatting.secondary_text
-                                  ? prediction.structured_formatting
-                                      .secondary_text
-                                  : prediction.structured_formatting.main_text}
-                              </Location>
-                            </HeaderUserContainer>
+                            <Header>
+                              <ImageContainer>
+                                <SearchCityPhoto cityId={prediction.place_id} />
+                              </ImageContainer>
+                              <HeaderUserContainer>
+                                <Bold>
+                                  {prediction.structured_formatting.main_text}
+                                </Bold>
+                                <Location>
+                                  {prediction.structured_formatting
+                                    .secondary_text
+                                    ? prediction.structured_formatting
+                                        .secondary_text
+                                    : prediction.structured_formatting
+                                        .main_text}
+                                </Location>
+                              </HeaderUserContainer>
+                            </Header>
                           </Container>
                         </Touchable>
                       ))}

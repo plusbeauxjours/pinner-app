@@ -186,7 +186,7 @@ export default ({ navigation }) => {
                       }}
                     >
                       <Entypo
-                        size={30}
+                        size={25}
                         color={"#999"}
                         name={"dots-three-horizontal"}
                       />

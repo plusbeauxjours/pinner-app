@@ -70,7 +70,14 @@ const ColumnItems = styled.View`
 const DistanceGreyText = styled(GreyText)`
   margin-right: 20;
 `;
-
+const ImageContainer = styled.View`
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+`;
+const GreyLocation = styled(Location)`
+  opacity: 0.6;
+`;
 interface IProps {
   user?: any;
   city?: any;
@@ -106,14 +113,16 @@ const UserRow: React.FC<IProps> = ({
         <Container>
           <Header>
             <Touchable>
-              <Image
-                style={{ height: 36, width: 36, borderRadius: 18 }}
-                source={
-                  user.appAvatarUrl
-                    ? { uri: `${BACKEND_URL}/media/${user.appAvatarUrl}` }
-                    : require(`../Images/avatars/earth1.png`)
-                }
-              />
+              <ImageContainer>
+                <Image
+                  style={{ height: 36, width: 36, borderRadius: 18 }}
+                  source={
+                    user.appAvatarUrl
+                      ? { uri: `${BACKEND_URL}/media/${user.appAvatarUrl}` }
+                      : require(`../Images/avatars/earth1.png`)
+                  }
+                />
+              </ImageContainer>
             </Touchable>
             <Touchable>
               <HeaderUserContainer>
@@ -132,14 +141,16 @@ const UserRow: React.FC<IProps> = ({
         <Container>
           <Header>
             <Touchable>
-              <Image
-                style={{ height: 36, width: 36, borderRadius: 18 }}
-                source={
-                  user.appAvatarUrl
-                    ? { uri: `${BACKEND_URL}/media/${user.appAvatarUrl}` }
-                    : require(`../Images/avatars/earth1.png`)
-                }
-              />
+              <ImageContainer>
+                <Image
+                  style={{ height: 36, width: 36, borderRadius: 18 }}
+                  source={
+                    user.appAvatarUrl
+                      ? { uri: `${BACKEND_URL}/media/${user.appAvatarUrl}` }
+                      : require(`../Images/avatars/earth1.png`)
+                  }
+                />
+              </ImageContainer>
             </Touchable>
             <Touchable>
               <HeaderUserContainer>
@@ -446,16 +457,18 @@ const UserRow: React.FC<IProps> = ({
         <Container>
           <Header>
             <Touchable>
-              <Image
-                style={{ height: 36, width: 36, borderRadius: 18 }}
-                source={
-                  coffee.host.profile.appAvatarUrl
-                    ? {
-                        uri: `${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`
-                      }
-                    : require(`../Images/avatars/earth1.png`)
-                }
-              />
+              <ImageContainer>
+                <Image
+                  style={{ height: 36, width: 36, borderRadius: 18 }}
+                  source={
+                    coffee.host.profile.appAvatarUrl
+                      ? {
+                          uri: `${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`
+                        }
+                      : require(`../Images/avatars/earth1.png`)
+                  }
+                />
+              </ImageContainer>
             </Touchable>
             <Touchable>
               <HeaderUserContainer>
@@ -503,25 +516,31 @@ const UserRow: React.FC<IProps> = ({
             <Container onPress={() => onPress(match.id)}>
               <Header>
                 <Touchable>
-                  <Image
-                    style={{ height: 36, width: 36, borderRadius: 18 }}
-                    source={
-                      match.guest.profile.appAvatarUrl
-                        ? {
-                            uri: `${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`
-                          }
-                        : require(`../Images/avatars/earth1.png`)
-                    }
-                  />
+                  <ImageContainer>
+                    <Image
+                      style={{ height: 36, width: 36, borderRadius: 18 }}
+                      source={
+                        match.guest.profile.appAvatarUrl
+                          ? {
+                              uri: `${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`
+                            }
+                          : require(`../Images/avatars/earth1.png`)
+                      }
+                    />
+                  </ImageContainer>
                   {!match.isReadByHost && <Mark>N</Mark>}
                 </Touchable>
                 <Touchable>
                   <HeaderUserContainer>
                     <Bold>{match.guest.profile.username}</Bold>
                     <Location>
-                      {match.coffee.city.cityName},{" "}
-                      {match.coffee.city.country.countryName}
+                      {match.guest.profile.currentCity.cityName},{" "}
+                      {match.guest.profile.currentCity.country.countryName}
                     </Location>
+                    <GreyLocation>
+                      Matched in {match.coffee.city.cityName}
+                      {match.coffee.city.country.countryEmoji}
+                    </GreyLocation>
                   </HeaderUserContainer>
                 </Touchable>
               </Header>
@@ -530,25 +549,31 @@ const UserRow: React.FC<IProps> = ({
             <Container onPress={() => onPress(match.id)}>
               <Header>
                 <Touchable>
-                  <Image
-                    style={{ height: 36, width: 36, borderRadius: 18 }}
-                    source={
-                      match.host.profile.appAvatarUrl
-                        ? {
-                            uri: `${BACKEND_URL}/media/${match.host.profile.appAvatarUrl}`
-                          }
-                        : require(`../Images/avatars/earth1.png`)
-                    }
-                  />
+                  <ImageContainer>
+                    <Image
+                      style={{ height: 36, width: 36, borderRadius: 18 }}
+                      source={
+                        match.host.profile.appAvatarUrl
+                          ? {
+                              uri: `${BACKEND_URL}/media/${match.host.profile.appAvatarUrl}`
+                            }
+                          : require(`../Images/avatars/earth1.png`)
+                      }
+                    />
+                  </ImageContainer>
                   {!match.isReadByGuest && <Mark>N</Mark>}
                 </Touchable>
                 <Touchable>
                   <HeaderUserContainer>
                     <Bold>{match.host.profile.username}</Bold>
                     <Location>
-                      {match.coffee.city.cityName},{" "}
-                      {match.coffee.city.country.countryName}
+                      {match.host.profile.currentCity.cityName},{" "}
+                      {match.host.profile.currentCity.country.countryName}
                     </Location>
+                    <GreyLocation>
+                      Matched in {match.coffee.city.cityName}
+                      {match.coffee.city.country.countryEmoji}
+                    </GreyLocation>
                   </HeaderUserContainer>
                 </Touchable>
               </Header>
