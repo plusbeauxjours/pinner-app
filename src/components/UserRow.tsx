@@ -4,6 +4,7 @@ import styled from "styled-components";
 import constants, { BACKEND_URL } from "../../constants";
 import CityLikeBtn from "./CityLikeBtn/CityLikeBtn";
 import moment from "moment";
+import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 
 const Container = styled.View`
   padding: 15px 5px 15px 5px;
@@ -170,13 +171,14 @@ const UserRow: React.FC<IProps> = ({
         <Container>
           <Header>
             <Touchable>
-              <Image
+              <ProgressiveImage
                 style={{ height: 40, width: 40, borderRadius: 5 }}
-                source={
+                preview={
                   trip.city.cityThumbnail && {
                     uri: trip.city.cityThumbnail
                   }
                 }
+                uri={trip.city.cityThumbnail && trip.city.cityThumbnail}
               />
             </Touchable>
             <Touchable>
@@ -218,13 +220,14 @@ const UserRow: React.FC<IProps> = ({
         <Container>
           <Header>
             <Touchable>
-              <Image
+              <ProgressiveImage
                 style={{ height: 40, width: 40, borderRadius: 5 }}
-                source={
+                preview={
                   city.cityThumbnail && {
                     uri: city.cityThumbnail
                   }
                 }
+                uri={city.cityThumbnail && city.cityThumbnail}
               />
             </Touchable>
             <Touchable>
@@ -246,13 +249,14 @@ const UserRow: React.FC<IProps> = ({
         <Container>
           <Header>
             <Touchable>
-              <Image
+              <ProgressiveImage
                 style={{ height: 40, width: 40, borderRadius: 5 }}
-                source={
+                preview={
                   city.cityThumbnail && {
                     uri: city.cityThumbnail
                   }
                 }
+                uri={city.cityThumbnail && city.cityThumbnail}
               />
             </Touchable>
             <Touchable>
@@ -277,13 +281,14 @@ const UserRow: React.FC<IProps> = ({
         <Container>
           <Header>
             <Touchable>
-              <Image
+              <ProgressiveImage
                 style={{ height: 40, width: 40, borderRadius: 5 }}
-                source={
+                preview={
                   city.cityThumbnail && {
-                    uri: `${city.cityThumbnail}`
+                    uri: city.cityThumbnail
                   }
                 }
+                uri={city.cityThumbnail && city.cityThumbnail}
               />
             </Touchable>
             <Touchable>
@@ -320,13 +325,14 @@ const UserRow: React.FC<IProps> = ({
         <Container>
           <Header>
             <Touchable>
-              <Image
+              <ProgressiveImage
                 style={{ height: 40, width: 40, borderRadius: 5 }}
-                source={
-                  country.countryThumbnail && {
-                    uri: country.countryThumbnail
+                preview={
+                  city.cityThumbnail && {
+                    uri: city.cityThumbnail
                   }
                 }
+                uri={city.cityThumbnail && city.cityThumbnail}
               />
             </Touchable>
             <Touchable>
@@ -346,13 +352,14 @@ const UserRow: React.FC<IProps> = ({
         <Container>
           <Header>
             <Touchable>
-              <Image
+              <ProgressiveImage
                 style={{ height: 40, width: 40, borderRadius: 5 }}
-                source={
+                preview={
                   country.countryThumbnail && {
                     uri: country.countryThumbnail
                   }
                 }
+                uri={country.countryThumbnail && country.countryThumbnail}
               />
             </Touchable>
             <Touchable>
@@ -389,12 +396,15 @@ const UserRow: React.FC<IProps> = ({
         <Container>
           <Header>
             <Touchable>
-              <Image
+              <ProgressiveImage
                 style={{ height: 40, width: 40, borderRadius: 5 }}
-                source={
+                preview={
                   continent.continentThumbnail && {
                     uri: continent.continentThumbnail
                   }
+                }
+                uri={
+                  continent.continentThumbnail && continent.continentThumbnail
                 }
               />
             </Touchable>
@@ -415,12 +425,15 @@ const UserRow: React.FC<IProps> = ({
         <Container>
           <Header>
             <Touchable>
-              <Image
+              <ProgressiveImage
                 style={{ height: 40, width: 40, borderRadius: 5 }}
-                source={
+                preview={
                   continent.continentThumbnail && {
                     uri: continent.continentThumbnail
                   }
+                }
+                uri={
+                  continent.continentThumbnail && continent.continentThumbnail
                 }
               />
             </Touchable>
@@ -486,13 +499,14 @@ const UserRow: React.FC<IProps> = ({
         <Container>
           <Header>
             <Touchable>
-              <Image
+              <ProgressiveImage
                 style={{ height: 40, width: 40, borderRadius: 5 }}
-                source={
+                preview={
                   coffee.city.cityThumbnail && {
-                    uri: `${coffee.city.cityThumbnail}`
+                    uri: coffee.city.cityThumbnail
                   }
                 }
+                uri={coffee.city.cityThumbnail && coffee.city.cityThumbnail}
               />
             </Touchable>
             <Touchable>

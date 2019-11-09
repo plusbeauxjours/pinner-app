@@ -1,12 +1,19 @@
 import React from "react";
 import uuid from "uuid";
-import { GiftedChat, Actions } from "react-native-gifted-chat";
+import { GiftedChat, Actions, Bubble } from "react-native-gifted-chat";
 import { withNavigation, NavigationScreenProp } from "react-navigation";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import CustomView from "./CustomView";
 import { database, chat_send } from "../../../../../Fire";
-import { Platform, Image, TouchableOpacity, Alert } from "react-native";
+import {
+  Platform,
+  Image,
+  TouchableOpacity,
+  Alert,
+  View,
+  Text
+} from "react-native";
 import NavIcon from "../../../../components/NavIcon";
 import { BACKEND_URL } from "../../../../../constants";
 import ChatPresenter from "./ChatPresenter";
@@ -95,7 +102,7 @@ class ChatContainer extends React.Component<IProps, IState> {
   public onSend = (messages = []) => {
     let msg = messages[0];
     if (msg) {
-      // msg._id = get_new_key("messages");
+      msg._id = get_new_key("messages");
       msg.user.name = this.state.userName;
       chat_send(this.state.chatId, msg);
       this.setState(previousState => ({
