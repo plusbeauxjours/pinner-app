@@ -1226,6 +1226,7 @@ export interface ContinentProfile_continentProfile_countries {
 
 export interface ContinentProfile_continentProfile {
   __typename: "ContinentProfileResponse";
+  page: number | null;
   count: number | null;
   hasNextPage: boolean | null;
   continent: ContinentProfile_continentProfile_continent | null;
@@ -2240,8 +2241,6 @@ export interface GetTrips_getTrips_trip {
 
 export interface GetTrips_getTrips {
   __typename: "TripResponse";
-  page: number | null;
-  hasNextPage: boolean | null;
   trip: (GetTrips_getTrips_trip | null)[] | null;
 }
 

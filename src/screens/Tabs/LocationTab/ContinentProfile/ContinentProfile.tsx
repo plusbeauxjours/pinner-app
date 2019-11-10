@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RefreshControl, Image } from "react-native";
+import { RefreshControl, Image, FlatList } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useLocation } from "../../../../context/LocationContext";
@@ -16,6 +16,7 @@ import { SLACK_REPORT_LOCATIONS } from "../../../../sharedQueries";
 import { CONTINENT_PROFILE } from "./ContinentProfileQueries";
 import { countries as countryData } from "../../../../../countryData";
 import constants from "../../../../../constants";
+import InfiniteScrollView from "react-native-infinite-scroll-view";
 
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -72,7 +73,8 @@ export default ({ navigation }) => {
   const {
     data: profileData,
     loading: profileLoading,
-    refetch: profileRefetch
+    refetch: profileRefetch,
+    fetchMore: profileFetchMore
   } = useQuery<ContinentProfile, ContinentProfileVariables>(CONTINENT_PROFILE, {
     variables: { continentCode }
   });
@@ -105,6 +107,31 @@ export default ({ navigation }) => {
     }
     return chunks;
   };
+  const loadMore = page => {
+    profileFetchMore({
+      variables: {
+        page,
+        continentCode
+      },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        if (!fetchMoreResult) {
+          return previousResult;
+        }
+        const data = {
+          continentProfile: {
+            ...previousResult.continentProfile,
+            countries: [
+              ...previousResult.continentProfile.countries,
+              ...fetchMoreResult.continentProfile.countries
+            ],
+            page: fetchMoreResult.continentProfile.page,
+            hasNextPage: fetchMoreResult.continentProfile.hasNextPage
+          }
+        };
+        return data;
+      }
+    });
+  };
   if (profileLoading) {
     return (
       <LoaderContainer>
@@ -114,6 +141,8 @@ export default ({ navigation }) => {
   } else {
     const {
       continentProfile: {
+        page = null,
+        hasNextPage = null,
         count = null,
         continent = null,
         continents = null,
@@ -194,27 +223,38 @@ export default ({ navigation }) => {
                 {continent.countryCount}
                 {continent.countryCount === 1 ? " COUNTRY" : " COUNTRIES"}
               </Title>
-              {countries.map((country: any, index: any) => (
-                <Touchable
-                  key={index}
-                  onPress={() => {
-                    if (
-                      navigation.getParam("countryCode") !==
-                        country.countryCode ||
-                      navigation.getParam("cityId")
-                    ) {
-                      navigation.push("CountryProfileTabs", {
-                        countryCode: country.countryCode,
-                        continentCode: country.continent.continentCode
-                      });
-                    } else {
-                      navigation.goBack();
-                    }
-                  }}
-                >
-                  <UserRow country={country} type={"country"} />
-                </Touchable>
-              ))}
+              <FlatList
+                data={countries}
+                renderItem={({ item }) => {
+                  return (
+                    <Touchable
+                      onPress={() => {
+                        if (
+                          navigation.getParam("countryCode") !==
+                            item.countryCode ||
+                          navigation.getParam("cityId")
+                        ) {
+                          navigation.push("CountryProfileTabs", {
+                            countryCode: item.countryCode,
+                            continentCode: item.continent.continentCode
+                          });
+                        } else {
+                          navigation.goBack();
+                        }
+                      }}
+                    >
+                      <UserRow country={item} type={"country"} />
+                    </Touchable>
+                  );
+                }}
+                renderScrollComponent={props => (
+                  <InfiniteScrollView {...props} />
+                )}
+                onEndReachedThreshold={0.8}
+                onEndReached={hasNextPage ? loadMore(page) : {}}
+                onLoadMoreAsync={() => {}}
+                keyExtractor={item => item.id}
+              />
             </Item>
           )}
         </Container>

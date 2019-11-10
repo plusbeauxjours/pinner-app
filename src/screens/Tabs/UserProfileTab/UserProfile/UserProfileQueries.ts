@@ -65,8 +65,6 @@ export const GET_USER = gql`
 export const GET_TRIPS = gql`
   query GetTrips($username: String!, $page: Int) {
     getTrips(username: $username, page: $page) {
-      page
-      hasNextPage
       trip {
         id
         city {

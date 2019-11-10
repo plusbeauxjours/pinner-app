@@ -75,6 +75,7 @@ export default ({ navigation }) => {
     loading: coffeeLoading,
     refetch: coffeeRefetch
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
+    fetchPolicy: "network-only",
     variables: { location: "city", cityId }
   });
   const onRefresh = async () => {

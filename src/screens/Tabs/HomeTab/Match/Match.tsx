@@ -83,6 +83,7 @@ export default ({ navigation }) => {
     MarkAsReadMatch,
     MarkAsReadMatchVariables
   >(MARK_AS_READ_MATCH, {
+    fetchPolicy: "network-only",
     update(cache, { data: { markAsReadMatch } }) {
       try {
         const matchData = cache.readQuery<GetMatches, GetMatchesVariables>({

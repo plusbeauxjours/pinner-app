@@ -485,6 +485,7 @@ export default ({ navigation }) => {
                   )}
                   onEndReachedThreshold={0.8}
                   onEndReached={hasNextPage ? loadMore(page) : {}}
+                  onLoadMoreAsync={() => {}}
                   keyExtractor={item => item.id}
                 />
               </Item>
