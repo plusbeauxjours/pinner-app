@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { RefreshControl, Image, Platform } from "react-native";
+import { RefreshControl, Image, Platform, FlatList } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -35,6 +35,7 @@ import Weather from "../../../../components/Weather";
 import { useTheme } from "../../../../context/ThemeContext";
 import Modal from "react-native-modal";
 import CoffeeDetail from "../../CoffeeTab/CoffeeDetail";
+import InfiniteScrollView from "react-native-infinite-scroll-view";
 
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -110,7 +111,8 @@ export default ({ navigation }) => {
   const {
     data: profileData,
     loading: profileLoading,
-    refetch: profileRefetch
+    refetch: profileRefetch,
+    fetchMore: profileFetchMore
   } = useQuery<CityProfile, CityProfileVariables>(CITY_PROFILE, {
     variables: { cityId }
   });
@@ -165,6 +167,31 @@ export default ({ navigation }) => {
     }
     return chunks;
   };
+  const loadMore = page => {
+    profileFetchMore({
+      variables: {
+        page,
+        cityId
+      },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        if (!fetchMoreResult) {
+          return previousResult;
+        }
+        const data = {
+          cityProfile: {
+            ...previousResult.cityProfile,
+            usersNow: [
+              ...previousResult.cityProfile.usersNow,
+              ...fetchMoreResult.cityProfile.usersNow
+            ],
+            page: fetchMoreResult.cityProfile.page,
+            hasNextPage: fetchMoreResult.cityProfile.hasNextPage
+          }
+        };
+        return data;
+      }
+    });
+  };
   if (
     profileLoading ||
     nearCitiesLoading ||
@@ -180,6 +207,7 @@ export default ({ navigation }) => {
     const {
       cityProfile: {
         count = null,
+        page = null,
         hasNextPage = null,
         city = null,
         usersBefore = null,
@@ -437,18 +465,28 @@ export default ({ navigation }) => {
             {usersNow && usersNow.length !== 0 && (
               <Item>
                 <Title>USERS NOW</Title>
-                {usersNow.map((user, index: any) => (
-                  <Touchable
-                    key={index}
-                    onPress={() =>
-                      navigation.push("UserProfileTabs", {
-                        username: user.username
-                      })
-                    }
-                  >
-                    <UserRow user={user} type={"user"} />
-                  </Touchable>
-                ))}
+                <FlatList
+                  data={usersNow}
+                  renderItem={({ item }) => {
+                    return (
+                      <Touchable
+                        onPress={() =>
+                          navigation.push("UserProfileTabs", {
+                            username: item.username
+                          })
+                        }
+                      >
+                        <UserRow user={item} type={"user"} />
+                      </Touchable>
+                    );
+                  }}
+                  renderScrollComponent={props => (
+                    <InfiniteScrollView {...props} />
+                  )}
+                  onEndReachedThreshold={0.8}
+                  onEndReached={hasNextPage ? loadMore(page) : {}}
+                  keyExtractor={item => item.id}
+                />
               </Item>
             )}
           </Container>

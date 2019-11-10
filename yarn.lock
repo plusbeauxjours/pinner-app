@@ -5815,6 +5815,10 @@ react-native-image-zoom-viewer@^2.2.26:
   dependencies:
     react-native-image-pan-zoom "^2.1.9"
 
+react-native-infinite-flatlist-patch@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-infinite-flatlist-patch/-/react-native-infinite-flatlist-patch-1.0.3.tgz#9fc1ecdc1bd48701547453eb520864fc4668e01f"
+
 react-native-infinite-scroll-view@^0.4.5:
   version "0.4.5"
   resolved "https://registry.yarnpkg.com/react-native-infinite-scroll-view/-/react-native-infinite-scroll-view-0.4.5.tgz#5200590519716ee0694f12b81d2f091b6df4571f"

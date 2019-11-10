@@ -278,7 +278,6 @@ export default ({ navigation }) => {
                 renderItem={({ item }) => {
                   return (
                     <Touchable
-                      key={item.cityId}
                       onPress={() =>
                         navigation.push("CityProfileTabs", {
                           cityId: item.cityId,
@@ -296,8 +295,8 @@ export default ({ navigation }) => {
                 renderScrollComponent={props => (
                   <InfiniteScrollView {...props} />
                 )}
-                onEndReached={() => hasNextPage && loadMore(page)}
                 onEndReachedThreshold={0.8}
+                onEndReached={hasNextPage ? loadMore(page) : {}}
                 keyExtractor={item => item.id}
               />
             </Item>

@@ -2,8 +2,8 @@ import gql from "graphql-tag";
 import { MATCH_FRAGMENT } from "../../../../fragmentQueries";
 
 export const GET_MATCHES = gql`
-  query GetMatches($matchPage: Int) {
-    getMatches(matchPage: $matchPage) {
+  query GetMatches($page: Int) {
+    getMatches(page: $page) {
       matches {
         ...MatchParts
       }

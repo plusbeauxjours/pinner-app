@@ -115,7 +115,6 @@ export default ({ navigation }) => {
     const {
       continentProfile: {
         count = null,
-        hasNextPage = null,
         continent = null,
         continents = null,
         countries = null

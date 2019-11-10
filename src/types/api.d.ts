@@ -950,7 +950,7 @@ export interface GetMatches {
 }
 
 export interface GetMatchesVariables {
-  matchPage?: number | null;
+  page?: number | null;
 }
 
 /* tslint:disable */
@@ -1075,6 +1075,7 @@ export interface CityProfile_cityProfile_city {
 
 export interface CityProfile_cityProfile {
   __typename: "CityProfileResponse";
+  page: number | null;
   count: number | null;
   hasNextPage: boolean | null;
   usersNow: (CityProfile_cityProfile_usersNow | null)[] | null;

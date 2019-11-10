@@ -328,11 +328,11 @@ const UserRow: React.FC<IProps> = ({
               <ProgressiveImage
                 style={{ height: 40, width: 40, borderRadius: 5 }}
                 preview={
-                  city.cityThumbnail && {
-                    uri: city.cityThumbnail
+                  country.countryThumbnail && {
+                    uri: country.countryThumbnail
                   }
                 }
-                uri={city.cityThumbnail && city.cityThumbnail}
+                uri={country.countryThumbnail && country.countryThumbnail}
               />
             </Touchable>
             <Touchable>

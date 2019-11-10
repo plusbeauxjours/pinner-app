@@ -305,8 +305,7 @@ export default ({ navigation }) => {
     loading: profileLoading,
     refetch: profileRefetch
   } = useQuery<UserProfile, UserProfileVariables>(GET_USER, {
-    variables: { username },
-    fetchPolicy: "network-only"
+    variables: { username }
   });
   const {
     data: getSameTripsData,
@@ -1253,7 +1252,7 @@ export default ({ navigation }) => {
                       closeOnRowBeginSwipe={true}
                       data={trip}
                       previewOpenValue={1000}
-                      renderItem={(data) => (
+                      renderItem={data => (
                         <TouchableBackRow key={data.item.id}>
                           <TouchableRow
                             onPress={() =>
