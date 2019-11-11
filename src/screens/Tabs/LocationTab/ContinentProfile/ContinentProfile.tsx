@@ -17,6 +17,9 @@ import { CONTINENT_PROFILE } from "./ContinentProfileQueries";
 import { countries as countryData } from "../../../../../countryData";
 import constants from "../../../../../constants";
 import InfiniteScrollView from "react-native-infinite-scroll-view";
+import Toast from "react-native-root-toast";
+import { Entypo } from "@expo/vector-icons";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -60,7 +63,18 @@ const LoaderContainer = styled.View`
   justify-content: center;
   align-items: center;
 `;
-
+const IconTouchable = styled.TouchableOpacity`
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+`;
+const LocationNameContainer = styled.View`
+  width: ${constants.width - 30};
+  align-self: flex-start;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
 export default ({ navigation }) => {
   const location = useLocation();
   const [continentCode, setContinentCode] = useState<string>(
@@ -68,8 +82,60 @@ export default ({ navigation }) => {
       countryData.find(i => i.code === location.currentCountryCode).continent
   );
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [payload, setPayload] = useState<string>();
-  const [sameContinents, setSameContinents] = useState([]);
+  const { showActionSheetWithOptions } = useActionSheet();
+  const selectReportLocation = () => {
+    showActionSheetWithOptions(
+      {
+        options: ["Inappropriate Photoes", "Wrong Location", "Other", "Cancel"],
+        cancelButtonIndex: 3,
+        title: `Choose a reason for reporting this continent.`,
+        showSeparators: true
+      },
+      async buttonIndex => {
+        if (buttonIndex === 0) {
+          reportLocation("PHOTO");
+        } else if (buttonIndex === 1) {
+          reportLocation("LOCATION");
+        } else if (buttonIndex === 2) {
+          reportLocation("OTHER");
+        } else {
+          null;
+        }
+      }
+    );
+  };
+  const reportLocation = (payload: string) => {
+    showActionSheetWithOptions(
+      {
+        options: ["Yes", "No"],
+        destructiveButtonIndex: 0,
+        cancelButtonIndex: 1,
+        title: `Are you sure to report this continent?`
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) {
+          slackReportLocationsFn({
+            variables: {
+              targetLocationId: continentCode,
+              targetLocationType: "continent",
+              payload
+            }
+          });
+          toast("Reported");
+        }
+      }
+    );
+  };
+  const toast = (message: string) => {
+    Toast.show(message, {
+      duration: Toast.durations.LONG,
+      position: Toast.positions.BOTTOM,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      delay: 0
+    });
+  };
   const {
     data: profileData,
     loading: profileLoading,
@@ -81,13 +147,7 @@ export default ({ navigation }) => {
   const [slackReportLocationsFn] = useMutation<
     SlackReportLocations,
     SlackReportLocationsVariables
-  >(SLACK_REPORT_LOCATIONS, {
-    variables: {
-      targetLocationId: continentCode,
-      targetLocationType: "continent",
-      payload
-    }
-  });
+  >(SLACK_REPORT_LOCATIONS);
   const onRefresh = async () => {
     try {
       setRefreshing(true);
@@ -170,7 +230,16 @@ export default ({ navigation }) => {
                   }
                 }
               />
-              <Bold>{continent.continentName}</Bold>
+              <LocationNameContainer>
+                <Bold>{continent.continentName}</Bold>
+                <IconTouchable onPress={() => selectReportLocation()}>
+                  <Entypo
+                    size={22}
+                    color={"#999"}
+                    name={"dots-three-horizontal"}
+                  />
+                </IconTouchable>
+              </LocationNameContainer>
               {count && count !== 0 ? (
                 <Text>
                   You've been to {continent.continentName} {count}

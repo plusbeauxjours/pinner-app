@@ -22,6 +22,9 @@ import { countries as countryData } from "../../../../../countryData";
 import { useTheme } from "../../../../context/ThemeContext";
 import { darkMode, lightMode } from "../../../../styles/mapStyles";
 import InfiniteScrollView from "react-native-infinite-scroll-view";
+import Toast from "react-native-root-toast";
+import { Entypo } from "@expo/vector-icons";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -75,7 +78,18 @@ const LoaderContainer = styled.View`
   justify-content: center;
   align-items: center;
 `;
-
+const IconTouchable = styled.TouchableOpacity`
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+`;
+const LocationNameContainer = styled.View`
+  width: ${constants.width - 30};
+  align-self: flex-start;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
 export default ({ navigation }) => {
   const location = useLocation();
   const isDarkMode = useTheme();
@@ -83,18 +97,65 @@ export default ({ navigation }) => {
     navigation.getParam("countryCode") || location.currentCountryCode
   );
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [payload, setPayload] = useState<string>();
   const [mapOpen, setMapOpen] = useState<boolean>(false);
+  const { showActionSheetWithOptions } = useActionSheet();
+  const selectReportLocation = () => {
+    showActionSheetWithOptions(
+      {
+        options: ["Inappropriate Photoes", "Wrong Location", "Other", "Cancel"],
+        cancelButtonIndex: 3,
+        title: `Choose a reason for reporting this country.`,
+        showSeparators: true
+      },
+      async buttonIndex => {
+        if (buttonIndex === 0) {
+          reportLocation("PHOTO");
+        } else if (buttonIndex === 1) {
+          reportLocation("LOCATION");
+        } else if (buttonIndex === 2) {
+          reportLocation("OTHER");
+        } else {
+          null;
+        }
+      }
+    );
+  };
+  const reportLocation = (payload: string) => {
+    showActionSheetWithOptions(
+      {
+        options: ["Yes", "No"],
+        destructiveButtonIndex: 0,
+        cancelButtonIndex: 1,
+        title: `Are you sure to report this country?`
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) {
+          slackReportLocationsFn({
+            variables: {
+              targetLocationId: countryCode,
+              targetLocationType: "country",
+              payload
+            }
+          });
+          toast("Reported");
+        }
+      }
+    );
+  };
+  const toast = (message: string) => {
+    Toast.show(message, {
+      duration: Toast.durations.LONG,
+      position: Toast.positions.BOTTOM,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      delay: 0
+    });
+  };
   const [slackReportLocationsFn] = useMutation<
     SlackReportLocations,
     SlackReportLocationsVariables
-  >(SLACK_REPORT_LOCATIONS, {
-    variables: {
-      targetLocationId: countryCode,
-      targetLocationType: "country",
-      payload
-    }
-  });
+  >(SLACK_REPORT_LOCATIONS);
   const {
     data: profileData,
     loading: profileLoading,
@@ -219,11 +280,19 @@ export default ({ navigation }) => {
                   />
                 </Touchable>
               )}
-
-              <CountryNameContainer>
-                <Bold>{country.countryName}</Bold>
-                <Flag>{country.countryEmoji}</Flag>
-              </CountryNameContainer>
+              <LocationNameContainer>
+                <CountryNameContainer>
+                  <Bold>{country.countryName}</Bold>
+                  <Flag>{country.countryEmoji}</Flag>
+                </CountryNameContainer>
+                <IconTouchable onPress={() => selectReportLocation()}>
+                  <Entypo
+                    size={22}
+                    color={"#999"}
+                    name={"dots-three-horizontal"}
+                  />
+                </IconTouchable>
+              </LocationNameContainer>
               {count && count !== 0 ? (
                 <Text>
                   You've been to {country.countryName} {count}
