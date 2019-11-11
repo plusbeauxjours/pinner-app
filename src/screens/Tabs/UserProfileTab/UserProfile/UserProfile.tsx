@@ -1206,7 +1206,10 @@ export default ({ navigation }) => {
                 coffees &&
                 coffees.length !== 0 &&
                 coffees.map(coffee => (
-                  <Touchable onPress={() => onPress(coffee.uuid)}>
+                  <Touchable
+                    key={coffee.id}
+                    onPress={() => onPress(coffee.uuid)}
+                  >
                     <Item>
                       <UserName>☕️</UserName>
                       <Bold>COFFEE </Bold>

@@ -36,6 +36,7 @@ const Header = styled.View`
 const SmallText = styled.Text`
   font-size: 9px;
   color: #999;
+  text-align: center;
 `;
 const Mark = styled.Text`
   color: ${props => props.theme.color};
@@ -78,6 +79,15 @@ const ImageContainer = styled.View`
 `;
 const GreyLocation = styled(Location)`
   opacity: 0.6;
+`;
+const View = styled.View`
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 40px;
+  width: 40px;
+  border: 0.5px solid ${props => props.theme.borderColor};
+  border-radius: 5px;
 `;
 interface IProps {
   user?: any;
@@ -171,15 +181,21 @@ const UserRow: React.FC<IProps> = ({
         <Container>
           <Header>
             <Touchable>
-              <ProgressiveImage
-                style={{ height: 40, width: 40, borderRadius: 5 }}
-                preview={
-                  trip.city.cityThumbnail && {
-                    uri: trip.city.cityThumbnail
+              {trip.city.cityThumbnail ? (
+                <ProgressiveImage
+                  style={{ height: 40, width: 40, borderRadius: 5 }}
+                  preview={
+                    trip.city.cityThumbnail && {
+                      uri: trip.city.cityThumbnail
+                    }
                   }
-                }
-                uri={trip.city.cityThumbnail && trip.city.cityThumbnail}
-              />
+                  uri={trip.city.cityThumbnail && trip.city.cityThumbnail}
+                />
+              ) : (
+                <View>
+                  <SmallText>NO PHOTO</SmallText>
+                </View>
+              )}
             </Touchable>
             <Touchable>
               <HeaderUserContainer>
@@ -220,15 +236,21 @@ const UserRow: React.FC<IProps> = ({
         <Container>
           <Header>
             <Touchable>
-              <ProgressiveImage
-                style={{ height: 40, width: 40, borderRadius: 5 }}
-                preview={
-                  city.cityThumbnail && {
-                    uri: city.cityThumbnail
+              {city.cityThumbnail ? (
+                <ProgressiveImage
+                  style={{ height: 40, width: 40, borderRadius: 5 }}
+                  preview={
+                    city.cityThumbnail && {
+                      uri: city.cityThumbnail
+                    }
                   }
-                }
-                uri={city.cityThumbnail && city.cityThumbnail}
-              />
+                  uri={city.cityThumbnail && city.cityThumbnail}
+                />
+              ) : (
+                <View>
+                  <SmallText>NO PHOTO</SmallText>
+                </View>
+              )}
             </Touchable>
             <Touchable>
               <HeaderUserContainer>
@@ -249,15 +271,21 @@ const UserRow: React.FC<IProps> = ({
         <Container>
           <Header>
             <Touchable>
-              <ProgressiveImage
-                style={{ height: 40, width: 40, borderRadius: 5 }}
-                preview={
-                  city.cityThumbnail && {
-                    uri: city.cityThumbnail
+              {city.cityThumbnail ? (
+                <ProgressiveImage
+                  style={{ height: 40, width: 40, borderRadius: 5 }}
+                  preview={
+                    city.cityThumbnail && {
+                      uri: city.cityThumbnail
+                    }
                   }
-                }
-                uri={city.cityThumbnail && city.cityThumbnail}
-              />
+                  uri={city.cityThumbnail && city.cityThumbnail}
+                />
+              ) : (
+                <View>
+                  <SmallText>NO PHOTO</SmallText>
+                </View>
+              )}
             </Touchable>
             <Touchable>
               <HeaderUserContainer>
@@ -281,15 +309,21 @@ const UserRow: React.FC<IProps> = ({
         <Container>
           <Header>
             <Touchable>
-              <ProgressiveImage
-                style={{ height: 40, width: 40, borderRadius: 5 }}
-                preview={
-                  city.cityThumbnail && {
-                    uri: city.cityThumbnail
+              {city.cityThumbnail ? (
+                <ProgressiveImage
+                  style={{ height: 40, width: 40, borderRadius: 5 }}
+                  preview={
+                    city.cityThumbnail && {
+                      uri: city.cityThumbnail
+                    }
                   }
-                }
-                uri={city.cityThumbnail && city.cityThumbnail}
-              />
+                  uri={city.cityThumbnail && city.cityThumbnail}
+                />
+              ) : (
+                <View>
+                  <SmallText>NO PHOTO</SmallText>
+                </View>
+              )}
             </Touchable>
             <Touchable>
               <HeaderUserContainer>
@@ -325,15 +359,21 @@ const UserRow: React.FC<IProps> = ({
         <Container>
           <Header>
             <Touchable>
-              <ProgressiveImage
-                style={{ height: 40, width: 40, borderRadius: 5 }}
-                preview={
-                  country.countryThumbnail && {
-                    uri: country.countryThumbnail
+              {country.countryThumbnail ? (
+                <ProgressiveImage
+                  style={{ height: 40, width: 40, borderRadius: 5 }}
+                  preview={
+                    country.countryThumbnail && {
+                      uri: country.countryThumbnail
+                    }
                   }
-                }
-                uri={country.countryThumbnail && country.countryThumbnail}
-              />
+                  uri={country.countryThumbnail && country.countryThumbnail}
+                />
+              ) : (
+                <View>
+                  <SmallText>NO PHOTO</SmallText>
+                </View>
+              )}
             </Touchable>
             <Touchable>
               <HeaderUserContainer>
@@ -352,15 +392,21 @@ const UserRow: React.FC<IProps> = ({
         <Container>
           <Header>
             <Touchable>
-              <ProgressiveImage
-                style={{ height: 40, width: 40, borderRadius: 5 }}
-                preview={
-                  country.countryThumbnail && {
-                    uri: country.countryThumbnail
+              {country.countryThumbnail ? (
+                <ProgressiveImage
+                  style={{ height: 40, width: 40, borderRadius: 5 }}
+                  preview={
+                    country.countryThumbnail && {
+                      uri: country.countryThumbnail
+                    }
                   }
-                }
-                uri={country.countryThumbnail && country.countryThumbnail}
-              />
+                  uri={country.countryThumbnail && country.countryThumbnail}
+                />
+              ) : (
+                <View>
+                  <SmallText>NO PHOTO</SmallText>
+                </View>
+              )}
             </Touchable>
             <Touchable>
               <HeaderUserContainer>
@@ -396,17 +442,23 @@ const UserRow: React.FC<IProps> = ({
         <Container>
           <Header>
             <Touchable>
-              <ProgressiveImage
-                style={{ height: 40, width: 40, borderRadius: 5 }}
-                preview={
-                  continent.continentThumbnail && {
-                    uri: continent.continentThumbnail
+              {continent.continentThumbnail ? (
+                <ProgressiveImage
+                  style={{ height: 40, width: 40, borderRadius: 5 }}
+                  preview={
+                    continent.continentThumbnail && {
+                      uri: continent.continentThumbnail
+                    }
                   }
-                }
-                uri={
-                  continent.continentThumbnail && continent.continentThumbnail
-                }
-              />
+                  uri={
+                    continent.continentThumbnail && continent.continentThumbnail
+                  }
+                />
+              ) : (
+                <View>
+                  <SmallText>NO PHOTO</SmallText>
+                </View>
+              )}
             </Touchable>
             <Touchable>
               <HeaderUserContainer>
@@ -425,17 +477,23 @@ const UserRow: React.FC<IProps> = ({
         <Container>
           <Header>
             <Touchable>
-              <ProgressiveImage
-                style={{ height: 40, width: 40, borderRadius: 5 }}
-                preview={
-                  continent.continentThumbnail && {
-                    uri: continent.continentThumbnail
+              {continent.continentThumbnail ? (
+                <ProgressiveImage
+                  style={{ height: 40, width: 40, borderRadius: 5 }}
+                  preview={
+                    continent.continentThumbnail && {
+                      uri: continent.continentThumbnail
+                    }
                   }
-                }
-                uri={
-                  continent.continentThumbnail && continent.continentThumbnail
-                }
-              />
+                  uri={
+                    continent.continentThumbnail && continent.continentThumbnail
+                  }
+                />
+              ) : (
+                <View>
+                  <SmallText>NO PHOTO</SmallText>
+                </View>
+              )}
             </Touchable>
             <Touchable>
               <HeaderUserContainer>
@@ -499,15 +557,21 @@ const UserRow: React.FC<IProps> = ({
         <Container>
           <Header>
             <Touchable>
-              <ProgressiveImage
-                style={{ height: 40, width: 40, borderRadius: 5 }}
-                preview={
-                  coffee.city.cityThumbnail && {
-                    uri: coffee.city.cityThumbnail
+              {coffee.city.cityThumbnail ? (
+                <ProgressiveImage
+                  style={{ height: 40, width: 40, borderRadius: 5 }}
+                  preview={
+                    coffee.city.cityThumbnail && {
+                      uri: coffee.city.cityThumbnail
+                    }
                   }
-                }
-                uri={coffee.city.cityThumbnail && coffee.city.cityThumbnail}
-              />
+                  uri={coffee.city.cityThumbnail && coffee.city.cityThumbnail}
+                />
+              ) : (
+                <View>
+                  <SmallText>NO PHOTO</SmallText>
+                </View>
+              )}
             </Touchable>
             <Touchable>
               <HeaderUserContainer>

@@ -6,10 +6,19 @@ import { GetCityPhoto, GetCityPhotoVariables } from "../types/api";
 import styled from "styled-components";
 
 const View = styled.View`
-  width: 40;
-  height: 40;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 40px;
+  width: 40px;
+  border: 0.5px solid ${props => props.theme.borderColor};
+  border-radius: 5px;
 `;
-
+const SmallText = styled.Text`
+  font-size: 9px;
+  color: #999;
+  text-align: center;
+`;
 interface IProps {
   cityId?: string;
 }
@@ -22,14 +31,22 @@ const SearchCityPhoto: React.FC<IProps> = ({ cityId }) => {
   if (!loading) {
     const { getCityPhoto: { photo = null } = {} } = data;
     return (
-      <Image
-        style={{ height: 40, width: 40, borderRadius: 5 }}
-        source={
-          photo && {
-            uri: photo
-          }
-        }
-      />
+      <>
+        {photo && photo.length !== 0 ? (
+          <Image
+            style={{ height: 40, width: 40, borderRadius: 5 }}
+            source={
+              photo && {
+                uri: photo
+              }
+            }
+          />
+        ) : (
+          <View>
+            <SmallText>NO PHOTO</SmallText>
+          </View>
+        )}
+      </>
     );
   } else {
     return <View />;
