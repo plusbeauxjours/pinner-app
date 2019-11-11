@@ -142,8 +142,9 @@ const IconContainer = styled.View`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  border: 1px solid ${props => props.theme.borderColor};
+  border: 0.5px solid #999;
   border-radius: 5px;
+  padding: 2px;
 `;
 const TouchableRow = styled.TouchableOpacity`
   background-color: ${props => props.theme.bgColor};
@@ -152,7 +153,7 @@ const TouchableBackRow = styled.View`
   background-color: ${props => props.theme.bgColor};
 `;
 const SmallText = styled.Text`
-  color: ${props => props.theme.color};
+  color: #999;
   text-align: center;
   font-size: 9px;
 `;
@@ -178,7 +179,7 @@ const AddTripContainer = styled.View`
   height: 40px;
   justify-content: center;
   align-items: center;
-  border: 0.5px solid ${props => props.theme.borderColor};
+  border: 0.5px solid #999;
   border-radius: 5px;
 `;
 const CalendarContainer = styled.View`
@@ -190,7 +191,7 @@ const TripSubmitBtn = styled.TouchableOpacity`
   flex: 1;
   height: 40px;
   margin: 5px;
-  border: 0.5px solid ${props => props.theme.borderColor};
+  border: 0.5px solid #999;
   border-radius: 5px;
 `;
 const TripSubmitContainer = styled.View``;

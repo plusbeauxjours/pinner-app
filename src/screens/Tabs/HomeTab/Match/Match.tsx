@@ -65,7 +65,7 @@ const BackLeftBtn = styled.TouchableOpacity`
   justify-content: center;
 `;
 const SmallText = styled.Text`
-  color: ${props => props.theme.color};
+  color: #999;
   text-align: center;
   font-size: 9px;
 `;
@@ -75,8 +75,9 @@ const IconContainer = styled.View`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  border: 1px solid ${props => props.theme.borderColor};
+  border: 0.5px solid #999;
   border-radius: 5px;
+  padding: 2px;
 `;
 const TouchableBackRow = styled.View`
   background-color: ${props => props.theme.bgColor};

@@ -188,9 +188,13 @@ export default ({ navigation }) => {
   );
   const [newCountryPhoneNumber, setNewCountryPhoneNumber] = useState<string>(
     profile.countryPhoneNumber
+      ? profile.countryPhoneNumber
+      : countries.find(i => i.code === location.currentCountryCode).phone
   );
   const [newCountryPhoneCode, setNewCountryPhoneCode] = useState<any>(
     profile.countryPhoneCode
+      ? profile.countryPhoneCode
+      : location.currentCountryCode
   );
   const [editPhoneModalOpen, setEditPhoneModalOpen] = useState<boolean>(false);
   const [verifyPhoneModalOpen, setVerifyPhoneModalOpen] = useState<boolean>(
@@ -218,6 +222,7 @@ export default ({ navigation }) => {
         if (buttonIndex === 0) {
           onSubmit();
           setSubmitModal(false);
+          toast("Profile Edited");
         } else {
           setSubmitModal(false);
         }
@@ -766,7 +771,7 @@ export default ({ navigation }) => {
               </Item>
               <Item>
                 <ToggleText>PHONE</ToggleText>
-                {countryPhoneCode && countryPhoneNumber && (
+                {countryPhoneCode && countryPhoneNumber ? (
                   <Touchable onPress={() => setEditPhoneModalOpen(true)}>
                     <ToggleText>
                       {countries.find(i => i.code === countryPhoneCode).emoji}
@@ -775,6 +780,18 @@ export default ({ navigation }) => {
                       {phoneNumber}
                     </ToggleText>
                   </Touchable>
+                ) : (
+                  <ToggleIcon onPress={() => setEditPhoneModalOpen(true)}>
+                    <NavIcon
+                      size={20}
+                      name={
+                        Platform.OS === "ios"
+                          ? "ios-radio-button-off"
+                          : "md-radio-button-off"
+                      }
+                      color={"#999"}
+                    />
+                  </ToggleIcon>
                 )}
               </Item>
               {profile.isVerifiedPhoneNumber ? (

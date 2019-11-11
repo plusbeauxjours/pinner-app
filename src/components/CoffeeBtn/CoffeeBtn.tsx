@@ -18,12 +18,12 @@ const Touchable = styled.TouchableOpacity`
 `;
 
 const Text = styled.Text`
-  color: ${props => props.theme.color};
+  color: #999;
 `;
 
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
-  border: 0.5px solid ${props => props.theme.borderColor};
+  border: 0.5px solid #999;
   border-radius: 4px;
   width: 100px;
   height: 25px;

@@ -33,8 +33,8 @@ const Text = styled.Text`
   color: ${props => props.theme.color};
 `;
 const Bold = styled.Text`
-  font-weight: 500;
-  font-size: 20;
+  font-weight: 400;
+  font-size: 16;
   color: ${props => props.theme.color};
 `;
 
@@ -48,6 +48,12 @@ const ScrollView = styled.ScrollView`
 const FooterIconTouchable = styled.TouchableOpacity`
   margin-left: 20px;
   margin-bottom: 20px;
+`;
+const LoaderContainer = styled.View`
+  flex: 1;
+  background-color: ${props => props.theme.bgColor};
+  justify-content: center;
+  align-items: center;
 `;
 export default ({ navigation }) => {
   const me = useMe();
@@ -134,79 +140,85 @@ export default ({ navigation }) => {
       }
     );
   };
-  return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      {avatarLoading || deleteAvatarLoading ? (
+  if (avatarLoading || deleteAvatarLoading) {
+    return (
+      <LoaderContainer>
         <Loader />
-      ) : (
-        <>
-          <Modal visible={modalOpen} transparent={true}>
-            <ImageViewer
-              imageUrls={[{ url: `${BACKEND_URL}/media/${avatar.image}` }]}
-              enablePreload={true}
-              style={{
-                height: constants.width,
-                width: constants.width,
-                padding: 0,
-                margin: 0
-              }}
-              renderImage={() => {
-                return (
-                  <ProgressiveImage
-                    style={{
-                      height: constants.width,
-                      width: constants.width,
-                      padding: 0,
-                      margin: 0,
-                      position: "absolute"
-                    }}
-                    preview={{
-                      uri: `${BACKEND_URL}/media/${avatar.thumbnail}`
-                    }}
-                    uri={`${BACKEND_URL}/media/${avatar.image}`}
-                  />
-                );
-              }}
-              onSwipeDown={async () => {
-                await ScreenOrientation.lockAsync(
-                  ScreenOrientation.OrientationLock.PORTRAIT_UP
-                );
-                closeModal();
-              }}
-              renderFooter={() => {
-                if (isSelf && !avatar.isMain && !avatarLoading) {
+      </LoaderContainer>
+    );
+  } else {
+    const { getAvatars: { avatars = null } = {} } = avatarData;
+    return (
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        {avatars && avatars.length !== 0 ? (
+          <>
+            <Modal visible={modalOpen} transparent={true}>
+              <ImageViewer
+                imageUrls={[{ url: `${BACKEND_URL}/media/${avatar.image}` }]}
+                enablePreload={true}
+                style={{
+                  height: constants.width,
+                  width: constants.width,
+                  padding: 0,
+                  margin: 0
+                }}
+                renderImage={() => {
                   return (
-                    <FooterIconTouchable
-                      onPress={() => {
-                        onPress();
+                    <ProgressiveImage
+                      style={{
+                        height: constants.width,
+                        width: constants.width,
+                        padding: 0,
+                        margin: 0,
+                        position: "absolute"
                       }}
-                    >
-                      <Entypo
-                        size={25}
-                        color={"#999"}
-                        name={"dots-three-horizontal"}
-                      />
-                    </FooterIconTouchable>
+                      preview={{
+                        uri: `${BACKEND_URL}/media/${avatar.thumbnail}`
+                      }}
+                      uri={`${BACKEND_URL}/media/${avatar.image}`}
+                    />
                   );
-                } else {
-                  return null;
+                }}
+                onSwipeDown={async () => {
+                  await ScreenOrientation.lockAsync(
+                    ScreenOrientation.OrientationLock.PORTRAIT_UP
+                  );
+                  closeModal();
+                }}
+                renderFooter={() => {
+                  if (isSelf && !avatar.isMain && !avatarLoading) {
+                    return (
+                      <FooterIconTouchable
+                        onPress={() => {
+                          onPress();
+                        }}
+                      >
+                        <Entypo
+                          size={25}
+                          color={"#999"}
+                          name={"dots-three-horizontal"}
+                        />
+                      </FooterIconTouchable>
+                    );
+                  } else {
+                    return null;
+                  }
+                }}
+                backgroundColor={
+                  isDarkMode && isDarkMode === true ? "black" : "white"
                 }
-              }}
-              backgroundColor={
-                isDarkMode && isDarkMode === true ? "black" : "white"
-              }
-              enableSwipeDown={true}
-              loadingRender={() => {
-                return <Loader />;
-              }}
-              renderIndicator={() => {}}
-            />
-          </Modal>
-          {/* {isSelf && !avatar.isMain && (
+                enableSwipeDown={true}
+                loadingRender={() => {
+                  return <Loader />;
+                }}
+                renderIndicator={() => {}}
+              />
+            </Modal>
+            {/* {isSelf && !avatar.isMain && (
               <Button
                 title="DELETE AVATAR"
                 onPress={() => deleteAvatar(avatar.uuid)}
@@ -222,41 +234,46 @@ export default ({ navigation }) => {
             )}
             <Button title="CLOSE AVATAR" onPress={() => closeModal()} />
           </Modal> */}
-          <Container>
-            <FlatList
-              data={avatarData.getAvatars.avatars}
-              renderItem={({ item }) => (
-                <Container
-                  style={{
-                    margin: 0.5
-                  }}
-                >
-                  <Touchable
-                    disabled={!item.image && true}
-                    onPress={() => {
-                      item.image && openModal(item);
+            <Container>
+              <FlatList
+                data={avatarData.getAvatars.avatars}
+                renderItem={({ item }) => (
+                  <Container
+                    style={{
+                      margin: 0.5
                     }}
                   >
-                    <ProgressiveImage
-                      style={{
-                        height: constants.width / 3 - 1,
-                        width: constants.width / 3 - 1
+                    <Touchable
+                      disabled={!item.image && true}
+                      onPress={() => {
+                        item.image && openModal(item);
                       }}
-                      preview={{
-                        uri: `${BACKEND_URL}/media/${item.thumbnail}`
-                      }}
-                      uri={`${BACKEND_URL}/media/${item.thumbnail}`}
-                    />
-                    {item.isMain && isSelf && <Text>M</Text>}
-                  </Touchable>
-                </Container>
-              )}
-              numColumns={3}
-              keyExtractor={item => item.id}
-            />
-          </Container>
-        </>
-      )}
-    </ScrollView>
-  );
+                    >
+                      <ProgressiveImage
+                        style={{
+                          height: constants.width / 3 - 1,
+                          width: constants.width / 3 - 1
+                        }}
+                        preview={{
+                          uri: `${BACKEND_URL}/media/${item.thumbnail}`
+                        }}
+                        uri={`${BACKEND_URL}/media/${item.thumbnail}`}
+                      />
+                      {item.isMain && isSelf && <Text>M</Text>}
+                    </Touchable>
+                  </Container>
+                )}
+                numColumns={3}
+                keyExtractor={item => item.id}
+              />
+            </Container>
+          </>
+        ) : (
+          <View>
+            <Bold>No Avatars Yet...</Bold>
+          </View>
+        )}
+      </ScrollView>
+    );
+  }
 };

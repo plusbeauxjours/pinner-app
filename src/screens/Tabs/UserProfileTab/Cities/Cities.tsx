@@ -44,7 +44,6 @@ export default ({ navigation }) => {
     variables: { userName: username },
     fetchPolicy: "network-only"
   });
-  console.log(data);
   const onRefresh = async () => {
     try {
       setRefreshing(true);

@@ -86,7 +86,8 @@ const View = styled.View`
   text-align: center;
   height: 40px;
   width: 40px;
-  border: 0.5px solid ${props => props.theme.borderColor};
+  border: 0.5px solid #999;
+  padding: 2px;
   border-radius: 5px;
 `;
 interface IProps {

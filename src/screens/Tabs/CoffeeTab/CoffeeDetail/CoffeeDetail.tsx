@@ -24,7 +24,10 @@ const View = styled.View`
 const Container = styled.View`
   width: ${constants.width};
   height: ${constants.width};
-  border: 0.5px solid ${props => props.theme.borderColor};
+  border-top-width: 0.5px;
+  border-top-color: #999;
+  border-bottom-width: 0.5px;
+  border-bottom-color: #999;
   justify-content: center;
   align-items: center;
   background-color: ${props => props.theme.headerColor};
@@ -46,7 +49,7 @@ const ImageTouchable = styled.TouchableOpacity`
   top: -75;
   border-width: 0.5;
   border-radius: 75;
-  border-color: ${props => props.theme.borderColor};
+  border: 0.5px solid #999;
 `;
 const Text = styled.Text`
   color: ${props => props.theme.color};
