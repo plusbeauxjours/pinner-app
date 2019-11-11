@@ -9,6 +9,8 @@ import {
 import { useMutation } from "react-apollo";
 import styled from "styled-components";
 import { ActivityIndicator } from "react-native";
+import Toast from "react-native-root-toast";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 
 const Touchable = styled.TouchableOpacity`
   width: 100px;
@@ -61,6 +63,40 @@ const CoffeeBtn: React.FC<IProps> = ({
   };
   const unmatch = async matchId => {
     await unMatchFn(matchId);
+  };
+  const toast = (message: string) => {
+    Toast.show(message, {
+      duration: Toast.durations.LONG,
+      position: Toast.positions.BOTTOM,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      delay: 0
+    });
+  };
+  const { showActionSheetWithOptions } = useActionSheet();
+  const options = ["Yes", "No"];
+  const destructiveButtonIndex = 0;
+  const cancelButtonIndex = 1;
+  const unMatch = (matchId: string) => {
+    showActionSheetWithOptions(
+      {
+        options,
+        destructiveButtonIndex,
+        cancelButtonIndex,
+        title: "Are you sure to unmatch?"
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) {
+          unMatchFn({
+            variables: {
+              matchId: matchId
+            }
+          });
+          toast("unmatched");
+        }
+      }
+    );
   };
   return (
     <>

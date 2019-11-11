@@ -8,11 +8,16 @@ import { useMe } from "../../../../context/MeContext";
 import { RefreshControl } from "react-native";
 import { MARK_AS_READ_MATCH } from "./MatchQueries";
 import { SwipeListView } from "react-native-swipe-list-view";
+import { useActionSheet } from "@expo/react-native-action-sheet";
+import Toast from "react-native-root-toast";
+import { UNMATCH } from "../../../../components/CoffeeBtn/CoffeeBtnQueries";
 import {
   GetMatches,
   GetMatchesVariables,
   MarkAsReadMatch,
-  MarkAsReadMatchVariables
+  MarkAsReadMatchVariables,
+  UnMatch,
+  UnMatchVariables
 } from "../../../../types/api";
 
 const Container = styled.View`
@@ -120,6 +125,10 @@ export default ({ navigation }) => {
     loading: matchLoading,
     refetch: matchRefetch
   } = useQuery<GetMatches, GetMatchesVariables>(GET_MATCHES);
+  const [unMatchFn, { loading: unMatchLoading }] = useMutation<
+    UnMatch,
+    UnMatchVariables
+  >(UNMATCH);
   const onRefresh = async () => {
     try {
       setRefreshing(true);
@@ -129,6 +138,40 @@ export default ({ navigation }) => {
     } finally {
       setRefreshing(false);
     }
+  };
+  const toast = (message: string) => {
+    Toast.show(message, {
+      duration: Toast.durations.LONG,
+      position: Toast.positions.BOTTOM,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      delay: 0
+    });
+  };
+  const { showActionSheetWithOptions } = useActionSheet();
+  const options = ["Yes", "No"];
+  const destructiveButtonIndex = 0;
+  const cancelButtonIndex = 1;
+  const unMatch = (matchId: string) => {
+    showActionSheetWithOptions(
+      {
+        options,
+        destructiveButtonIndex,
+        cancelButtonIndex,
+        title: "Are you sure to unmatch?"
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) {
+          unMatchFn({
+            variables: {
+              matchId
+            }
+          });
+          toast("unmatched");
+        }
+      }
+    );
   };
   if (matchLoading) {
     return (
@@ -179,7 +222,7 @@ export default ({ navigation }) => {
                   )}
                   renderHiddenItem={data => (
                     <RowBack>
-                      <BackLeftBtn onPress={() => console.log("hihi")}>
+                      <BackLeftBtn onPress={() => unMatch(data.item.id)}>
                         <IconContainer>
                           <SmallText>UN MATCH</SmallText>
                         </IconContainer>

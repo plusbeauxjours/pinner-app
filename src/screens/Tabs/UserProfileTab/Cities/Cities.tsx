@@ -41,8 +41,10 @@ export default ({ navigation }) => {
     FrequentVisits,
     FrequentVisitsVariables
   >(FREQUENT_VISITS, {
-    variables: { userName: username }
+    variables: { userName: username },
+    fetchPolicy: "network-only"
   });
+  console.log(data);
   const onRefresh = async () => {
     try {
       setRefreshing(true);

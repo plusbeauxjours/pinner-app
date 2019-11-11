@@ -1617,8 +1617,6 @@ export interface FrequentVisits_frequentVisits_cities {
 
 export interface FrequentVisits_frequentVisits {
   __typename: "CitiesResponse";
-  page: number | null;
-  hasNextPage: boolean | null;
   cities: (FrequentVisits_frequentVisits_cities | null)[] | null;
 }
 
@@ -1777,8 +1775,6 @@ export interface TopContinents_topContinents_continents {
 
 export interface TopContinents_topContinents {
   __typename: "ContinentsResponse";
-  page: number | null;
-  hasNextPage: boolean | null;
   continents: (TopContinents_topContinents_continents | null)[] | null;
 }
 
@@ -1820,8 +1816,6 @@ export interface TopCountries_topCountries_countries {
 
 export interface TopCountries_topCountries {
   __typename: "CountriesResponse";
-  page: number | null;
-  hasNextPage: boolean | null;
   countries: (TopCountries_topCountries_countries | null)[] | null;
 }
 
