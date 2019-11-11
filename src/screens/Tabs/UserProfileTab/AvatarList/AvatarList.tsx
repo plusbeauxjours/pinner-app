@@ -101,13 +101,11 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
-  const otions = ["Mark As Main", "Delete Avatar", "Cancel"];
-  const cancelButtonIndex = 2;
   const onPress = () => {
     showActionSheetWithOptions(
       {
-        options: otions,
-        cancelButtonIndex: cancelButtonIndex,
+        options: ["Mark As Main", "Delete Avatar", "Cancel"],
+        cancelButtonIndex: 2,
         showSeparators: true
       },
       buttonIndex => {
@@ -121,15 +119,12 @@ export default ({ navigation }) => {
       }
     );
   };
-  const confirmOptions = ["Yes", "No"];
-  const destructiveButtonIndex = 0;
-  const confirmCancelButtonIndex = 1;
   const onConfirmPress = () => {
     showActionSheetWithOptions(
       {
-        options: confirmOptions,
-        destructiveButtonIndex,
-        cancelButtonIndex: confirmCancelButtonIndex
+        options: ["Yes", "No"],
+        destructiveButtonIndex: 0,
+        cancelButtonIndex: 1
       },
       buttonIndex => {
         if (buttonIndex === 0) {
@@ -270,7 +265,7 @@ export default ({ navigation }) => {
           </>
         ) : (
           <View>
-            <Bold>No Avatars Yet...</Bold>
+            <Bold>No avatars yet...</Bold>
           </View>
         )}
       </ScrollView>

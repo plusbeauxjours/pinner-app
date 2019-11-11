@@ -19,8 +19,6 @@ const Container = styled.TouchableOpacity`
 
 export default withNavigation(({ navigation }) => {
   const { showActionSheetWithOptions } = useActionSheet();
-  const options = ["Image From Gallery", "Image From Camera", "Cancel"];
-  const cancelButtonIndex = 2;
   const [UploadAvatarFn] = useMutation<UploadAvatar, UploadAvatarVariables>(
     UPLOAD_AVATAR
   );
@@ -106,8 +104,8 @@ export default withNavigation(({ navigation }) => {
   const onOpenActionSheet = () => {
     showActionSheetWithOptions(
       {
-        options,
-        cancelButtonIndex,
+        options: ["Image From Gallery", "Image From Camera", "Cancel"],
+        cancelButtonIndex: 2,
         showSeparators: true
       },
       buttonIndex => {

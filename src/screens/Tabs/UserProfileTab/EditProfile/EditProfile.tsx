@@ -206,16 +206,13 @@ export default ({ navigation }) => {
     EditProfileVariables
   >(EDIT_PROFILE);
   const [submitModal, setSubmitModal] = useState<boolean>(false);
-  const options = ["Yes", "No"];
-  const destructiveButtonIndex = 0;
-  const cancelButtonIndex = 1;
   const onPress = () => {
     setSubmitModal(true);
     showActionSheetWithOptions(
       {
-        options,
-        destructiveButtonIndex,
-        cancelButtonIndex,
+        options: ["Yes", "No"],
+        destructiveButtonIndex: 0,
+        cancelButtonIndex: 1,
         title: "Are you sure to edit this profile?"
       },
       buttonIndex => {
@@ -234,9 +231,9 @@ export default ({ navigation }) => {
     setLogoutModal(true);
     showActionSheetWithOptions(
       {
-        options,
-        destructiveButtonIndex,
-        cancelButtonIndex,
+        options: ["Yes", "No"],
+        destructiveButtonIndex: 0,
+        cancelButtonIndex: 1,
         title: "Are you sure to logout?"
       },
       buttonIndex => {
@@ -254,9 +251,9 @@ export default ({ navigation }) => {
     setDeleteModal(true);
     showActionSheetWithOptions(
       {
-        options,
-        destructiveButtonIndex,
-        cancelButtonIndex,
+        options: ["Yes", "No"],
+        destructiveButtonIndex: 0,
+        cancelButtonIndex: 1,
         title: "Are you sure to delete this account?"
       },
       buttonIndex => {
@@ -484,13 +481,11 @@ export default ({ navigation }) => {
       setIsProfileSubmitted(false);
     }
   };
-  const genders = ["Male", "Female", "Other", "Cancel"];
-  const genderCancelButtonIndex = 3;
   const onOpenGenderActionSheet = () => {
     showActionSheetWithOptions(
       {
-        options: genders,
-        cancelButtonIndex: genderCancelButtonIndex,
+        options: ["Male", "Female", "Other", "Cancel"],
+        cancelButtonIndex: 3,
         showSeparators: true
       },
       buttonIndex => {

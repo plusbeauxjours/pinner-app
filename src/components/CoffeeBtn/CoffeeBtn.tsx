@@ -75,15 +75,12 @@ const CoffeeBtn: React.FC<IProps> = ({
     });
   };
   const { showActionSheetWithOptions } = useActionSheet();
-  const options = ["Yes", "No"];
-  const destructiveButtonIndex = 0;
-  const cancelButtonIndex = 1;
   const unMatch = (matchId: string) => {
     showActionSheetWithOptions(
       {
-        options,
-        destructiveButtonIndex,
-        cancelButtonIndex,
+        options: ["Yes", "No"],
+        destructiveButtonIndex: 0,
+        cancelButtonIndex: 1,
         title: "Are you sure to unmatch?"
       },
       buttonIndex => {

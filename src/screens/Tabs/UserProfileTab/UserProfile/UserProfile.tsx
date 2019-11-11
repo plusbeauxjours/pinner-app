@@ -11,7 +11,7 @@ import styled from "styled-components";
 import { SwipeListView } from "react-native-swipe-list-view";
 import Toast from "react-native-root-toast";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, Entypo } from "@expo/vector-icons";
 import { range } from "lodash";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
@@ -109,6 +109,9 @@ const UserNameContainer = styled.View`
 const Touchable = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
+`;
+const IconTouchable = styled(Touchable)`
+  margin-left: 5;
 `;
 const ImageTouchable = styled(Touchable)`
   margin-bottom: 15;
@@ -260,23 +263,17 @@ export default ({ navigation }) => {
   const [username, setUsername] = useState<string>(
     navigation.getParam("username") || me.user.username
   );
-  const [payload, setPayload] = useState<string>();
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [startDate, setStartDate] = useState<moment.Moment>(null);
-  const [endDate, setEndDate] = useState<moment.Moment>(null);
   const [tripStartDate, setTripStartDate] = useState<moment.Moment>(null);
   const [tripEndDate, setTripEndDate] = useState<moment.Moment>(null);
   const [tripMarkedDates, setTripMarkedDates] = useState<any>({});
   const { showActionSheetWithOptions } = useActionSheet();
-  const options = ["Yes", "No"];
-  const destructiveButtonIndex = 0;
-  const cancelButtonIndex = 1;
   const deleteTrip = id => {
     showActionSheetWithOptions(
       {
-        options,
-        destructiveButtonIndex,
-        cancelButtonIndex,
+        options: ["Yes", "No"],
+        destructiveButtonIndex: 0,
+        cancelButtonIndex: 1,
         title: "Are you sure to delete trip?"
       },
       buttonIndex => {
@@ -286,7 +283,55 @@ export default ({ navigation }) => {
               moveNotificationId: parseInt(id, 10)
             }
           });
+          calculateDistanceFn();
           toast("Trip Deleted");
+        }
+      }
+    );
+  };
+  const selectReportUser = () => {
+    showActionSheetWithOptions(
+      {
+        options: [
+          "Inappropriate Photoes",
+          "Looks Like Spam",
+          "Inappropriate Message",
+          "Other",
+          "Cancel"
+        ],
+        cancelButtonIndex: 4,
+        title: `Choose a reason for reporting this account. We won't tell ${username} who reported them.`,
+        showSeparators: true
+      },
+      async buttonIndex => {
+        if (buttonIndex === 0) {
+          reportUser("PHOTO");
+        } else if (buttonIndex === 1) {
+          reportUser("SPAM");
+        } else if (buttonIndex === 2) {
+          reportUser("MESSAGE");
+        } else if (buttonIndex === 3) {
+          reportUser("OTHER");
+        } else {
+          null;
+        }
+      }
+    );
+  };
+  const reportUser = payload => {
+    showActionSheetWithOptions(
+      {
+        options: ["Yes", "No"],
+        destructiveButtonIndex: 0,
+        cancelButtonIndex: 1,
+        title: `Are you sure to report ${username}?`
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) {
+          slackReportUsersFn({
+            variables: { targetUsername: username, payload }
+          });
+          toast("Reported");
         }
       }
     );
@@ -359,9 +404,7 @@ export default ({ navigation }) => {
   const [slackReportUsersFn] = useMutation<
     SlackReportUsers,
     SlackReportUsersVariables
-  >(SLACK_REPORT_USERS, {
-    variables: { targetUsername: username, payload }
-  });
+  >(SLACK_REPORT_USERS);
   const [createCityFn, { loading: createCityLoading }] = useMutation<
     CreateCity,
     CreateCityVariables
@@ -416,6 +459,7 @@ export default ({ navigation }) => {
       } = await addTripFn();
       setTripMarkedDates({});
       if (addTrip.ok) {
+        calculateDistanceFn();
         toast("Trip Added");
       }
     } catch (e) {
@@ -432,6 +476,7 @@ export default ({ navigation }) => {
       } = await editTripFn();
       setTripMarkedDates({});
       if (editTrip.ok) {
+        calculateDistanceFn();
         toast("Trip Edited");
       }
     } catch (e) {
@@ -963,8 +1008,8 @@ export default ({ navigation }) => {
                   ? user.username.substring(0, 24) + "..."
                   : user.username}
               </UserName>
-              {user.profile.isSelf && (
-                <Touchable
+              {user.profile.isSelf ? (
+                <IconTouchable
                   onPress={() =>
                     navigation.push("EditProfile", {
                       ...user,
@@ -977,9 +1022,17 @@ export default ({ navigation }) => {
                       Platform.OS === "ios" ? "ios-settings" : "md-settings"
                     }
                     color={"#999"}
-                    size={30}
+                    size={22}
                   />
-                </Touchable>
+                </IconTouchable>
+              ) : (
+                <IconTouchable onPress={() => selectReportUser()}>
+                  <Entypo
+                    size={22}
+                    color={"#999"}
+                    name={"dots-three-horizontal"}
+                  />
+                </IconTouchable>
               )}
             </UserNameContainer>
             <UserNameContainer>
