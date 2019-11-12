@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { PROFILE_FRAGMENT } from "../../../../fragmentQueries";
+import { PROFILE_FRAGMENT } from "../../../fragmentQueries";
 
 export const RECOMMEND_USERS = gql`
   query RecommendUsers($page: Int) {

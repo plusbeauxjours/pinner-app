@@ -51,7 +51,6 @@ import constants, { BACKEND_URL } from "../../../../../constants";
 import { GET_COFFEES } from "../Coffees/CoffeesQueries";
 import { GET_SAME_TRIPS } from "./UserProfileQueries";
 import Modal from "react-native-modal";
-import CoffeeDetail from "../../CoffeeTab/CoffeeDetail";
 import { useTheme } from "../../../../context/ThemeContext";
 import { CalendarList } from "react-native-calendars";
 import { CREATE_CITY } from "../../../../components/Search/SearchQueries";
@@ -60,6 +59,7 @@ import useGoogleAutocomplete from "../../../../hooks/useGoogleAutocomplete";
 import keys from "../../../../../keys";
 import SearchCityPhoto from "../../../../components/SearchCityPhoto";
 import { countries } from "../../../../../countryData";
+import CoffeeDetail from "../../../CoffeeDetail/index";
 
 const Header = styled.View`
   height: 250;

@@ -1,9 +1,8 @@
 import { createStackNavigator } from "react-navigation";
 import { createMaterialTopTabNavigator } from "react-navigation";
-import Home from "../screens/Tabs/HomeTab/Home";
-import Chat from "../screens/Tabs/HomeTab/Chat";
-import SendLocationScreen from "../screens/Tabs/HomeTab/Chat/SendLocationScreen";
-import Match from "../screens/Tabs/HomeTab/Match";
+import Chat from "../screens/Tabs/MatchTab/Chat";
+import SendLocationScreen from "../screens/Tabs/MatchTab/Chat/SendLocationScreen";
+import Match from "../screens/Tabs/MatchTab/Match";
 import CityProfile from "../screens/Tabs/LocationTab/CityProfile";
 import CountryProfile from "../screens/Tabs/LocationTab/CountryProfile";
 import ContinentProfile from "../screens/Tabs/LocationTab/ContinentProfile";
@@ -125,44 +124,10 @@ const CityProfileTabs = createMaterialTopTabNavigator(
   }
 );
 
-const HomeTabs = createMaterialTopTabNavigator(
-  {
-    Match: {
-      screen: Match,
-      navigationOptions: {
-        header: null,
-        mode: "modal"
-      }
-    },
-    Home: {
-      screen: Home,
-      navigationOptions: {
-        header: null,
-        mode: "modal"
-      }
-    }
-  },
-  {
-    animationEnabled: true,
-    swipeEnabled: true,
-    tabBarPosition: "bottom",
-    tabBarOptions: {
-      style: {
-        display: "none"
-      },
-      activeTintColor: "#000",
-      inactiveTintColor: "#d1cece",
-      upperCaseLabel: false,
-      showLabel: false,
-      showIcon: false
-    }
-  }
-);
-
 export default createStackNavigator(
   {
+    Match,
     UserProfileTabs,
-    HomeTabs,
     CityProfileTabs,
     ContinentProfile,
     CountryProfileTabs,

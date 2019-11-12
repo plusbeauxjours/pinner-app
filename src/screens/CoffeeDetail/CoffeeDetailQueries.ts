@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { COUNTRY_FRAGMENT } from "../../../..//fragmentQueries";
+import { COUNTRY_FRAGMENT } from "../../fragmentQueries";
 
 export const COFFEE_DETAIL = gql`
   query CoffeeDetail($coffeeId: String!) {

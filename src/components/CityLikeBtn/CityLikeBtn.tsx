@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { TOGGLE_LIKE_CITY } from "./CityLikeBtnQueries";
 import { ToggleLikeCity, ToggleLikeCityVariables } from "../../types/api";
 import { useMutation } from "react-apollo";
-import styled from "styled-components";
 import { Ionicons } from "@expo/vector-icons";
 import { Platform } from "react-native";
 import { theme } from "../../styles/theme";
+import styled from "styled-components";
 
 const Touchable = styled.TouchableOpacity<ITheme>`
   margin-left: 3px;

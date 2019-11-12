@@ -1,10 +1,10 @@
 import React from "react";
 import { Image } from "react-native";
-import styled from "styled-components";
 import constants, { BACKEND_URL } from "../../constants";
 import CityLikeBtn from "./CityLikeBtn/CityLikeBtn";
 import moment from "moment";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
+import styled from "styled-components";
 
 const Container = styled.View`
   padding: 15px 5px 15px 5px;

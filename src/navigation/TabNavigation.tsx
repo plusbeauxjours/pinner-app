@@ -5,12 +5,12 @@ import {
 } from "react-navigation";
 import { Platform } from "react-native";
 import NavIcon from "../components/NavIcon";
-import HomeNavigation from "./HomeNavigation";
+import MatchNavigation from "./MatchNavigation";
 import LocationNavigation from "./LocationNavigation";
 import PhotoLink from "../components/PhotoLink";
-import RequestCoffees from "../screens/Tabs/CoffeeTab/RequestCoffees";
 import UserProfileNavigation from "./UserProfileNavigation";
 import Search from "../components/Search";
+import RequestCoffee from "../screens/Tabs/RequestCoffeeTab/index";
 
 const stackFactory = initialRoute =>
   createStackNavigator({
@@ -25,8 +25,8 @@ const stackFactory = initialRoute =>
 
 export default createBottomTabNavigator(
   {
-    Home: {
-      screen: stackFactory(HomeNavigation),
+    Match: {
+      screen: stackFactory(MatchNavigation),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
           <>
@@ -50,7 +50,7 @@ export default createBottomTabNavigator(
       }
     },
     RequestCoffees: {
-      screen: stackFactory(RequestCoffees),
+      screen: stackFactory(RequestCoffee),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
           <NavIcon
@@ -71,27 +71,6 @@ export default createBottomTabNavigator(
         )
       }
     }
-    // Notifications: {
-    //   screen: stackFactory(Notifications, {
-    //     title: "Notifications"
-    //   }),
-    //   navigationOptions: {
-    //     tabBarIcon: ({ focused }) => (
-    //       <NavIcon
-    //         focused={focused}
-    //         name={
-    //           Platform.OS === "ios"
-    //             ? focused
-    //               ? "ios-heart"
-    //               : "ios-heart-empty"
-    //             : focused
-    //             ? "md-heart"
-    //             : "md-heart-empty"
-    //         }
-    //       />
-    //     )
-    //   }
-    // },
   },
   {
     animationEnabled: true,

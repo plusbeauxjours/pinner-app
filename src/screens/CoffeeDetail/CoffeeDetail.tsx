@@ -2,18 +2,18 @@ import React from "react";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useState } from "react";
-import { useLocation } from "../../../../context/LocationContext";
+import { useLocation } from "../../context/LocationContext";
 import {
   CoffeeDetail,
   CoffeeDetailVariables,
   DeleteCoffee,
   DeleteCoffeeVariables
-} from "../../../../types/api";
+} from "../../types/api";
 import { COFFEE_DETAIL, DELETE_COFFEE } from "./CoffeeDetailQueries";
-import { useTheme } from "../../../../context/ThemeContext";
-import constants, { BACKEND_URL } from "../../../../../constants";
-import Loader from "../../../../components/Loader";
-import CoffeeBtn from "../../../../components/CoffeeBtn";
+import { useTheme } from "../../context/ThemeContext";
+import constants, { BACKEND_URL } from "../../../constants";
+import Loader from "../../components/Loader";
+import CoffeeBtn from "../../components/CoffeeBtn";
 import { withNavigation } from "react-navigation";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 
@@ -162,8 +162,8 @@ const CoffeeDetails: React.FC<IProps> = ({
                     width: 150,
                     borderRadius: 150 / 2
                   }}
-                  preview={require(`../../../../Images/thumbnails/earth1.png`)}
-                  uri={require(`../../../../Images/avatars/earth1.png`)}
+                  preview={require(`../../Images/thumbnails/earth1.png`)}
+                  uri={require(`../../Images/avatars/earth1.png`)}
                 />
               )}
             </ImageTouchable>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled from "../../../../styles/typed-components";
+import styled from "styled-components";
 import { useLocation } from "../../../../context/LocationContext";
 import { Ionicons } from "@expo/vector-icons";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";

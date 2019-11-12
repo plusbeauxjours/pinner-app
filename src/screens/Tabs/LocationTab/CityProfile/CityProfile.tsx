@@ -34,11 +34,11 @@ import { countries } from "../../../../../countryData";
 import Weather from "../../../../components/Weather";
 import { useTheme } from "../../../../context/ThemeContext";
 import Modal from "react-native-modal";
-import CoffeeDetail from "../../CoffeeTab/CoffeeDetail";
 import InfiniteScrollView from "react-native-infinite-scroll-view";
 import Toast from "react-native-root-toast";
 import { Entypo } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import CoffeeDetail from "../../../CoffeeDetail";
 
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};

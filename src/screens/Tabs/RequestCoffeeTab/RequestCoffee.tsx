@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Loader from "../../../../components/Loader";
-import UserRow from "../../../../components/UserRow";
+import Loader from "../../../components/Loader";
+import UserRow from "../../../components/UserRow";
 import { useQuery } from "react-apollo-hooks";
-import { RECOMMEND_USERS, RECOMMEND_LOCATIONS } from "./HomeQueries";
-import { useLocation } from "../../../../context/LocationContext";
+import { RECOMMEND_USERS, RECOMMEND_LOCATIONS } from "./RequestCoffeeQueries";
+import { useLocation } from "../../../context/LocationContext";
 import { RefreshControl, Platform } from "react-native";
 import Swiper from "react-native-swiper";
-import { GET_COFFEES } from "../../../../sharedQueries";
+import { GET_COFFEES } from "../../../sharedQueries";
 import {
   GetCoffees,
   GetCoffeesVariables,
@@ -15,10 +15,10 @@ import {
   RecommendUsersVariables,
   RecommendLocations,
   RecommendLocationsVariables
-} from "../../../../types/api";
-import CoffeeDetail from "../../CoffeeTab/CoffeeDetail";
+} from "../../../types/api";
 import Modal from "react-native-modal";
-import { useTheme } from "../../../../context/ThemeContext";
+import { useTheme } from "../../../context/ThemeContext";
+import CoffeeDetail from "../../CoffeeDetail/index";
 
 const Container = styled.View`
   flex: 1;
