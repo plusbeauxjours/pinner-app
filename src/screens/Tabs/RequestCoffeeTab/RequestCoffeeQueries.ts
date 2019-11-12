@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { PROFILE_FRAGMENT } from "../../../fragmentQueries";
+import { PROFILE_FRAGMENT, COFFEE_FRAGMENT } from "../../../fragmentQueries";
 
 export const RECOMMEND_USERS = gql`
   query RecommendUsers($page: Int) {
@@ -41,4 +41,26 @@ export const RECOMMEND_LOCATIONS = gql`
       }
     }
   }
+`;
+
+export const REQUEST_COFFEE = gql`
+  mutation RequestCoffee(
+    $countryCode: String
+    $gender: String
+    $currentCityId: String!
+    $target: String
+  ) {
+    requestCoffee(
+      countryCode: $countryCode
+      gender: $gender
+      currentCityId: $currentCityId
+      target: $target
+    ) {
+      ok
+      coffee {
+        ...CoffeeParts
+      }
+    }
+  }
+  ${COFFEE_FRAGMENT}
 `;

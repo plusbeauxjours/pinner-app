@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Loader from "../../../components/Loader";
 import UserRow from "../../../components/UserRow";
-import { useQuery } from "react-apollo-hooks";
-import { RECOMMEND_USERS, RECOMMEND_LOCATIONS } from "./RequestCoffeeQueries";
+import { useQuery, useMutation } from "react-apollo-hooks";
+import {
+  RECOMMEND_USERS,
+  RECOMMEND_LOCATIONS,
+  REQUEST_COFFEE
+} from "./RequestCoffeeQueries";
 import { useLocation } from "../../../context/LocationContext";
 import { RefreshControl, Platform } from "react-native";
 import Swiper from "react-native-swiper";
@@ -14,19 +18,26 @@ import {
   RecommendUsers,
   RecommendUsersVariables,
   RecommendLocations,
-  RecommendLocationsVariables
+  RecommendLocationsVariables,
+  RequestCoffee,
+  RequestCoffeeVariables
 } from "../../../types/api";
 import Modal from "react-native-modal";
 import { useTheme } from "../../../context/ThemeContext";
 import CoffeeDetail from "../../CoffeeDetail/index";
+import { useActionSheet } from "@expo/react-native-action-sheet";
+import { useMe } from "../../../context/MeContext";
+import SearchCityPhoto from "../../../components/SearchCityPhoto";
 
 const Container = styled.View`
   flex: 1;
   background-color: ${props => props.theme.bgColor};
-  padding: 0 15px 0 15px;
+  padding: 0 10px 0 10px;
 `;
 
-const UserContainer = styled.View``;
+const UserContainer = styled.View`
+  padding: 0 5px 0 5px;
+`;
 
 const UserColumn = styled.View``;
 
@@ -36,6 +47,7 @@ const Item = styled.View`
 `;
 const Title = styled.Text`
   font-weight: 500;
+  margin-left: 5px;
   font-size: 18px;
   margin-bottom: 5px;
   color: ${props => props.theme.color};
@@ -50,14 +62,73 @@ const LoaderContainer = styled.View`
   justify-content: center;
   align-items: center;
 `;
-
+const CoffeeSubmitBtn = styled.TouchableOpacity`
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  height: 40px;
+  margin: 5px;
+  border: 0.5px solid #999;
+  border-radius: 5px;
+`;
+const CoffeeText = styled.Text`
+  font-size: 16;
+  font-weight: 500;
+  color: ${props => props.theme.color};
+`;
 export default ({ navigation }) => {
+  const me = useMe();
   const location = useLocation();
   const isDarkMode = useTheme();
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [coffeeId, setCoffeeId] = useState<string>("");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const cityId = location.currentCityId;
+  const currentCityId = location.currentCityId;
+  const { showActionSheetWithOptions } = useActionSheet();
+  const selectReportUser = () => {
+    showActionSheetWithOptions(
+      {
+        options: ["Everyone", "Nationality", "Residence", "Gender", "Cancel"],
+        cancelButtonIndex: 4,
+        title: `Choose a target.`,
+        showSeparators: true
+      },
+      async buttonIndex => {
+        if (buttonIndex === 0) {
+          requestCoffeeFn({ variables: { target: "everyone", currentCityId } });
+        } else if (buttonIndex === 1) {
+          requestCoffeeFn({
+            variables: {
+              target: "nationality",
+              currentCityId,
+              countryCode: me.profile.nationality.countryCode
+            }
+          });
+        } else if (buttonIndex === 2) {
+          requestCoffeeFn({
+            variables: {
+              target: "residence",
+              currentCityId,
+              countryCode: me.profile.residence.countryCode
+            }
+          });
+        } else if (buttonIndex === 3) {
+          requestCoffeeFn({
+            variables: {
+              target: "gender",
+              currentCityId,
+              gender: me.profile.gender
+            }
+          });
+        } else {
+          null;
+        }
+      }
+    );
+  };
+  const [requestCoffeeFn] = useMutation<RequestCoffee, RequestCoffeeVariables>(
+    REQUEST_COFFEE
+  );
   const {
     data: recommendUserData,
     loading: recommendUserLoading,
@@ -76,7 +147,7 @@ export default ({ navigation }) => {
     refetch: coffeeRefetch
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
     fetchPolicy: "network-only",
-    variables: { location: "city", cityId }
+    variables: { location: "city", cityId: currentCityId }
   });
   const onRefresh = async () => {
     try {
@@ -151,6 +222,43 @@ export default ({ navigation }) => {
           }
         >
           <Container>
+            <SearchCityPhoto cityId={currentCityId} />
+            <CoffeeSubmitBtn onPress={() => selectReportUser()}>
+              <CoffeeText>ADD TRIP</CoffeeText>
+            </CoffeeSubmitBtn>
+            {coffees && coffees.length !== 0 && (
+              <Item>
+                <Title>NEED SOME COFFEE NOW</Title>
+                <UserContainer>
+                  <Swiper
+                    style={{ height: coffees.length < 3 ? 90 : 135 }}
+                    paginationStyle={{ bottom: -15 }}
+                    loop={false}
+                  >
+                    {chunk(coffees).map((coffeeColumn, index) => {
+                      return (
+                        <UserColumn key={index}>
+                          {coffeeColumn.map((coffee: any, index: any) => {
+                            return (
+                              <Touchable
+                                key={index}
+                                onPress={() => onPress(coffee.uuid)}
+                              >
+                                <UserRow
+                                  key={coffee.id}
+                                  coffee={coffee}
+                                  type={"coffee"}
+                                />
+                              </Touchable>
+                            );
+                          })}
+                        </UserColumn>
+                      );
+                    })}
+                  </Swiper>
+                </UserContainer>
+              </Item>
+            )}
             {recommendUsers && recommendUsers.length !== 0 && (
               <Item>
                 <Title>RECOMMEND USERS</Title>
@@ -211,39 +319,6 @@ export default ({ navigation }) => {
                                 }
                               >
                                 <UserRow city={city} type={"city"} />
-                              </Touchable>
-                            );
-                          })}
-                        </UserColumn>
-                      );
-                    })}
-                  </Swiper>
-                </UserContainer>
-              </Item>
-            )}
-            {coffees && coffees.length !== 0 && (
-              <Item>
-                <Title>NEED SOME COFFEE NOW</Title>
-                <UserContainer>
-                  <Swiper
-                    style={{ height: coffees.length < 3 ? 90 : 135 }}
-                    paginationStyle={{ bottom: -15 }}
-                    loop={false}
-                  >
-                    {chunk(coffees).map((coffeeColumn, index) => {
-                      return (
-                        <UserColumn key={index}>
-                          {coffeeColumn.map((coffee: any, index: any) => {
-                            return (
-                              <Touchable
-                                key={index}
-                                onPress={() => onPress(coffee.uuid)}
-                              >
-                                <UserRow
-                                  key={coffee.id}
-                                  coffee={coffee}
-                                  type={"coffee"}
-                                />
                               </Touchable>
                             );
                           })}

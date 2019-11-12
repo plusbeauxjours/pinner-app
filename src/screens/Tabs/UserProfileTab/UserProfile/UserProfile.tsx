@@ -73,7 +73,7 @@ const Body = styled.View`
   flex: 1;
   background-color: ${props => props.theme.bgColor};
   color: ${props => props.theme.color};
-  padding: 15px;
+  padding: 5px;
 `;
 
 const Text = styled.Text`

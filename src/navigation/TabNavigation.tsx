@@ -49,7 +49,7 @@ export default createBottomTabNavigator(
         )
       }
     },
-    RequestCoffees: {
+    RequestCoffee: {
       screen: stackFactory(RequestCoffee),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (

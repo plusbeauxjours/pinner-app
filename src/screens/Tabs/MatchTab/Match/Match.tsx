@@ -22,7 +22,7 @@ import {
 
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
-  padding: 0 15px 0 15px;
+  padding: 0 10px 0 10px;
 `;
 const Touchable = styled.TouchableOpacity``;
 const View = styled.View``;
@@ -31,7 +31,9 @@ const Text = styled.Text`
   font-size: 9px;
   margin-left: 5px;
 `;
-const UserContainer = styled.View``;
+const UserContainer = styled.View`
+  padding: 0 5px 0 5px;
+`;
 
 const Item = styled.View`
   flex: 1;
@@ -39,6 +41,7 @@ const Item = styled.View`
 `;
 const Title = styled.Text`
   font-weight: 500;
+  margin-left: 5px;
   font-size: 18px;
   margin-bottom: 5px;
   color: ${props => props.theme.color};
