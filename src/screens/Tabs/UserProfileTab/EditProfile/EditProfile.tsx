@@ -62,8 +62,8 @@ const ToggleText = styled.Text`
   color: ${props => props.theme.color};
 `;
 const CountryView = styled.View`
-  align-items: center;
-  flex-direction: row;
+  align-items: flex-end;
+  flex-direction: column;
 `;
 const Text = styled.Text`
   color: ${props => props.theme.color};
@@ -105,6 +105,9 @@ const ExplainText = styled.Text`
   font-size: 12px;
   font-weight: 100;
   color: ${props => props.theme.color};
+`;
+const FlagExplainText = styled(ExplainText)`
+  top: -5px;
 `;
 const ScrollView = styled.ScrollView`
   background-color: ${props => props.theme.bgColor};
@@ -219,7 +222,6 @@ export default ({ navigation }) => {
         if (buttonIndex === 0) {
           onSubmit();
           setSubmitModal(false);
-          toast("Profile Edited");
         } else {
           setSubmitModal(false);
         }
@@ -471,12 +473,13 @@ export default ({ navigation }) => {
                 residenceCode
               }
             });
+            toast("Profile Edited");
           }
         }
       }
     } catch (e) {
       console.log(e);
-      Alert.alert("Could not be Verified you");
+      toast("Could not be Verified you");
     } finally {
       setIsProfileSubmitted(false);
     }
@@ -655,9 +658,10 @@ export default ({ navigation }) => {
                     withAlphaFilter={true}
                     withEmoji={true}
                     onSelect={onSelectNationality}
-                    withCountryNameButton={true}
                   />
-                  <Text>{nationalityCode}</Text>
+                  <FlagExplainText>
+                    {countries.find(i => i.code === nationalityCode).name}
+                  </FlagExplainText>
                 </CountryView>
               </CountryContainer>
               <CountryContainer>
@@ -674,9 +678,10 @@ export default ({ navigation }) => {
                     withAlphaFilter={true}
                     withEmoji={true}
                     onSelect={onSelectrRsidence}
-                    withCountryNameButton={true}
                   />
-                  <Text>{residenceCode}</Text>
+                  <FlagExplainText>
+                    {countries.find(i => i.code === residenceCode).name}
+                  </FlagExplainText>
                 </CountryView>
               </CountryContainer>
 
