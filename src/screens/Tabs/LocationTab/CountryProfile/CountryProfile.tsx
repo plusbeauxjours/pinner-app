@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RefreshControl, Image, FlatList, ListView } from "react-native";
+import { RefreshControl, Image,  } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -21,7 +21,6 @@ import constants from "../../../../../constants";
 import { countries as countryData } from "../../../../../countryData";
 import { useTheme } from "../../../../context/ThemeContext";
 import { darkMode, lightMode } from "../../../../styles/mapStyles";
-import InfiniteScrollView from "react-native-infinite-scroll-view";
 import Toast from "react-native-root-toast";
 import { Entypo } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
@@ -160,9 +159,8 @@ export default ({ navigation }) => {
     data: profileData,
     loading: profileLoading,
     refetch: profileRefetch,
-    fetchMore: profileFetchMore
   } = useQuery<CountryProfile, CountryProfileVariables>(COUNTRY_PROFILE, {
-    variables: { countryCode }
+    variables: { countryCode, page:1 }
   });
   const {
     data: countriesData,
@@ -181,31 +179,6 @@ export default ({ navigation }) => {
     } finally {
       setRefreshing(false);
     }
-  };
-  const loadMore = page => {
-    profileFetchMore({
-      variables: {
-        page,
-        countryCode
-      },
-      updateQuery: (previousResult, { fetchMoreResult }) => {
-        if (!fetchMoreResult) {
-          return previousResult;
-        }
-        const data = {
-          countryProfile: {
-            ...previousResult.countryProfile,
-            cities: [
-              ...previousResult.countryProfile.cities,
-              ...fetchMoreResult.countryProfile.cities
-            ],
-            page: fetchMoreResult.countryProfile.page,
-            hasNextPage: fetchMoreResult.countryProfile.hasNextPage
-          }
-        };
-        return data;
-      }
-    });
   };
   const chunk = arr => {
     let chunks = [],
@@ -342,33 +315,22 @@ export default ({ navigation }) => {
                 {country.cityCount}
                 {country.cityCount === 1 ? " CITY" : " CITIES"}
               </Title>
-              <FlatList
-                data={cities}
-                renderItem={({ item }) => {
-                  return (
-                    <Touchable
-                      onPress={() =>
-                        navigation.push("CityProfileTabs", {
-                          cityId: item.cityId,
-                          countryCode: item.country.countryCode,
-                          continentCode: countryData.find(
-                            i => i.code === item.country.countryCode
-                          ).continent
-                        })
-                      }
-                    >
-                      <UserRow city={item} type={"city"} />
-                    </Touchable>
-                  );
-                }}
-                renderScrollComponent={props => (
-                  <InfiniteScrollView {...props} />
-                )}
-                onEndReachedThreshold={0.8}
-                onEndReached={hasNextPage ? loadMore(page) : {}}
-                onLoadMoreAsync={() => {}}
-                keyExtractor={item => item.id}
-              />
+              {cities.map((city, index) => (
+                <Touchable
+                  key={index}
+                  onPress={() =>
+                    navigation.push("CityProfileTabs", {
+                      cityId: city.cityId,
+                      countryCode: city.country.countryCode,
+                      continentCode: countryData.find(
+                        i => i.code === city.country.countryCode
+                      ).continent
+                    })
+                  }
+                >
+                  <UserRow city={city} type={"city"} />
+                </Touchable>
+              ))}
             </Item>
           )}
         </Container>

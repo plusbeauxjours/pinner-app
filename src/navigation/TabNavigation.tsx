@@ -10,7 +10,7 @@ import LocationNavigation from "./LocationNavigation";
 import PhotoLink from "../components/PhotoLink";
 import UserProfileNavigation from "./UserProfileNavigation";
 import Search from "../components/Search";
-import RequestCoffee from "../screens/Tabs/RequestCoffeeTab/index";
+import RequestNavigation from "./RequestNavigation";
 
 const stackFactory = initialRoute =>
   createStackNavigator({
@@ -25,6 +25,17 @@ const stackFactory = initialRoute =>
 
 export default createBottomTabNavigator(
   {
+    RequestCoffee: {
+      screen: stackFactory(RequestNavigation),
+      navigationOptions: {
+        tabBarIcon: ({ focused }) => (
+          <NavIcon
+            focused={focused}
+            name={Platform.OS === "ios" ? "ios-add" : "md-add"}
+          />
+        )
+      }
+    },
     Match: {
       screen: stackFactory(MatchNavigation),
       navigationOptions: {
@@ -49,17 +60,7 @@ export default createBottomTabNavigator(
         )
       }
     },
-    RequestCoffee: {
-      screen: stackFactory(RequestCoffee),
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            name={Platform.OS === "ios" ? "ios-add" : "md-add"}
-          />
-        )
-      }
-    },
+
     Profile: {
       screen: stackFactory(UserProfileNavigation),
       navigationOptions: {

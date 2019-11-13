@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { RefreshControl, Image, Platform, FlatList } from "react-native";
+import React, { useState } from "react";
+import { RefreshControl, Image, Platform } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -34,7 +34,6 @@ import { countries } from "../../../../../countryData";
 import Weather from "../../../../components/Weather";
 import { useTheme } from "../../../../context/ThemeContext";
 import Modal from "react-native-modal";
-import InfiniteScrollView from "react-native-infinite-scroll-view";
 import Toast from "react-native-root-toast";
 import { Entypo } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
@@ -173,10 +172,9 @@ export default ({ navigation }) => {
   const {
     data: profileData,
     loading: profileLoading,
-    refetch: profileRefetch,
-    fetchMore: profileFetchMore
+    refetch: profileRefetch
   } = useQuery<CityProfile, CityProfileVariables>(CITY_PROFILE, {
-    variables: { cityId }
+    variables: { cityId, page: 1 }
   });
   const {
     data: nearCitiesData,
@@ -228,31 +226,6 @@ export default ({ navigation }) => {
       chunks.push(arr.slice(i, (i += 3)));
     }
     return chunks;
-  };
-  const loadMore = page => {
-    profileFetchMore({
-      variables: {
-        page,
-        cityId
-      },
-      updateQuery: (previousResult, { fetchMoreResult }) => {
-        if (!fetchMoreResult) {
-          return previousResult;
-        }
-        const data = {
-          cityProfile: {
-            ...previousResult.cityProfile,
-            usersNow: [
-              ...previousResult.cityProfile.usersNow,
-              ...fetchMoreResult.cityProfile.usersNow
-            ],
-            page: fetchMoreResult.cityProfile.page,
-            hasNextPage: fetchMoreResult.cityProfile.hasNextPage
-          }
-        };
-        return data;
-      }
-    });
   };
   if (
     profileLoading ||
@@ -536,29 +509,18 @@ export default ({ navigation }) => {
             {usersNow && usersNow.length !== 0 && (
               <Item>
                 <Title>USERS NOW</Title>
-                <FlatList
-                  data={usersNow}
-                  renderItem={({ item }) => {
-                    return (
-                      <Touchable
-                        onPress={() =>
-                          navigation.push("UserProfileTabs", {
-                            username: item.username
-                          })
-                        }
-                      >
-                        <UserRow user={item} type={"user"} />
-                      </Touchable>
-                    );
-                  }}
-                  renderScrollComponent={props => (
-                    <InfiniteScrollView {...props} />
-                  )}
-                  onEndReachedThreshold={0.8}
-                  onEndReached={hasNextPage ? loadMore(page) : {}}
-                  onLoadMoreAsync={() => {}}
-                  keyExtractor={item => item.id}
-                />
+                {usersNow.map((user: any, index: any) => (
+                  <Touchable
+                    key={index}
+                    onPress={() =>
+                      navigation.push("UserProfileTabs", {
+                        username: user.username
+                      })
+                    }
+                  >
+                    <UserRow user={user} type={"user"} />
+                  </Touchable>
+                ))}
               </Item>
             )}
           </Container>

@@ -9,7 +9,7 @@ import {
   REQUEST_COFFEE
 } from "./RequestCoffeeQueries";
 import { useLocation } from "../../../context/LocationContext";
-import { RefreshControl, Platform } from "react-native";
+import { RefreshControl, Platform, View } from "react-native";
 import Swiper from "react-native-swiper";
 import { GET_COFFEES } from "../../../sharedQueries";
 import {
@@ -28,6 +28,7 @@ import CoffeeDetail from "../../CoffeeDetail/index";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { useMe } from "../../../context/MeContext";
 import SearchCityPhoto from "../../../components/SearchCityPhoto";
+import { countries } from "../../../../countryData";
 
 const Container = styled.View`
   flex: 1;
@@ -38,9 +39,7 @@ const Container = styled.View`
 const UserContainer = styled.View`
   padding: 0 5px 0 5px;
 `;
-
 const UserColumn = styled.View``;
-
 const Item = styled.View`
   flex: 1;
   margin-bottom: 25px;
@@ -65,7 +64,6 @@ const LoaderContainer = styled.View`
 const CoffeeSubmitBtn = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
-  flex: 1;
   height: 40px;
   margin: 5px;
   border: 0.5px solid #999;
@@ -76,6 +74,27 @@ const CoffeeText = styled.Text`
   font-weight: 500;
   color: ${props => props.theme.color};
 `;
+const Footer = styled.View`
+  background-color: ${props => props.theme.bgColor};
+`;
+
+const CityBold = styled.Text`
+  font-weight: 500;
+  color: ${props => props.theme.color};
+`;
+const Location = styled.Text`
+  font-size: 12px;
+  color: ${props => props.theme.color};
+`;
+const SearchCityContainer = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
+const SearchHeaderUserContainer = styled.View`
+  margin-left: 10px;
+  flex-direction: column;
+`;
 export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
@@ -83,7 +102,6 @@ export default ({ navigation }) => {
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [coffeeId, setCoffeeId] = useState<string>("");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const currentCityId = location.currentCityId;
   const { showActionSheetWithOptions } = useActionSheet();
   const selectReportUser = () => {
     showActionSheetWithOptions(
@@ -95,12 +113,17 @@ export default ({ navigation }) => {
       },
       async buttonIndex => {
         if (buttonIndex === 0) {
-          requestCoffeeFn({ variables: { target: "everyone", currentCityId } });
+          requestCoffeeFn({
+            variables: {
+              target: "everyone",
+              currentCityId: location.currentCityId
+            }
+          });
         } else if (buttonIndex === 1) {
           requestCoffeeFn({
             variables: {
               target: "nationality",
-              currentCityId,
+              currentCityId: location.currentCityId,
               countryCode: me.profile.nationality.countryCode
             }
           });
@@ -108,7 +131,7 @@ export default ({ navigation }) => {
           requestCoffeeFn({
             variables: {
               target: "residence",
-              currentCityId,
+              currentCityId: location.currentCityId,
               countryCode: me.profile.residence.countryCode
             }
           });
@@ -116,7 +139,7 @@ export default ({ navigation }) => {
           requestCoffeeFn({
             variables: {
               target: "gender",
-              currentCityId,
+              currentCityId: location.currentCityId,
               gender: me.profile.gender
             }
           });
@@ -147,7 +170,7 @@ export default ({ navigation }) => {
     refetch: coffeeRefetch
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
     fetchPolicy: "network-only",
-    variables: { location: "city", cityId: currentCityId }
+    variables: { location: "city", cityId: location.currentCityId }
   });
   const onRefresh = async () => {
     try {
@@ -222,10 +245,6 @@ export default ({ navigation }) => {
           }
         >
           <Container>
-            <SearchCityPhoto cityId={currentCityId} />
-            <CoffeeSubmitBtn onPress={() => selectReportUser()}>
-              <CoffeeText>ADD TRIP</CoffeeText>
-            </CoffeeSubmitBtn>
             {coffees && coffees.length !== 0 && (
               <Item>
                 <Title>NEED SOME COFFEE NOW</Title>
@@ -331,6 +350,26 @@ export default ({ navigation }) => {
             )}
           </Container>
         </ScrollView>
+        <Footer>
+          <Touchable onPress={() => console.log("false")}>
+            <SearchCityContainer>
+              <SearchCityPhoto cityId={location.currentCityId} />
+              <SearchHeaderUserContainer>
+                <CityBold>{location.currentCityName}</CityBold>
+                <Location>
+                  {location.currentCountryCode
+                    ? countries.find(
+                        i => i.code === location.currentCountryCode
+                      ).name
+                    : location.currentCountryCode}
+                </Location>
+              </SearchHeaderUserContainer>
+            </SearchCityContainer>
+          </Touchable>
+          <CoffeeSubmitBtn onPress={() => selectReportUser()}>
+            <CoffeeText>REQUEST COFFEE</CoffeeText>
+          </CoffeeSubmitBtn>
+        </Footer>
       </>
     );
   }
