@@ -972,7 +972,12 @@ export default ({ navigation }) => {
           backdropTransitionInTiming={200}
           backdropTransitionOutTiming={200}
         >
-          <CoffeeDetail coffeeId={coffeeId} setModalOpen={setCoffeeModalOpen} />
+          <CoffeeDetail
+            coffeeId={coffeeId}
+            setModalOpen={setCoffeeModalOpen}
+            isSelf={user.profile.isSelf}
+            isStaying={true}
+          />
         </Modal>
         <ScrollView
           refreshControl={

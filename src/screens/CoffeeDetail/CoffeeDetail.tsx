@@ -94,12 +94,14 @@ interface IProps {
   coffeeId: string;
   setModalOpen?: any;
   isStaying?: boolean;
+  isSelf?: boolean;
 }
 const CoffeeDetails: React.FC<IProps> = ({
   navigation,
   coffeeId,
   setModalOpen,
-  isStaying
+  isStaying,
+  isSelf
 }) => {
   const isDarkMode = useTheme();
   const location = useLocation();
@@ -246,7 +248,8 @@ const CoffeeDetails: React.FC<IProps> = ({
                   cityId={coffee.city.cityId}
                   coffeeId={coffee.uuid}
                   isMatching={coffee.isMatching}
-                  isSelf={coffee.host.profile.isSelf}
+                  isSelf={isSelf ? isSelf : coffee.host.profile.isSelf}
+                  setModalOpen={setModalOpen}
                 />
               </CoffeeBtnContainer>
             )}

@@ -210,6 +210,7 @@ export default ({ navigation }) => {
                 loadingRender={() => {
                   return <Loader />;
                 }}
+                renderIndicator={() => {}}
               />
             </Modal>
             {/* {isSelf && !avatar.isMain && (

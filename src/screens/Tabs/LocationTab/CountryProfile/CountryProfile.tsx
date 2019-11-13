@@ -208,7 +208,6 @@ export default ({ navigation }) => {
         }
       >
         <Container>
-          {console.log(cities.length)}
           {country && (
             <View>
               {mapOpen ? (

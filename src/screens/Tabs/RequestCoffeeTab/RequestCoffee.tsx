@@ -29,6 +29,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import { useMe } from "../../../context/MeContext";
 import SearchCityPhoto from "../../../components/SearchCityPhoto";
 import { countries } from "../../../../countryData";
+import Toast from "react-native-root-toast";
 
 const Container = styled.View`
   flex: 1;
@@ -132,30 +133,35 @@ export default ({ navigation }) => {
               currentCityId: location.currentCityId
             }
           });
+          toast("Requested");
         } else if (buttonIndex === 1) {
           requestCoffeeFn({
             variables: {
               target: "nationality",
               currentCityId: location.currentCityId,
-              countryCode: me.profile.nationality.countryCode
+              countryCode: me.user.profile.nationality.countryCode
             }
           });
+          toast("Requested");
         } else if (buttonIndex === 2) {
           requestCoffeeFn({
             variables: {
               target: "residence",
               currentCityId: location.currentCityId,
-              countryCode: me.profile.residence.countryCode
+              countryCode: me.user.profile.residence.countryCode
             }
           });
+          toast("Requested");
         } else if (buttonIndex === 3) {
           requestCoffeeFn({
             variables: {
               target: "gender",
               currentCityId: location.currentCityId,
-              gender: me.profile.gender
+              gender: me.user.profile.gender
             }
+
           });
+          toast("Requested");
         } else {
           null;
         }
@@ -185,6 +191,16 @@ export default ({ navigation }) => {
     fetchPolicy: "network-only",
     variables: { location: "city", cityId: location.currentCityId }
   });
+  const toast = (message: string) => {
+    Toast.show(message, {
+      duration: Toast.durations.LONG,
+      position: Toast.positions.BOTTOM,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      delay: 0
+    });
+  };
   const onRefresh = async () => {
     try {
       setRefreshing(true);

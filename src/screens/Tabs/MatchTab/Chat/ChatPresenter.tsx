@@ -113,6 +113,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
               closeModalOpen();
             }}
             enableSwipeDown={true}
+            renderIndicator={() => {}}
           />
           {/* )}
           {nowShowing == "video" && (
