@@ -11,7 +11,7 @@ import {
 import { useLocation } from "../../../context/LocationContext";
 import { RefreshControl, Platform } from "react-native";
 import Swiper from "react-native-swiper";
-import { GET_COFFEES } from "../../../sharedQueries";
+import { GET_COFFEES, ME } from "../../../sharedQueries";
 import {
   GetCoffees,
   GetCoffeesVariables,
@@ -29,10 +29,11 @@ import { useTheme } from "../../../context/ThemeContext";
 import CoffeeDetail from "../../CoffeeDetail/index";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { useMe } from "../../../context/MeContext";
-import SearchCityPhoto from "../../../components/SearchCityPhoto";
-import { countries } from "../../../../countryData";
+// import SearchCityPhoto from "../../../components/SearchCityPhoto";
+// import { countries } from "../../../../countryData";
 import Toast from "react-native-root-toast";
 import { DELETE_COFFEE } from "../../CoffeeDetail/CoffeeDetailQueries";
+import { Me } from "../../../types/api";
 
 const Container = styled.View`
   flex: 1;
@@ -170,9 +171,79 @@ export default ({ navigation }) => {
       }
     );
   };
-  const [requestCoffeeFn] = useMutation<RequestCoffee, RequestCoffeeVariables>(
-    REQUEST_COFFEE
-  );
+  const {
+    data: coffeeData,
+    loading: coffeeLoading,
+    refetch: coffeeRefetch
+  } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
+    fetchPolicy: "network-only",
+    variables: { location: "city", cityId: location.currentCityId }
+  });
+  const [requestCoffeeFn, { loading: requestLoading }] = useMutation<
+    RequestCoffee,
+    RequestCoffeeVariables
+  >(REQUEST_COFFEE, {
+    update(cache, { data: { requestCoffee } }) {
+      try {
+        const meData = cache.readQuery<Me>({
+          query: ME
+        });
+        if (meData) {
+          meData.me.user.profile.requestedCoffee = [requestCoffee.coffee];
+          cache.writeQuery({
+            query: ME,
+            data: meData
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      try {
+        const profileData = cache.readQuery({
+          query: GET_COFFEES,
+          variables: {
+            userName: me.user.username,
+            location: "profile"
+          }
+        });
+        if (profileData) {
+          profileData.getCoffees.coffees.push(requestCoffee.coffee);
+          cache.writeQuery({
+            query: GET_COFFEES,
+            variables: {
+              userName: me.user.username,
+              location: "profile"
+            },
+            data: profileData
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      try {
+        const feedData = cache.readQuery({
+          query: GET_COFFEES,
+          variables: {
+            cityId: location.currentCityId,
+            location: "city"
+          }
+        });
+        if (feedData) {
+          feedData.getCoffees.coffees.unshift(requestCoffee.coffee);
+          cache.writeQuery({
+            query: GET_COFFEES,
+            variables: {
+              cityId: location.currentCityId,
+              location: "city"
+            },
+            data: feedData
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  });
   const {
     data: recommendUserData,
     loading: recommendUserLoading,
@@ -188,16 +259,78 @@ export default ({ navigation }) => {
   const [deleteCoffeeFn, { loading: deleteCoffeeLoading }] = useMutation<
     DeleteCoffee,
     DeleteCoffeeVariables
-  >(DELETE_COFFEE);
-  const {
-    data: coffeeData,
-    loading: coffeeLoading,
-    refetch: coffeeRefetch
-  } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
-    fetchPolicy: "network-only",
-    variables: { location: "city", cityId: location.currentCityId }
+  >(DELETE_COFFEE, {
+    update(cache, { data: { deleteCoffee } }) {
+      try {
+        const meData = cache.readQuery<Me>({
+          query: ME
+        });
+        if (meData) {
+          meData.me.user.profile.requestedCoffee = meData.me.user.profile.requestedCoffee.filter(
+            i => i.uuid !== deleteCoffee.coffeeId
+          );
+          cache.writeQuery({
+            query: ME,
+            data: meData
+          });
+          console.log(meData);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      try {
+        const profileData = cache.readQuery({
+          query: GET_COFFEES,
+          variables: {
+            userName: me.user.username,
+            location: "profile"
+          }
+        });
+        if (profileData) {
+          profileData.getCoffees.coffees = profileData.getCoffees.coffees.filter(
+            i => i.uuid !== deleteCoffee.coffeeId
+          );
+          cache.writeQuery({
+            query: GET_COFFEES,
+            variables: {
+              userName: me.user.username,
+              location: "profile"
+            },
+            data: profileData
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      try {
+        const feedData = cache.readQuery({
+          query: GET_COFFEES,
+          variables: {
+            cityId: location.currentCityId,
+            location: "city"
+          }
+        });
+        if (feedData) {
+          feedData.getCoffees.coffees = feedData.getCoffees.coffees.filter(
+            i => i.uuid !== deleteCoffee.coffeeId
+          );
+          cache.writeQuery({
+            query: GET_COFFEES,
+            variables: {
+              cityId: location.currentCityId,
+              location: "city"
+            },
+            data: feedData
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
   });
+
   const cancelCoffee = coffeeId => {
+    console.log(coffeeId);
     showActionSheetWithOptions(
       {
         options: ["Yes", "No"],
@@ -435,14 +568,19 @@ export default ({ navigation }) => {
           {me.user.profile.requestedCoffee &&
           me.user.profile.requestedCoffee.length !== 0 ? (
             <CoffeeSubmitBtn
-              onPress={() =>
-                cancelCoffee(me.user.profile.requestedCoffee[0].uuid)
-              }
+              disabled={deleteCoffeeLoading}
+              onPress={() => {
+                console.log(me.user.profile),
+                  cancelCoffee(me.user.profile.requestedCoffee[0].uuid);
+              }}
             >
               <CoffeeText>CANCEL COFFEE</CoffeeText>
             </CoffeeSubmitBtn>
           ) : (
-            <CoffeeSubmitBtn onPress={() => selectReportUser()}>
+            <CoffeeSubmitBtn
+              disabled={requestLoading}
+              onPress={() => selectReportUser()}
+            >
               <CoffeeText>REQUEST COFFEE</CoffeeText>
             </CoffeeSubmitBtn>
           )}

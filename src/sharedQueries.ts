@@ -1,4 +1,5 @@
 import gql from "graphql-tag";
+import { COFFEE_FRAGMENT } from "./fragmentQueries";
 
 export const ME = gql`
   query Me {
@@ -9,7 +10,7 @@ export const ME = gql`
           id
           gender
           requestedCoffee {
-            uuid
+            ...CoffeeParts
           }
           residence {
             countryCode
@@ -31,6 +32,7 @@ export const ME = gql`
       }
     }
   }
+  ${COFFEE_FRAGMENT}
 `;
 
 export const SLACK_REPORT_LOCATIONS = gql`
