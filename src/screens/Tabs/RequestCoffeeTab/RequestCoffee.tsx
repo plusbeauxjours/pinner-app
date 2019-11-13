@@ -21,8 +21,8 @@ import {
   RecommendLocationsVariables,
   RequestCoffee,
   RequestCoffeeVariables,
-  deleteCoffee,
-  deleteCoffeeVariables
+  DeleteCoffee,
+  DeleteCoffeeVariables
 } from "../../../types/api";
 import Modal from "react-native-modal";
 import { useTheme } from "../../../context/ThemeContext";
@@ -69,7 +69,7 @@ const CoffeeSubmitBtn = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   height: 40px;
-  margin: 5px;
+  margin: 0 5px 5px 5px;
   border: 0.5px solid #999;
   border-radius: 5px;
 `;
@@ -186,8 +186,8 @@ export default ({ navigation }) => {
     RECOMMEND_LOCATIONS
   );
   const [deleteCoffeeFn, { loading: deleteCoffeeLoading }] = useMutation<
-    deleteCoffee,
-    deleteCoffeeVariables
+    DeleteCoffee,
+    DeleteCoffeeVariables
   >(DELETE_COFFEE);
   const {
     data: coffeeData,
@@ -197,7 +197,7 @@ export default ({ navigation }) => {
     fetchPolicy: "network-only",
     variables: { location: "city", cityId: location.currentCityId }
   });
-  const deleteCoffee = coffeeId => {
+  const cancelCoffee = coffeeId => {
     showActionSheetWithOptions(
       {
         options: ["Yes", "No"],
@@ -407,7 +407,7 @@ export default ({ navigation }) => {
           </Container>
         </ScrollView>
         <Footer>
-          <Touchable
+          {/* <Touchable
             onPress={() =>
               navigation.push("CityProfileTabs", {
                 cityId: location.currentCityId,
@@ -431,12 +431,12 @@ export default ({ navigation }) => {
                 </Location>
               </SearchHeaderUserContainer>
             </SearchCityContainer>
-          </Touchable>
+          </Touchable> */}
           {me.user.profile.requestedCoffee &&
           me.user.profile.requestedCoffee.length !== 0 ? (
             <CoffeeSubmitBtn
               onPress={() =>
-                deleteCoffee(me.user.profile.requestedCoffee[0].uuid)
+                cancelCoffee(me.user.profile.requestedCoffee[0].uuid)
               }
             >
               <CoffeeText>CANCEL COFFEE</CoffeeText>

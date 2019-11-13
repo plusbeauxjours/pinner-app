@@ -38,6 +38,17 @@ export default createBottomTabNavigator(
         )
       }
     },
+    RequestCoffee: {
+      screen: stackFactory(RequestNavigation),
+      navigationOptions: {
+        tabBarIcon: ({ focused }) => (
+          <NavIcon
+          focused={focused}
+          name={Platform.OS === "ios" ? "ios-cafe" : "md-cafe"}
+        />
+        )
+      }
+    },
     Location: {
       screen: stackFactory(LocationNavigation),
       navigationOptions: {
@@ -45,17 +56,6 @@ export default createBottomTabNavigator(
           <NavIcon
             focused={focused}
             name={Platform.OS === "ios" ? "ios-map" : "md-map"}
-          />
-        )
-      }
-    },
-    RequestCoffee: {
-      screen: stackFactory(RequestNavigation),
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            name={Platform.OS === "ios" ? "ios-add" : "md-add"}
           />
         )
       }

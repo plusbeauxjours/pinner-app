@@ -80,9 +80,9 @@ const CoffeeBtn: React.FC<IProps> = ({
   };
   const match = async coffeeId => {
     await matchFn(coffeeId);
+    setModalOpen(false);
     toast("Matched");
   };
-
   const { showActionSheetWithOptions } = useActionSheet();
   const unMatch = (matchId: string) => {
     showActionSheetWithOptions(
@@ -95,12 +95,13 @@ const CoffeeBtn: React.FC<IProps> = ({
       buttonIndex => {
         if (buttonIndex === 0) {
           unMatchFn();
+          setModalOpen(false);
           toast("unmatched");
         }
       }
     );
   };
-  const deleteCoffee =  () => {
+  const deleteCoffee = () => {
     showActionSheetWithOptions(
       {
         options: ["Yes", "No"],
@@ -110,7 +111,7 @@ const CoffeeBtn: React.FC<IProps> = ({
       },
       buttonIndex => {
         if (buttonIndex === 0) {
-           deleteCoffeeFn();
+          deleteCoffeeFn();
           setModalOpen(false);
           toast("canceld");
         }
