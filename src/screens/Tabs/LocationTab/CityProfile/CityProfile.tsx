@@ -242,8 +242,6 @@ export default ({ navigation }) => {
     const {
       cityProfile: {
         count = null,
-        page = null,
-        hasNextPage = null,
         city = null,
         usersBefore = null,
         usersNow = null

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RefreshControl, Image,  } from "react-native";
+import { RefreshControl, Image } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -158,9 +158,10 @@ export default ({ navigation }) => {
   const {
     data: profileData,
     loading: profileLoading,
-    refetch: profileRefetch,
+    refetch: profileRefetch
   } = useQuery<CountryProfile, CountryProfileVariables>(COUNTRY_PROFILE, {
-    variables: { countryCode, page:1 }
+    variables: { countryCode, page: 1 },
+    fetchPolicy: "network-only"
   });
   const {
     data: countriesData,
@@ -197,13 +198,7 @@ export default ({ navigation }) => {
     );
   } else {
     const {
-      countryProfile: {
-        count = null,
-        page = null,
-        hasNextPage = null,
-        country = null,
-        cities = null
-      } = {}
+      countryProfile: { count = null, country = null, cities = null } = {}
     } = profileData;
     const { getCountries: { countries = null } = {} } = countriesData;
     return (
@@ -213,6 +208,7 @@ export default ({ navigation }) => {
         }
       >
         <Container>
+          {console.log(cities.length)}
           {country && (
             <View>
               {mapOpen ? (

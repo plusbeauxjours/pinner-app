@@ -103,10 +103,23 @@ export default ({ navigation }) => {
   const [coffeeId, setCoffeeId] = useState<string>("");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const { showActionSheetWithOptions } = useActionSheet();
+
   const selectReportUser = () => {
     showActionSheetWithOptions(
       {
-        options: ["Everyone", "Nationality", "Residence", "Gender", "Cancel"],
+        options: [
+          "Everyone",
+          me.user.profile.nationality
+            ? `Nationality: ${me.user.profile.nationality.countryName} ${me.user.profile.nationality.countryEmoji}`
+            : "Nationality",
+          me.user.profile.residence
+            ? `Residence: ${me.user.profile.residence.countryName} ${me.user.profile.residence.countryEmoji}`
+            : "Residence",
+          me.user.profile.gender
+            ? `Gender: ${me.user.profile.gender}`
+            : "Gender",
+          "Cancel"
+        ],
         cancelButtonIndex: 4,
         title: `Choose a target.`,
         showSeparators: true
@@ -351,7 +364,17 @@ export default ({ navigation }) => {
           </Container>
         </ScrollView>
         <Footer>
-          <Touchable onPress={() => console.log("false")}>
+          <Touchable
+            onPress={() =>
+              navigation.push("CityProfileTabs", {
+                cityId: location.currentCityId,
+                countryCode: location.currentCountryCode,
+                continentCode: countries.find(
+                  i => i.code === location.currentCountryCode
+                ).continent
+              })
+            }
+          >
             <SearchCityContainer>
               <SearchCityPhoto cityId={location.currentCityId} />
               <SearchHeaderUserContainer>
