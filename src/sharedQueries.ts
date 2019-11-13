@@ -8,6 +8,9 @@ export const ME = gql`
         profile {
           id
           gender
+          requestedCoffee {
+            uuid
+          }
           residence {
             countryCode
             countryName

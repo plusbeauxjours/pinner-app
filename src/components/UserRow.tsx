@@ -616,9 +616,10 @@ const UserRow: React.FC<IProps> = ({
                       {match.guest.profile.currentCity.cityName},{" "}
                       {match.guest.profile.currentCity.country.countryName}
                     </Location>
+                    {console.log(match)}
                     <GreyLocation>
-                      Matched in {match.coffee.city.cityName}
-                      {match.coffee.city.country.countryEmoji}
+                      Matched in {match.city.cityName}
+                      {match.city.country.countryEmoji}
                     </GreyLocation>
                   </HeaderUserContainer>
                 </Touchable>
@@ -650,8 +651,8 @@ const UserRow: React.FC<IProps> = ({
                       {match.host.profile.currentCity.country.countryName}
                     </Location>
                     <GreyLocation>
-                      Matched in {match.coffee.city.cityName}
-                      {match.coffee.city.country.countryEmoji}
+                      Matched in {match.city.cityName}
+                      {match.city.country.countryEmoji}
                     </GreyLocation>
                   </HeaderUserContainer>
                 </Touchable>

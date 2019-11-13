@@ -109,6 +109,7 @@ export const MATCH_FRAGMENT = gql`
       cityName
       country {
         countryName
+        countryEmoji
       }
     }
     host {

@@ -115,6 +115,18 @@ export default ({ navigation }) => {
       }
     }
   });
+
+  const {
+    data: matchData,
+    loading: matchLoading,
+    refetch: matchRefetch
+  } = useQuery<GetMatches, GetMatchesVariables>(GET_MATCHES, {
+    fetchPolicy: "network-only"
+  });
+  const [unMatchFn, { loading: unMatchLoading }] = useMutation<
+    UnMatch,
+    UnMatchVariables
+  >(UNMATCH);
   const onPress = (matchId: string) => {
     MarkAsReadMatchFn({
       variables: { matchId }
@@ -124,15 +136,6 @@ export default ({ navigation }) => {
       lastMessage: "hi"
     });
   };
-  const {
-    data: matchData,
-    loading: matchLoading,
-    refetch: matchRefetch
-  } = useQuery<GetMatches, GetMatchesVariables>(GET_MATCHES);
-  const [unMatchFn, { loading: unMatchLoading }] = useMutation<
-    UnMatch,
-    UnMatchVariables
-  >(UNMATCH);
   const onRefresh = async () => {
     try {
       setRefreshing(true);

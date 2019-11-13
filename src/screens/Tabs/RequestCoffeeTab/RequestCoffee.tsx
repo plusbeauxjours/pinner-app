@@ -9,7 +9,7 @@ import {
   REQUEST_COFFEE
 } from "./RequestCoffeeQueries";
 import { useLocation } from "../../../context/LocationContext";
-import { RefreshControl, Platform, View } from "react-native";
+import { RefreshControl, Platform } from "react-native";
 import Swiper from "react-native-swiper";
 import { GET_COFFEES } from "../../../sharedQueries";
 import {
@@ -20,7 +20,9 @@ import {
   RecommendLocations,
   RecommendLocationsVariables,
   RequestCoffee,
-  RequestCoffeeVariables
+  RequestCoffeeVariables,
+  deleteCoffee,
+  deleteCoffeeVariables
 } from "../../../types/api";
 import Modal from "react-native-modal";
 import { useTheme } from "../../../context/ThemeContext";
@@ -30,6 +32,7 @@ import { useMe } from "../../../context/MeContext";
 import SearchCityPhoto from "../../../components/SearchCityPhoto";
 import { countries } from "../../../../countryData";
 import Toast from "react-native-root-toast";
+import { DELETE_COFFEE } from "../../CoffeeDetail/CoffeeDetailQueries";
 
 const Container = styled.View`
   flex: 1;
@@ -159,7 +162,6 @@ export default ({ navigation }) => {
               currentCityId: location.currentCityId,
               gender: me.user.profile.gender
             }
-
           });
           toast("Requested");
         } else {
@@ -183,6 +185,10 @@ export default ({ navigation }) => {
   } = useQuery<RecommendLocations, RecommendLocationsVariables>(
     RECOMMEND_LOCATIONS
   );
+  const [deleteCoffeeFn, { loading: deleteCoffeeLoading }] = useMutation<
+    deleteCoffee,
+    deleteCoffeeVariables
+  >(DELETE_COFFEE);
   const {
     data: coffeeData,
     loading: coffeeLoading,
@@ -191,6 +197,27 @@ export default ({ navigation }) => {
     fetchPolicy: "network-only",
     variables: { location: "city", cityId: location.currentCityId }
   });
+  const deleteCoffee = coffeeId => {
+    showActionSheetWithOptions(
+      {
+        options: ["Yes", "No"],
+        destructiveButtonIndex: 0,
+        cancelButtonIndex: 1,
+        title: "Are you sure to cancel?"
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) {
+          deleteCoffeeFn({
+            variables: {
+              coffeeId
+            }
+          });
+          setModalOpen(false);
+          toast("canceld");
+        }
+      }
+    );
+  };
   const toast = (message: string) => {
     Toast.show(message, {
       duration: Toast.durations.LONG,
@@ -405,9 +432,20 @@ export default ({ navigation }) => {
               </SearchHeaderUserContainer>
             </SearchCityContainer>
           </Touchable>
-          <CoffeeSubmitBtn onPress={() => selectReportUser()}>
-            <CoffeeText>REQUEST COFFEE</CoffeeText>
-          </CoffeeSubmitBtn>
+          {me.user.profile.requestedCoffee &&
+          me.user.profile.requestedCoffee.length !== 0 ? (
+            <CoffeeSubmitBtn
+              onPress={() =>
+                deleteCoffee(me.user.profile.requestedCoffee[0].uuid)
+              }
+            >
+              <CoffeeText>CANCEL COFFEE</CoffeeText>
+            </CoffeeSubmitBtn>
+          ) : (
+            <CoffeeSubmitBtn onPress={() => selectReportUser()}>
+              <CoffeeText>REQUEST COFFEE</CoffeeText>
+            </CoffeeSubmitBtn>
+          )}
         </Footer>
       </>
     );

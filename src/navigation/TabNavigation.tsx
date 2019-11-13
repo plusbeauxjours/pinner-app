@@ -25,17 +25,6 @@ const stackFactory = initialRoute =>
 
 export default createBottomTabNavigator(
   {
-    RequestCoffee: {
-      screen: stackFactory(RequestNavigation),
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            name={Platform.OS === "ios" ? "ios-add" : "md-add"}
-          />
-        )
-      }
-    },
     Match: {
       screen: stackFactory(MatchNavigation),
       navigationOptions: {
@@ -60,7 +49,17 @@ export default createBottomTabNavigator(
         )
       }
     },
-
+    RequestCoffee: {
+      screen: stackFactory(RequestNavigation),
+      navigationOptions: {
+        tabBarIcon: ({ focused }) => (
+          <NavIcon
+            focused={focused}
+            name={Platform.OS === "ios" ? "ios-add" : "md-add"}
+          />
+        )
+      }
+    },
     Profile: {
       screen: stackFactory(UserProfileNavigation),
       navigationOptions: {

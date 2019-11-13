@@ -67,19 +67,7 @@ const CoffeeBtn: React.FC<IProps> = ({
     deleteCoffee,
     deleteCoffeeVariables
   >(DELETE_COFFEE, { variables: { coffeeId } });
-  const match = async coffeeId => {
-    await matchFn(coffeeId);
-    toast("Matched");
-  };
-  const unmatch = async matchId => {
-    await unMatchFn(matchId);
-    setModalOpen(false);
-  };
-  const deleteCoffee = async () => {
-    await deleteCoffeeFn();
-    setModalOpen(false);
-    toast("Canceled");
-  };
+
   const toast = (message: string) => {
     Toast.show(message, {
       duration: Toast.durations.LONG,
@@ -90,6 +78,11 @@ const CoffeeBtn: React.FC<IProps> = ({
       delay: 0
     });
   };
+  const match = async coffeeId => {
+    await matchFn(coffeeId);
+    toast("Matched");
+  };
+
   const { showActionSheetWithOptions } = useActionSheet();
   const unMatch = (matchId: string) => {
     showActionSheetWithOptions(
@@ -101,12 +94,25 @@ const CoffeeBtn: React.FC<IProps> = ({
       },
       buttonIndex => {
         if (buttonIndex === 0) {
-          unMatchFn({
-            variables: {
-              matchId: matchId
-            }
-          });
+          unMatchFn();
           toast("unmatched");
+        }
+      }
+    );
+  };
+  const deleteCoffee =  () => {
+    showActionSheetWithOptions(
+      {
+        options: ["Yes", "No"],
+        destructiveButtonIndex: 0,
+        cancelButtonIndex: 1,
+        title: "Are you sure to cancel?"
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) {
+           deleteCoffeeFn();
+          setModalOpen(false);
+          toast("canceld");
         }
       }
     );
@@ -126,7 +132,7 @@ const CoffeeBtn: React.FC<IProps> = ({
       ) : (
         <>
           {!isSelf && isMatching ? (
-            <Touchable disabled={unMatchLoading} onPress={unmatch}>
+            <Touchable disabled={unMatchLoading} onPress={unMatch}>
               <Container>
                 {unMatchLoading ? (
                   <ActivityIndicator color={"#999"} />

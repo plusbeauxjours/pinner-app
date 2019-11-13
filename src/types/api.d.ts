@@ -49,6 +49,7 @@ export interface ToggleLikeCityVariables {
 export interface Match_match_match_city_country {
   __typename: "CountryType";
   countryName: string | null;
+  countryEmoji: string | null;
 }
 
 export interface Match_match_match_city {
@@ -382,147 +383,6 @@ export interface GetCityPhotoVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: StartEmailVerification
-// ====================================================
-
-export interface StartEmailVerification_startEmailVerification {
-  __typename: "StartEmailVerificationResponse";
-  ok: boolean | null;
-}
-
-export interface StartEmailVerification {
-  startEmailVerification: StartEmailVerification_startEmailVerification;
-}
-
-export interface StartEmailVerificationVariables {
-  emailAddress: string;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL mutation operation: FacebookConnect
-// ====================================================
-
-export interface FacebookConnect_facebookConnect {
-  __typename: "FacebookConnectResponse";
-  token: string | null;
-}
-
-export interface FacebookConnect {
-  facebookConnect: FacebookConnect_facebookConnect;
-}
-
-export interface FacebookConnectVariables {
-  firstName?: string | null;
-  lastName?: string | null;
-  email?: string | null;
-  gender?: string | null;
-  cityId: string;
-  countryCode: string;
-  fbId: string;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL mutation operation: StartPhoneVerification
-// ====================================================
-
-export interface StartPhoneVerification_startPhoneVerification {
-  __typename: "StartPhoneVerificationResponse";
-  ok: boolean | null;
-}
-
-export interface StartPhoneVerification {
-  startPhoneVerification: StartPhoneVerification_startPhoneVerification;
-}
-
-export interface StartPhoneVerificationVariables {
-  phoneNumber: string;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL mutation operation: CompleteEmailVerification
-// ====================================================
-
-export interface CompleteEmailVerification_completeEmailVerification_user_profile_currentCity {
-  __typename: "CityType";
-  cityId: string | null;
-  cityName: string | null;
-}
-
-export interface CompleteEmailVerification_completeEmailVerification_user_profile {
-  __typename: "ProfileType";
-  avatarUrl: string | null;
-  appAvatarUrl: string | null;
-  currentCity: CompleteEmailVerification_completeEmailVerification_user_profile_currentCity | null;
-}
-
-export interface CompleteEmailVerification_completeEmailVerification_user {
-  __typename: "UserType";
-  /**
-   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
-   */
-  username: string;
-  profile: CompleteEmailVerification_completeEmailVerification_user_profile | null;
-}
-
-export interface CompleteEmailVerification_completeEmailVerification {
-  __typename: "CompleteEmailVerificationResponse";
-  ok: boolean | null;
-  token: string | null;
-  user: CompleteEmailVerification_completeEmailVerification_user | null;
-}
-
-export interface CompleteEmailVerification {
-  completeEmailVerification: CompleteEmailVerification_completeEmailVerification;
-}
-
-export interface CompleteEmailVerificationVariables {
-  key: string;
-  cityId: string;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL mutation operation: CompletePhoneVerification
-// ====================================================
-
-export interface CompletePhoneVerification_completePhoneVerification {
-  __typename: "CompletePhoneVerificationResponse";
-  ok: boolean | null;
-  token: string | null;
-}
-
-export interface CompletePhoneVerification {
-  completePhoneVerification: CompletePhoneVerification_completePhoneVerification;
-}
-
-export interface CompletePhoneVerificationVariables {
-  key: string;
-  phoneNumber: string;
-  countryPhoneNumber: string;
-  countryPhoneCode: string;
-  cityId: string;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
 // GraphQL query operation: CoffeeDetail
 // ====================================================
 
@@ -661,124 +521,114 @@ export interface DeleteCoffeeVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: RequestCoffee
+// GraphQL mutation operation: StartEmailVerification
 // ====================================================
 
-export interface RequestCoffee_requestCoffee_coffee_city_country {
-  __typename: "CountryType";
-  countryName: string | null;
-  countryCode: string | null;
+export interface StartEmailVerification_startEmailVerification {
+  __typename: "StartEmailVerificationResponse";
+  ok: boolean | null;
 }
 
-export interface RequestCoffee_requestCoffee_coffee_city {
+export interface StartEmailVerification {
+  startEmailVerification: StartEmailVerification_startEmailVerification;
+}
+
+export interface StartEmailVerificationVariables {
+  emailAddress: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: FacebookConnect
+// ====================================================
+
+export interface FacebookConnect_facebookConnect {
+  __typename: "FacebookConnectResponse";
+  token: string | null;
+}
+
+export interface FacebookConnect {
+  facebookConnect: FacebookConnect_facebookConnect;
+}
+
+export interface FacebookConnectVariables {
+  firstName?: string | null;
+  lastName?: string | null;
+  email?: string | null;
+  gender?: string | null;
+  cityId: string;
+  countryCode: string;
+  fbId: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: StartPhoneVerification
+// ====================================================
+
+export interface StartPhoneVerification_startPhoneVerification {
+  __typename: "StartPhoneVerificationResponse";
+  ok: boolean | null;
+}
+
+export interface StartPhoneVerification {
+  startPhoneVerification: StartPhoneVerification_startPhoneVerification;
+}
+
+export interface StartPhoneVerificationVariables {
+  phoneNumber: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: CompleteEmailVerification
+// ====================================================
+
+export interface CompleteEmailVerification_completeEmailVerification_user_profile_currentCity {
   __typename: "CityType";
   cityId: string | null;
   cityName: string | null;
-  cityThumbnail: string | null;
-  country: RequestCoffee_requestCoffee_coffee_city_country;
 }
 
-export interface RequestCoffee_requestCoffee_coffee_host_profile_currentCity_country {
-  __typename: "CountryType";
-  countryName: string | null;
-}
-
-export interface RequestCoffee_requestCoffee_coffee_host_profile_currentCity {
-  __typename: "CityType";
-  cityName: string | null;
-  country: RequestCoffee_requestCoffee_coffee_host_profile_currentCity_country;
-}
-
-export interface RequestCoffee_requestCoffee_coffee_host_profile {
+export interface CompleteEmailVerification_completeEmailVerification_user_profile {
   __typename: "ProfileType";
   avatarUrl: string | null;
   appAvatarUrl: string | null;
-  isSelf: boolean | null;
-  currentCity: RequestCoffee_requestCoffee_coffee_host_profile_currentCity | null;
+  currentCity: CompleteEmailVerification_completeEmailVerification_user_profile_currentCity | null;
 }
 
-export interface RequestCoffee_requestCoffee_coffee_host {
+export interface CompleteEmailVerification_completeEmailVerification_user {
   __typename: "UserType";
-  id: string;
   /**
    * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
    */
   username: string;
-  profile: RequestCoffee_requestCoffee_coffee_host_profile | null;
+  profile: CompleteEmailVerification_completeEmailVerification_user_profile | null;
 }
 
-export interface RequestCoffee_requestCoffee_coffee {
-  __typename: "CoffeeType";
-  id: string;
-  uuid: any | null;
-  city: RequestCoffee_requestCoffee_coffee_city;
-  host: RequestCoffee_requestCoffee_coffee_host;
-  status: string | null;
-  naturalTime: string | null;
-  target: CoffeeTarget;
-  createdAt: any;
-  matchCount: number | null;
-}
-
-export interface RequestCoffee_requestCoffee {
-  __typename: "RequestCoffeeResponse";
+export interface CompleteEmailVerification_completeEmailVerification {
+  __typename: "CompleteEmailVerificationResponse";
   ok: boolean | null;
-  coffee: RequestCoffee_requestCoffee_coffee | null;
+  token: string | null;
+  user: CompleteEmailVerification_completeEmailVerification_user | null;
 }
 
-export interface RequestCoffee {
-  requestCoffee: RequestCoffee_requestCoffee;
+export interface CompleteEmailVerification {
+  completeEmailVerification: CompleteEmailVerification_completeEmailVerification;
 }
 
-export interface RequestCoffeeVariables {
-  countryCode?: string | null;
-  gender?: string | null;
-  currentCityId: string;
-  target?: string | null;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL query operation: RecommendUsers
-// ====================================================
-
-export interface RecommendUsers_recommendUsers_users_currentCity_country {
-  __typename: "CountryType";
-  countryName: string | null;
-}
-
-export interface RecommendUsers_recommendUsers_users_currentCity {
-  __typename: "CityType";
-  cityName: string | null;
-  country: RecommendUsers_recommendUsers_users_currentCity_country;
-}
-
-export interface RecommendUsers_recommendUsers_users {
-  __typename: "ProfileType";
-  id: string;
-  username: string | null;
-  avatarUrl: string | null;
-  appAvatarUrl: string | null;
-  isSelf: boolean | null;
-  currentCity: RecommendUsers_recommendUsers_users_currentCity | null;
-}
-
-export interface RecommendUsers_recommendUsers {
-  __typename: "RecommendUsersResponse";
-  page: number | null;
-  hasNextPage: boolean | null;
-  users: (RecommendUsers_recommendUsers_users | null)[] | null;
-}
-
-export interface RecommendUsers {
-  recommendUsers: RecommendUsers_recommendUsers;
-}
-
-export interface RecommendUsersVariables {
-  page?: number | null;
+export interface CompleteEmailVerificationVariables {
+  key: string;
+  cityId: string;
 }
 
 /* tslint:disable */
@@ -786,195 +636,25 @@ export interface RecommendUsersVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: RecommendLocations
+// GraphQL mutation operation: CompletePhoneVerification
 // ====================================================
 
-export interface RecommendLocations_recommendLocations_cities_country_continent {
-  __typename: "ContinentType";
-  continentCode: string | null;
-  continentName: string | null;
-}
-
-export interface RecommendLocations_recommendLocations_cities_country {
-  __typename: "CountryType";
-  countryName: string | null;
-  countryCode: string | null;
-  continent: RecommendLocations_recommendLocations_cities_country_continent | null;
-}
-
-export interface RecommendLocations_recommendLocations_cities {
-  __typename: "CityType";
-  id: string;
-  latitude: number | null;
-  longitude: number | null;
-  cityName: string | null;
-  cityId: string | null;
-  cityPhoto: string | null;
-  cityThumbnail: string | null;
-  distance: number | null;
-  country: RecommendLocations_recommendLocations_cities_country;
-  likeCount: number | null;
-  isLiked: boolean | null;
-}
-
-export interface RecommendLocations_recommendLocations {
-  __typename: "RecommendLocationsResponse";
-  page: number | null;
-  hasNextPage: boolean | null;
-  cities: (RecommendLocations_recommendLocations_cities | null)[] | null;
-}
-
-export interface RecommendLocations {
-  recommendLocations: RecommendLocations_recommendLocations;
-}
-
-export interface RecommendLocationsVariables {
-  page?: number | null;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL query operation: GetMatches
-// ====================================================
-
-export interface GetMatches_getMatches_matches_city_country {
-  __typename: "CountryType";
-  countryName: string | null;
-}
-
-export interface GetMatches_getMatches_matches_city {
-  __typename: "CityType";
-  cityId: string | null;
-  cityName: string | null;
-  country: GetMatches_getMatches_matches_city_country;
-}
-
-export interface GetMatches_getMatches_matches_host_profile_currentCity_country {
-  __typename: "CountryType";
-  countryName: string | null;
-}
-
-export interface GetMatches_getMatches_matches_host_profile_currentCity {
-  __typename: "CityType";
-  cityName: string | null;
-  country: GetMatches_getMatches_matches_host_profile_currentCity_country;
-}
-
-export interface GetMatches_getMatches_matches_host_profile {
-  __typename: "ProfileType";
-  id: string;
-  username: string | null;
-  avatarUrl: string | null;
-  appAvatarUrl: string | null;
-  isSelf: boolean | null;
-  currentCity: GetMatches_getMatches_matches_host_profile_currentCity | null;
-}
-
-export interface GetMatches_getMatches_matches_host {
-  __typename: "UserType";
-  profile: GetMatches_getMatches_matches_host_profile | null;
-}
-
-export interface GetMatches_getMatches_matches_guest_profile_currentCity_country {
-  __typename: "CountryType";
-  countryName: string | null;
-}
-
-export interface GetMatches_getMatches_matches_guest_profile_currentCity {
-  __typename: "CityType";
-  cityName: string | null;
-  country: GetMatches_getMatches_matches_guest_profile_currentCity_country;
-}
-
-export interface GetMatches_getMatches_matches_guest_profile {
-  __typename: "ProfileType";
-  id: string;
-  username: string | null;
-  avatarUrl: string | null;
-  appAvatarUrl: string | null;
-  isSelf: boolean | null;
-  currentCity: GetMatches_getMatches_matches_guest_profile_currentCity | null;
-}
-
-export interface GetMatches_getMatches_matches_guest {
-  __typename: "UserType";
-  profile: GetMatches_getMatches_matches_guest_profile | null;
-}
-
-export interface GetMatches_getMatches_matches_coffee_city_country {
-  __typename: "CountryType";
-  countryName: string | null;
-  countryEmoji: string | null;
-}
-
-export interface GetMatches_getMatches_matches_coffee_city {
-  __typename: "CityType";
-  cityId: string | null;
-  cityName: string | null;
-  country: GetMatches_getMatches_matches_coffee_city_country;
-}
-
-export interface GetMatches_getMatches_matches_coffee {
-  __typename: "CoffeeType";
-  id: string;
-  uuid: any | null;
-  target: CoffeeTarget;
-  city: GetMatches_getMatches_matches_coffee_city;
-}
-
-export interface GetMatches_getMatches_matches {
-  __typename: "MatchType";
-  id: string;
-  naturalTime: string | null;
-  city: GetMatches_getMatches_matches_city | null;
-  host: GetMatches_getMatches_matches_host | null;
-  guest: GetMatches_getMatches_matches_guest | null;
-  coffee: GetMatches_getMatches_matches_coffee | null;
-  isHost: boolean | null;
-  isGuest: boolean | null;
-  isMatching: boolean | null;
-  isReadByHost: boolean;
-  isReadByGuest: boolean;
-}
-
-export interface GetMatches_getMatches {
-  __typename: "GetMatchesResponse";
-  matches: (GetMatches_getMatches_matches | null)[] | null;
-}
-
-export interface GetMatches {
-  getMatches: GetMatches_getMatches;
-}
-
-export interface GetMatchesVariables {
-  page?: number | null;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL mutation operation: MarkAsReadMatch
-// ====================================================
-
-export interface MarkAsReadMatch_markAsReadMatch {
-  __typename: "MarkAsReadMatchResponse";
+export interface CompletePhoneVerification_completePhoneVerification {
+  __typename: "CompletePhoneVerificationResponse";
   ok: boolean | null;
-  matchId: string | null;
-  isReadByHost: boolean | null;
-  isReadByGuest: boolean | null;
+  token: string | null;
 }
 
-export interface MarkAsReadMatch {
-  markAsReadMatch: MarkAsReadMatch_markAsReadMatch;
+export interface CompletePhoneVerification {
+  completePhoneVerification: CompletePhoneVerification_completePhoneVerification;
 }
 
-export interface MarkAsReadMatchVariables {
-  matchId: string;
+export interface CompletePhoneVerificationVariables {
+  key: string;
+  phoneNumber: string;
+  countryPhoneNumber: string;
+  countryPhoneCode: string;
+  cityId: string;
 }
 
 /* tslint:disable */
@@ -1464,6 +1144,328 @@ export interface TripProfileVariables {
   cityId: string;
   startDate: any;
   endDate: any;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GetMatches
+// ====================================================
+
+export interface GetMatches_getMatches_matches_city_country {
+  __typename: "CountryType";
+  countryName: string | null;
+  countryEmoji: string | null;
+}
+
+export interface GetMatches_getMatches_matches_city {
+  __typename: "CityType";
+  cityId: string | null;
+  cityName: string | null;
+  country: GetMatches_getMatches_matches_city_country;
+}
+
+export interface GetMatches_getMatches_matches_host_profile_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface GetMatches_getMatches_matches_host_profile_currentCity {
+  __typename: "CityType";
+  cityName: string | null;
+  country: GetMatches_getMatches_matches_host_profile_currentCity_country;
+}
+
+export interface GetMatches_getMatches_matches_host_profile {
+  __typename: "ProfileType";
+  id: string;
+  username: string | null;
+  avatarUrl: string | null;
+  appAvatarUrl: string | null;
+  isSelf: boolean | null;
+  currentCity: GetMatches_getMatches_matches_host_profile_currentCity | null;
+}
+
+export interface GetMatches_getMatches_matches_host {
+  __typename: "UserType";
+  profile: GetMatches_getMatches_matches_host_profile | null;
+}
+
+export interface GetMatches_getMatches_matches_guest_profile_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface GetMatches_getMatches_matches_guest_profile_currentCity {
+  __typename: "CityType";
+  cityName: string | null;
+  country: GetMatches_getMatches_matches_guest_profile_currentCity_country;
+}
+
+export interface GetMatches_getMatches_matches_guest_profile {
+  __typename: "ProfileType";
+  id: string;
+  username: string | null;
+  avatarUrl: string | null;
+  appAvatarUrl: string | null;
+  isSelf: boolean | null;
+  currentCity: GetMatches_getMatches_matches_guest_profile_currentCity | null;
+}
+
+export interface GetMatches_getMatches_matches_guest {
+  __typename: "UserType";
+  profile: GetMatches_getMatches_matches_guest_profile | null;
+}
+
+export interface GetMatches_getMatches_matches_coffee_city_country {
+  __typename: "CountryType";
+  countryName: string | null;
+  countryEmoji: string | null;
+}
+
+export interface GetMatches_getMatches_matches_coffee_city {
+  __typename: "CityType";
+  cityId: string | null;
+  cityName: string | null;
+  country: GetMatches_getMatches_matches_coffee_city_country;
+}
+
+export interface GetMatches_getMatches_matches_coffee {
+  __typename: "CoffeeType";
+  id: string;
+  uuid: any | null;
+  target: CoffeeTarget;
+  city: GetMatches_getMatches_matches_coffee_city;
+}
+
+export interface GetMatches_getMatches_matches {
+  __typename: "MatchType";
+  id: string;
+  naturalTime: string | null;
+  city: GetMatches_getMatches_matches_city | null;
+  host: GetMatches_getMatches_matches_host | null;
+  guest: GetMatches_getMatches_matches_guest | null;
+  coffee: GetMatches_getMatches_matches_coffee | null;
+  isHost: boolean | null;
+  isGuest: boolean | null;
+  isMatching: boolean | null;
+  isReadByHost: boolean;
+  isReadByGuest: boolean;
+}
+
+export interface GetMatches_getMatches {
+  __typename: "GetMatchesResponse";
+  matches: (GetMatches_getMatches_matches | null)[] | null;
+}
+
+export interface GetMatches {
+  getMatches: GetMatches_getMatches;
+}
+
+export interface GetMatchesVariables {
+  page?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: MarkAsReadMatch
+// ====================================================
+
+export interface MarkAsReadMatch_markAsReadMatch {
+  __typename: "MarkAsReadMatchResponse";
+  ok: boolean | null;
+  matchId: string | null;
+  isReadByHost: boolean | null;
+  isReadByGuest: boolean | null;
+}
+
+export interface MarkAsReadMatch {
+  markAsReadMatch: MarkAsReadMatch_markAsReadMatch;
+}
+
+export interface MarkAsReadMatchVariables {
+  matchId: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: RecommendUsers
+// ====================================================
+
+export interface RecommendUsers_recommendUsers_users_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface RecommendUsers_recommendUsers_users_currentCity {
+  __typename: "CityType";
+  cityName: string | null;
+  country: RecommendUsers_recommendUsers_users_currentCity_country;
+}
+
+export interface RecommendUsers_recommendUsers_users {
+  __typename: "ProfileType";
+  id: string;
+  username: string | null;
+  avatarUrl: string | null;
+  appAvatarUrl: string | null;
+  isSelf: boolean | null;
+  currentCity: RecommendUsers_recommendUsers_users_currentCity | null;
+}
+
+export interface RecommendUsers_recommendUsers {
+  __typename: "RecommendUsersResponse";
+  page: number | null;
+  hasNextPage: boolean | null;
+  users: (RecommendUsers_recommendUsers_users | null)[] | null;
+}
+
+export interface RecommendUsers {
+  recommendUsers: RecommendUsers_recommendUsers;
+}
+
+export interface RecommendUsersVariables {
+  page?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: RecommendLocations
+// ====================================================
+
+export interface RecommendLocations_recommendLocations_cities_country_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
+export interface RecommendLocations_recommendLocations_cities_country {
+  __typename: "CountryType";
+  countryName: string | null;
+  countryCode: string | null;
+  continent: RecommendLocations_recommendLocations_cities_country_continent | null;
+}
+
+export interface RecommendLocations_recommendLocations_cities {
+  __typename: "CityType";
+  id: string;
+  latitude: number | null;
+  longitude: number | null;
+  cityName: string | null;
+  cityId: string | null;
+  cityPhoto: string | null;
+  cityThumbnail: string | null;
+  distance: number | null;
+  country: RecommendLocations_recommendLocations_cities_country;
+  likeCount: number | null;
+  isLiked: boolean | null;
+}
+
+export interface RecommendLocations_recommendLocations {
+  __typename: "RecommendLocationsResponse";
+  page: number | null;
+  hasNextPage: boolean | null;
+  cities: (RecommendLocations_recommendLocations_cities | null)[] | null;
+}
+
+export interface RecommendLocations {
+  recommendLocations: RecommendLocations_recommendLocations;
+}
+
+export interface RecommendLocationsVariables {
+  page?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: RequestCoffee
+// ====================================================
+
+export interface RequestCoffee_requestCoffee_coffee_city_country {
+  __typename: "CountryType";
+  countryName: string | null;
+  countryCode: string | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_city {
+  __typename: "CityType";
+  cityId: string | null;
+  cityName: string | null;
+  cityThumbnail: string | null;
+  country: RequestCoffee_requestCoffee_coffee_city_country;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host_profile_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host_profile_currentCity {
+  __typename: "CityType";
+  cityName: string | null;
+  country: RequestCoffee_requestCoffee_coffee_host_profile_currentCity_country;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host_profile {
+  __typename: "ProfileType";
+  avatarUrl: string | null;
+  appAvatarUrl: string | null;
+  isSelf: boolean | null;
+  currentCity: RequestCoffee_requestCoffee_coffee_host_profile_currentCity | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host {
+  __typename: "UserType";
+  id: string;
+  /**
+   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+   */
+  username: string;
+  profile: RequestCoffee_requestCoffee_coffee_host_profile | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee {
+  __typename: "CoffeeType";
+  id: string;
+  uuid: any | null;
+  city: RequestCoffee_requestCoffee_coffee_city;
+  host: RequestCoffee_requestCoffee_coffee_host;
+  status: string | null;
+  naturalTime: string | null;
+  target: CoffeeTarget;
+  createdAt: any;
+  matchCount: number | null;
+}
+
+export interface RequestCoffee_requestCoffee {
+  __typename: "RequestCoffeeResponse";
+  ok: boolean | null;
+  coffee: RequestCoffee_requestCoffee_coffee | null;
+}
+
+export interface RequestCoffee {
+  requestCoffee: RequestCoffee_requestCoffee;
+}
+
+export interface RequestCoffeeVariables {
+  countryCode?: string | null;
+  gender?: string | null;
+  currentCityId: string;
+  target?: string | null;
 }
 
 /* tslint:disable */
@@ -2469,6 +2471,11 @@ export interface GetSameTripsVariables {
 // GraphQL query operation: Me
 // ====================================================
 
+export interface Me_me_user_profile_requestedCoffee {
+  __typename: "CoffeeType";
+  uuid: any | null;
+}
+
 export interface Me_me_user_profile_residence {
   __typename: "CountryType";
   countryCode: string | null;
@@ -2493,6 +2500,7 @@ export interface Me_me_user_profile {
   __typename: "ProfileType";
   id: string;
   gender: ProfileGender | null;
+  requestedCoffee: (Me_me_user_profile_requestedCoffee | null)[] | null;
   residence: Me_me_user_profile_residence | null;
   nationality: Me_me_user_profile_nationality | null;
   avatarUrl: string | null;
@@ -2775,6 +2783,7 @@ export interface CoffeeParts {
 export interface MatchParts_city_country {
   __typename: "CountryType";
   countryName: string | null;
+  countryEmoji: string | null;
 }
 
 export interface MatchParts_city {
