@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { PROFILE_FRAGMENT, COFFEE_FRAGMENT } from "../../../fragmentQueries";
+import { PROFILE_FRAGMENT, COUNTRY_FRAGMENT } from "../../../fragmentQueries";
 
 export const RECOMMEND_USERS = gql`
   query RecommendUsers($page: Int) {
@@ -58,9 +58,48 @@ export const REQUEST_COFFEE = gql`
     ) {
       ok
       coffee {
-        ...CoffeeParts
+        id
+        uuid
+        city {
+          cityId
+          cityName
+          cityThumbnail
+          country {
+            countryName
+            countryCode
+            countryEmoji
+          }
+        }
+        host {
+          id
+          username
+          profile {
+            avatarUrl
+            appAvatarUrl
+            isSelf
+            nationality {
+              countryEmoji
+              ...CountryParts
+            }
+            residence {
+              countryEmoji
+              ...CountryParts
+            }
+            currentCity {
+              cityName
+              country {
+                countryName
+              }
+            }
+          }
+        }
+        status
+        naturalTime
+        target
+        createdAt
+        matchCount
       }
     }
   }
-  ${COFFEE_FRAGMENT}
+  ${COUNTRY_FRAGMENT}
 `;

@@ -1,4 +1,5 @@
 import gql from "graphql-tag";
+import { COUNTRY_FRAGMENT } from "./fragmentQueries";
 
 export const ME = gql`
   query Me {
@@ -9,14 +10,12 @@ export const ME = gql`
           id
           gender
           residence {
-            countryCode
-            countryName
             countryEmoji
+            ...CountryParts
           }
           nationality {
-            countryCode
-            countryName
             countryEmoji
+            ...CountryParts
           }
           avatarUrl
           appAvatarUrl
@@ -28,6 +27,7 @@ export const ME = gql`
       }
     }
   }
+  ${COUNTRY_FRAGMENT}
 `;
 
 export const SLACK_REPORT_LOCATIONS = gql`

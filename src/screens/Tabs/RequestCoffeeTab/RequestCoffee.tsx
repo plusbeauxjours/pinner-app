@@ -138,7 +138,7 @@ export default ({ navigation }) => {
       },
       async buttonIndex => {
         if (buttonIndex === 0) {
-          await requestCoffeeFn({
+          requestCoffeeFn({
             variables: {
               target: "everyone",
               currentCityId: location.currentCityId
@@ -147,13 +147,20 @@ export default ({ navigation }) => {
           toast("Requested");
         } else if (buttonIndex === 1) {
           if (me.user.profile.nationality) {
-            await requestNationality();
+            await requestCoffeeFn({
+              variables: {
+                target: "nationality",
+                currentCityId: location.currentCityId,
+                countryCode: me.user.profile.nationality.countryCode
+              }
+            });
+            toast("Requested");
           } else {
             setNationalityModalOpen(true);
           }
         } else if (buttonIndex === 2) {
           if (me.user.profile.residence) {
-            requestCoffeeFn({
+            await requestCoffeeFn({
               variables: {
                 target: "residence",
                 currentCityId: location.currentCityId,
@@ -165,7 +172,7 @@ export default ({ navigation }) => {
             setResidenceModalOpen(true);
           }
         } else if (buttonIndex === 3) {
-          requestCoffeeFn({
+          await requestCoffeeFn({
             variables: {
               target: "gender",
               currentCityId: location.currentCityId,
@@ -191,18 +198,18 @@ export default ({ navigation }) => {
     {
       update(cache, { data: { requestCoffee } }) {
         try {
-          console.log("hihih");
           const meData = cache.readQuery<Me>({
             query: ME
           });
-          console.log(meData);
           if (meData) {
-            !meData.me.user.profile.nationality &&
-              (meData.me.user.profile.nationality =
-                requestCoffee.coffee.host.nationality);
-            !meData.me.user.profile.residence &&
-              (meData.me.user.profile.residence =
-                requestCoffee.coffee.host.residence);
+            if (!meData.me.user.profile.nationality) {
+              meData.me.user.profile.nationality =
+                requestCoffee.coffee.host.profile.nationality;
+            }
+            if (!meData.me.user.profile.residence) {
+              meData.me.user.profile.residence =
+                requestCoffee.coffee.host.profile.residence;
+            }
             cache.writeQuery({
               query: ME,
               data: meData
@@ -211,28 +218,28 @@ export default ({ navigation }) => {
         } catch (e) {
           console.log(e);
         }
-        // try {
-        //   const profileData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
-        //     query: GET_COFFEES,
-        //     variables: {
-        //       userName,
-        //       location: "profile"
-        //     }
-        //   });
-        //   if (profileData) {
-        //     profileData.getCoffees.coffees.push(requestCoffee.coffee);
-        //     cache.writeQuery({
-        //       query: GET_COFFEES,
-        //       variables: {
-        //         userName,
-        //         location: "profile"
-        //       },
-        //       data: profileData
-        //     });
-        //   }
-        // } catch (e) {
-        //   console.log(e);
-        // }
+        try {
+          const profileData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
+            query: GET_COFFEES,
+            variables: {
+              userName,
+              location: "profile"
+            }
+          });
+          if (profileData) {
+            profileData.getCoffees.coffees.push(requestCoffee.coffee);
+            cache.writeQuery({
+              query: GET_COFFEES,
+              variables: {
+                userName,
+                location: "profile"
+              },
+              data: profileData
+            });
+          }
+        } catch (e) {
+          console.log(e);
+        }
         try {
           const feedData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
             query: GET_COFFEES,
@@ -384,16 +391,6 @@ export default ({ navigation }) => {
       chunks.push(arr.slice(i, (i += 3)));
     }
     return chunks;
-  };
-  const requestNationality = async () => {
-    await requestCoffeeFn({
-      variables: {
-        target: "nationality",
-        currentCityId: location.currentCityId,
-        countryCode: me.user.profile.nationality.countryCode
-      }
-    });
-    toast("Requested");
   };
   const onSelectNationality = async (country: any) => {
     await requestCoffeeFn({
