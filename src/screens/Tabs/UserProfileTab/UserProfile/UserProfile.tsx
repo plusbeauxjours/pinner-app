@@ -48,7 +48,7 @@ import {
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
 import constants, { BACKEND_URL } from "../../../../../constants";
-import { GET_COFFEES } from "../Coffees/CoffeesQueries";
+
 import { GET_SAME_TRIPS } from "./UserProfileQueries";
 import Modal from "react-native-modal";
 import { useTheme } from "../../../../context/ThemeContext";
@@ -60,6 +60,7 @@ import keys from "../../../../../keys";
 import SearchCityPhoto from "../../../../components/SearchCityPhoto";
 import { countries } from "../../../../../countryData";
 import CoffeeDetail from "../../../CoffeeDetail/index";
+import { GET_COFFEES } from "../../../../sharedQueries";
 
 const Header = styled.View`
   height: 250;

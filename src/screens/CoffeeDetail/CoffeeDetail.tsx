@@ -1,15 +1,10 @@
 import React from "react";
-import { useQuery, useMutation } from "react-apollo-hooks";
+import { useQuery } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useState } from "react";
 import { useLocation } from "../../context/LocationContext";
-import {
-  CoffeeDetail,
-  CoffeeDetailVariables,
-  DeleteCoffee,
-  DeleteCoffeeVariables
-} from "../../types/api";
-import { COFFEE_DETAIL, DELETE_COFFEE } from "./CoffeeDetailQueries";
+import { CoffeeDetail, CoffeeDetailVariables } from "../../types/api";
+import { COFFEE_DETAIL } from "./CoffeeDetailQueries";
 import { useTheme } from "../../context/ThemeContext";
 import constants, { BACKEND_URL } from "../../../constants";
 import Loader from "../../components/Loader";
@@ -119,10 +114,6 @@ const CoffeeDetails: React.FC<IProps> = ({
     variables: { coffeeId },
     fetchPolicy: "network-only"
   });
-  const [delateCoffeeFn] = useMutation<DeleteCoffee, DeleteCoffeeVariables>(
-    DELETE_COFFEE,
-    { variables: { coffeeId } }
-  );
   const onPress = username => {
     setModalOpen(false);
     navigation.push("UserProfileTabs", {

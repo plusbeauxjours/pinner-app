@@ -120,7 +120,7 @@ export default ({ navigation }) => {
         title: `Choose a reason for reporting this city.`,
         showSeparators: true
       },
-      async buttonIndex => {
+      buttonIndex => {
         if (buttonIndex === 0) {
           reportLocation("PHOTO");
         } else if (buttonIndex === 1) {
@@ -197,8 +197,7 @@ export default ({ navigation }) => {
     loading: coffeeLoading,
     refetch: coffeeRefetch
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
-    variables: { location: "city", cityId },
-    fetchPolicy: "network-only"
+    variables: { location: "city", cityId }
   });
   const onRefresh = async () => {
     try {

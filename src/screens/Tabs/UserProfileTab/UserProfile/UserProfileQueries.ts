@@ -183,29 +183,6 @@ export const SLACK_REPORT_USERS = gql`
   }
 `;
 
-export const GET_COFFEES = gql`
-  query GetCoffees(
-    $cityId: String
-    $countryCode: String
-    $continentCode: String
-    $userName: String
-    $location: String!
-  ) {
-    getCoffees(
-      cityId: $cityId
-      countryCode: $countryCode
-      continentCode: $continentCode
-      userName: $userName
-      location: $location
-    ) {
-      coffees {
-        ...CoffeeParts
-      }
-    }
-  }
-  ${COFFEE_FRAGMENT}
-`;
-
 export const GET_SAME_TRIPS = gql`
   query GetSameTrips($username: String!) {
     getSameTrips(username: $username) {

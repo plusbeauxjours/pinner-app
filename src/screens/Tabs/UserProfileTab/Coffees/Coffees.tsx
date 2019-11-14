@@ -3,10 +3,11 @@ import styled from "styled-components";
 import { RefreshControl } from "react-native";
 import { GetCoffees, GetCoffeesVariables } from "../../../../types/api";
 import { useQuery } from "react-apollo-hooks";
-import { GET_COFFEES } from "./CoffeesQueries";
+
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
 import { countries } from "../../../../../countryData";
+import { GET_COFFEES } from "../../../../sharedQueries";
 
 const View = styled.View`
   justify-content: center;

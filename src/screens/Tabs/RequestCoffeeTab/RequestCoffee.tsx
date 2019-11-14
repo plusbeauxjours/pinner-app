@@ -11,8 +11,9 @@ import {
 import { useLocation } from "../../../context/LocationContext";
 import { RefreshControl, Platform } from "react-native";
 import Swiper from "react-native-swiper";
-import { GET_COFFEES, ME } from "../../../sharedQueries";
+import { GET_COFFEES, ME, DELETE_COFFEE } from "../../../sharedQueries";
 import {
+  Me,
   GetCoffees,
   GetCoffeesVariables,
   RecommendUsers,
@@ -32,8 +33,7 @@ import { useMe } from "../../../context/MeContext";
 // import SearchCityPhoto from "../../../components/SearchCityPhoto";
 // import { countries } from "../../../../countryData";
 import Toast from "react-native-root-toast";
-import { DELETE_COFFEE } from "../../CoffeeDetail/CoffeeDetailQueries";
-import { Me } from "../../../types/api";
+import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
 
 const Container = styled.View`
   flex: 1;
@@ -104,12 +104,19 @@ export default ({ navigation }) => {
   const me = useMe();
   const location = useLocation();
   const isDarkMode = useTheme();
+  const [nationalityModalOpen, setNationalityModalOpen] = useState<boolean>(
+    false
+  );
+  const [residenceModalOpen, setResidenceModalOpen] = useState<boolean>(false);
+  const [nationalityCode, setNationalityCode] = useState<any>("");
+  const [residenceCode, setResidenceCode] = useState<any>("");
+  const [gender, setGender] = useState<string>("");
+  const [userName, setUserName] = useState<string>(me.user.username);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [coffeeId, setCoffeeId] = useState<string>("");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const { showActionSheetWithOptions } = useActionSheet();
-
-  const selectReportUser = () => {
+  const requestCoffee = () => {
     showActionSheetWithOptions(
       {
         options: [
@@ -131,7 +138,7 @@ export default ({ navigation }) => {
       },
       async buttonIndex => {
         if (buttonIndex === 0) {
-          requestCoffeeFn({
+          await requestCoffeeFn({
             variables: {
               target: "everyone",
               currentCityId: location.currentCityId
@@ -139,23 +146,24 @@ export default ({ navigation }) => {
           });
           toast("Requested");
         } else if (buttonIndex === 1) {
-          requestCoffeeFn({
-            variables: {
-              target: "nationality",
-              currentCityId: location.currentCityId,
-              countryCode: me.user.profile.nationality.countryCode
-            }
-          });
-          toast("Requested");
+          if (me.user.profile.nationality) {
+            await requestNationality();
+          } else {
+            setNationalityModalOpen(true);
+          }
         } else if (buttonIndex === 2) {
-          requestCoffeeFn({
-            variables: {
-              target: "residence",
-              currentCityId: location.currentCityId,
-              countryCode: me.user.profile.residence.countryCode
-            }
-          });
-          toast("Requested");
+          if (me.user.profile.residence) {
+            requestCoffeeFn({
+              variables: {
+                target: "residence",
+                currentCityId: location.currentCityId,
+                countryCode: me.user.profile.residence.countryCode
+              }
+            });
+            toast("Requested");
+          } else {
+            setResidenceModalOpen(true);
+          }
         } else if (buttonIndex === 3) {
           requestCoffeeFn({
             variables: {
@@ -176,74 +184,80 @@ export default ({ navigation }) => {
     loading: coffeeLoading,
     refetch: coffeeRefetch
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
-    fetchPolicy: "network-only",
     variables: { location: "city", cityId: location.currentCityId }
   });
-  const [requestCoffeeFn, { loading: requestLoading }] = useMutation<
-    RequestCoffee,
-    RequestCoffeeVariables
-  >(REQUEST_COFFEE, {
-    update(cache, { data: { requestCoffee } }) {
-      try {
-        const meData = cache.readQuery<Me>({
-          query: ME
-        });
-        if (meData) {
-          meData.me.user.profile.requestedCoffee = [requestCoffee.coffee];
-          cache.writeQuery({
-            query: ME,
-            data: meData
+  const [requestCoffeeFn] = useMutation<RequestCoffee, RequestCoffeeVariables>(
+    REQUEST_COFFEE,
+    {
+      update(cache, { data: { requestCoffee } }) {
+        try {
+          console.log("hihih");
+          const meData = cache.readQuery<Me>({
+            query: ME
           });
-        }
-      } catch (e) {
-        console.log(e);
-      }
-      try {
-        const profileData = cache.readQuery({
-          query: GET_COFFEES,
-          variables: {
-            userName: me.user.username,
-            location: "profile"
+          console.log(meData);
+          if (meData) {
+            !meData.me.user.profile.nationality &&
+              (meData.me.user.profile.nationality =
+                requestCoffee.coffee.host.nationality);
+            !meData.me.user.profile.residence &&
+              (meData.me.user.profile.residence =
+                requestCoffee.coffee.host.residence);
+            cache.writeQuery({
+              query: ME,
+              data: meData
+            });
           }
-        });
-        if (profileData) {
-          profileData.getCoffees.coffees.push(requestCoffee.coffee);
-          cache.writeQuery({
-            query: GET_COFFEES,
-            variables: {
-              userName: me.user.username,
-              location: "profile"
-            },
-            data: profileData
-          });
+        } catch (e) {
+          console.log(e);
         }
-      } catch (e) {
-        console.log(e);
-      }
-      try {
-        const feedData = cache.readQuery({
-          query: GET_COFFEES,
-          variables: {
-            cityId: location.currentCityId,
-            location: "city"
-          }
-        });
-        if (feedData) {
-          feedData.getCoffees.coffees.unshift(requestCoffee.coffee);
-          cache.writeQuery({
+        // try {
+        //   const profileData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
+        //     query: GET_COFFEES,
+        //     variables: {
+        //       userName,
+        //       location: "profile"
+        //     }
+        //   });
+        //   if (profileData) {
+        //     profileData.getCoffees.coffees.push(requestCoffee.coffee);
+        //     cache.writeQuery({
+        //       query: GET_COFFEES,
+        //       variables: {
+        //         userName,
+        //         location: "profile"
+        //       },
+        //       data: profileData
+        //     });
+        //   }
+        // } catch (e) {
+        //   console.log(e);
+        // }
+        try {
+          const feedData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
             query: GET_COFFEES,
             variables: {
               cityId: location.currentCityId,
               location: "city"
-            },
-            data: feedData
+            }
           });
+          if (feedData) {
+            feedData.getCoffees.coffees.unshift(requestCoffee.coffee);
+            cache.writeQuery({
+              query: GET_COFFEES,
+              variables: {
+                cityId: location.currentCityId,
+                location: "city"
+              },
+              data: feedData
+            });
+          }
+        } catch (e) {
+          console.log(e);
         }
-      } catch (e) {
-        console.log(e);
       }
     }
-  });
+  );
   const {
     data: recommendUserData,
     loading: recommendUserLoading,
@@ -256,81 +270,62 @@ export default ({ navigation }) => {
   } = useQuery<RecommendLocations, RecommendLocationsVariables>(
     RECOMMEND_LOCATIONS
   );
-  const [deleteCoffeeFn, { loading: deleteCoffeeLoading }] = useMutation<
-    DeleteCoffee,
-    DeleteCoffeeVariables
-  >(DELETE_COFFEE, {
-    update(cache, { data: { deleteCoffee } }) {
-      try {
-        const meData = cache.readQuery<Me>({
-          query: ME
-        });
-        if (meData) {
-          meData.me.user.profile.requestedCoffee = meData.me.user.profile.requestedCoffee.filter(
-            i => i.uuid !== deleteCoffee.coffeeId
-          );
-          cache.writeQuery({
-            query: ME,
-            data: meData
-          });
-          console.log(meData);
-        }
-      } catch (e) {
-        console.log(e);
-      }
-      try {
-        const profileData = cache.readQuery({
-          query: GET_COFFEES,
-          variables: {
-            userName: me.user.username,
-            location: "profile"
-          }
-        });
-        if (profileData) {
-          profileData.getCoffees.coffees = profileData.getCoffees.coffees.filter(
-            i => i.uuid !== deleteCoffee.coffeeId
-          );
-          cache.writeQuery({
+  const [deleteCoffeeFn] = useMutation<DeleteCoffee, DeleteCoffeeVariables>(
+    DELETE_COFFEE,
+    {
+      update(cache, { data: { deleteCoffee } }) {
+        try {
+          const profileData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
             query: GET_COFFEES,
             variables: {
-              userName: me.user.username,
+              userName,
               location: "profile"
-            },
-            data: profileData
+            }
           });
-        }
-      } catch (e) {
-        console.log(e);
-      }
-      try {
-        const feedData = cache.readQuery({
-          query: GET_COFFEES,
-          variables: {
-            cityId: location.currentCityId,
-            location: "city"
+          if (profileData) {
+            profileData.getCoffees.coffees = profileData.getCoffees.coffees.filter(
+              i => i.uuid !== deleteCoffee.coffeeId
+            );
+            cache.writeQuery({
+              query: GET_COFFEES,
+              variables: {
+                userName,
+                location: "profile"
+              },
+              data: profileData
+            });
           }
-        });
-        if (feedData) {
-          feedData.getCoffees.coffees = feedData.getCoffees.coffees.filter(
-            i => i.uuid !== deleteCoffee.coffeeId
-          );
-          cache.writeQuery({
+        } catch (e) {
+          console.log(e);
+        }
+        try {
+          const feedData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
             query: GET_COFFEES,
             variables: {
               cityId: location.currentCityId,
               location: "city"
-            },
-            data: feedData
+            }
           });
+          if (feedData) {
+            feedData.getCoffees.coffees = feedData.getCoffees.coffees.filter(
+              i => i.uuid !== deleteCoffee.coffeeId
+            );
+            cache.writeQuery({
+              query: GET_COFFEES,
+              variables: {
+                cityId: location.currentCityId,
+                location: "city"
+              },
+              data: feedData
+            });
+          }
+        } catch (e) {
+          console.log(e);
         }
-      } catch (e) {
-        console.log(e);
       }
     }
-  });
-
+  );
   const cancelCoffee = coffeeId => {
-    console.log(coffeeId);
     showActionSheetWithOptions(
       {
         options: ["Yes", "No"],
@@ -340,13 +335,17 @@ export default ({ navigation }) => {
       },
       buttonIndex => {
         if (buttonIndex === 0) {
-          deleteCoffeeFn({
-            variables: {
-              coffeeId
-            }
-          });
-          setModalOpen(false);
-          toast("canceld");
+          try {
+            deleteCoffeeFn({
+              variables: {
+                coffeeId
+              }
+            });
+            setModalOpen(false);
+            toast("Canceld");
+          } catch (e) {
+            console.log(e);
+          }
         }
       }
     );
@@ -386,6 +385,38 @@ export default ({ navigation }) => {
     }
     return chunks;
   };
+  const requestNationality = async () => {
+    await requestCoffeeFn({
+      variables: {
+        target: "nationality",
+        currentCityId: location.currentCityId,
+        countryCode: me.user.profile.nationality.countryCode
+      }
+    });
+    toast("Requested");
+  };
+  const onSelectNationality = async (country: any) => {
+    await requestCoffeeFn({
+      variables: {
+        target: "nationality",
+        currentCityId: location.currentCityId,
+        countryCode: country.cca2
+      }
+    });
+    toast("Requested");
+    setNationalityModalOpen(false);
+  };
+  const onSelectrRsidence = async (country: any) => {
+    await requestCoffeeFn({
+      variables: {
+        target: "residence",
+        currentCityId: location.currentCityId,
+        countryCode: country.cca2
+      }
+    });
+    toast("Requested");
+    setResidenceModalOpen(false);
+  };
   if (recommendUserLoading || recommendLocationLoading || coffeeLoading) {
     return (
       <LoaderContainer>
@@ -402,6 +433,78 @@ export default ({ navigation }) => {
     const { getCoffees: { coffees = null } = {} } = ({} = coffeeData);
     return (
       <>
+        <Modal
+          style={{
+            margin: 0,
+            alignItems: "flex-start"
+          }}
+          isVisible={nationalityModalOpen}
+          backdropColor={isDarkMode && isDarkMode === true ? "black" : "white"}
+          onBackdropPress={() => setNationalityModalOpen(false)}
+          onBackButtonPress={() =>
+            Platform.OS !== "ios" && setNationalityModalOpen(false)
+          }
+          onModalHide={() => setNationalityModalOpen(false)}
+          propagateSwipe={true}
+          scrollHorizontal={true}
+          backdropOpacity={0.9}
+          animationIn="zoomInDown"
+          animationOut="zoomOutUp"
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropTransitionInTiming={200}
+          backdropTransitionOutTiming={200}
+        >
+          <CountryPicker
+            theme={isDarkMode && DARK_THEME}
+            countryCode={nationalityCode}
+            withFilter={true}
+            withFlag={true}
+            withAlphaFilter={true}
+            withEmoji={true}
+            onSelect={onSelectNationality}
+            withModal={false}
+            onClose={() => {
+              setNationalityCode(""), setNationalityModalOpen(false);
+            }}
+          />
+        </Modal>
+        <Modal
+          style={{
+            margin: 0,
+            alignItems: "flex-start"
+          }}
+          isVisible={residenceModalOpen}
+          backdropColor={isDarkMode && isDarkMode === true ? "black" : "white"}
+          onBackdropPress={() => setResidenceModalOpen(false)}
+          onBackButtonPress={() =>
+            Platform.OS !== "ios" && setResidenceModalOpen(false)
+          }
+          onModalHide={() => setResidenceModalOpen(false)}
+          propagateSwipe={true}
+          scrollHorizontal={true}
+          backdropOpacity={0.9}
+          animationIn="zoomInDown"
+          animationOut="zoomOutUp"
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropTransitionInTiming={200}
+          backdropTransitionOutTiming={200}
+        >
+          <CountryPicker
+            theme={isDarkMode && DARK_THEME}
+            countryCode={residenceCode}
+            withFilter={true}
+            withFlag={true}
+            withAlphaFilter={true}
+            withEmoji={true}
+            onSelect={onSelectrRsidence}
+            withModal={false}
+            onClose={() => {
+              setResidenceCode(""), setResidenceModalOpen(false);
+            }}
+          />
+        </Modal>
         <Modal
           style={{
             margin: 0,
@@ -565,21 +668,23 @@ export default ({ navigation }) => {
               </SearchHeaderUserContainer>
             </SearchCityContainer>
           </Touchable> */}
-          {me.user.profile.requestedCoffee &&
-          me.user.profile.requestedCoffee.length !== 0 ? (
+          {coffees &&
+          coffees.length !== 0 &&
+          coffees.find(i => i.host.username === userName) ? (
             <CoffeeSubmitBtn
-              disabled={deleteCoffeeLoading}
-              onPress={() => {
-                console.log(me.user.profile),
-                  cancelCoffee(me.user.profile.requestedCoffee[0].uuid);
-              }}
+              // disabled={deleteCoffeeLoading}
+              onPress={() =>
+                cancelCoffee(
+                  coffees.find(i => i.host.username === userName).uuid
+                )
+              }
             >
               <CoffeeText>CANCEL COFFEE</CoffeeText>
             </CoffeeSubmitBtn>
           ) : (
             <CoffeeSubmitBtn
-              disabled={requestLoading}
-              onPress={() => selectReportUser()}
+              // disabled={requestLoading}
+              onPress={() => requestCoffee()}
             >
               <CoffeeText>REQUEST COFFEE</CoffeeText>
             </CoffeeSubmitBtn>

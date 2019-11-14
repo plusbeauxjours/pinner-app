@@ -52,13 +52,3 @@ export const COFFEE_DETAIL = gql`
   }
   ${COUNTRY_FRAGMENT}
 `;
-
-export const DELETE_COFFEE = gql`
-  mutation DeleteCoffee($coffeeId: String!) {
-    deleteCoffee(coffeeId: $coffeeId) {
-      ok
-      coffeeId
-      username
-    }
-  }
-`;

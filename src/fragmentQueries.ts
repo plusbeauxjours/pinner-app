@@ -75,6 +75,7 @@ export const COFFEE_FRAGMENT = gql`
       country {
         countryName
         countryCode
+        countryEmoji
       }
     }
     host {
@@ -84,6 +85,16 @@ export const COFFEE_FRAGMENT = gql`
         avatarUrl
         appAvatarUrl
         isSelf
+        residence {
+          countryCode
+          countryName
+          countryEmoji
+        }
+        nationality {
+          countryCode
+          countryName
+          countryEmoji
+        }
         currentCity {
           cityName
           country {

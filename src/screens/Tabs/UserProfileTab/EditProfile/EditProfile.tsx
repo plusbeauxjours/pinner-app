@@ -30,17 +30,11 @@ import Loader from "../../../../components/Loader";
 import NavIcon from "../../../../components/NavIcon";
 import { GET_USER } from "../UserProfile/UserProfileQueries";
 import { UserProfileVariables } from "../../../../types/api";
-import {
-  RefreshControl,
-  Platform,
-  TextInput,
-  ActivityIndicator
-} from "react-native";
+import { RefreshControl, Platform, TextInput } from "react-native";
 import constants from "../../../../../constants";
 import { countries } from "../../../../../countryData";
 import { useLogOut } from "../../../../context/AuthContext";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import { Alert } from "react-native";
 import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
 import { useLocation } from "../../../../context/LocationContext";
 
@@ -204,10 +198,9 @@ export default ({ navigation }) => {
     false
   );
   const [verificationKey, setVerificationKey] = useState<string>("");
-  const [editProfileFn, { data }] = useMutation<
-    EditProfile,
-    EditProfileVariables
-  >(EDIT_PROFILE);
+  const [editProfileFn] = useMutation<EditProfile, EditProfileVariables>(
+    EDIT_PROFILE
+  );
   const [submitModal, setSubmitModal] = useState<boolean>(false);
   const onPress = () => {
     setSubmitModal(true);

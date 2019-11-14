@@ -177,6 +177,7 @@ export interface UnMatch_unMatch_coffee_city_country {
   __typename: "CountryType";
   countryName: string | null;
   countryCode: string | null;
+  countryEmoji: string | null;
 }
 
 export interface UnMatch_unMatch_coffee_city {
@@ -185,6 +186,20 @@ export interface UnMatch_unMatch_coffee_city {
   cityName: string | null;
   cityThumbnail: string | null;
   country: UnMatch_unMatch_coffee_city_country;
+}
+
+export interface UnMatch_unMatch_coffee_host_profile_residence {
+  __typename: "CountryType";
+  countryCode: string | null;
+  countryName: string | null;
+  countryEmoji: string | null;
+}
+
+export interface UnMatch_unMatch_coffee_host_profile_nationality {
+  __typename: "CountryType";
+  countryCode: string | null;
+  countryName: string | null;
+  countryEmoji: string | null;
 }
 
 export interface UnMatch_unMatch_coffee_host_profile_currentCity_country {
@@ -203,6 +218,8 @@ export interface UnMatch_unMatch_coffee_host_profile {
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
+  residence: UnMatch_unMatch_coffee_host_profile_residence | null;
+  nationality: UnMatch_unMatch_coffee_host_profile_nationality | null;
   currentCity: UnMatch_unMatch_coffee_host_profile_currentCity | null;
 }
 
@@ -1399,6 +1416,7 @@ export interface RequestCoffee_requestCoffee_coffee_city_country {
   __typename: "CountryType";
   countryName: string | null;
   countryCode: string | null;
+  countryEmoji: string | null;
 }
 
 export interface RequestCoffee_requestCoffee_coffee_city {
@@ -1407,6 +1425,20 @@ export interface RequestCoffee_requestCoffee_coffee_city {
   cityName: string | null;
   cityThumbnail: string | null;
   country: RequestCoffee_requestCoffee_coffee_city_country;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host_profile_residence {
+  __typename: "CountryType";
+  countryCode: string | null;
+  countryName: string | null;
+  countryEmoji: string | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host_profile_nationality {
+  __typename: "CountryType";
+  countryCode: string | null;
+  countryName: string | null;
+  countryEmoji: string | null;
 }
 
 export interface RequestCoffee_requestCoffee_coffee_host_profile_currentCity_country {
@@ -1425,6 +1457,8 @@ export interface RequestCoffee_requestCoffee_coffee_host_profile {
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
+  residence: RequestCoffee_requestCoffee_coffee_host_profile_residence | null;
+  nationality: RequestCoffee_requestCoffee_coffee_host_profile_nationality | null;
   currentCity: RequestCoffee_requestCoffee_coffee_host_profile_currentCity | null;
 }
 
@@ -2471,11 +2505,6 @@ export interface GetSameTripsVariables {
 // GraphQL query operation: Me
 // ====================================================
 
-export interface Me_me_user_profile_requestedCoffee {
-  __typename: "CoffeeType";
-  uuid: any | null;
-}
-
 export interface Me_me_user_profile_residence {
   __typename: "CountryType";
   countryCode: string | null;
@@ -2500,7 +2529,6 @@ export interface Me_me_user_profile {
   __typename: "ProfileType";
   id: string;
   gender: ProfileGender | null;
-  requestedCoffee: (Me_me_user_profile_requestedCoffee | null)[] | null;
   residence: Me_me_user_profile_residence | null;
   nationality: Me_me_user_profile_nationality | null;
   avatarUrl: string | null;
@@ -2720,6 +2748,7 @@ export interface CoffeeParts_city_country {
   __typename: "CountryType";
   countryName: string | null;
   countryCode: string | null;
+  countryEmoji: string | null;
 }
 
 export interface CoffeeParts_city {
@@ -2728,6 +2757,20 @@ export interface CoffeeParts_city {
   cityName: string | null;
   cityThumbnail: string | null;
   country: CoffeeParts_city_country;
+}
+
+export interface CoffeeParts_host_profile_residence {
+  __typename: "CountryType";
+  countryCode: string | null;
+  countryName: string | null;
+  countryEmoji: string | null;
+}
+
+export interface CoffeeParts_host_profile_nationality {
+  __typename: "CountryType";
+  countryCode: string | null;
+  countryName: string | null;
+  countryEmoji: string | null;
 }
 
 export interface CoffeeParts_host_profile_currentCity_country {
@@ -2746,6 +2789,8 @@ export interface CoffeeParts_host_profile {
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
+  residence: CoffeeParts_host_profile_residence | null;
+  nationality: CoffeeParts_host_profile_nationality | null;
   currentCity: CoffeeParts_host_profile_currentCity | null;
 }
 

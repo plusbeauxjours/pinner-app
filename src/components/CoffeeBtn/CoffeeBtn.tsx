@@ -5,15 +5,15 @@ import {
   MatchVariables,
   UnMatch,
   UnMatchVariables,
-  deleteCoffee,
-  deleteCoffeeVariables
+  DeleteCoffee,
+  DeleteCoffeeVariables
 } from "../../types/api";
 import { useMutation } from "react-apollo";
 import styled from "styled-components";
 import { ActivityIndicator } from "react-native";
 import Toast from "react-native-root-toast";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import { DELETE_COFFEE } from "../../screens/CoffeeDetail/CoffeeDetailQueries";
+import { DELETE_COFFEE } from "../../sharedQueries";
 
 const Touchable = styled.TouchableOpacity`
   justify-content: center;
@@ -64,8 +64,8 @@ const CoffeeBtn: React.FC<IProps> = ({
     variables: { matchId }
   });
   const [deleteCoffeeFn, { loading: deleteCoffeeLoading }] = useMutation<
-    deleteCoffee,
-    deleteCoffeeVariables
+    DeleteCoffee,
+    DeleteCoffeeVariables
   >(DELETE_COFFEE, { variables: { coffeeId } });
 
   const toast = (message: string) => {

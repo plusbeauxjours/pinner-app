@@ -1,5 +1,4 @@
 import gql from "graphql-tag";
-import { COFFEE_FRAGMENT } from "./fragmentQueries";
 
 export const ME = gql`
   query Me {
@@ -9,9 +8,6 @@ export const ME = gql`
         profile {
           id
           gender
-          requestedCoffee {
-            ...CoffeeParts
-          }
           residence {
             countryCode
             countryName
@@ -32,7 +28,6 @@ export const ME = gql`
       }
     }
   }
-  ${COFFEE_FRAGMENT}
 `;
 
 export const SLACK_REPORT_LOCATIONS = gql`
@@ -119,6 +114,16 @@ export const GET_COFFEES = gql`
         createdAt
         matchCount
       }
+    }
+  }
+`;
+
+export const DELETE_COFFEE = gql`
+  mutation DeleteCoffee($coffeeId: String!) {
+    deleteCoffee(coffeeId: $coffeeId) {
+      ok
+      coffeeId
+      username
     }
   }
 `;
