@@ -128,7 +128,18 @@ export default ({ navigation }) => {
             ? `Residence: ${me.user.profile.residence.countryName} ${me.user.profile.residence.countryEmoji}`
             : "Residence",
           me.user.profile.gender
-            ? `Gender: ${me.user.profile.gender}`
+            ? (() => {
+                switch (me.user.profile.gender) {
+                  case "MALE":
+                    return "Gender: Male";
+                  case "FEMALE":
+                    return "Gender: Female";
+                  case "OTHER":
+                    return "Gender: Other";
+                  default:
+                    return null;
+                }
+              })()
             : "Gender",
           "Cancel"
         ],
@@ -172,11 +183,56 @@ export default ({ navigation }) => {
             setResidenceModalOpen(true);
           }
         } else if (buttonIndex === 3) {
+          if (me.user.profile.gender) {
+            await requestCoffeeFn({
+              variables: {
+                target: "gender",
+                currentCityId: location.currentCityId,
+                countryCode: me.user.profile.gender
+              }
+            });
+            toast("Requested");
+          } else {
+            onOpenGenderActionSheet();
+          }
+        } else {
+          null;
+        }
+      }
+    );
+  };
+  const onOpenGenderActionSheet = () => {
+    showActionSheetWithOptions(
+      {
+        options: ["Male", "Female", "Other", "Cancel"],
+        cancelButtonIndex: 3,
+        showSeparators: true
+      },
+      async buttonIndex => {
+        if (buttonIndex === 0) {
           await requestCoffeeFn({
             variables: {
               target: "gender",
               currentCityId: location.currentCityId,
-              gender: me.user.profile.gender
+              gender: "MALE"
+            }
+          });
+          toast("Requested");
+        } else if (buttonIndex === 1) {
+          await requestCoffeeFn({
+            variables: {
+              target: "gender",
+              currentCityId: location.currentCityId,
+              gender: "FEMALE"
+            }
+          });
+          toast("Requested");
+        } else if (buttonIndex === 2) {
+          await requestCoffeeFn({
+            variables: {
+              target: "gender",
+              currentCityId: location.currentCityId,
+              gender: "OTHER"
             }
           });
           toast("Requested");
@@ -209,6 +265,10 @@ export default ({ navigation }) => {
             if (!meData.me.user.profile.residence) {
               meData.me.user.profile.residence =
                 requestCoffee.coffee.host.profile.residence;
+            }
+            if (!meData.me.user.profile.gender) {
+              meData.me.user.profile.gender =
+                requestCoffee.coffee.host.profile.gender;
             }
             cache.writeQuery({
               query: ME,

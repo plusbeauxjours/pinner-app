@@ -77,6 +77,7 @@ export const REQUEST_COFFEE = gql`
             avatarUrl
             appAvatarUrl
             isSelf
+            gender
             nationality {
               countryEmoji
               ...CountryParts
