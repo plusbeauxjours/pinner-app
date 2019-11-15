@@ -208,8 +208,8 @@ export default ({ navigation }) => {
                             userName: me.user.username,
                             userUrl: me.user.profile.appAvatarUrl,
                             targetName: data.item.isHost
-                              ? data.item.guest.profile.username
-                              : data.item.host.profile.username
+                              ? data.item.guest.username
+                              : data.item.host.username
                           })
                         }
                       >

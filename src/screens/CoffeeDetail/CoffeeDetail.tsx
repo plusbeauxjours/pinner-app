@@ -147,9 +147,7 @@ const CoffeeDetails: React.FC<IProps> = ({
       <Container>
         {coffee && (
           <>
-            <ImageTouchable
-              onPress={() => onPress(coffee.host.profile.username)}
-            >
+            <ImageTouchable onPress={() => onPress(coffee.host.username)}>
               {coffee.host.profile.avatarUrl ? (
                 <ProgressiveImage
                   style={{
@@ -170,11 +168,11 @@ const CoffeeDetails: React.FC<IProps> = ({
                 />
               )}
             </ImageTouchable>
-            <Touchable onPress={() => onPress(coffee.host.profile.username)}>
+            <Touchable onPress={() => onPress(coffee.host.username)}>
               <UserName>
-                {coffee.host.profile.username.length > 24
-                  ? coffee.host.profile.username.substring(0, 24) + "..."
-                  : coffee.host.profile.username}
+                {coffee.host.username.length > 24
+                  ? coffee.host.username.substring(0, 24) + "..."
+                  : coffee.host.username}
               </UserName>
               <Text>
                 {coffee.host.profile.currentCity.cityName},&nbsp;
@@ -246,6 +244,7 @@ const CoffeeDetails: React.FC<IProps> = ({
               <CoffeeBtnContainer>
                 <GreyText>until {coffee.naturalTime}</GreyText>
                 <CoffeeBtn
+                  userName={coffee.host.username}
                   cityId={coffee.city.cityId}
                   coffeeId={coffee.uuid}
                   isMatching={coffee.isMatching}

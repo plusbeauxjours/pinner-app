@@ -5,6 +5,7 @@ import CityLikeBtn from "./CityLikeBtn/CityLikeBtn";
 import moment from "moment";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import styled from "styled-components";
+import { useTheme } from "../context/ThemeContext";
 
 const Container = styled.View`
   padding: 15px 5px 15px 5px;
@@ -129,6 +130,7 @@ const UserRow: React.FC<IProps> = ({
   type,
   onPress
 }) => {
+  const isDarkMode = useTheme();
   switch (type) {
     case "user":
       return (
@@ -136,14 +138,21 @@ const UserRow: React.FC<IProps> = ({
           <Header>
             <Touchable>
               <ImageContainer>
-                <Image
-                  style={{ height: 36, width: 36, borderRadius: 18 }}
-                  source={
-                    user.appAvatarUrl
-                      ? { uri: `${BACKEND_URL}/media/${user.appAvatarUrl}` }
-                      : randomAvatar[Math.round(Math.random() * 9)]
-                  }
-                />
+                {user.appAvatarUrl ? (
+                  <ProgressiveImage
+                    tint={isDarkMode ? "dark" : "light"}
+                    style={{ height: 36, width: 36, borderRadius: 18 }}
+                    preview={{
+                      uri: `${BACKEND_URL}/media/${user.appAvatarUrl}`
+                    }}
+                    uri={`${BACKEND_URL}/media/${user.appAvatarUrl}`}
+                  />
+                ) : (
+                  <Image
+                    style={{ height: 36, width: 36, borderRadius: 18 }}
+                    source={randomAvatar[Math.round(Math.random() * 9)]}
+                  />
+                )}
               </ImageContainer>
             </Touchable>
             <Touchable>
@@ -164,14 +173,21 @@ const UserRow: React.FC<IProps> = ({
           <Header>
             <Touchable>
               <ImageContainer>
-                <Image
-                  style={{ height: 36, width: 36, borderRadius: 18 }}
-                  source={
-                    user.appAvatarUrl
-                      ? { uri: `${BACKEND_URL}/media/${user.appAvatarUrl}` }
-                      : randomAvatar[Math.round(Math.random() * 9)]
-                  }
-                />
+                {user.appAvatarUrl ? (
+                  <ProgressiveImage
+                    tint={isDarkMode ? "dark" : "light"}
+                    style={{ height: 36, width: 36, borderRadius: 18 }}
+                    preview={{
+                      uri: `${BACKEND_URL}/media/${user.appAvatarUrl}`
+                    }}
+                    uri={`${BACKEND_URL}/media/${user.appAvatarUrl}`}
+                  />
+                ) : (
+                  <Image
+                    style={{ height: 36, width: 36, borderRadius: 18 }}
+                    source={randomAvatar[Math.round(Math.random() * 9)]}
+                  />
+                )}
               </ImageContainer>
             </Touchable>
             <Touchable>
@@ -540,16 +556,21 @@ const UserRow: React.FC<IProps> = ({
           <Header>
             <Touchable>
               <ImageContainer>
-                <Image
-                  style={{ height: 36, width: 36, borderRadius: 18 }}
-                  source={
-                    coffee.host.profile.appAvatarUrl
-                      ? {
-                          uri: `${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`
-                        }
-                      : randomAvatar[Math.round(Math.random() * 9)]
-                  }
-                />
+                {coffee.host.profile.appAvatarUrl ? (
+                  <ProgressiveImage
+                    tint={isDarkMode ? "dark" : "light"}
+                    style={{ height: 36, width: 36, borderRadius: 18 }}
+                    preview={{
+                      uri: `${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`
+                    }}
+                    uri={`${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`}
+                  />
+                ) : (
+                  <Image
+                    style={{ height: 36, width: 36, borderRadius: 18 }}
+                    source={randomAvatar[Math.round(Math.random() * 9)]}
+                  />
+                )}
               </ImageContainer>
             </Touchable>
             <Touchable>
@@ -606,22 +627,27 @@ const UserRow: React.FC<IProps> = ({
               <Header>
                 <Touchable>
                   <ImageContainer>
-                    <Image
-                      style={{ height: 36, width: 36, borderRadius: 18 }}
-                      source={
-                        match.guest.profile.appAvatarUrl
-                          ? {
-                              uri: `${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`
-                            }
-                          : randomAvatar[Math.round(Math.random() * 9)]
-                      }
-                    />
+                    {match.guest.profile.appAvatarUrl ? (
+                      <ProgressiveImage
+                        tint={isDarkMode ? "dark" : "light"}
+                        style={{ height: 36, width: 36, borderRadius: 18 }}
+                        preview={{
+                          uri: `${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`
+                        }}
+                        uri={`${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`}
+                      />
+                    ) : (
+                      <Image
+                        style={{ height: 36, width: 36, borderRadius: 18 }}
+                        source={randomAvatar[Math.round(Math.random() * 9)]}
+                      />
+                    )}
                   </ImageContainer>
                   {!match.isReadByHost && <Mark>N</Mark>}
                 </Touchable>
                 <Touchable>
                   <HeaderUserContainer>
-                    <Bold>{match.guest.profile.username}</Bold>
+                    <Bold>{match.guest.username}</Bold>
                     <Location>
                       {match.guest.profile.currentCity.cityName},{" "}
                       {match.guest.profile.currentCity.country.countryName}
@@ -639,22 +665,27 @@ const UserRow: React.FC<IProps> = ({
               <Header>
                 <Touchable>
                   <ImageContainer>
-                    <Image
-                      style={{ height: 36, width: 36, borderRadius: 18 }}
-                      source={
-                        match.host.profile.appAvatarUrl
-                          ? {
-                              uri: `${BACKEND_URL}/media/${match.host.profile.appAvatarUrl}`
-                            }
-                          : randomAvatar[Math.round(Math.random() * 9)]
-                      }
-                    />
+                    {match.host.profile.appAvatarUrl ? (
+                      <ProgressiveImage
+                        tint={isDarkMode ? "dark" : "light"}
+                        style={{ height: 36, width: 36, borderRadius: 18 }}
+                        preview={{
+                          uri: `${BACKEND_URL}/media/${match.host.profile.appAvatarUrl}`
+                        }}
+                        uri={`${BACKEND_URL}/media/${match.host.profile.appAvatarUrl}`}
+                      />
+                    ) : (
+                      <Image
+                        style={{ height: 36, width: 36, borderRadius: 18 }}
+                        source={randomAvatar[Math.round(Math.random() * 9)]}
+                      />
+                    )}
                   </ImageContainer>
                   {!match.isReadByGuest && <Mark>N</Mark>}
                 </Touchable>
                 <Touchable>
                   <HeaderUserContainer>
-                    <Bold>{match.host.profile.username}</Bold>
+                    <Bold>{match.host.username}</Bold>
                     <Location>
                       {match.host.profile.currentCity.cityName},{" "}
                       {match.host.profile.currentCity.country.countryName}

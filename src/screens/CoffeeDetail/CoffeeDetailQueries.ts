@@ -21,6 +21,7 @@ export const COFFEE_DETAIL = gql`
         }
         host {
           id
+          username
           profile {
             nationality {
               countryEmoji
@@ -30,7 +31,6 @@ export const COFFEE_DETAIL = gql`
               countryEmoji
               ...CountryParts
             }
-            username
             isSelf
             avatarUrl
             appAvatarUrl

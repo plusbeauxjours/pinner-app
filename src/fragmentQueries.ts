@@ -124,9 +124,9 @@ export const MATCH_FRAGMENT = gql`
       }
     }
     host {
+      username
       profile {
         id
-        username
         avatarUrl
         appAvatarUrl
         isSelf
@@ -139,9 +139,9 @@ export const MATCH_FRAGMENT = gql`
       }
     }
     guest {
+      username
       profile {
         id
-        username
         avatarUrl
         appAvatarUrl
         isSelf

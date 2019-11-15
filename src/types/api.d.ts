@@ -73,7 +73,6 @@ export interface Match_match_match_host_profile_currentCity {
 export interface Match_match_match_host_profile {
   __typename: "ProfileType";
   id: string;
-  username: string | null;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
@@ -82,6 +81,10 @@ export interface Match_match_match_host_profile {
 
 export interface Match_match_match_host {
   __typename: "UserType";
+  /**
+   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+   */
+  username: string;
   profile: Match_match_match_host_profile | null;
 }
 
@@ -99,7 +102,6 @@ export interface Match_match_match_guest_profile_currentCity {
 export interface Match_match_match_guest_profile {
   __typename: "ProfileType";
   id: string;
-  username: string | null;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
@@ -108,6 +110,10 @@ export interface Match_match_match_guest_profile {
 
 export interface Match_match_match_guest {
   __typename: "UserType";
+  /**
+   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+   */
+  username: string;
   profile: Match_match_match_guest_profile | null;
 }
 
@@ -467,7 +473,6 @@ export interface CoffeeDetail_coffeeDetail_coffee_host_profile {
   __typename: "ProfileType";
   nationality: CoffeeDetail_coffeeDetail_coffee_host_profile_nationality | null;
   residence: CoffeeDetail_coffeeDetail_coffee_host_profile_residence | null;
-  username: string | null;
   isSelf: boolean | null;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
@@ -481,6 +486,10 @@ export interface CoffeeDetail_coffeeDetail_coffee_host_profile {
 export interface CoffeeDetail_coffeeDetail_coffee_host {
   __typename: "UserType";
   id: string;
+  /**
+   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+   */
+  username: string;
   profile: CoffeeDetail_coffeeDetail_coffee_host_profile | null;
 }
 
@@ -1175,7 +1184,6 @@ export interface GetMatches_getMatches_matches_host_profile_currentCity {
 export interface GetMatches_getMatches_matches_host_profile {
   __typename: "ProfileType";
   id: string;
-  username: string | null;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
@@ -1184,6 +1192,10 @@ export interface GetMatches_getMatches_matches_host_profile {
 
 export interface GetMatches_getMatches_matches_host {
   __typename: "UserType";
+  /**
+   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+   */
+  username: string;
   profile: GetMatches_getMatches_matches_host_profile | null;
 }
 
@@ -1201,7 +1213,6 @@ export interface GetMatches_getMatches_matches_guest_profile_currentCity {
 export interface GetMatches_getMatches_matches_guest_profile {
   __typename: "ProfileType";
   id: string;
-  username: string | null;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
@@ -1210,6 +1221,10 @@ export interface GetMatches_getMatches_matches_guest_profile {
 
 export interface GetMatches_getMatches_matches_guest {
   __typename: "UserType";
+  /**
+   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+   */
+  username: string;
   profile: GetMatches_getMatches_matches_guest_profile | null;
 }
 
@@ -1404,18 +1419,40 @@ export interface RequestCoffee_requestCoffee_coffee_city {
   country: RequestCoffee_requestCoffee_coffee_city_country;
 }
 
-export interface RequestCoffee_requestCoffee_coffee_host_profile_residence {
-  __typename: "CountryType";
-  countryCode: string | null;
-  countryName: string | null;
-  countryEmoji: string | null;
+export interface RequestCoffee_requestCoffee_coffee_host_profile_nationality_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
 }
 
 export interface RequestCoffee_requestCoffee_coffee_host_profile_nationality {
   __typename: "CountryType";
-  countryCode: string | null;
-  countryName: string | null;
   countryEmoji: string | null;
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryPhoto: string | null;
+  countryThumbnail: string | null;
+  cityCount: number | null;
+  continent: RequestCoffee_requestCoffee_coffee_host_profile_nationality_continent | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host_profile_residence_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host_profile_residence {
+  __typename: "CountryType";
+  countryEmoji: string | null;
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryPhoto: string | null;
+  countryThumbnail: string | null;
+  cityCount: number | null;
+  continent: RequestCoffee_requestCoffee_coffee_host_profile_residence_continent | null;
 }
 
 export interface RequestCoffee_requestCoffee_coffee_host_profile_currentCity_country {
@@ -1434,8 +1471,9 @@ export interface RequestCoffee_requestCoffee_coffee_host_profile {
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
-  residence: RequestCoffee_requestCoffee_coffee_host_profile_residence | null;
+  gender: ProfileGender | null;
   nationality: RequestCoffee_requestCoffee_coffee_host_profile_nationality | null;
+  residence: RequestCoffee_requestCoffee_coffee_host_profile_residence | null;
   currentCity: RequestCoffee_requestCoffee_coffee_host_profile_currentCity | null;
 }
 
@@ -2401,18 +2439,40 @@ export interface GetSameTripsVariables {
 // GraphQL query operation: Me
 // ====================================================
 
+export interface Me_me_user_profile_residence_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
 export interface Me_me_user_profile_residence {
   __typename: "CountryType";
-  countryCode: string | null;
-  countryName: string | null;
   countryEmoji: string | null;
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryPhoto: string | null;
+  countryThumbnail: string | null;
+  cityCount: number | null;
+  continent: Me_me_user_profile_residence_continent | null;
+}
+
+export interface Me_me_user_profile_nationality_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
 }
 
 export interface Me_me_user_profile_nationality {
   __typename: "CountryType";
-  countryCode: string | null;
-  countryName: string | null;
   countryEmoji: string | null;
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryPhoto: string | null;
+  countryThumbnail: string | null;
+  cityCount: number | null;
+  continent: Me_me_user_profile_nationality_continent | null;
 }
 
 export interface Me_me_user_profile_currentCity {
@@ -2852,7 +2912,6 @@ export interface MatchParts_host_profile_currentCity {
 export interface MatchParts_host_profile {
   __typename: "ProfileType";
   id: string;
-  username: string | null;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
@@ -2861,6 +2920,10 @@ export interface MatchParts_host_profile {
 
 export interface MatchParts_host {
   __typename: "UserType";
+  /**
+   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+   */
+  username: string;
   profile: MatchParts_host_profile | null;
 }
 
@@ -2878,7 +2941,6 @@ export interface MatchParts_guest_profile_currentCity {
 export interface MatchParts_guest_profile {
   __typename: "ProfileType";
   id: string;
-  username: string | null;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
@@ -2887,6 +2949,10 @@ export interface MatchParts_guest_profile {
 
 export interface MatchParts_guest {
   __typename: "UserType";
+  /**
+   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+   */
+  username: string;
   profile: MatchParts_guest_profile | null;
 }
 

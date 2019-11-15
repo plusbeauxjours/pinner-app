@@ -11,6 +11,7 @@ import styled from "styled-components";
 import { SwipeListView } from "react-native-swipe-list-view";
 import Toast from "react-native-root-toast";
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import { Ionicons, Entypo } from "@expo/vector-icons";
 import { range } from "lodash";
 import { useMe } from "../../../../context/MeContext";
@@ -48,7 +49,6 @@ import {
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
 import constants, { BACKEND_URL } from "../../../../../constants";
-
 import { GET_SAME_TRIPS } from "./UserProfileQueries";
 import Modal from "react-native-modal";
 import { useTheme } from "../../../../context/ThemeContext";
@@ -1008,21 +1008,28 @@ export default ({ navigation }) => {
                 })
               }
             >
-              <Image
-                resizeMode={"contain"}
-                style={{
-                  height: 150,
-                  width: 150,
-                  borderRadius: 75
-                }}
-                source={
-                  user.profile.avatarUrl
-                    ? {
-                        uri: `${BACKEND_URL}/media/${user.profile.avatarUrl}`
-                      }
-                    : randomAvatar[imageNumber]
-                }
-              />
+              {user.profile.avatarUrl ? (
+                <ProgressiveImage
+                  tint={isDarkMode ? "dark" : "light"}
+                  style={{ height: 150,
+                    width: 150,
+                    borderRadius: 75}}
+                  preview={{
+                    uri: `${BACKEND_URL}/media/${user.profile.avatarUrl}`
+                  }}
+                  uri={`${BACKEND_URL}/media/${user.profile.avatarUrl}`}
+                />
+              ) : (
+                <Image
+                  resizeMode={"contain"}
+                  style={{
+                    height: 150,
+                    width: 150,
+                    borderRadius: 75
+                  }}
+                  source={randomAvatar[imageNumber]}
+                />
+              )}
             </ImageTouchable>
             <UserNameContainer>
               <UserName>
