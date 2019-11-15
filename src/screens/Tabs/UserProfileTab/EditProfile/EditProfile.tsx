@@ -194,9 +194,7 @@ export default ({ navigation }) => {
       : location.currentCountryCode
   );
   const [editPhoneModalOpen, setEditPhoneModalOpen] = useState<boolean>(false);
-  const [verifyPhoneModalOpen, setVerifyPhoneModalOpen] = useState<boolean>(
-    false
-  );
+  const [isVerifyPhoneMode, setIsVerifyPhoneMode] = useState<boolean>(false);
   const [verificationKey, setVerificationKey] = useState<string>("");
   const [editProfileFn] = useMutation<EditProfile, EditProfileVariables>(
     EDIT_PROFILE
@@ -287,8 +285,10 @@ export default ({ navigation }) => {
   >(COMPLETE_EDIT_PHONE_VERIFICATION, {
     variables: {
       key: verificationKey,
-      phoneNumber: newPhoneNumber,
-      countryPhoneNumber,
+      phoneNumber: newPhoneNumber.startsWith("0")
+        ? newPhoneNumber.substring(1)
+        : newPhoneNumber,
+      countryPhoneNumber: newCountryPhoneNumber,
       countryPhoneCode: newCountryPhoneCode
     }
   });
@@ -361,10 +361,8 @@ export default ({ navigation }) => {
   };
   const closeEditPhoneModalOpen = () => {
     setEditPhoneModalOpen(false);
-  };
-  const closeVerifyPhoneModalOpen = () => {
+    setIsVerifyPhoneMode(false);
     setVerificationKey("");
-    setVerifyPhoneModalOpen(false);
   };
   const onPressToggleIcon = async (payload: string) => {
     if (payload === "HIDE_TRIPS") {
@@ -421,11 +419,8 @@ export default ({ navigation }) => {
     const {
       data: { startEditPhoneVerification }
     } = await startEditPhoneVerificationFn();
-    setEditPhoneModalOpen(false);
     if (startEditPhoneVerification.ok) {
-      setTimeout(() => {
-        setVerifyPhoneModalOpen(true);
-      }, 500);
+      setIsVerifyPhoneMode(true);
     } else if (newPhoneNumber === "") {
       toast("Phone number can't be empty");
     } else if (newCountryPhoneNumber === "") {
@@ -438,12 +433,23 @@ export default ({ navigation }) => {
       toast("Please write a valid phone number");
     }
   };
+  console.log(verificationKey);
   const handlePhoneVerification = async () => {
+    console.log("completeEditPhoneVerification");
+    console.log(
+      verificationKey,
+      newPhoneNumber,
+      newCountryPhoneNumber,
+      newCountryPhoneCode
+    );
     const {
       data: { completeEditPhoneVerification }
     } = await completeEditPhoneVerificationFn();
-    setVerifyPhoneModalOpen(false);
-    if (!completeEditPhoneVerification.ok) {
+    console.log(completeEditPhoneVerification);
+    setEditPhoneModalOpen(false);
+    setIsVerifyPhoneMode(false);
+    setVerificationKey("");
+    if (completeEditPhoneVerification.ok) {
       toast("Your phone number is verified");
     } else {
       toast("Could not be Verified your phone number");
@@ -521,97 +527,91 @@ export default ({ navigation }) => {
             backdropOpacity={0.9}
             style={{ justifyContent: "center", alignItems: "center" }}
           >
-            <EditModalContainer>
-              <CountryPicker
-                theme={theme && DARK_THEME}
-                countryCode={newCountryPhoneCode}
-                withFilter={true}
-                withFlag={true}
-                withAlphaFilter={true}
-                withEmoji={true}
-                onSelect={onSelectrEditPhone}
-              />
-              {/* <Text>{newCountryPhoneCode}</Text> */}
-              <Bigtext>{newCountryPhoneNumber}</Bigtext>
-              <TextInput
-                style={{
-                  width: 200,
-                  backgroundColor: "transparent",
-                  borderBottomWidth: 1,
-                  borderBottomColor: "#999",
-                  color: theme ? "white" : "black",
-                  marginLeft: 5,
-                  fontSize: 32,
-                  fontWeight: "300"
-                }}
-                keyboardType="phone-pad"
-                returnKeyType="send"
-                onChangeText={number => setNewPhoneNumber(number)}
-              />
-            </EditModalContainer>
-            <ButtonContainer>
-              <Text>
-                When you tap Continue, Pinner will send a text with verification
-                code. Message and data rates may apply. The verified phone
-                number can be used to login.
-              </Text>
-              <Void />
-              <Touchable
-                disabled={startEditPhoneVerificationLoading}
-                onPress={handlePhoneNumber}
-              >
-                {startEditPhoneVerificationLoading ? (
-                  <SubmitLoaderContainer>
-                    <Loader />
-                  </SubmitLoaderContainer>
-                ) : (
-                  <Bigtext>Send SMS</Bigtext>
-                )}
-              </Touchable>
-            </ButtonContainer>
-          </Modal>
-          <Modal
-            isVisible={verifyPhoneModalOpen}
-            backdropColor={theme ? "black" : "white"}
-            onBackdropPress={() => closeVerifyPhoneModalOpen()}
-            onBackButtonPress={() =>
-              Platform.OS !== "ios" && closeVerifyPhoneModalOpen()
-            }
-            propagateSwipe={true}
-            scrollHorizontal={true}
-            backdropOpacity={0.9}
-            style={{ justifyContent: "center", alignItems: "center" }}
-          >
-            <TextInput
-              style={{
-                width: 200,
-                backgroundColor: "transparent",
-                borderBottomWidth: 1,
-                borderBottomColor: "#999",
-                color: theme ? "white" : "black",
-                marginLeft: 5,
-                fontSize: 32,
-                fontWeight: "300",
-                textAlign: "center"
-              }}
-              keyboardType="phone-pad"
-              returnKeyType="send"
-              onChangeText={number => setVerificationKey(number)}
-            />
-            <ButtonContainer>
-              <Touchable
-                disabled={completeEditPhoneVerificationLoading}
-                onPress={handlePhoneVerification}
-              >
-                <EmptyView>
-                  {completeEditPhoneVerificationLoading ? (
-                    <Loader />
-                  ) : (
-                    <Bigtext>Verify Key</Bigtext>
-                  )}
-                </EmptyView>
-              </Touchable>
-            </ButtonContainer>
+            {isVerifyPhoneMode ? (
+              <>
+                <TextInput
+                  style={{
+                    width: 220,
+                    backgroundColor: "transparent",
+                    borderBottomWidth: 1,
+                    borderBottomColor: "#999",
+                    color: theme ? "white" : "black",
+                    marginLeft: 5,
+                    fontSize: 32,
+                    fontWeight: "300",
+                    textAlign: "center"
+                  }}
+                  keyboardType="phone-pad"
+                  returnKeyType="send"
+                  onChangeText={number => setVerificationKey(number)}
+                />
+                <ButtonContainer>
+                  <Touchable
+                    disabled={completeEditPhoneVerificationLoading}
+                    onPress={handlePhoneVerification}
+                  >
+                    <EmptyView>
+                      {completeEditPhoneVerificationLoading ? (
+                        <Loader />
+                      ) : (
+                        <Bigtext>Verify Key</Bigtext>
+                      )}
+                    </EmptyView>
+                  </Touchable>
+                </ButtonContainer>
+              </>
+            ) : (
+              <>
+                <EditModalContainer>
+                  <CountryPicker
+                    theme={theme && DARK_THEME}
+                    countryCode={newCountryPhoneCode}
+                    withFilter={true}
+                    withFlag={true}
+                    withAlphaFilter={true}
+                    withEmoji={true}
+                    onSelect={onSelectrEditPhone}
+                  />
+                  {/* <Text>{newCountryPhoneCode}</Text> */}
+                  <Bigtext>{newCountryPhoneNumber}</Bigtext>
+                  <TextInput
+                    style={{
+                      width: 220,
+                      backgroundColor: "transparent",
+                      borderBottomWidth: 1,
+                      borderBottomColor: "#999",
+                      color: theme ? "white" : "black",
+                      marginLeft: 5,
+                      fontSize: 32,
+                      fontWeight: "300"
+                    }}
+                    keyboardType="phone-pad"
+                    returnKeyType="send"
+                    onChangeText={number => setNewPhoneNumber(number)}
+                  />
+                </EditModalContainer>
+                <ButtonContainer>
+                  <Text>
+                    When you tap Continue, Pinner will send a text with
+                    verification code. Message and data rates may apply. The
+                    verified phone number can be used to login.
+                  </Text>
+                  <Void />
+                  <Touchable
+                    disabled={startEditPhoneVerificationLoading}
+                    onPress={handlePhoneNumber}
+                  >
+                    {startEditPhoneVerificationLoading ? (
+                      <SubmitLoaderContainer>
+                        <Loader />
+                      </SubmitLoaderContainer>
+                    ) : (
+                      <Bigtext>Send SMS</Bigtext>
+                    )}
+                  </Touchable>
+                </ButtonContainer>
+              </>
+            )}
           </Modal>
           <View>
             <Bold>EDIT PROFILE</Bold>
@@ -680,11 +680,25 @@ export default ({ navigation }) => {
 
               <Item>
                 <ToggleText>GENDER</ToggleText>
-                <Touchable onPress={() => onOpenGenderActionSheet()}>
-                  <EmptyView>
-                    <Text>{gender}</Text>
-                  </EmptyView>
-                </Touchable>
+                {gender ? (
+                  <Touchable onPress={() => onOpenGenderActionSheet()}>
+                    <EmptyView>
+                      <Text>{gender}</Text>
+                    </EmptyView>
+                  </Touchable>
+                ) : (
+                  <ToggleIcon onPress={() => onOpenGenderActionSheet()}>
+                    <NavIcon
+                      size={20}
+                      name={
+                        Platform.OS === "ios"
+                          ? "ios-radio-button-off"
+                          : "md-radio-button-off"
+                      }
+                      color={"#999"}
+                    />
+                  </ToggleIcon>
+                )}
               </Item>
               <ExplainText>Your gender to match</ExplainText>
               <Item>
