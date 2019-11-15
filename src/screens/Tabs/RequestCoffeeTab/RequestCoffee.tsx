@@ -107,6 +107,8 @@ export default ({ navigation }) => {
   const [nationalityModalOpen, setNationalityModalOpen] = useState<boolean>(
     false
   );
+  console.log(me.user.username);
+  console.log(location);
   const [residenceModalOpen, setResidenceModalOpen] = useState<boolean>(false);
   const [nationalityCode, setNationalityCode] = useState<any>("");
   const [residenceCode, setResidenceCode] = useState<any>("");
@@ -148,49 +150,69 @@ export default ({ navigation }) => {
       },
       async buttonIndex => {
         if (buttonIndex === 0) {
-          requestCoffeeFn({
-            variables: {
-              target: "everyone",
-              currentCityId: location.currentCityId
-            }
-          });
-          toast("Requested");
-        } else if (buttonIndex === 1) {
-          if (me.user.profile.nationality) {
-            await requestCoffeeFn({
+          try {
+            requestCoffeeFn({
               variables: {
-                target: "nationality",
-                currentCityId: location.currentCityId,
-                countryCode: me.user.profile.nationality.countryCode
+                target: "everyone",
+                currentCityId: location.currentCityId
               }
             });
+          } catch (e) {
+            console.log(e);
+          } finally {
             toast("Requested");
+          }
+        } else if (buttonIndex === 1) {
+          if (me.user.profile.nationality) {
+            try {
+              await requestCoffeeFn({
+                variables: {
+                  target: "nationality",
+                  currentCityId: location.currentCityId,
+                  countryCode: me.user.profile.nationality.countryCode
+                }
+              });
+            } catch (e) {
+              console.log(e);
+            } finally {
+              toast("Requested");
+            }
           } else {
             setNationalityModalOpen(true);
           }
         } else if (buttonIndex === 2) {
           if (me.user.profile.residence) {
-            await requestCoffeeFn({
-              variables: {
-                target: "residence",
-                currentCityId: location.currentCityId,
-                countryCode: me.user.profile.residence.countryCode
-              }
-            });
-            toast("Requested");
+            try {
+              await requestCoffeeFn({
+                variables: {
+                  target: "residence",
+                  currentCityId: location.currentCityId,
+                  countryCode: me.user.profile.residence.countryCode
+                }
+              });
+            } catch (e) {
+              console.log(e);
+            } finally {
+              toast("Requested");
+            }
           } else {
             setResidenceModalOpen(true);
           }
         } else if (buttonIndex === 3) {
           if (me.user.profile.gender) {
-            await requestCoffeeFn({
-              variables: {
-                target: "gender",
-                currentCityId: location.currentCityId,
-                countryCode: me.user.profile.gender
-              }
-            });
-            toast("Requested");
+            try {
+              await requestCoffeeFn({
+                variables: {
+                  target: "gender",
+                  currentCityId: location.currentCityId,
+                  countryCode: me.user.profile.gender
+                }
+              });
+            } catch (e) {
+              console.log(e);
+            } finally {
+              toast("Requested");
+            }
           } else {
             onOpenGenderActionSheet();
           }
@@ -209,32 +231,47 @@ export default ({ navigation }) => {
       },
       async buttonIndex => {
         if (buttonIndex === 0) {
-          await requestCoffeeFn({
-            variables: {
-              target: "gender",
-              currentCityId: location.currentCityId,
-              gender: "MALE"
-            }
-          });
-          toast("Requested");
+          try {
+            await requestCoffeeFn({
+              variables: {
+                target: "gender",
+                currentCityId: location.currentCityId,
+                gender: "MALE"
+              }
+            });
+          } catch (e) {
+            console.log(e);
+          } finally {
+            toast("Requested");
+          }
         } else if (buttonIndex === 1) {
-          await requestCoffeeFn({
-            variables: {
-              target: "gender",
-              currentCityId: location.currentCityId,
-              gender: "FEMALE"
-            }
-          });
-          toast("Requested");
+          try {
+            await requestCoffeeFn({
+              variables: {
+                target: "gender",
+                currentCityId: location.currentCityId,
+                gender: "FEMALE"
+              }
+            });
+          } catch (e) {
+            console.log(e);
+          } finally {
+            toast("Requested");
+          }
         } else if (buttonIndex === 2) {
-          await requestCoffeeFn({
-            variables: {
-              target: "gender",
-              currentCityId: location.currentCityId,
-              gender: "OTHER"
-            }
-          });
-          toast("Requested");
+          try {
+            await requestCoffeeFn({
+              variables: {
+                target: "gender",
+                currentCityId: location.currentCityId,
+                gender: "OTHER"
+              }
+            });
+          } catch (e) {
+            console.log(e);
+          } finally {
+            toast("Requested");
+          }
         } else {
           null;
         }
@@ -454,26 +491,36 @@ export default ({ navigation }) => {
     return chunks;
   };
   const onSelectNationality = async (country: any) => {
-    await requestCoffeeFn({
-      variables: {
-        target: "nationality",
-        currentCityId: location.currentCityId,
-        countryCode: country.cca2
-      }
-    });
-    toast("Requested");
-    setNationalityModalOpen(false);
+    try {
+      await requestCoffeeFn({
+        variables: {
+          target: "nationality",
+          currentCityId: location.currentCityId,
+          countryCode: country.cca2
+        }
+      });
+      setNationalityModalOpen(false);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      toast("Requested");
+    }
   };
   const onSelectrRsidence = async (country: any) => {
-    await requestCoffeeFn({
-      variables: {
-        target: "residence",
-        currentCityId: location.currentCityId,
-        countryCode: country.cca2
-      }
-    });
-    toast("Requested");
-    setResidenceModalOpen(false);
+    try {
+      await requestCoffeeFn({
+        variables: {
+          target: "residence",
+          currentCityId: location.currentCityId,
+          countryCode: country.cca2
+        }
+      });
+      setResidenceModalOpen(false);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      toast("Requested");
+    }
   };
   if (
     recommendUserLoading ||

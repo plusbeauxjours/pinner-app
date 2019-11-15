@@ -23,6 +23,8 @@ export const AuthProvider = ({
     try {
       await AsyncStorage.setItem("isLoggedIn", "false");
       setIsLoggedIn(false);
+      await AsyncStorage.clear();
+      client.cache.reset();
     } catch (e) {
       console.log(e);
     }

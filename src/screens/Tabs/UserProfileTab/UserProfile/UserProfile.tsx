@@ -90,7 +90,7 @@ const Bold = styled.Text`
 const Item = styled.View`
   flex-direction: column;
   align-items: center;
-  width: ${constants.width / 4 - 7.5};
+  width: ${constants.width / 4 - 2.5};
   height: ${constants.width / 5 - 10};
 `;
 const DisptanceItem = styled(Item)`
@@ -99,7 +99,6 @@ const DisptanceItem = styled(Item)`
 const ItemContainer = styled.View`
   flex-wrap: wrap;
   flex-direction: row;
-  justify-content: flex-end;
   margin-bottom: 10px;
 `;
 
@@ -246,6 +245,7 @@ const TripSmallText = styled(SmallText)`
 `;
 export default ({ navigation }) => {
   const { me, loading: meLoading } = useMe();
+  console.log(me);
   const location = useLocation();
   const isSelf = navigation.getParam("isSelf");
   const isDarkMode = useTheme();
@@ -601,11 +601,11 @@ export default ({ navigation }) => {
     if (distance < 1e3) return distance;
     if (distance >= 1e3 && distance < 1e5)
       return +(distance / 1e3).toFixed(2) + "K";
-    if (distance >= 1e5 && distance < 1e9)
+    if (distance >= 1e5 && distance < 1e8)
       return +(distance / 1e6).toFixed(2) + "M";
-    if (distance >= 1e9 && distance < 1e12)
+    if (distance >= 1e8 && distance < 1e11)
       return +(distance / 1e9).toFixed(2) + "B";
-    if (distance >= 1e12) return +(distance / 1e12).toFixed(1) + "T";
+    if (distance >= 1e11) return +(distance / 1e12).toFixed(1) + "T";
     else return null;
   };
   useEffect(
@@ -1094,10 +1094,10 @@ export default ({ navigation }) => {
             <BioText>{user.profile.bio}</BioText>
             <ItemContainer>
               {user.profile.distance !== 0 && (
-                <DisptanceItem>
+                <Item>
                   <UserName>{formatDistance(user.profile.distance)}</UserName>
                   <Bold>KM</Bold>
-                </DisptanceItem>
+                </Item>
               )}
               {trip && (
                 <Item>

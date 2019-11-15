@@ -26,6 +26,7 @@ const Container = styled.View`
   justify-content: center;
   align-items: center;
   background-color: ${props => props.theme.headerColor};
+  padding: 5px;
 `;
 const LoaderContainer = styled.View`
   flex: 1;
@@ -66,7 +67,7 @@ const Item = styled.View`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: ${constants.width / 4};
+  width: ${constants.width / 4 - 2.5};
   height: ${constants.width / 5};
 `;
 const DisptanceItem = styled(Item)`
@@ -136,6 +137,17 @@ const CoffeeDetails: React.FC<IProps> = ({
     8: require(`../../Images/avatars/earth8.png`),
     9: require(`../../Images/avatars/earth9.png`)
   };
+  const formatDistance = (distance: number) => {
+    if (distance < 1e3) return distance;
+    if (distance >= 1e3 && distance < 1e5)
+      return +(distance / 1e3).toFixed(2) + "K";
+    if (distance >= 1e5 && distance < 1e8)
+      return +(distance / 1e6).toFixed(2) + "M";
+    if (distance >= 1e8 && distance < 1e11)
+      return +(distance / 1e9).toFixed(2) + "B";
+    if (distance >= 1e11) return +(distance / 1e12).toFixed(1) + "T";
+    else return null;
+  };
   if (coffeeDetailLoading) {
     return (
       <LoaderContainer>
@@ -181,10 +193,12 @@ const CoffeeDetails: React.FC<IProps> = ({
             </Touchable>
             <ItemContainer>
               {coffee.host.profile.distance !== 0 && (
-                <DisptanceItem>
-                  <UserName>{coffee.host.profile.distance}</UserName>
+                <Item>
+                  <UserName>
+                    {formatDistance(coffee.host.profile.distance)}
+                  </UserName>
                   <Text>KM</Text>
-                </DisptanceItem>
+                </Item>
               )}
               {coffee.host.profile.tripCount !== 0 && (
                 <Item>

@@ -433,19 +433,10 @@ export default ({ navigation }) => {
       toast("Please write a valid phone number");
     }
   };
-  console.log(verificationKey);
   const handlePhoneVerification = async () => {
-    console.log("completeEditPhoneVerification");
-    console.log(
-      verificationKey,
-      newPhoneNumber,
-      newCountryPhoneNumber,
-      newCountryPhoneCode
-    );
     const {
       data: { completeEditPhoneVerification }
     } = await completeEditPhoneVerificationFn();
-    console.log(completeEditPhoneVerification);
     setEditPhoneModalOpen(false);
     setIsVerifyPhoneMode(false);
     setVerificationKey("");

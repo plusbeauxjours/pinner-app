@@ -263,8 +263,8 @@ class ChatContainer extends React.Component<IProps, IState> {
             user: user,
             image: url
           };
-          chat_send(this.state.chatId, messageServer).catch(error =>
-            console.log(error)
+          chat_send(this.state.chatId, messageServer).catch(e =>
+            console.log(e)
           );
         }
       } else {
@@ -318,9 +318,7 @@ class ChatContainer extends React.Component<IProps, IState> {
         image: url
       };
 
-      chat_send(this.state.chatId, messageServer).catch(error =>
-        console.log(error)
-      );
+      chat_send(this.state.chatId, messageServer).catch(e => console.log(e));
     }
   };
 
