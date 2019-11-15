@@ -104,7 +104,17 @@ interface IProps {
   type: string;
   onPress?: any;
 }
-
+const randomAvatar = {
+  1: require(`../Images/thumbnails/earth1.png`),
+  2: require(`../Images/thumbnails/earth2.png`),
+  3: require(`../Images/thumbnails/earth3.png`),
+  4: require(`../Images/thumbnails/earth4.png`),
+  5: require(`../Images/thumbnails/earth5.png`),
+  6: require(`../Images/thumbnails/earth6.png`),
+  7: require(`../Images/thumbnails/earth7.png`),
+  8: require(`../Images/thumbnails/earth8.png`),
+  9: require(`../Images/thumbnails/earth9.png`)
+};
 const UserRow: React.FC<IProps> = ({
   user,
   city,
@@ -131,7 +141,7 @@ const UserRow: React.FC<IProps> = ({
                   source={
                     user.appAvatarUrl
                       ? { uri: `${BACKEND_URL}/media/${user.appAvatarUrl}` }
-                      : require(`../Images/avatars/earth1.png`)
+                      : randomAvatar[Math.round(Math.random() * 9)]
                   }
                 />
               </ImageContainer>
@@ -159,7 +169,7 @@ const UserRow: React.FC<IProps> = ({
                   source={
                     user.appAvatarUrl
                       ? { uri: `${BACKEND_URL}/media/${user.appAvatarUrl}` }
-                      : require(`../Images/avatars/earth1.png`)
+                      : randomAvatar[Math.round(Math.random() * 9)]
                   }
                 />
               </ImageContainer>
@@ -537,7 +547,7 @@ const UserRow: React.FC<IProps> = ({
                       ? {
                           uri: `${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`
                         }
-                      : require(`../Images/avatars/earth1.png`)
+                      : randomAvatar[Math.round(Math.random() * 9)]
                   }
                 />
               </ImageContainer>
@@ -603,7 +613,7 @@ const UserRow: React.FC<IProps> = ({
                           ? {
                               uri: `${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`
                             }
-                          : require(`../Images/avatars/earth1.png`)
+                          : randomAvatar[Math.round(Math.random() * 9)]
                       }
                     />
                   </ImageContainer>
@@ -636,7 +646,7 @@ const UserRow: React.FC<IProps> = ({
                           ? {
                               uri: `${BACKEND_URL}/media/${match.host.profile.appAvatarUrl}`
                             }
-                          : require(`../Images/avatars/earth1.png`)
+                          : randomAvatar[Math.round(Math.random() * 9)]
                       }
                     />
                   </ImageContainer>

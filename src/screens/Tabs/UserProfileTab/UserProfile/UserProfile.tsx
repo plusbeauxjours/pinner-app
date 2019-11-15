@@ -270,6 +270,18 @@ export default ({ navigation }) => {
   const [tripEndDate, setTripEndDate] = useState<moment.Moment>(null);
   const [tripMarkedDates, setTripMarkedDates] = useState<any>({});
   const { showActionSheetWithOptions } = useActionSheet();
+  const imageNumber = Math.round(Math.random() * 9);
+  const randomAvatar = {
+    1: require(`../../../../Images/avatars/earth1.png`),
+    2: require(`../../../../Images/avatars/earth2.png`),
+    3: require(`../../../../Images/avatars/earth3.png`),
+    4: require(`../../../../Images/avatars/earth4.png`),
+    5: require(`../../../../Images/avatars/earth5.png`),
+    6: require(`../../../../Images/avatars/earth6.png`),
+    7: require(`../../../../Images/avatars/earth7.png`),
+    8: require(`../../../../Images/avatars/earth8.png`),
+    9: require(`../../../../Images/avatars/earth9.png`)
+  };
   const deleteTrip = id => {
     showActionSheetWithOptions(
       {
@@ -1009,7 +1021,7 @@ export default ({ navigation }) => {
                     ? {
                         uri: `${BACKEND_URL}/media/${user.profile.avatarUrl}`
                       }
-                    : require(`../../../../Images/avatars/earth1.png`)
+                    : randomAvatar[imageNumber]
                 }
               />
             </ImageTouchable>

@@ -83,7 +83,11 @@ const CoffeeBtnContainer = styled.View`
   position: absolute;
   bottom: 10;
 `;
-
+const Image = styled.Image`
+  height: 150px;
+  width: 150px;
+  border-radius: 75px;
+`;
 interface IProps {
   navigation: any;
   coffeeId: string;
@@ -120,6 +124,18 @@ const CoffeeDetails: React.FC<IProps> = ({
       username
     });
   };
+  const imageNumber = Math.round(Math.random() * 9);
+  const randomAvatar = {
+    1: require(`../../Images/avatars/earth1.png`),
+    2: require(`../../Images/avatars/earth2.png`),
+    3: require(`../../Images/avatars/earth3.png`),
+    4: require(`../../Images/avatars/earth4.png`),
+    5: require(`../../Images/avatars/earth5.png`),
+    6: require(`../../Images/avatars/earth6.png`),
+    7: require(`../../Images/avatars/earth7.png`),
+    8: require(`../../Images/avatars/earth8.png`),
+    9: require(`../../Images/avatars/earth9.png`)
+  };
   if (coffeeDetailLoading) {
     return (
       <LoaderContainer>
@@ -148,14 +164,9 @@ const CoffeeDetails: React.FC<IProps> = ({
                   uri={`${BACKEND_URL}/media/${coffee.host.profile.avatarUrl}`}
                 />
               ) : (
-                <ProgressiveImage
-                  style={{
-                    height: 150,
-                    width: 150,
-                    borderRadius: 150 / 2
-                  }}
-                  preview={require(`../../Images/thumbnails/earth1.png`)}
-                  uri={require(`../../Images/avatars/earth1.png`)}
+                <Image
+                  resizeMode={"contain"}
+                  source={randomAvatar[imageNumber]}
                 />
               )}
             </ImageTouchable>

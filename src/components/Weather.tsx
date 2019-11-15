@@ -119,15 +119,35 @@ export default ({ latitude, longitude }) => {
   useEffect(() => {
     getWeather(latitude, longitude);
   }, [latitude, longitude]);
+  const iconUrl = {
+    "01d": require(`../Images/weatherIcon/01d.svg`),
+    "01n": require(`../Images/weatherIcon/01n.svg`),
+    "02d": require(`../Images/weatherIcon/02d.svg`),
+    "02n": require(`../Images/weatherIcon/02n.svg`),
+    "03d": require(`../Images/weatherIcon/03d.svg`),
+    "03n": require(`../Images/weatherIcon/03n.svg`),
+    "04d": require(`../Images/weatherIcon/04d.svg`),
+    "04n": require(`../Images/weatherIcon/04n.svg`),
+    "09d": require(`../Images/weatherIcon/09d.svg`),
+    "09n": require(`../Images/weatherIcon/09n.svg`),
+    "10d": require(`../Images/weatherIcon/10d.svg`),
+    "10n": require(`../Images/weatherIcon/10n.svg`),
+    "11d": require(`../Images/weatherIcon/11d.svg`),
+    "11n": require(`../Images/weatherIcon/11n.svg`),
+    "13d": require(`../Images/weatherIcon/13d.svg`),
+    "13n": require(`../Images/weatherIcon/13n.svg`),
+    "50d": require(`../Images/weatherIcon/50d.svg`),
+    "50n": require(`../Images/weatherIcon/50n.svg`),
+    "wi-celsius": require(`../Images/weatherIcon/wi-celsius.svg`),
+    "wi-humidity": require(`../Images/weatherIcon/wi-humidity.svg`),
+    "wi-na": require(`../Images/weatherIcon/wi-na.svg`)
+  };
+
   return (
     <Container>
       <IconContainer>
         {icon ? (
-          <SvgUri
-            width="30px"
-            height="30px"
-            source={require(`../Images/weatherIcon/01d.svg`)}
-          />
+          <SvgUri width="30px" height="30px" source={iconUrl[icon]} />
         ) : (
           <Loader />
         )}
