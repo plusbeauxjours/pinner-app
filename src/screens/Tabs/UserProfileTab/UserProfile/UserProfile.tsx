@@ -244,7 +244,8 @@ const TripSmallText = styled(SmallText)`
   text-align: auto;
 `;
 export default ({ navigation }) => {
-  const me = useMe();
+  const { me, loading: meLoading } = useMe();
+  console.log("meLoading", meLoading);
   const location = useLocation();
   const isSelf = navigation.getParam("isSelf");
   const isDarkMode = useTheme();
@@ -348,14 +349,14 @@ export default ({ navigation }) => {
     });
   };
   const {
-    data: profileData,
+    data: { userProfile: { user = null } = {} } = {},
     loading: profileLoading,
     refetch: profileRefetch
   } = useQuery<UserProfile, UserProfileVariables>(GET_USER, {
     variables: { username }
   });
   const {
-    data: getSameTripsData,
+    data: { getSameTrips: { cities = null } = {} } = {},
     loading: getSameTripsLoading,
     refetch: getSameTripsRefetch
   } = useQuery<GetSameTrips, GetSameTripsVariables>(GET_SAME_TRIPS, {
@@ -365,14 +366,14 @@ export default ({ navigation }) => {
     skip: !navigation.getParam("username")
   });
   const {
-    data: tripData,
+    data: { getTrips: { trip = null } = {} } = {},
     loading: tripLoading,
     refetch: tripRefetch
   } = useQuery<GetTrips, GetTripsVariables>(GET_TRIPS, {
     variables: { username }
   });
   const {
-    data: coffeeData,
+    data: { getCoffees: { coffees = null } = {} } = {},
     loading: coffeeLoading,
     refetch: coffeeRefetch
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
@@ -584,21 +585,23 @@ export default ({ navigation }) => {
       }
     }
   };
-
   useEffect(
     () => setUsername(navigation.getParam("username") || me.user.username),
     [navigation]
   );
-  if (profileLoading || tripLoading || coffeeLoading || getSameTripsLoading) {
+  if (
+    profileLoading ||
+    tripLoading ||
+    coffeeLoading ||
+    getSameTripsLoading ||
+    meLoading
+  ) {
     return (
       <LoaderContainer>
         <Loader />
       </LoaderContainer>
     );
   } else {
-    const { userProfile: { user = null } = {} } = profileData;
-    const { getTrips: { trip = null } = {} } = tripData;
-    const { getCoffees: { coffees = null } = {} } = coffeeData;
     return (
       <>
         <Modal
@@ -1003,7 +1006,9 @@ export default ({ navigation }) => {
                 }}
                 source={
                   user.profile.avatarUrl
-                    ? { uri: `${BACKEND_URL}/media/${user.profile.avatarUrl}` }
+                    ? {
+                        uri: `${BACKEND_URL}/media/${user.profile.avatarUrl}`
+                      }
                     : require(`../../../../Images/avatars/earth1.png`)
                 }
               />
@@ -1042,20 +1047,19 @@ export default ({ navigation }) => {
               )}
             </UserNameContainer>
             <UserNameContainer>
-              {getSameTripsData &&
-                getSameTripsData.getSameTrips.cities.length !== 0 && (
-                  <EditText>
-                    You guys have been to
-                    {getSameTripsData.getSameTrips.cities.map(city => (
-                      <EditText key={city.id}>
-                        &nbsp;
-                        {city.cityName}
-                        {city.country.countryEmoji}
-                      </EditText>
-                    ))}
-                    .
-                  </EditText>
-                )}
+              {cities && cities.length !== 0 && (
+                <EditText>
+                  You guys have been to
+                  {cities.map(city => (
+                    <EditText key={city.id}>
+                      &nbsp;
+                      {city.cityName}
+                      {city.country.countryEmoji}
+                    </EditText>
+                  ))}
+                  .
+                </EditText>
+              )}
             </UserNameContainer>
           </Header>
           <Body>
@@ -1264,7 +1268,6 @@ export default ({ navigation }) => {
               )}
               {user.profile.isSelf &&
                 coffees &&
-                coffees.length !== 0 &&
                 coffees.map(coffee => (
                   <Touchable
                     key={coffee.id}

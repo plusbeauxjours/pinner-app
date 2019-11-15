@@ -31,15 +31,16 @@ const ScrollView = styled.ScrollView`
 export default ({ navigation }) => {
   const [username, setUsername] = useState(navigation.getParam("username"));
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const { data, loading, refetch } = useQuery<GetCoffees, GetCoffeesVariables>(
-    GET_COFFEES,
-    {
-      variables: {
-        userName: username,
-        location: "history"
-      }
+  const {
+    data: { getCoffees: { coffees = null } = {} } = {},
+    loading,
+    refetch
+  } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
+    variables: {
+      userName: username,
+      location: "history"
     }
-  );
+  });
   const onRefresh = async () => {
     try {
       setRefreshing(true);
@@ -50,21 +51,19 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
-
-  return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      {loading ? (
-        <Loader />
-      ) : (
+  if (loading) {
+    return <Loader />;
+  } else {
+    return (
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View>
           <Bold>COFFEES</Bold>
-          {data.getCoffees.coffees &&
-            data.getCoffees.coffees.length !== 0 &&
-            data.getCoffees.coffees.map((coffee, index) => (
+          {coffees &&
+            coffees.map((coffee, index) => (
               <Touchable
                 key={index}
                 onPress={() =>
@@ -85,7 +84,7 @@ export default ({ navigation }) => {
               </Touchable>
             ))}
         </View>
-      )}
-    </ScrollView>
-  );
+      </ScrollView>
+    );
+  }
 };

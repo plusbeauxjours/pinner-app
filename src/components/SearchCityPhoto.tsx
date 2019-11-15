@@ -25,12 +25,13 @@ interface IProps {
 }
 
 const SearchCityPhoto: React.FC<IProps> = ({ cityId }) => {
-  const { data, loading } = useQuery<GetCityPhoto, GetCityPhotoVariables>(
-    GET_CITY_PHOTO,
-    { variables: { cityId } }
-  );
+  const {
+    data: { getCityPhoto: { photo = null } = {} } = {},
+    loading
+  } = useQuery<GetCityPhoto, GetCityPhotoVariables>(GET_CITY_PHOTO, {
+    variables: { cityId }
+  });
   if (!loading) {
-    const { getCityPhoto: { photo = null } = {} } = data;
     return (
       <>
         {photo && photo.length !== 0 ? (

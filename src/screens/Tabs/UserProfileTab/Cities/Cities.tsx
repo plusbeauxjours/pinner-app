@@ -37,10 +37,11 @@ const LoaderContainer = styled.View`
 export default ({ navigation }) => {
   const [username, setUsername] = useState(navigation.getParam("username"));
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const { data, loading, refetch } = useQuery<
-    FrequentVisits,
-    FrequentVisitsVariables
-  >(FREQUENT_VISITS, {
+  const {
+    data: { frequentVisits: { cities = null } = {} } = {},
+    loading,
+    refetch
+  } = useQuery<FrequentVisits, FrequentVisitsVariables>(FREQUENT_VISITS, {
     variables: { userName: username },
     fetchPolicy: "network-only"
   });
@@ -61,43 +62,38 @@ export default ({ navigation }) => {
       </LoaderContainer>
     );
   } else {
-    const { frequentVisits: { cities = null } = {} } = data;
-    if (cities) {
-      return (
-        <ScrollView
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        >
-          <View>
-            <Bold>CITIES</Bold>
-            {cities.length !== 0 &&
-              cities.map((city: any, index: any) => (
-                <Touchable
-                  key={index}
-                  onPress={() =>
-                    navigation.push("CityProfileTabs", {
-                      cityId: city.cityId,
-                      countryCode: city.country.countryCode,
-                      continentCode: countries.find(
-                        i => i.code === city.country.countryCode
-                      ).continent
-                    })
-                  }
-                >
-                  <UserRow
-                    city={city}
-                    count={city.count}
-                    diff={city.diff}
-                    type={"userProfileCity"}
-                  />
-                </Touchable>
-              ))}
-          </View>
-        </ScrollView>
-      );
-    } else {
-      return null;
-    }
+    return (
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <View>
+          <Bold>CITIES</Bold>
+          {cities.length !== 0 &&
+            cities.map((city: any, index: any) => (
+              <Touchable
+                key={index}
+                onPress={() =>
+                  navigation.push("CityProfileTabs", {
+                    cityId: city.cityId,
+                    countryCode: city.country.countryCode,
+                    continentCode: countries.find(
+                      i => i.code === city.country.countryCode
+                    ).continent
+                  })
+                }
+              >
+                <UserRow
+                  city={city}
+                  count={city.count}
+                  diff={city.diff}
+                  type={"userProfileCity"}
+                />
+              </Touchable>
+            ))}
+        </View>
+      </ScrollView>
+    );
   }
 };

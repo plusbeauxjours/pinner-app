@@ -170,14 +170,21 @@ export default ({ navigation }) => {
     SlackReportLocationsVariables
   >(SLACK_REPORT_LOCATIONS);
   const {
-    data: profileData,
+    data: {
+      cityProfile: {
+        count = null,
+        city = null,
+        usersBefore = null,
+        usersNow = null
+      } = {}
+    } = {},
     loading: profileLoading,
     refetch: profileRefetch
   } = useQuery<CityProfile, CityProfileVariables>(CITY_PROFILE, {
     variables: { cityId, page: 1 }
   });
   const {
-    data: nearCitiesData,
+    data: { nearCities: { cities: nearCities = null } = {} } = {},
     loading: nearCitiesLoading,
     refetch: nearCitiesRefetch
   } = useQuery<NearCities, NearCitiesVariables>(NEAR_CITIES, {
@@ -185,7 +192,7 @@ export default ({ navigation }) => {
     fetchPolicy: "network-only"
   });
   const {
-    data: samenameCitiesData,
+    data: { getSamenameCities: { cities: samenameCities = null } = {} } = {},
     loading: samenameCitiesLoading,
     refetch: samenameCitiesRefetch
   } = useQuery<GetSamenameCities, GetSamenameCitiesVariables>(
@@ -193,7 +200,7 @@ export default ({ navigation }) => {
     { variables: { cityId } }
   );
   const {
-    data: coffeeData,
+    data: { getCoffees: { coffees = null } = {} } = {},
     loading: coffeeLoading,
     refetch: coffeeRefetch
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
@@ -238,19 +245,6 @@ export default ({ navigation }) => {
       </LoaderContainer>
     );
   } else {
-    const {
-      cityProfile: {
-        count = null,
-        city = null,
-        usersBefore = null,
-        usersNow = null
-      } = {}
-    } = profileData;
-    const {
-      getSamenameCities: { cities: samenameCities = null } = {}
-    } = samenameCitiesData;
-    const { nearCities: { cities: nearCities = null } = {} } = nearCitiesData;
-    const { getCoffees: { coffees = null } = {} } = ({} = coffeeData);
     return (
       <>
         <Modal

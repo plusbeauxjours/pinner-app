@@ -101,7 +101,7 @@ const SearchHeaderUserContainer = styled.View`
   flex-direction: column;
 `;
 export default ({ navigation }) => {
-  const me = useMe();
+  const { me, loading: meLoading } = useMe();
   const location = useLocation();
   const isDarkMode = useTheme();
   const [nationalityModalOpen, setNationalityModalOpen] = useState<boolean>(
@@ -110,8 +110,7 @@ export default ({ navigation }) => {
   const [residenceModalOpen, setResidenceModalOpen] = useState<boolean>(false);
   const [nationalityCode, setNationalityCode] = useState<any>("");
   const [residenceCode, setResidenceCode] = useState<any>("");
-  const [gender, setGender] = useState<string>("");
-  const [userName, setUserName] = useState<string>(me.user.username);
+  const userName = me.user.username;
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [coffeeId, setCoffeeId] = useState<string>("");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -243,7 +242,7 @@ export default ({ navigation }) => {
     );
   };
   const {
-    data: coffeeData,
+    data: { getCoffees: { coffees = null } = {} } = {},
     loading: coffeeLoading,
     refetch: coffeeRefetch
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
@@ -326,12 +325,14 @@ export default ({ navigation }) => {
     }
   );
   const {
-    data: recommendUserData,
+    data: { recommendUsers: { users: recommendUsers = null } = {} } = {},
     loading: recommendUserLoading,
     refetch: recommendUserRefetch
   } = useQuery<RecommendUsers, RecommendUsersVariables>(RECOMMEND_USERS);
   const {
-    data: recommendLocationData,
+    data: {
+      recommendLocations: { cities: recommendLocations = null } = {}
+    } = {},
     loading: recommendLocationLoading,
     refetch: recommendLocationRefetch
   } = useQuery<RecommendLocations, RecommendLocationsVariables>(
@@ -474,20 +475,18 @@ export default ({ navigation }) => {
     toast("Requested");
     setResidenceModalOpen(false);
   };
-  if (recommendUserLoading || recommendLocationLoading || coffeeLoading) {
+  if (
+    recommendUserLoading ||
+    recommendLocationLoading ||
+    coffeeLoading ||
+    meLoading
+  ) {
     return (
       <LoaderContainer>
         <Loader />
       </LoaderContainer>
     );
   } else {
-    const {
-      recommendUsers: { users: recommendUsers = null } = {}
-    } = recommendUserData;
-    const {
-      recommendLocations: { cities: recommendLocations = null } = {}
-    } = recommendLocationData;
-    const { getCoffees: { coffees = null } = {} } = ({} = coffeeData);
     return (
       <>
         <Modal

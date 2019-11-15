@@ -156,7 +156,9 @@ export default ({ navigation }) => {
     SlackReportLocationsVariables
   >(SLACK_REPORT_LOCATIONS);
   const {
-    data: profileData,
+    data: {
+      countryProfile: { count = null, country = null, cities = null } = {}
+    } = {},
     loading: profileLoading,
     refetch: profileRefetch
   } = useQuery<CountryProfile, CountryProfileVariables>(COUNTRY_PROFILE, {
@@ -164,7 +166,7 @@ export default ({ navigation }) => {
     fetchPolicy: "network-only"
   });
   const {
-    data: countriesData,
+    data: { getCountries: { countries = null } = {} } = {},
     loading: countriesLoading,
     refetch: countriesRefetch
   } = useQuery<GetCountries, GetCountriesVariables>(GET_COUNTRIES, {
@@ -197,10 +199,6 @@ export default ({ navigation }) => {
       </LoaderContainer>
     );
   } else {
-    const {
-      countryProfile: { count = null, country = null, cities = null } = {}
-    } = profileData;
-    const { getCountries: { countries = null } = {} } = countriesData;
     return (
       <ScrollView
         refreshControl={
@@ -278,28 +276,27 @@ export default ({ navigation }) => {
                   paginationStyle={{ bottom: -15 }}
                   loop={false}
                 >
-                  {countries.length !== 0 &&
-                    chunk(countries).map((countryItem, index) => {
-                      return (
-                        <UserColumn key={index}>
-                          {countryItem.map((country: any, index: any) => {
-                            return (
-                              <Touchable
-                                key={index}
-                                onPress={() =>
-                                  navigation.push("CountryProfileTabs", {
-                                    countryCode: country.countryCode,
-                                    continentCode: country.continentCode
-                                  })
-                                }
-                              >
-                                <UserRow country={country} type={"country"} />
-                              </Touchable>
-                            );
-                          })}
-                        </UserColumn>
-                      );
-                    })}
+                  {chunk(countries).map((countryItem, index) => {
+                    return (
+                      <UserColumn key={index}>
+                        {countryItem.map((country: any, index: any) => {
+                          return (
+                            <Touchable
+                              key={index}
+                              onPress={() =>
+                                navigation.push("CountryProfileTabs", {
+                                  countryCode: country.countryCode,
+                                  continentCode: country.continentCode
+                                })
+                              }
+                            >
+                              <UserRow country={country} type={"country"} />
+                            </Touchable>
+                          );
+                        })}
+                      </UserColumn>
+                    );
+                  })}
                 </Swiper>
               </UserContainer>
             </Item>

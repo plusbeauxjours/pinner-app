@@ -93,14 +93,18 @@ const Search = ({ navigation }) => {
     CreateCity,
     CreateCityVariables
   >(CREATE_CITY);
-  const { data, loading } = useQuery<SearchTerms, SearchTermsVariables>(
-    SEARCH,
-    {
-      variables: { search },
-      skip: search === "",
-      fetchPolicy: "network-only"
-    }
-  );
+  const {
+    data: {
+      searchUsers: { users = null } = {},
+      searchCountries: { countries = null } = {},
+      searchContinents: { continents = null } = {}
+    } = {},
+    loading
+  } = useQuery<SearchTerms, SearchTermsVariables>(SEARCH, {
+    variables: { search },
+    skip: search === "",
+    fetchPolicy: "network-only"
+  });
   const onPress = async cityId => {
     let result;
     try {
@@ -186,14 +190,14 @@ const Search = ({ navigation }) => {
               </LoaderContainer>
             ) : (
               <KeyboardAvoidingView enabled behavior="padding">
-                {data && data.searchUsers.users.length !== 0 && (
+                {users && users.length !== 0 && (
                   <>
-                    {data.searchUsers.users.length === 1 ? (
+                    {users.length === 1 ? (
                       <Text>USER</Text>
                     ) : (
                       <Text>USERS</Text>
                     )}
-                    {data.searchUsers.users.map(user => (
+                    {users.map(user => (
                       <Touchable
                         key={user.profile.id}
                         onPress={() => {
@@ -247,14 +251,14 @@ const Search = ({ navigation }) => {
                       ))}
                     </>
                   )}
-                {data && data.searchCountries.countries.length !== 0 && (
+                {countries && countries.length !== 0 && (
                   <>
-                    {data.searchCountries.countries.length === 1 ? (
+                    {countries.length === 1 ? (
                       <Text>COUNTRY</Text>
                     ) : (
                       <Text>COUNTRIES</Text>
                     )}
-                    {data.searchCountries.countries.map(country => (
+                    {countries.map(country => (
                       <Touchable
                         key={country.id}
                         onPress={() => {
@@ -270,14 +274,14 @@ const Search = ({ navigation }) => {
                     ))}
                   </>
                 )}
-                {data && data.searchContinents.continents.length !== 0 && (
+                {continents && continents.length !== 0 && (
                   <>
-                    {data.searchContinents.continents.length === 1 ? (
+                    {continents.length === 1 ? (
                       <Text>CONTINENT</Text>
                     ) : (
                       <Text>CONTINENTS</Text>
                     )}
-                    {data.searchContinents.continents.map(continent => (
+                    {continents.map(continent => (
                       <Touchable
                         key={continent.id}
                         onPress={() => {

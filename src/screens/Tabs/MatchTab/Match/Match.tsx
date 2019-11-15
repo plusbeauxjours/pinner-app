@@ -86,7 +86,7 @@ const TouchableBackRow = styled.View`
   background-color: ${props => props.theme.bgColor};
 `;
 export default ({ navigation }) => {
-  const me = useMe();
+  const { me, loading: meLoading } = useMe();
   const [refreshing, setRefreshing] = useState(false);
   const [MarkAsReadMatchFn] = useMutation<
     MarkAsReadMatch,
@@ -114,9 +114,8 @@ export default ({ navigation }) => {
       }
     }
   });
-
   const {
-    data: matchData,
+    data: { getMatches: { matches = null } = {} } = {},
     loading: matchLoading,
     refetch: matchRefetch
   } = useQuery<GetMatches, GetMatchesVariables>(GET_MATCHES, {
@@ -176,14 +175,13 @@ export default ({ navigation }) => {
       }
     );
   };
-  if (matchLoading) {
+  if (matchLoading || meLoading) {
     return (
       <LoaderContainer>
         <Loader />
       </LoaderContainer>
     );
-  } else if (matchData) {
-    const { getMatches: { matches = null } = {} } = matchData;
+  } else {
     return (
       <ScrollView
         refreshControl={

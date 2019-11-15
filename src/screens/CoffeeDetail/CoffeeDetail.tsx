@@ -107,10 +107,10 @@ const CoffeeDetails: React.FC<IProps> = ({
   const [currentCityId, setCurrentCityId] = useState<string>(
     location.currentCityId
   );
-  const { data: coffeeDetailData, loading: coffeeDetailLoading } = useQuery<
-    CoffeeDetail,
-    CoffeeDetailVariables
-  >(COFFEE_DETAIL, {
+  const {
+    data: { coffeeDetail: { coffee = null } = {} } = {},
+    loading: coffeeDetailLoading
+  } = useQuery<CoffeeDetail, CoffeeDetailVariables>(COFFEE_DETAIL, {
     variables: { coffeeId },
     fetchPolicy: "network-only"
   });
@@ -127,7 +127,6 @@ const CoffeeDetails: React.FC<IProps> = ({
       </LoaderContainer>
     );
   } else {
-    const { coffeeDetail: { coffee = null } = {} } = ({} = coffeeDetailData);
     return (
       <Container>
         {coffee && (

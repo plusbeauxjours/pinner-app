@@ -56,7 +56,7 @@ const LoaderContainer = styled.View`
   align-items: center;
 `;
 export default ({ navigation }) => {
-  const me = useMe();
+  const { me, loading: meLoading } = useMe();
   const isDarkMode = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
   const username = navigation.getParam("username") || me.user.username;
@@ -65,7 +65,7 @@ export default ({ navigation }) => {
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<any>({});
   const {
-    data: avatarData,
+    data: { getAvatars: { avatars = null } = {} } = {},
     loading: avatarLoading,
     refetch: avatarRefetch
   } = useQuery<GetAvatars, GetAvatarsVariables>(GET_AVATARS, {
@@ -135,14 +135,13 @@ export default ({ navigation }) => {
       }
     );
   };
-  if (avatarLoading || deleteAvatarLoading) {
+  if (avatarLoading || deleteAvatarLoading || meLoading) {
     return (
       <LoaderContainer>
         <Loader />
       </LoaderContainer>
     );
   } else {
-    const { getAvatars: { avatars = null } = {} } = avatarData;
     return (
       <ScrollView
         refreshControl={
@@ -231,7 +230,7 @@ export default ({ navigation }) => {
           </Modal> */}
             <Container>
               <FlatList
-                data={avatarData.getAvatars.avatars}
+                data={avatars}
                 renderItem={({ item }) => (
                   <Container
                     style={{

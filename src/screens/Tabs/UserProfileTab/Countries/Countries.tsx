@@ -36,10 +36,11 @@ const LoaderContainer = styled.View`
 export default ({ navigation }) => {
   const [username, setUsername] = useState(navigation.getParam("username"));
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const { data, loading, refetch } = useQuery<
-    TopCountries,
-    TopCountriesVariables
-  >(TOP_COUNTRIES, {
+  const {
+    data: { topCountries: { countries = null } = {} } = {},
+    loading,
+    refetch
+  } = useQuery<TopCountries, TopCountriesVariables>(TOP_COUNTRIES, {
     variables: { userName: username }
   });
   const onRefresh = async () => {
@@ -59,41 +60,35 @@ export default ({ navigation }) => {
       </LoaderContainer>
     );
   } else {
-    const { topCountries: { countries = null } = {} } = data;
-    if (countries) {
-      return (
-        <ScrollView
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        >
-          <View>
-            <Bold>COUNTRIES</Bold>
-            {countries &&
-              countries.length !== 0 &&
-              countries.map((country, index) => (
-                <Touchable
-                  key={index}
-                  onPress={() =>
-                    navigation.push("CountryProfileTabs", {
-                      countryCode: country.countryCode,
-                      continentCode: country.continent.continentCode
-                    })
-                  }
-                >
-                  <UserRow
-                    country={country}
-                    count={country.count}
-                    diff={country.diff}
-                    type={"userProfileCountry"}
-                  />
-                </Touchable>
-              ))}
-          </View>
-        </ScrollView>
-      );
-    } else {
-      return null;
-    }
+    return (
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <View>
+          <Bold>COUNTRIES</Bold>
+          {countries &&
+            countries.map((country, index) => (
+              <Touchable
+                key={index}
+                onPress={() =>
+                  navigation.push("CountryProfileTabs", {
+                    countryCode: country.countryCode,
+                    continentCode: country.continent.continentCode
+                  })
+                }
+              >
+                <UserRow
+                  country={country}
+                  count={country.count}
+                  diff={country.diff}
+                  type={"userProfileCountry"}
+                />
+              </Touchable>
+            ))}
+        </View>
+      </ScrollView>
+    );
   }
 };

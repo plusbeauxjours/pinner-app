@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RefreshControl, Image,  } from "react-native";
+import { RefreshControl, Image } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useLocation } from "../../../../context/LocationContext";
@@ -136,9 +136,16 @@ export default ({ navigation }) => {
     });
   };
   const {
-    data: profileData,
+    data: {
+      continentProfile: {
+        count = null,
+        continent = null,
+        continents = null,
+        countries = null
+      } = {}
+    } = {},
     loading: profileLoading,
-    refetch: profileRefetch,
+    refetch: profileRefetch
   } = useQuery<ContinentProfile, ContinentProfileVariables>(CONTINENT_PROFILE, {
     variables: { continentCode, page: 1 }
   });
@@ -172,14 +179,6 @@ export default ({ navigation }) => {
       </LoaderContainer>
     );
   } else {
-    const {
-      continentProfile: {
-        count = null,
-        continent = null,
-        continents = null,
-        countries = null
-      } = {}
-    } = profileData;
     return (
       <ScrollView
         refreshControl={

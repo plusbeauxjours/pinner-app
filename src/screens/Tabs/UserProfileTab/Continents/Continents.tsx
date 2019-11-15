@@ -38,10 +38,11 @@ export default ({ navigation }) => {
     navigation.getParam("username")
   );
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const { data, loading, refetch } = useQuery<
-    TopContinents,
-    TopContinentsVariables
-  >(TOP_CONTINENTS, {
+  const {
+    data: { topContinents: { continents = null } = {} } = {},
+    loading,
+    refetch
+  } = useQuery<TopContinents, TopContinentsVariables>(TOP_CONTINENTS, {
     variables: { userName: username }
   });
   const onRefresh = async () => {
@@ -61,38 +62,34 @@ export default ({ navigation }) => {
       </LoaderContainer>
     );
   } else {
-    const { topContinents: { continents = null } = {} } = data;
-    if (continents) {
-      return (
-        <ScrollView
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        >
-          <View>
-            <Bold>CONTINENTS</Bold>
-            {data.topContinents.continents &&
-              data.topContinents.continents.length !== 0 &&
-              data.topContinents.continents.map((continent, index) => (
-                <Touchable
-                  key={index}
-                  onPress={() =>
-                    navigation.push("ContinentProfile", {
-                      continentCode: continent.continentCode
-                    })
-                  }
-                >
-                  <UserRow
-                    continent={continent}
-                    count={continent.count}
-                    diff={continent.diff}
-                    type={"userProfileContinent"}
-                  />
-                </Touchable>
-              ))}
-          </View>
-        </ScrollView>
-      );
-    }
+    return (
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <View>
+          <Bold>CONTINENTS</Bold>
+          {continents &&
+            continents.map((continent, index) => (
+              <Touchable
+                key={index}
+                onPress={() =>
+                  navigation.push("ContinentProfile", {
+                    continentCode: continent.continentCode
+                  })
+                }
+              >
+                <UserRow
+                  continent={continent}
+                  count={continent.count}
+                  diff={continent.diff}
+                  type={"userProfileContinent"}
+                />
+              </Touchable>
+            ))}
+        </View>
+      </ScrollView>
+    );
   }
 };
