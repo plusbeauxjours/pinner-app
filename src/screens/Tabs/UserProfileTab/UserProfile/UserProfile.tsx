@@ -94,11 +94,12 @@ const Item = styled.View`
   height: ${constants.width / 5 - 10};
 `;
 const DisptanceItem = styled(Item)`
-  width: ${constants.width / 2 - 15};
+  width: ${constants.width / 4};
 `;
 const ItemContainer = styled.View`
   flex-wrap: wrap;
   flex-direction: row;
+  justify-content: flex-end;
   margin-bottom: 10px;
 `;
 
@@ -596,6 +597,17 @@ export default ({ navigation }) => {
       }
     }
   };
+  const formatDistance = (distance: number) => {
+    if (distance < 1e3) return distance;
+    if (distance >= 1e3 && distance < 1e5)
+      return +(distance / 1e3).toFixed(2) + "K";
+    if (distance >= 1e5 && distance < 1e9)
+      return +(distance / 1e6).toFixed(2) + "M";
+    if (distance >= 1e9 && distance < 1e12)
+      return +(distance / 1e9).toFixed(2) + "B";
+    if (distance >= 1e12) return +(distance / 1e12).toFixed(1) + "T";
+    else return null;
+  };
   useEffect(
     () => setUsername(navigation.getParam("username") || me.user.username),
     [navigation]
@@ -1011,9 +1023,7 @@ export default ({ navigation }) => {
               {user.profile.avatarUrl ? (
                 <ProgressiveImage
                   tint={isDarkMode ? "dark" : "light"}
-                  style={{ height: 150,
-                    width: 150,
-                    borderRadius: 75}}
+                  style={{ height: 150, width: 150, borderRadius: 75 }}
                   preview={{
                     uri: `${BACKEND_URL}/media/${user.profile.avatarUrl}`
                   }}
@@ -1085,7 +1095,7 @@ export default ({ navigation }) => {
             <ItemContainer>
               {user.profile.distance !== 0 && (
                 <DisptanceItem>
-                  <UserName>{user.profile.distance}</UserName>
+                  <UserName>{formatDistance(user.profile.distance)}</UserName>
                   <Bold>KM</Bold>
                 </DisptanceItem>
               )}
