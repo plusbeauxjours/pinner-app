@@ -6,14 +6,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import CustomView from "./CustomView";
 import { database, chat_send } from "../../../../../Fire";
-import {
-  Platform,
-  Image,
-  TouchableOpacity,
-  Alert,
-  View,
-  Text
-} from "react-native";
+import { Platform, Image, TouchableOpacity, Alert } from "react-native";
 import NavIcon from "../../../../components/NavIcon";
 import { BACKEND_URL } from "../../../../../constants";
 import ChatPresenter from "./ChatPresenter";

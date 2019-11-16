@@ -11,6 +11,7 @@ import { SwipeListView } from "react-native-swipe-list-view";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import Toast from "react-native-root-toast";
 import { UNMATCH } from "../../../../components/CoffeeBtn/CoffeeBtnQueries";
+import { chat_leave } from "../../../../../Fire";
 import {
   GetMatches,
   GetMatchesVariables,
@@ -165,12 +166,17 @@ export default ({ navigation }) => {
       },
       buttonIndex => {
         if (buttonIndex === 0) {
-          unMatchFn({
-            variables: {
-              matchId
-            }
-          });
-          toast("unmatched");
+          try {
+            unMatchFn({
+              variables: {
+                matchId
+              }
+            });
+            chat_leave(matchId, me.user.profile.id, me.user.username);
+            toast("unmatched");
+          } catch (e) {
+            console.log(e);
+          }
         }
       }
     );

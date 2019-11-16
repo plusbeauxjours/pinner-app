@@ -245,7 +245,6 @@ const TripSmallText = styled(SmallText)`
 `;
 export default ({ navigation }) => {
   const { me, loading: meLoading } = useMe();
-  console.log(me);
   const location = useLocation();
   const isSelf = navigation.getParam("isSelf");
   const isDarkMode = useTheme();
