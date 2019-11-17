@@ -11,6 +11,7 @@ import PhotoLink from "../components/PhotoLink";
 import UserProfileNavigation from "./UserProfileNavigation";
 import Search from "../components/Search";
 import RequestNavigation from "./RequestNavigation";
+import { useTheme } from "../context/ThemeContext";
 
 const stackFactory = initialRoute =>
   createStackNavigator({
@@ -22,12 +23,18 @@ const stackFactory = initialRoute =>
       }
     }
   });
+const Tab = createBottomTabNavigator();
 
-export default createBottomTabNavigator(
-  {
-    Match: {
-      screen: stackFactory(MatchNavigation),
-      navigationOptions: {
+export default () => {
+  return (
+    <Tab.Navigator
+    initialRouteName="Feed"
+    tabBarOptions={{
+      activeTintColor: '#e91e63',
+    }}
+  >
+    <Tab.Screen
+      options={{
         tabBarIcon: ({ focused }) => (
           <>
             <NavIcon
@@ -36,55 +43,73 @@ export default createBottomTabNavigator(
             />
           </>
         )
-      }
-    },
-    RequestCoffee: {
-      screen: stackFactory(RequestNavigation),
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <NavIcon
-          focused={focused}
-          name={Platform.OS === "ios" ? "ios-cafe" : "md-cafe"}
-        />
-        )
-      }
-    },
-    Location: {
-      screen: stackFactory(LocationNavigation),
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            name={Platform.OS === "ios" ? "ios-map" : "md-map"}
-          />
-        )
-      }
-    },
-    Profile: {
-      screen: stackFactory(UserProfileNavigation),
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            name={Platform.OS === "ios" ? "ios-person" : "md-person"}
-          />
-        )
-      }
-    }
-  },
-  {
-    animationEnabled: true,
-    swipeEnabled: true,
-    tabBarPosition: "bottom",
-    tabBarOptions: {
-      style: {
-        backgroundColor: "white"
-      },
-      activeTintColor: "#000",
-      inactiveTintColor: "#d1cece",
-      upperCaseLabel: false,
-      showLabel: false,
-      showIcon: true
-    }
-  }
-);
+      }}
+    ></Tab.Screen>
+  );
+};
+
+// export default createBottomTabNavigator(
+//   {
+//     Match: {
+//       screen: stackFactory(MatchNavigation),
+//       navigationOptions: {
+//         tabBarIcon: ({ focused }) => (
+//           <>
+//             <NavIcon
+//               focused={focused}
+//               name={Platform.OS === "ios" ? "ios-home" : "md-home"}
+//             />
+//           </>
+//         )
+//       }
+//     },
+//     RequestCoffee: {
+//       screen: stackFactory(RequestNavigation),
+//       navigationOptions: {
+//         tabBarIcon: ({ focused }) => (
+//           <NavIcon
+//             focused={focused}
+//             name={Platform.OS === "ios" ? "ios-cafe" : "md-cafe"}
+//           />
+//         )
+//       }
+//     },
+//     Location: {
+//       screen: stackFactory(LocationNavigation),
+//       navigationOptions: {
+//         tabBarIcon: ({ focused }) => (
+//           <NavIcon
+//             focused={focused}
+//             name={Platform.OS === "ios" ? "ios-map" : "md-map"}
+//           />
+//         )
+//       }
+//     },
+//     Profile: {
+//       screen: stackFactory(UserProfileNavigation),
+//       navigationOptions: {
+//         tabBarIcon: ({ focused }) => (
+//           <NavIcon
+//             focused={focused}
+//             name={Platform.OS === "ios" ? "ios-person" : "md-person"}
+//           />
+//         )
+//       }
+//     }
+//   },
+//   {
+//     animationEnabled: true,
+//     swipeEnabled: true,
+//     tabBarPosition: "bottom",
+//     tabBarOptions: {
+//       style: {
+//         backgroundColor: isDarkMode ? "black" : "white"
+//       },
+//       activeTintColor: "#000",
+//       inactiveTintColor: "#d1cece",
+//       upperCaseLabel: false,
+//       showLabel: false,
+//       showIcon: true
+//     }
+//   }
+// );

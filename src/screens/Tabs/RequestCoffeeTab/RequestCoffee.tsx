@@ -107,8 +107,6 @@ export default ({ navigation }) => {
   const [nationalityModalOpen, setNationalityModalOpen] = useState<boolean>(
     false
   );
-  console.log(me.user.username);
-  console.log(location);
   const [residenceModalOpen, setResidenceModalOpen] = useState<boolean>(false);
   const [nationalityCode, setNationalityCode] = useState<any>("");
   const [residenceCode, setResidenceCode] = useState<any>("");

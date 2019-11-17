@@ -16,6 +16,8 @@ import { ActivityIndicator } from "react-native";
 import Toast from "react-native-root-toast";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { DELETE_COFFEE, GET_COFFEES } from "../../sharedQueries";
+import { chat_leave } from "../../../Fire";
+import { useMe } from "../../context/MeContext";
 
 const Touchable = styled.TouchableOpacity`
   justify-content: center;
@@ -55,6 +57,7 @@ const CoffeeBtn: React.FC<IProps> = ({
   setModalOpen,
   userName
 }) => {
+  const { me } = useMe();
   const [matchFn, { loading: matchLoading }] = useMutation<
     Match,
     MatchVariables
@@ -152,6 +155,7 @@ const CoffeeBtn: React.FC<IProps> = ({
         if (buttonIndex === 0) {
           unMatchFn();
           setModalOpen(false);
+          chat_leave(matchId, me.user.profile.id, me.user.username);
           toast("unmatched");
         }
       }
