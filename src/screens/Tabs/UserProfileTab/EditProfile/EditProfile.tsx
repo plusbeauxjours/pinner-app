@@ -27,7 +27,6 @@ import {
   TOGGLE_SETTINGS
 } from "./EditProfileQueries";
 import Loader from "../../../../components/Loader";
-import NavIcon from "../../../../components/NavIcon";
 import { GET_USER } from "../UserProfile/UserProfileQueries";
 import { UserProfileVariables } from "../../../../types/api";
 import { RefreshControl, Platform, TextInput } from "react-native";
@@ -37,6 +36,7 @@ import { useLogOut } from "../../../../context/AuthContext";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
 import { useLocation } from "../../../../context/LocationContext";
+import { Ionicons } from "@expo/vector-icons";
 
 const View = styled.View`
   flex: 1;
@@ -679,7 +679,7 @@ export default ({ navigation }) => {
                   </Touchable>
                 ) : (
                   <ToggleIcon onPress={() => onOpenGenderActionSheet()}>
-                    <NavIcon
+                    <Ionicons
                       size={20}
                       name={
                         Platform.OS === "ios"
@@ -752,7 +752,7 @@ export default ({ navigation }) => {
               <Item>
                 <ToggleText>SUBMIT</ToggleText>
                 <Touchable onPress={onPress}>
-                  <NavIcon
+                  <Ionicons
                     size={20}
                     name={
                       Platform.OS === "ios"
@@ -780,7 +780,7 @@ export default ({ navigation }) => {
                   </Touchable>
                 ) : (
                   <ToggleIcon onPress={() => setEditPhoneModalOpen(true)}>
-                    <NavIcon
+                    <Ionicons
                       size={20}
                       name={
                         Platform.OS === "ios"
@@ -815,7 +815,7 @@ export default ({ navigation }) => {
               <Item>
                 <ToggleText>DARK MODE</ToggleText>
                 <ToggleIcon onPress={toggleTheme}>
-                  <NavIcon
+                  <Ionicons
                     size={20}
                     name={
                       Platform.OS === "ios"
@@ -839,7 +839,7 @@ export default ({ navigation }) => {
               <Item>
                 <ToggleText>HIDE TRIPS</ToggleText>
                 <ToggleIcon onPress={() => onPressToggleIcon("HIDE_TRIPS")}>
-                  <NavIcon
+                  <Ionicons
                     size={20}
                     name={
                       Platform.OS === "ios"
@@ -862,7 +862,7 @@ export default ({ navigation }) => {
               {/* <Item>
               <ToggleText>HIDE COFFEES</ToggleText>
               <ToggleIcon onPress={() => onPressToggleIcon("HIDE_COFFEES")}>
-                <NavIcon
+                <Ionicons
                   size={20}
                   name={
                     Platform.OS === "ios"
@@ -885,7 +885,7 @@ export default ({ navigation }) => {
               <Item>
                 <ToggleText>HIDE CITIES</ToggleText>
                 <ToggleIcon onPress={() => onPressToggleIcon("HIDE_CITIES")}>
-                  <NavIcon
+                  <Ionicons
                     size={20}
                     name={
                       Platform.OS === "ios"
@@ -908,7 +908,7 @@ export default ({ navigation }) => {
               <Item>
                 <ToggleText>HIDE COUNTRIES</ToggleText>
                 <ToggleIcon onPress={() => onPressToggleIcon("HIDE_COUNTRIES")}>
-                  <NavIcon
+                  <Ionicons
                     size={20}
                     name={
                       Platform.OS === "ios"
@@ -933,7 +933,7 @@ export default ({ navigation }) => {
                 <ToggleIcon
                   onPress={() => onPressToggleIcon("HIDE_CONTINENTS")}
                 >
-                  <NavIcon
+                  <Ionicons
                     size={20}
                     name={
                       Platform.OS === "ios"
@@ -958,7 +958,7 @@ export default ({ navigation }) => {
                 <ToggleIcon
                   onPress={() => onPressToggleIcon("AUTO_LOCATION_REPORT")}
                 >
-                  <NavIcon
+                  <Ionicons
                     size={20}
                     name={
                       Platform.OS === "ios"
@@ -981,7 +981,7 @@ export default ({ navigation }) => {
               <Item>
                 <ToggleText>LOG OUT</ToggleText>
                 <Touchable onPress={() => onLogout()}>
-                  <NavIcon
+                  <Ionicons
                     size={20}
                     name={
                       Platform.OS === "ios"
@@ -1000,7 +1000,7 @@ export default ({ navigation }) => {
               <Item>
                 <ToggleText>DELETE PROFILE</ToggleText>
                 <Touchable onPress={() => onDelete()}>
-                  <NavIcon
+                  <Ionicons
                     size={20}
                     name={
                       Platform.OS === "ios"

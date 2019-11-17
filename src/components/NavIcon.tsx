@@ -2,6 +2,7 @@ import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { theme } from "../styles/theme";
 import styled from "styled-components";
+import { useTheme } from "../context/ThemeContext";
 
 const Text = styled.Text``;
 
@@ -17,12 +18,17 @@ const NavIcon: React.FC<IProps> = ({
   color,
   size = 26,
   focused = true
-}) => (
-  <Ionicons
-    name={name}
-    color={focused ? color : theme.lightGreyColor}
-    size={size}
-  />
-);
+}) => {
+  const isDarkMode = useTheme();
+  if (isDarkMode) {
+    return (
+      <Ionicons name={name} color={focused ? "red" : "green"} size={size} />
+    );
+  } else {
+    return (
+      <Ionicons name={name} color={focused ? "orange" : "blue"} size={size} />
+    );
+  }
+};
 
 export default NavIcon;

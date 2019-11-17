@@ -1,13 +1,11 @@
 import React from "react";
-import uuid from "uuid";
-import { GiftedChat, Actions, Bubble } from "react-native-gifted-chat";
+import { GiftedChat, Actions } from "react-native-gifted-chat";
 import { withNavigation, NavigationScreenProp } from "react-navigation";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import CustomView from "./CustomView";
 import { database, chat_send } from "../../../../../Fire";
 import { Platform, Image, TouchableOpacity, Alert } from "react-native";
-import NavIcon from "../../../../components/NavIcon";
 import { BACKEND_URL } from "../../../../../constants";
 import ChatPresenter from "./ChatPresenter";
 import {
@@ -18,6 +16,7 @@ import {
   image_upload_chat
 } from "../../../../../Fire";
 import * as ImageManipulator from "expo-image-manipulator";
+import { Ionicons } from "@expo/vector-icons";
 
 const HIGH_WIDTH = 1280;
 const HIGH_HEIGHT = 960;
@@ -105,7 +104,7 @@ class ChatContainer extends React.Component<IProps, IState> {
   };
 
   public renderActionsIcon = () => (
-    <NavIcon name={Platform.OS === "ios" ? "ios-add" : "md-add"} />
+    <Ionicons name={Platform.OS === "ios" ? "ios-add" : "md-add"} size={26} />
   );
   public renderCustomView = props => {
     return <CustomView {...props} />;

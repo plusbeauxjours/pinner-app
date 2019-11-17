@@ -1,9 +1,16 @@
 import React from "react";
 import { useIsLoggedIn } from "../context/AuthContext";
 import AuthNavigation from "../navigation/AuthNavigation";
-import MainNavigation from "../navigation/MainNavigation";
+import { useTheme } from "../context/ThemeContext";
+import DarkMainNavigation from "../navigation/DarkMainNavigation";
+import LightMainNavigation from "../navigation/LightMainNavigation";
 
 export default () => {
   const isLoggedIn = useIsLoggedIn();
-  return isLoggedIn ? <MainNavigation /> : <AuthNavigation />;
+  const isDarkMode = useTheme();
+  if (isDarkMode) {
+    return isLoggedIn ? <DarkMainNavigation /> : <AuthNavigation />;
+  } else {
+    return isLoggedIn ? <LightMainNavigation /> : <AuthNavigation />;
+  }
 };
