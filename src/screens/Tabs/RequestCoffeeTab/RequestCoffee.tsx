@@ -579,7 +579,7 @@ export default ({ navigation }) => {
           }}
           isVisible={residenceModalOpen}
           backdropColor={
-            isDarkMode && isDarkMode === true ? "#161616" : "EFEFEF"
+            isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
           }
           onBackdropPress={() => setResidenceModalOpen(false)}
           onBackButtonPress={() =>
@@ -617,7 +617,7 @@ export default ({ navigation }) => {
           }}
           isVisible={modalOpen}
           backdropColor={
-            isDarkMode && isDarkMode === true ? "#161616" : "EFEFEF"
+            isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
           }
           onBackdropPress={() => setModalOpen(false)}
           onBackButtonPress={() => Platform.OS !== "ios" && setModalOpen(false)}
