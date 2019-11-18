@@ -13,8 +13,8 @@ const firebaseConfig = {
   appId: keys.REACT_APP_FIREBASE_APP_ID,
   measurementId: keys.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
-const fb_app = firebase.initializeApp(firebaseConfig);
-const fb_db = firebase.database().ref();
+export const fb_app = firebase.initializeApp(firebaseConfig);
+export const fb_db = firebase.database().ref();
 
 export const database = firebase.database();
 
@@ -129,4 +129,113 @@ export const chat_send = (chat_id: string, message: ChatMessage) => {
 
   updates[`/messages/${chat_id}/${new_key}/`] = message;
   return fb_db.ref.update(updates);
+};
+
+export const get_old_chat_messages = async (
+  chatId: string,
+  resolution: string,
+  userId: string
+) => {
+  return new Promise<any[]>((resolve, reject) => {
+    fb_db.ref
+      .child("messages")
+      .child(chatId)
+      .orderByKey()
+      .once("value", snapshot => {
+        let messages = [];
+        /* tslint:disable:no-string-literal */
+        if (!snapshot) {
+          resolve(undefined);
+        }
+        let promises = [];
+        snapshot.forEach(child => {
+          if (child && child.val() && child.val()["_id"]) {
+            let message: ChatMessage;
+            let systemMessage: SystemMessage;
+
+            if (child.val().system) {
+              systemMessage = child.val();
+              messages.push(systemMessage);
+            } else {
+              message = child.val();
+              if (!message.image) {
+                messages.push(message);
+              } else {
+                let promise = image_get_raw(message.image, resolution).then(
+                  image => {
+                    message.image = image;
+                    messages.push(message);
+                  }
+                );
+                promises.push(promise);
+              }
+            }
+          }
+          /* tslint:enable:no-string-literal */
+        });
+        Promise.all(promises).then(() => {
+          resolve(messages);
+        });
+      });
+  });
+};
+
+export const image_get_raw = async (image_path: string, resolution: string) => {
+  console.log("image get raw got a request");
+  if (image_path.startsWith("chat_pictures")) {
+    if (resolution === "full") {
+      return firebase
+        .storage()
+        .ref(image_path)
+        .getDownloadURL();
+    } else if (resolution === "high") {
+      if (path.basename(image_path) === "full") {
+        return firebase
+          .storage()
+          .ref(image_path)
+          .parent.child("HIGH")
+          .getDownloadURL();
+      } else {
+        return firebase
+          .storage()
+          .ref(image_path)
+          .getDownloadURL();
+      }
+    } else {
+      // resolution === "low"
+      if (path.basename(image_path) === "low") {
+        return firebase
+          .storage()
+          .ref(image_path)
+          .getDownloadURL();
+      } else {
+        return firebase
+          .storage()
+          .ref(image_path)
+          .parent.child("LOW")
+          .getDownloadURL();
+      }
+    }
+    // return firebase.storage().ref(image_path).parent.child("high").getDownloadURL();
+  }
+  return image_path;
+};
+
+export const update_message_info = async (msg: any, chat_id: string) => {
+  return new Promise<ChatMessage | SystemMessage>((resolve, reject) => {
+    if (msg.system) {
+      resolve(msg);
+    }
+
+    fb_db.ref
+      .child("messages")
+      .child(chat_id)
+      .orderByKey()
+      .once("value", snapshot => {
+        if (!snapshot.exists()) {
+          console.log("User doesn't belong to the chat");
+          resolve(undefined);
+        }
+      });
+  });
 };

@@ -8,6 +8,7 @@ import { Platform, KeyboardAvoidingView, Modal, Image } from "react-native";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import constants from "../../../../../constants";
+import { useTheme } from "../../../../context/ThemeContext";
 
 const View = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -38,9 +39,9 @@ interface IProps {
   onSend: (newMessages: any) => void;
   renderCustomView: any;
   onPressAvatar: () => void;
-  onLoadEarlier: () => void;
   renderMessageVideo: () => void;
-  renderMessageImage: any;
+  renderDarkMessageImage: any;
+  renderLightMessageImage: any;
   renderActions: any;
   closeModalOpen: () => void;
   leaveChat: () => void;
@@ -62,15 +63,16 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   onSend,
   renderCustomView,
   onPressAvatar,
-  onLoadEarlier,
   renderMessageVideo,
-  renderMessageImage,
+  renderDarkMessageImage,
+  renderLightMessageImage,
   renderActions,
   closeModalOpen,
   leaveChat,
   pickFromCamera,
   pickFromGallery
 }) => {
+  const isDarkMode = useTheme();
   if (loading) {
     return (
       <View>
@@ -152,9 +154,9 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                 renderCustomView={renderCustomView}
                 renderActions={renderActions}
                 onPressAvatar={onPressAvatar}
-                loadEarlier={true}
-                onLoadEarlier={onLoadEarlier}
-                renderMessageImage={renderMessageImage}
+                renderMessageImage={
+                  isDarkMode ? renderDarkMessageImage : renderLightMessageImage
+                }
                 // renderMessageVideo={renderMessageVideo}
               />
               <KeyboardSpacer />
@@ -170,9 +172,9 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
               renderCustomView={renderCustomView}
               renderActions={renderActions}
               onPressAvatar={onPressAvatar}
-              loadEarlier={true}
-              onLoadEarlier={onLoadEarlier}
-              renderMessageImage={renderMessageImage}
+              renderMessageImage={
+                isDarkMode ? renderDarkMessageImage : renderLightMessageImage
+              }
               // renderMessageVideo={renderMessageVideo}
             />
           )}

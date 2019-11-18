@@ -103,7 +103,6 @@ interface IProps {
   diff?: number;
   naturalTime?: string;
   type: string;
-  onPress?: any;
 }
 const randomAvatar = {
   1: require(`../Images/thumbnails/earth1.png`),
@@ -128,7 +127,6 @@ const UserRow: React.FC<IProps> = ({
   diff,
   naturalTime,
   type,
-  onPress
 }) => {
   const isDarkMode = useTheme();
   switch (type) {
@@ -623,7 +621,7 @@ const UserRow: React.FC<IProps> = ({
       return (
         <>
           {match.isHost ? (
-            <Container onPress={() => onPress(match.id)}>
+            <Container >
               <Header>
                 <Touchable>
                   <ImageContainer>
@@ -661,7 +659,7 @@ const UserRow: React.FC<IProps> = ({
               </Header>
             </Container>
           ) : (
-            <Container onPress={() => onPress(match.id)}>
+            <Container >
               <Header>
                 <Touchable>
                   <ImageContainer>

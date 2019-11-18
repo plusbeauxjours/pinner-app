@@ -126,15 +126,6 @@ export default ({ navigation }) => {
     UnMatch,
     UnMatchVariables
   >(UNMATCH);
-  const onPress = (matchId: string) => {
-    MarkAsReadMatchFn({
-      variables: { matchId }
-    });
-    navigation.push("Chat", {
-      chatId: matchId,
-      lastMessage: "hi"
-    });
-  };
   const onRefresh = async () => {
     try {
       setRefreshing(true);
@@ -211,6 +202,9 @@ export default ({ navigation }) => {
                           navigation.push("Chat", {
                             chatId: data.item.id,
                             userId: me.user.profile.id,
+                            receiverId: data.item.isHost
+                              ? data.item.guest.profile.id
+                              : data.item.host.profile.id,
                             userName: me.user.username,
                             userUrl: me.user.profile.appAvatarUrl,
                             targetName: data.item.isHost
@@ -219,11 +213,7 @@ export default ({ navigation }) => {
                           })
                         }
                       >
-                        <UserRow
-                          match={data.item}
-                          type={"match"}
-                          onPress={onPress}
-                        />
+                        <UserRow match={data.item} type={"match"} />
                       </Touchable>
                     </TouchableBackRow>
                   )}

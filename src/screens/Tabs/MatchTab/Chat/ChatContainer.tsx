@@ -1,11 +1,13 @@
 import React from "react";
 import { GiftedChat, Actions } from "react-native-gifted-chat";
 import { withNavigation, NavigationScreenProp } from "react-navigation";
+import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
+import firebase from "firebase";
 import CustomView from "./CustomView";
 import { database, chat_send } from "../../../../../Fire";
-import { Platform, Image, TouchableOpacity, Alert } from "react-native";
+import { Platform, TouchableOpacity, Alert, BackHandler } from "react-native";
 import { BACKEND_URL } from "../../../../../constants";
 import ChatPresenter from "./ChatPresenter";
 import {
@@ -13,7 +15,11 @@ import {
   get_new_key,
   UserChatMessage,
   ChatMessage,
-  image_upload_chat
+  image_upload_chat,
+  get_old_chat_messages,
+  image_get_raw,
+  update_message_info,
+  fb_db
 } from "../../../../../Fire";
 import * as ImageManipulator from "expo-image-manipulator";
 import { Ionicons } from "@expo/vector-icons";
@@ -36,6 +42,7 @@ interface IProps {
 interface IState {
   chatId: string;
   userId: string;
+  receiverId: string;
   userName: string;
   userUrl: string;
   userAvatarUrl: string;
@@ -47,6 +54,9 @@ interface IState {
   loading: boolean;
   messages: any;
   resolution: "full" | "high" | "low";
+  loadingEarlier: boolean;
+  overlayVisible: boolean;
+  dbref: any;
 }
 
 class ChatContainer extends React.Component<IProps, IState> {
@@ -55,6 +65,7 @@ class ChatContainer extends React.Component<IProps, IState> {
     this.state = {
       chatId: this.props.navigation.getParam("chatId"),
       userId: this.props.navigation.getParam("userId"),
+      receiverId: this.props.navigation.getParam("receiverId"),
       userName: this.props.navigation.getParam("userName"),
       userUrl: this.props.navigation.getParam("userUrl"),
       userAvatarUrl: `${BACKEND_URL}/media/${this.props.navigation.getParam(
@@ -67,29 +78,15 @@ class ChatContainer extends React.Component<IProps, IState> {
       modalOpen: false,
       loading: false,
       messages: [],
-      resolution: "low"
+      resolution: "high",
+      loadingEarlier: false,
+      overlayVisible: false,
+      dbref: firebase
+        .database()
+        .ref("messages")
+        .child(this.props.navigation.getParam("chatId"))
     };
   }
-
-  public componentDidMount() {
-    this.fetchMessages();
-  }
-
-  public fetchMessages = async () => {
-    const { chatId } = this.state;
-    this.setState({ loading: true });
-    await database
-      .ref("messages")
-      .child(chatId)
-      .on("value", snap => {
-        let messages = [];
-        snap.forEach(message => {
-          messages.push(message.val());
-        });
-        this.setState({ messages: messages.reverse() });
-      });
-    this.setState({ loading: false });
-  };
 
   public onSend = (messages = []) => {
     let msg = messages[0];
@@ -106,6 +103,7 @@ class ChatContainer extends React.Component<IProps, IState> {
   public renderActionsIcon = () => (
     <Ionicons name={Platform.OS === "ios" ? "ios-add" : "md-add"} size={26} />
   );
+
   public renderCustomView = props => {
     return <CustomView {...props} />;
   };
@@ -118,18 +116,18 @@ class ChatContainer extends React.Component<IProps, IState> {
     });
   };
 
-  public onLoadEarlier = () => {};
   public renderMessageVideo = () => {};
 
   public openImageViewer = images => {
     this.setState({ modalOpen: true, imageUrl: images[0].url });
   };
 
-  public renderMessageImage = props => {
+  public renderDarkMessageImage = props => {
     const images = [{ url: props.currentMessage.image }];
     return (
       <TouchableOpacity onPress={() => this.openImageViewer(images)}>
-        <Image
+        <ProgressiveImage
+          tint={"dark"}
           style={{
             width: 200,
             height: 200,
@@ -137,7 +135,32 @@ class ChatContainer extends React.Component<IProps, IState> {
             margin: 3,
             resizeMode: "cover"
           }}
-          source={{ uri: props.currentMessage.image }}
+          preview={{
+            uri: props.currentMessage.image
+          }}
+          uri={props.currentMessage.image}
+        />
+      </TouchableOpacity>
+    );
+  };
+
+  public renderLightMessageImage = props => {
+    const images = [{ url: props.currentMessage.image }];
+    return (
+      <TouchableOpacity onPress={() => this.openImageViewer(images)}>
+        <ProgressiveImage
+          tint={"light"}
+          style={{
+            width: 200,
+            height: 200,
+            borderRadius: 13,
+            margin: 3,
+            resizeMode: "cover"
+          }}
+          preview={{
+            uri: props.currentMessage.image
+          }}
+          uri={props.currentMessage.image}
         />
       </TouchableOpacity>
     );
@@ -318,6 +341,108 @@ class ChatContainer extends React.Component<IProps, IState> {
     this.setState({ modalOpen: false });
   };
 
+  public sortByDate = (a, b) => {
+    let date1 = new Date(a.createdAt).getTime();
+    let date2 = new Date(b.createdAt).getTime();
+    return date1 < date2 ? 1 : date2 < date1 ? -1 : 0;
+  };
+
+  // public componentDidMount() {
+  //   this.fetchMessages();
+  // }
+
+  public fetchMessages = async () => {
+    const { chatId } = this.state;
+    this.setState({ loading: true });
+    await database
+      .ref("messages")
+      .child(chatId)
+      .on("value", snap => {
+        let messages = [];
+        snap.forEach(message => {
+          messages.push(message.val());
+        });
+        this.setState({ messages: messages.reverse() });
+      });
+    this.setState({ loading: false });
+  };
+
+  public componentDidMount() {
+    BackHandler.addEventListener("hardwareBackPress", () => {
+      if (!this.state.overlayVisible) {
+        this.props.navigation.navigate("ActiveChatsScreen");
+        return true;
+      } else {
+        this.setState({ overlayVisible: false });
+        return true;
+      }
+    });
+
+    get_old_chat_messages(
+      this.state.chatId,
+      this.state.resolution,
+      this.state.userId
+    ).then(messages => {
+      if (messages) {
+        this.setState({
+          messages: messages.filter(r => r).sort(this.sortByDate),
+          loading: false
+        });
+      }
+    });
+    console.log("messages", this.state.messages);
+    let start_key = get_new_key("messages");
+    fb_db.ref
+      .child("messages")
+      .child(this.state.chatId)
+      .orderByKey()
+      .startAt(start_key)
+      .on("child_added", child => {
+        /* tslint:disable:no-string-literal */
+        if (child && child.val()) {
+          let message_container = [];
+          let new_message = child.val();
+          if (
+            new_message.system ||
+            new_message.user._id !== this.state.userId
+          ) {
+            update_message_info(new_message, this.state.chatId).then(
+              updated_message => {
+                console.log("updated_message", updated_message);
+                //@ts-ignore
+                if (updated_message.image) {
+                  image_get_raw(
+                    //@ts-ignore
+                    updated_message.image,
+                    this.state.resolution
+                  ).then(image => {
+                    console.log("image", image);
+                    //@ts-ignore
+                    updated_message.image = image;
+                    message_container.push(new_message);
+                    this.setState(previousState => ({
+                      messages: GiftedChat.append(
+                        previousState.messages,
+                        message_container
+                      ).sort(this.sortByDate)
+                    }));
+                  });
+                } else {
+                  message_container.push(new_message);
+                  this.setState(previousState => ({
+                    messages: GiftedChat.append(
+                      previousState.messages,
+                      message_container
+                    ).sort(this.sortByDate)
+                  }));
+                }
+              }
+            );
+          }
+        }
+      });
+  }
+
   public render() {
     const {
       loading,
@@ -346,9 +471,9 @@ class ChatContainer extends React.Component<IProps, IState> {
         onSend={this.onSend}
         renderCustomView={this.renderCustomView}
         onPressAvatar={this.onPressAvatar}
-        onLoadEarlier={this.onLoadEarlier}
         renderMessageVideo={this.renderMessageVideo}
-        renderMessageImage={this.renderMessageImage}
+        renderDarkMessageImage={this.renderDarkMessageImage}
+        renderLightMessageImage={this.renderLightMessageImage}
         renderActions={this.renderActions}
         closeModalOpen={this.closeModalOpen}
         leaveChat={this.leaveChat}
