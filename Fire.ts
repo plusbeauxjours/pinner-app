@@ -220,22 +220,3 @@ export const image_get_raw = async (image_path: string, resolution: string) => {
   }
   return image_path;
 };
-
-export const update_message_info = async (msg: any, chat_id: string) => {
-  return new Promise<ChatMessage | SystemMessage>((resolve, reject) => {
-    if (msg.system) {
-      resolve(msg);
-    }
-
-    fb_db.ref
-      .child("messages")
-      .child(chat_id)
-      .orderByKey()
-      .once("value", snapshot => {
-        if (!snapshot.exists()) {
-          console.log("User doesn't belong to the chat");
-          resolve(undefined);
-        }
-      });
-  });
-};

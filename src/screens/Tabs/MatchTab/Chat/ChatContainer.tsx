@@ -350,22 +350,21 @@ class ChatContainer extends React.Component<IProps, IState> {
   // public componentDidMount() {
   //   this.fetchMessages();
   // }
-
-  public fetchMessages = async () => {
-    const { chatId } = this.state;
-    this.setState({ loading: true });
-    await database
-      .ref("messages")
-      .child(chatId)
-      .on("value", snap => {
-        let messages = [];
-        snap.forEach(message => {
-          messages.push(message.val());
-        });
-        this.setState({ messages: messages.reverse() });
-      });
-    this.setState({ loading: false });
-  };
+  // public fetchMessages = async () => {
+  //   const { chatId } = this.state;
+  //   this.setState({ loading: true });
+  //   await database
+  //     .ref("messages")
+  //     .child(chatId)
+  //     .on("value", snap => {
+  //       let messages = [];
+  //       snap.forEach(message => {
+  //         messages.push(message.val());
+  //       });
+  //       this.setState({ messages: messages.reverse() });
+  //     });
+  //   this.setState({ loading: false });
+  // };
 
   public componentDidMount() {
     BackHandler.addEventListener("hardwareBackPress", () => {

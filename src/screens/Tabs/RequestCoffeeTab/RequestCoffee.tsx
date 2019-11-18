@@ -281,7 +281,8 @@ export default ({ navigation }) => {
     loading: coffeeLoading,
     refetch: coffeeRefetch
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
-    variables: { location: "city", cityId: location.currentCityId }
+    variables: { location: "city", cityId: location.currentCityId },
+    fetchPolicy: "network-only"
   });
   const [requestCoffeeFn] = useMutation<RequestCoffee, RequestCoffeeVariables>(
     REQUEST_COFFEE,
@@ -456,7 +457,7 @@ export default ({ navigation }) => {
   const toast = (message: string) => {
     Toast.show(message, {
       duration: Toast.durations.LONG,
-      position: Toast.positions.BOTTOM,
+      position: Toast.positions.TOP,
       shadow: true,
       animation: true,
       hideOnPress: true,

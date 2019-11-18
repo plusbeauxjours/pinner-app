@@ -158,7 +158,7 @@ export default ({ navigation }) => {
   const toast = (message: string) => {
     Toast.show(message, {
       duration: Toast.durations.LONG,
-      position: Toast.positions.BOTTOM,
+      position: Toast.positions.TOP,
       shadow: true,
       animation: true,
       hideOnPress: true,
