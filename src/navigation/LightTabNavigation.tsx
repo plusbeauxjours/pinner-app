@@ -18,7 +18,7 @@ const stackFactory = initialRoute =>
       screen: initialRoute,
       navigationOptions: {
         headerStyle: {
-          backgroundColor: "white"
+          backgroundColor: "#EFEFEF"
         },
         headerLeft: <Search />,
         headerRight: <PhotoLink />
@@ -79,7 +79,7 @@ export default createBottomTabNavigator(
     tabBarPosition: "bottom",
     tabBarOptions: {
       style: {
-        backgroundColor: "white"
+        backgroundColor: "#EFEFEF"
       },
       activeTintColor: "#000",
       inactiveTintColor: "#d1cece",

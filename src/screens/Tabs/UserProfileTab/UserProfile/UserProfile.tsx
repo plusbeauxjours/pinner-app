@@ -629,7 +629,7 @@ export default ({ navigation }) => {
         <Modal
           style={{ margin: 0, alignItems: "flex-start" }}
           isVisible={addTripModalOpen}
-          backdropColor={isDarkMode && isDarkMode === true ? "black" : "white"}
+          backdropColor={isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"}
           onBackdropPress={() => {
             setAddTripModalOpen(false), setSearch(""), setIsCalendarMode(false);
           }}
@@ -803,7 +803,7 @@ export default ({ navigation }) => {
         <Modal
           style={{ margin: 0, alignItems: "flex-start" }}
           isVisible={editTripModalOpen}
-          backdropColor={isDarkMode && isDarkMode === true ? "black" : "white"}
+          backdropColor={isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"}
           onBackdropPress={() => {
             setEditTripModalOpen(false),
               setSearch(""),
@@ -982,7 +982,7 @@ export default ({ navigation }) => {
         <Modal
           style={{ margin: 0, alignItems: "flex-start" }}
           isVisible={coffeeModalOpen}
-          backdropColor={isDarkMode && isDarkMode === true ? "black" : "white"}
+          backdropColor={isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"}
           onBackdropPress={() => setCoffeeModalOpen(false)}
           onBackButtonPress={() =>
             Platform.OS !== "ios" && setCoffeeModalOpen(false)

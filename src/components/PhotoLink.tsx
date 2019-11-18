@@ -12,12 +12,14 @@ import { UploadAvatar, UploadAvatarVariables } from "../types/api";
 import { UPLOAD_AVATAR } from "../sharedQueries";
 import { useMutation } from "react-apollo";
 import { ReactNativeFile } from "apollo-upload-client";
+import { useTheme } from "../context/ThemeContext";
 
 const Container = styled.TouchableOpacity`
   padding-right: 20px;
 `;
 
 export default withNavigation(({ navigation }) => {
+  const isDarkMode = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
   const [UploadAvatarFn] = useMutation<UploadAvatar, UploadAvatarVariables>(
     UPLOAD_AVATAR
@@ -125,6 +127,7 @@ export default withNavigation(({ navigation }) => {
       <Ionicons
         name={Platform.OS === "ios" ? "ios-camera" : "md-camera"}
         size={36}
+        color={isDarkMode ? "#EFEFEF" : "#161616"}
       />
     </Container>
   );

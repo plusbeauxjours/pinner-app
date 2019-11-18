@@ -250,7 +250,9 @@ export default ({ navigation }) => {
         <Modal
           style={{ margin: 0, alignItems: "flex-start" }}
           isVisible={modalOpen}
-          backdropColor={isDarkMode && isDarkMode === true ? "black" : "white"}
+          backdropColor={
+            isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
+          }
           onBackdropPress={() => setModalOpen(false)}
           onBackButtonPress={() =>
             Platform.OS !== "ios" && setModalOpen(isStaying)

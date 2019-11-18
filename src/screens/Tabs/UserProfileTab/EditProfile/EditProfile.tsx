@@ -508,7 +508,7 @@ export default ({ navigation }) => {
         <>
           <Modal
             isVisible={editPhoneModalOpen}
-            backdropColor={theme ? "black" : "white"}
+            backdropColor={theme ? "#161616" : "#EFEFEF"}
             onBackdropPress={() => closeEditPhoneModalOpen()}
             onBackButtonPress={() =>
               Platform.OS !== "ios" && closeEditPhoneModalOpen()
@@ -674,7 +674,18 @@ export default ({ navigation }) => {
                 {gender ? (
                   <Touchable onPress={() => onOpenGenderActionSheet()}>
                     <EmptyView>
-                      <Text>{gender}</Text>
+                      {(() => {
+                        switch (gender) {
+                          case "MALE":
+                            return <Text>Male</Text>;
+                          case "FEMALE":
+                            return <Text>Female</Text>;
+                          case "OTHER":
+                            return <Text>Other</Text>;
+                          default:
+                            return null;
+                        }
+                      })()}
                     </EmptyView>
                   </Touchable>
                 ) : (

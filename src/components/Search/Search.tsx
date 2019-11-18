@@ -23,7 +23,6 @@ import {
 import keys from "../../../keys";
 import useGoogleAutocomplete from "../../hooks/useGoogleAutocomplete";
 import SearchCityPhoto from "../SearchCityPhoto";
-import { theme } from "../../styles/theme";
 import { useTheme } from "../../context/ThemeContext";
 
 const Text = styled.Text`
@@ -142,7 +141,9 @@ const Search = ({ navigation }) => {
       <Modal
         style={{ margin: 0, alignItems: "flex-start" }}
         isVisible={modalOpen}
-        backdropColor={isDarkMode && isDarkMode === true ? "black" : "white"}
+        backdropColor={
+          isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
+        }
         onBackdropPress={() => setModalOpen(false)}
         onBackButtonPress={() => Platform.OS !== "ios" && setModalOpen(false)}
         onModalHide={() => setSearch("")}
@@ -306,6 +307,7 @@ const Search = ({ navigation }) => {
           <Ionicons
             name={Platform.OS === "ios" ? "ios-search" : "md-search"}
             size={36}
+            color={isDarkMode ? "#EFEFEF" : "#161616"}
           />
         </TouchableIcon>
       </View>

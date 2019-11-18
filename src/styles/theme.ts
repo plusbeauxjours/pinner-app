@@ -8,13 +8,13 @@ const theme = {
   color: "#999",
   boxBorder: "1px solid #999",
   darkBlueColor: "#003569",
-  lightGreyColor: "rgb(230, 230, 230)"
+  lightGreyColor: "#DADADA"
 };
 
 const lightTheme = {
   headerColor: "#EFEFEF",
   bgColor: "#e6e6e6",
-  color: "#191919",
+  color: "#161616",
   greyColor: "#999",
   blackColor: "#262626",
   blueColor: "#3897f0",
@@ -33,9 +33,9 @@ const lightTheme = {
 };
 
 const darkTheme = {
-  headerColor: "#141313",
+  headerColor: "#161616",
   bgColor: "#212121",
-  color: "white",
+  color: "#EFEFEF",
   greyColor: "#999",
   blackColor: "#262626",
   blueColor: "#3897f0",

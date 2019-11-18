@@ -203,7 +203,7 @@ export default ({ navigation }) => {
                   }
                 }}
                 backgroundColor={
-                  isDarkMode && isDarkMode === true ? "black" : "white"
+                  isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
                 }
                 enableSwipeDown={true}
                 loadingRender={() => {

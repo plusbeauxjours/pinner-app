@@ -540,7 +540,9 @@ export default ({ navigation }) => {
             alignItems: "flex-start"
           }}
           isVisible={nationalityModalOpen}
-          backdropColor={isDarkMode && isDarkMode === true ? "black" : "white"}
+          backdropColor={
+            isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
+          }
           onBackdropPress={() => setNationalityModalOpen(false)}
           onBackButtonPress={() =>
             Platform.OS !== "ios" && setNationalityModalOpen(false)
@@ -576,7 +578,9 @@ export default ({ navigation }) => {
             alignItems: "flex-start"
           }}
           isVisible={residenceModalOpen}
-          backdropColor={isDarkMode && isDarkMode === true ? "black" : "white"}
+          backdropColor={
+            isDarkMode && isDarkMode === true ? "#161616" : "EFEFEF"
+          }
           onBackdropPress={() => setResidenceModalOpen(false)}
           onBackButtonPress={() =>
             Platform.OS !== "ios" && setResidenceModalOpen(false)
@@ -612,7 +616,9 @@ export default ({ navigation }) => {
             alignItems: "flex-start"
           }}
           isVisible={modalOpen}
-          backdropColor={isDarkMode && isDarkMode === true ? "black" : "white"}
+          backdropColor={
+            isDarkMode && isDarkMode === true ? "#161616" : "EFEFEF"
+          }
           onBackdropPress={() => setModalOpen(false)}
           onBackButtonPress={() => Platform.OS !== "ios" && setModalOpen(false)}
           onModalHide={() => setModalOpen(false)}
