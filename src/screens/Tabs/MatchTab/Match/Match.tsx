@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
 import { useQuery, useMutation } from "react-apollo-hooks";
+import { Linking } from "expo";
 import { GET_MATCHES } from "./MatchQueries";
 import { useMe } from "../../../../context/MeContext";
 import { RefreshControl } from "react-native";
@@ -12,13 +13,16 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import Toast from "react-native-root-toast";
 import { UNMATCH } from "../../../../components/CoffeeBtn/CoffeeBtnQueries";
 import { chat_leave } from "../../../../../Fire";
+import { COMPLETE_EDIT_EMAIL_VERIFICATION } from "../../UserProfileTab/ConfirmEditEmailAddress/ConfirmEditEmailAddressQueries";
 import {
   GetMatches,
   GetMatchesVariables,
   MarkAsReadMatch,
   MarkAsReadMatchVariables,
   UnMatch,
-  UnMatchVariables
+  UnMatchVariables,
+  CompleteEditEmailVerification,
+  CompleteEditEmailVerificationVariables
 } from "../../../../types/api";
 
 const Container = styled.View`
@@ -89,6 +93,10 @@ const TouchableBackRow = styled.View`
 export default ({ navigation }) => {
   const { me, loading: meLoading } = useMe();
   const [refreshing, setRefreshing] = useState(false);
+  const [completeEditEmailVerificationFn] = useMutation<
+    CompleteEditEmailVerification,
+    CompleteEditEmailVerificationVariables
+  >(COMPLETE_EDIT_EMAIL_VERIFICATION);
   const [MarkAsReadMatchFn] = useMutation<
     MarkAsReadMatch,
     MarkAsReadMatchVariables
@@ -172,6 +180,38 @@ export default ({ navigation }) => {
       }
     );
   };
+  const handleOpenURL = async event => {
+    console.log(event);
+    const route = await event.url.replace(/.*?:\/\//g, "");
+    const key = await route.match(/\/([^\/]+)\/?$/)[0].split("/")[1];
+    const routeName = await route.split("/")[2];
+    // console.log("route", route, "key", key, "routeName", routeName);
+    const toast = (message: string) => {
+      Toast.show(message, {
+        duration: Toast.durations.LONG,
+        position: 40,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0
+      });
+    };
+    const {
+      data: { completeEditEmailVerification }
+    } = await completeEditEmailVerificationFn({
+      variables: {
+        key
+      }
+    });
+    if (completeEditEmailVerification.ok) {
+      toast("Your new email address is verified");
+    } else {
+      toast("Could not be verified your new email address, please try again");
+    }
+  };
+  useEffect(() => {
+    Linking.addEventListener("url", handleOpenURL);
+  }, []);
   if (matchLoading || meLoading) {
     return (
       <LoaderContainer>
