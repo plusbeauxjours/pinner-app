@@ -139,7 +139,7 @@ export default ({ navigation }) => {
   const toast = (message: string) => {
     Toast.show(message, {
       duration: Toast.durations.LONG,
-      position: Toast.positions.TOP,
+      position: 40,
       shadow: true,
       animation: true,
       hideOnPress: true,
@@ -198,20 +198,24 @@ export default ({ navigation }) => {
                   renderItem={data => (
                     <TouchableBackRow key={data.index}>
                       <Touchable
-                        onPress={() =>
-                          navigation.push("Chat", {
-                            chatId: data.item.id,
-                            userId: me.user.profile.id,
-                            receiverId: data.item.isHost
-                              ? data.item.guest.profile.id
-                              : data.item.host.profile.id,
-                            userName: me.user.username,
-                            userUrl: me.user.profile.appAvatarUrl,
-                            targetName: data.item.isHost
-                              ? data.item.guest.username
-                              : data.item.host.username
-                          })
-                        }
+                        onPress={() => {
+                          console.log(data.item.id),
+                            MarkAsReadMatchFn({
+                              variables: { matchId: data.item.id }
+                            }),
+                            navigation.push("Chat", {
+                              chatId: data.item.id,
+                              userId: me.user.profile.id,
+                              receiverId: data.item.isHost
+                                ? data.item.guest.profile.id
+                                : data.item.host.profile.id,
+                              userName: me.user.username,
+                              userUrl: me.user.profile.appAvatarUrl,
+                              targetName: data.item.isHost
+                                ? data.item.guest.username
+                                : data.item.host.username
+                            });
+                        }}
                       >
                         <UserRow match={data.item} type={"match"} />
                       </Touchable>

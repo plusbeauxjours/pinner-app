@@ -348,11 +348,11 @@ export default ({ navigation }) => {
   const toast = (message: string) => {
     Toast.show(message, {
       duration: Toast.durations.LONG,
-      position: Toast.positions.TOP,
+      position: 40,
       shadow: true,
       animation: true,
       hideOnPress: true,
-      delay: 0
+      delay: 0,
     });
   };
   const onSelectNationality = (country: any) => {
@@ -436,14 +436,19 @@ export default ({ navigation }) => {
     if (startEditPhoneVerification.ok) {
       setIsEditPhoneMode(false);
     } else if (newPhoneNumber === "") {
+      closeEditPhoneModalOpen();
       toast("Phone number can't be empty");
     } else if (newCountryPhoneNumber === "") {
+      closeEditPhoneModalOpen();
       toast("Please choose a country");
     } else if (!phoneRegex.test(phone)) {
+      closeEditPhoneModalOpen();
       toast("That phone number is invalid");
     } else if (!startEditPhoneVerification.ok) {
+      closeEditPhoneModalOpen();
       toast("Could not send you a Key");
     } else {
+      closeEditPhoneModalOpen();
       toast("Please write a valid phone number");
     }
   };
@@ -483,7 +488,7 @@ export default ({ navigation }) => {
       }
     } catch (e) {
       console.log(e);
-      toast("Could not be verified you");
+      toast("Could not edit your profile");
     } finally {
       setIsProfileSubmitted(false);
     }
@@ -493,7 +498,6 @@ export default ({ navigation }) => {
       const isValid = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(
         newEmailAddress
       );
-      console.log(isValid);
       if (isValid) {
         const {
           data: { startEditEmailVerification }
@@ -501,13 +505,15 @@ export default ({ navigation }) => {
         if (startEditEmailVerification.ok) {
           setIsEditEmailMode(false);
         } else {
-          toast("Requested email address is already verified");
           setEditEmailModalOpen(false);
+          toast("Requested email address is already verified");
         }
       } else {
+        setEditEmailModalOpen(false);
         toast("Please write a valid email");
       }
     } else {
+      setEditEmailModalOpen(false);
       toast("Please write a email address");
     }
   };
