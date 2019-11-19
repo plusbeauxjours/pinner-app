@@ -194,8 +194,13 @@ export default ({ navigation }) => {
       : location.currentCountryCode
   );
   const [editPhoneModalOpen, setEditPhoneModalOpen] = useState<boolean>(false);
-  const [isVerifyPhoneMode, setIsVerifyPhoneMode] = useState<boolean>(false);
+  const [isEditPhoneMode, setIsEditPhoneMode] = useState<boolean>(true);
   const [verificationKey, setVerificationKey] = useState<string>("");
+
+  const emailAddress = profile.emailAddress;
+  const [newEmailAddress, setNewEmailAddress] = useState<string>("");
+  const [editEmailModalOpen, setEditEmailModalOpen] = useState<boolean>(false);
+  const [isEditEmailMode, setIsEditEmailMode] = useState<boolean>(true);
   const [editProfileFn] = useMutation<EditProfile, EditProfileVariables>(
     EDIT_PROFILE
   );
@@ -259,7 +264,7 @@ export default ({ navigation }) => {
       }
     );
   };
-  const [deleteProfileFn, { loading: deladeLoading }] = useMutation<
+  const [deleteProfileFn, { loading: deleteeLoading }] = useMutation<
     DeleteProfile
   >(DELETE_PROFILE);
   const [
@@ -292,12 +297,15 @@ export default ({ navigation }) => {
       countryPhoneCode: newCountryPhoneCode
     }
   });
-  const [startEditEmailVerificationFn] = useMutation<
+  const [
+    startEditEmailVerificationFn,
+    { loading: startEditEmailVerificationLoading }
+  ] = useMutation<
     StartEditEmailVerification,
     StartEditEmailVerificationVariables
   >(START_EDIT_EMAIL_VERIFICATION, {
     variables: {
-      emailAddress: ""
+      emailAddress: newEmailAddress
     }
   });
 
@@ -361,8 +369,14 @@ export default ({ navigation }) => {
   };
   const closeEditPhoneModalOpen = () => {
     setEditPhoneModalOpen(false);
-    setIsVerifyPhoneMode(false);
+    setIsEditPhoneMode(true);
     setVerificationKey("");
+  };
+  const closeEditEmailModalOpen = () => {
+    if (!startEditEmailVerificationLoading) {
+      setEditEmailModalOpen(false);
+      setIsEditEmailMode(true);
+    }
   };
   const onPressToggleIcon = async (payload: string) => {
     if (payload === "HIDE_TRIPS") {
@@ -420,7 +434,7 @@ export default ({ navigation }) => {
       data: { startEditPhoneVerification }
     } = await startEditPhoneVerificationFn();
     if (startEditPhoneVerification.ok) {
-      setIsVerifyPhoneMode(true);
+      setIsEditPhoneMode(false);
     } else if (newPhoneNumber === "") {
       toast("Phone number can't be empty");
     } else if (newCountryPhoneNumber === "") {
@@ -438,7 +452,7 @@ export default ({ navigation }) => {
       data: { completeEditPhoneVerification }
     } = await completeEditPhoneVerificationFn();
     setEditPhoneModalOpen(false);
-    setIsVerifyPhoneMode(false);
+    setIsEditPhoneMode(true);
     setVerificationKey("");
     if (completeEditPhoneVerification.ok) {
       toast("Your phone number is verified");
@@ -463,15 +477,38 @@ export default ({ navigation }) => {
                 residenceCode
               }
             });
-            toast("Profile Edited");
+            toast("Profile edited");
           }
         }
       }
     } catch (e) {
       console.log(e);
-      toast("Could not be Verified you");
+      toast("Could not be verified you");
     } finally {
       setIsProfileSubmitted(false);
+    }
+  };
+  const handleEmailAddress = async () => {
+    if (newEmailAddress !== "") {
+      const isValid = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(
+        newEmailAddress
+      );
+      console.log(isValid);
+      if (isValid) {
+        const {
+          data: { startEditEmailVerification }
+        } = await startEditEmailVerificationFn();
+        if (startEditEmailVerification.ok) {
+          setIsEditEmailMode(false);
+        } else {
+          toast("Requested email address is already verified");
+          setEditEmailModalOpen(false);
+        }
+      } else {
+        toast("Please write a valid email");
+      }
+    } else {
+      toast("Please write a email address");
     }
   };
   const onOpenGenderActionSheet = () => {
@@ -518,7 +555,58 @@ export default ({ navigation }) => {
             backdropOpacity={0.9}
             style={{ justifyContent: "center", alignItems: "center" }}
           >
-            {isVerifyPhoneMode ? (
+            {isEditPhoneMode ? (
+              <>
+                <EditModalContainer>
+                  <CountryPicker
+                    theme={theme && DARK_THEME}
+                    countryCode={newCountryPhoneCode}
+                    withFilter={true}
+                    withFlag={true}
+                    withAlphaFilter={true}
+                    withEmoji={true}
+                    onSelect={onSelectrEditPhone}
+                  />
+                  {/* <Text>{newCountryPhoneCode}</Text> */}
+                  <Bigtext>{newCountryPhoneNumber}</Bigtext>
+                  <TextInput
+                    style={{
+                      width: 220,
+                      backgroundColor: "transparent",
+                      borderBottomWidth: 1,
+                      borderBottomColor: "#999",
+                      color: theme ? "white" : "black",
+                      marginLeft: 5,
+                      fontSize: 32,
+                      fontWeight: "300"
+                    }}
+                    keyboardType="phone-pad"
+                    returnKeyType="send"
+                    onChangeText={number => setNewPhoneNumber(number)}
+                  />
+                </EditModalContainer>
+                <ButtonContainer>
+                  <Text>
+                    When you tap "Send SMS", Pinner will send a text with
+                    verification code. Message and data rates may apply. The
+                    verified phone number can be used to login.
+                  </Text>
+                  <Void />
+                  <Touchable
+                    disabled={startEditPhoneVerificationLoading}
+                    onPress={handlePhoneNumber}
+                  >
+                    {startEditPhoneVerificationLoading ? (
+                      <SubmitLoaderContainer>
+                        <Loader />
+                      </SubmitLoaderContainer>
+                    ) : (
+                      <Bigtext>Send SMS</Bigtext>
+                    )}
+                  </Touchable>
+                </ButtonContainer>
+              </>
+            ) : (
               <>
                 <TextInput
                   style={{
@@ -551,56 +639,68 @@ export default ({ navigation }) => {
                   </Touchable>
                 </ButtonContainer>
               </>
-            ) : (
+            )}
+          </Modal>
+          <Modal
+            isVisible={editEmailModalOpen}
+            backdropColor={theme ? "#161616" : "#EFEFEF"}
+            onBackdropPress={() => closeEditEmailModalOpen()}
+            onBackButtonPress={() =>
+              Platform.OS !== "ios" && closeEditEmailModalOpen()
+            }
+            propagateSwipe={true}
+            scrollHorizontal={true}
+            backdropOpacity={0.9}
+            style={{ justifyContent: "center", alignItems: "center" }}
+          >
+            {isEditEmailMode ? (
               <>
                 <EditModalContainer>
-                  <CountryPicker
-                    theme={theme && DARK_THEME}
-                    countryCode={newCountryPhoneCode}
-                    withFilter={true}
-                    withFlag={true}
-                    withAlphaFilter={true}
-                    withEmoji={true}
-                    onSelect={onSelectrEditPhone}
-                  />
-                  {/* <Text>{newCountryPhoneCode}</Text> */}
-                  <Bigtext>{newCountryPhoneNumber}</Bigtext>
                   <TextInput
                     style={{
-                      width: 220,
+                      width: constants.width - 80,
                       backgroundColor: "transparent",
                       borderBottomWidth: 1,
                       borderBottomColor: "#999",
                       color: theme ? "white" : "black",
-                      marginLeft: 5,
                       fontSize: 32,
                       fontWeight: "300"
                     }}
-                    keyboardType="phone-pad"
+                    keyboardType="email-address"
                     returnKeyType="send"
-                    onChangeText={number => setNewPhoneNumber(number)}
+                    onChangeText={adress => setNewEmailAddress(adress)}
                   />
                 </EditModalContainer>
                 <ButtonContainer>
                   <Text>
-                    When you tap Continue, Pinner will send a text with
-                    verification code. Message and data rates may apply. The
-                    verified phone number can be used to login.
+                    When you tap "Send EMAIL", Pinner will email you a link that
+                    will instantly log you in.
                   </Text>
                   <Void />
                   <Touchable
-                    disabled={startEditPhoneVerificationLoading}
-                    onPress={handlePhoneNumber}
+                    disabled={startEditEmailVerificationLoading}
+                    onPress={handleEmailAddress}
                   >
-                    {startEditPhoneVerificationLoading ? (
+                    {startEditEmailVerificationLoading ? (
                       <SubmitLoaderContainer>
                         <Loader />
                       </SubmitLoaderContainer>
                     ) : (
-                      <Bigtext>Send SMS</Bigtext>
+                      <Bigtext>Send EMAIL</Bigtext>
                     )}
                   </Touchable>
                 </ButtonContainer>
+              </>
+            ) : (
+              <>
+                <Text>{newEmailAddress}, an email has been sent</Text>
+                <Text>
+                  Please check your email in a moment to verify email address.
+                </Text>
+                <Text>Didn't receive a link?</Text>
+                {/* <Underline onClick={toggleVerifyEmailAddressModal}>
+                  Use a different email
+                </Underline> */}
               </>
             )}
           </Modal>
@@ -813,7 +913,23 @@ export default ({ navigation }) => {
               )}
               <Item>
                 <ToggleText>EMAIL</ToggleText>
-                <ToggleText>{profile.emailAddress}</ToggleText>
+                {emailAddress ? (
+                  <Touchable onPress={() => setEditEmailModalOpen(true)}>
+                    <ToggleText>{emailAddress}</ToggleText>
+                  </Touchable>
+                ) : (
+                  <ToggleIcon onPress={() => setEditEmailModalOpen(true)}>
+                    <Ionicons
+                      size={20}
+                      name={
+                        Platform.OS === "ios"
+                          ? "ios-radio-button-off"
+                          : "md-radio-button-off"
+                      }
+                      color={"#999"}
+                    />
+                  </ToggleIcon>
+                )}
               </Item>
               {profile.isVerifiedPhoneNumber ? (
                 <ExplainText>

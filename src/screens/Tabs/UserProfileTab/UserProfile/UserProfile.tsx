@@ -64,9 +64,11 @@ import { GET_COFFEES } from "../../../../sharedQueries";
 
 const Header = styled.View`
   height: 250;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
   background-color: ${props => props.theme.headerColor};
+  padding: 10px;
 `;
 const Body = styled.View`
   justify-content: center;
@@ -93,9 +95,6 @@ const Item = styled.View`
   width: ${constants.width / 4 - 2.5};
   height: ${constants.width / 5 - 10};
 `;
-const DisptanceItem = styled(Item)`
-  width: ${constants.width / 4};
-`;
 const ItemContainer = styled.View`
   flex-wrap: wrap;
   flex-direction: row;
@@ -105,7 +104,6 @@ const ItemContainer = styled.View`
 const UserNameContainer = styled.View`
   align-self: flex-start;
   flex-direction: row;
-  margin-left: 10;
 `;
 const Touchable = styled.TouchableOpacity`
   justify-content: center;
@@ -115,11 +113,12 @@ const IconTouchable = styled(Touchable)`
   margin-left: 5;
 `;
 const ImageTouchable = styled(Touchable)`
-  margin-bottom: 15;
+  margin-bottom: 15px;
+  margin-top: 25px;
 `;
 const UserName = styled.Text`
   font-weight: 500;
-  font-size: 30;
+  font-size: 30px;
   color: ${props => props.theme.color};
 `;
 const ScrollView = styled.ScrollView`
@@ -629,7 +628,9 @@ export default ({ navigation }) => {
         <Modal
           style={{ margin: 0, alignItems: "flex-start" }}
           isVisible={addTripModalOpen}
-          backdropColor={isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"}
+          backdropColor={
+            isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
+          }
           onBackdropPress={() => {
             setAddTripModalOpen(false), setSearch(""), setIsCalendarMode(false);
           }}
@@ -803,7 +804,9 @@ export default ({ navigation }) => {
         <Modal
           style={{ margin: 0, alignItems: "flex-start" }}
           isVisible={editTripModalOpen}
-          backdropColor={isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"}
+          backdropColor={
+            isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
+          }
           onBackdropPress={() => {
             setEditTripModalOpen(false),
               setSearch(""),
@@ -982,7 +985,9 @@ export default ({ navigation }) => {
         <Modal
           style={{ margin: 0, alignItems: "flex-start" }}
           isVisible={coffeeModalOpen}
-          backdropColor={isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"}
+          backdropColor={
+            isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
+          }
           onBackdropPress={() => setCoffeeModalOpen(false)}
           onBackButtonPress={() =>
             Platform.OS !== "ios" && setCoffeeModalOpen(false)
@@ -1073,8 +1078,8 @@ export default ({ navigation }) => {
                 </IconTouchable>
               )}
             </UserNameContainer>
-            <UserNameContainer>
-              {cities && cities.length !== 0 && (
+            {cities && cities.length !== 0 && (
+              <UserNameContainer>
                 <EditText>
                   You guys have been to
                   {cities.map(city => (
@@ -1086,8 +1091,8 @@ export default ({ navigation }) => {
                   ))}
                   .
                 </EditText>
-              )}
-            </UserNameContainer>
+              </UserNameContainer>
+            )}
           </Header>
           <Body>
             <BioText>{user.profile.bio}</BioText>
