@@ -1,3 +1,5 @@
+import React from "react";
+import { Linking } from "expo";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import DarkTabNavigation from "./DarkTabNavigation";
 
@@ -6,4 +8,11 @@ const DarkMainNavigation = createStackNavigator(
   { headerMode: "none", mode: "modal" }
 );
 
-export default createAppContainer(DarkMainNavigation);
+const AppContainer = createAppContainer(DarkMainNavigation);
+
+export default () => {
+  const prefix = Linking.makeUrl("/");
+  console.log(prefix);
+
+  return <AppContainer uriPrefix={prefix} />;
+};

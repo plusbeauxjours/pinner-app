@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import Modal from "react-native-modal";
@@ -352,7 +352,7 @@ export default ({ navigation }) => {
       shadow: true,
       animation: true,
       hideOnPress: true,
-      delay: 0,
+      delay: 0
     });
   };
   const onSelectNationality = (country: any) => {

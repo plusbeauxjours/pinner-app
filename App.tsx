@@ -3,7 +3,7 @@ import { AsyncStorage } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as Font from "expo-font";
 import { Asset } from "expo-asset";
-
+import { Linking } from "expo";
 import { persistCache } from "apollo-cache-persist";
 import { ApolloClient } from "apollo-boost";
 import apolloClientOptions from "./apollo";
@@ -20,8 +20,9 @@ import NavController from "./src/components/NavController";
 import { createUploadLink } from "apollo-upload-client";
 import { setContext } from "apollo-link-context";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
+import EditProfile from "./src/screens/Tabs/UserProfileTab/EditProfile/index";
 
-export default function App() {
+const App = ({ navigation }) => {
   const [client, setClient] = useState<any>(null);
   const [loaded, setLoaded] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(null);
@@ -70,8 +71,25 @@ export default function App() {
       console.log(e);
     }
   };
+  const handleOpenURL = event => {
+    console.log(event.url);
+    navigate(event.url);
+  };
+
+  const navigate = url => {
+    const route = url.replace(/.*?:\/\//g, "");
+    const key = route.match(/\/([^\/]+)\/?$/)[0].split("/")[1];
+    const routeName = route.split("/")[2];
+    console.log("route", route, "key", key, "routeName", routeName);
+    if (routeName === "confirm") {
+      navigation.navigate("EditProfile", {
+        username: "devilishPlusbeauxjours",
+        key
+      });
+    }
+  };
   useEffect(() => {
-    preLoad();
+    Linking.addEventListener("url", handleOpenURL), preLoad();
   }, []);
   return loaded && client && isLoggedIn !== null && isDarkMode !== null ? (
     <ApolloHooksProvider client={client}>
@@ -92,4 +110,5 @@ export default function App() {
   ) : (
     <AppLoading />
   );
-}
+};
+export default App;

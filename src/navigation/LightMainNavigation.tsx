@@ -1,3 +1,5 @@
+import React from "react";
+import { Linking } from "expo";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import LightTabNavigation from "./LightTabNavigation";
 
@@ -6,4 +8,11 @@ const LightMainNavigation = createStackNavigator(
   { headerMode: "none", mode: "modal" }
 );
 
-export default createAppContainer(LightMainNavigation);
+const AppContainer = createAppContainer(LightMainNavigation);
+
+export default () => {
+  const prefix = Linking.makeUrl("/");
+  console.log(prefix);
+
+  return <AppContainer uriPrefix={prefix} />;
+};
