@@ -240,7 +240,7 @@ export default ({ navigation }) => {
                           MarkAsReadMatchFn({
                             variables: { matchId: data.item.id }
                           }),
-                            navigation.push("Chat", {
+                            navigation.navigate("Chat", {
                               chatId: data.item.id,
                               userId: me.user.profile.id,
                               receiverId: data.item.isHost

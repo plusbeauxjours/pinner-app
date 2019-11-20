@@ -130,22 +130,6 @@ export const chat_send = (chat_id: string, message: ChatMessage) => {
   return fb_db.ref.update(updates);
 };
 
-// fetchMessages = async () => {
-//   const { chatId } = this.state;
-//   this.setState({ loading: true });
-//   await database
-//     .ref("messages")
-//     .child(chatId)
-//     .on("value", snap => {
-//       let messages = [];
-//       snap.forEach(message => {
-//         messages.push(message.val());
-//       });
-//       this.setState({ messages: messages.reverse() });
-//     });
-//   this.setState({ loading: false });
-// };
-
 export const update_message_info = async (msg: any, chat_id: string) => {
   return new Promise<ChatMessage | SystemMessage>((resolve, reject) => {
     if (msg.system) {
@@ -199,7 +183,6 @@ export const get_old_chat_messages = async (
               } else {
                 let promise = image_get_raw(message.image, resolution).then(
                   image => {
-                    console.log(image);
                     message.image = image;
                     messages.push(message);
                   }

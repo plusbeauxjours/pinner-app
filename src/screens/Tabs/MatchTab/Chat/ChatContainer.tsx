@@ -176,7 +176,7 @@ class ChatContainer extends React.Component<IProps, IState> {
 
   public leaveChat = () => {
     chat_leave(this.state.chatId, this.state.userId, this.state.userName);
-    this.props.navigation.navigate("ActiveChatsScreen");
+    this.props.navigation.navigate("Match");
   };
 
   public renderActions = props => {
@@ -374,13 +374,8 @@ class ChatContainer extends React.Component<IProps, IState> {
   //   this.setState({ loading: false });
   // };
 
-  public componentDidUnMount() {
-    this.state.dbref.off("child_added");
-    BackHandler.removeEventListener("hardwareBackPress", () => {
-      return;
-    });
-  }
   public componentDidMount() {
+    console.log("hihi");
     BackHandler.addEventListener("hardwareBackPress", () => {
       if (!this.state.overlayVisible) {
         this.props.navigation.navigate("Match");
@@ -434,7 +429,6 @@ class ChatContainer extends React.Component<IProps, IState> {
                       updated_message.image,
                       this.state.resolution
                     ).then(image => {
-                      console.log("image", image);
                       //@ts-ignore
                       updated_message.image = image;
                       message_container.push(new_message);
@@ -465,7 +459,19 @@ class ChatContainer extends React.Component<IProps, IState> {
         }
       });
   }
-
+  public didBlurSubscription = this.props.navigation.addListener(
+    "didBlur",
+    payload => {
+      BackHandler.removeEventListener("hardwareBackPress", () => {
+        return;
+      });
+      this.state.dbref.off("child_added");
+    }
+  );
+  public componentDidUnMount() {
+    console.log("bybybybybye");
+    this.didBlurSubscription.remove();
+  }
   public render() {
     const {
       loading,
