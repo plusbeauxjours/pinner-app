@@ -10,7 +10,7 @@ import Coffees from "../screens/Tabs/UserProfileTab/Coffees";
 import CityProfile from "../screens/Tabs/LocationTab/CityProfile";
 import CountryProfile from "../screens/Tabs/LocationTab/CountryProfile";
 import ContinentProfile from "../screens/Tabs/LocationTab/ContinentProfile";
-import AvatarDetail from "../screens/Tabs/UserProfileTab/AvatarDetail/index";
+import AvatarDetail from "../screens/Tabs/UserProfileTab/AvatarDetail";
 
 export const UserProfileTabs = createMaterialTopTabNavigator(
   {

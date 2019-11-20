@@ -64,7 +64,6 @@ export default ({ navigation }) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<any>({});
-  console.log("kokoko", navigation.getParam("key"));
   const {
     data: { getAvatars: { avatars = null } = {} } = {},
     loading: avatarLoading,
@@ -210,6 +209,7 @@ export default ({ navigation }) => {
                 loadingRender={() => {
                   return <Loader />;
                 }}
+                //@ts-ignore
                 renderIndicator={() => {}}
               />
             </Modal>

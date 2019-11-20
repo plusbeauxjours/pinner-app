@@ -57,6 +57,7 @@ interface IState {
   loadingEarlier: boolean;
   overlayVisible: boolean;
   dbref: any;
+  imageLoading: boolean;
 }
 
 class ChatContainer extends React.Component<IProps, IState> {
@@ -84,7 +85,8 @@ class ChatContainer extends React.Component<IProps, IState> {
       dbref: firebase
         .database()
         .ref("messages")
-        .child(this.props.navigation.getParam("chatId"))
+        .child(this.props.navigation.getParam("chatId")),
+      imageLoading: false
     };
   }
 
@@ -125,7 +127,10 @@ class ChatContainer extends React.Component<IProps, IState> {
   public renderDarkMessageImage = props => {
     const images = [{ url: props.currentMessage.image }];
     return (
-      <TouchableOpacity onPress={() => this.openImageViewer(images)}>
+      <TouchableOpacity
+        disabled={this.state.imageLoading}
+        onPress={() => this.openImageViewer(images)}
+      >
         <ProgressiveImage
           tint={"dark"}
           style={{
@@ -147,7 +152,10 @@ class ChatContainer extends React.Component<IProps, IState> {
   public renderLightMessageImage = props => {
     const images = [{ url: props.currentMessage.image }];
     return (
-      <TouchableOpacity onPress={() => this.openImageViewer(images)}>
+      <TouchableOpacity
+        disabled={this.state.imageLoading}
+        onPress={() => this.openImageViewer(images)}
+      >
         <ProgressiveImage
           tint={"light"}
           style={{
@@ -366,30 +374,39 @@ class ChatContainer extends React.Component<IProps, IState> {
   //   this.setState({ loading: false });
   // };
 
+  public componentDidUnMount() {
+    this.state.dbref.off("child_added");
+    BackHandler.removeEventListener("hardwareBackPress", () => {
+      return;
+    });
+  }
   public componentDidMount() {
     BackHandler.addEventListener("hardwareBackPress", () => {
       if (!this.state.overlayVisible) {
-        this.props.navigation.navigate("ActiveChatsScreen");
+        this.props.navigation.navigate("Match");
         return true;
       } else {
         this.setState({ overlayVisible: false });
         return true;
       }
     });
-
     get_old_chat_messages(
       this.state.chatId,
       this.state.resolution,
       this.state.userId
     ).then(messages => {
       if (messages) {
-        this.setState({
-          messages: messages.filter(r => r).sort(this.sortByDate),
-          loading: false
+        let promises = messages.map(m =>
+          update_message_info(m, this.state.chatId)
+        );
+        Promise.all(promises).then(results => {
+          this.setState({
+            messages: results.filter(r => r).sort(this.sortByDate),
+            loading: false
+          });
         });
       }
     });
-    console.log("messages", this.state.messages);
     let start_key = get_new_key("messages");
     fb_db.ref
       .child("messages")
@@ -410,22 +427,29 @@ class ChatContainer extends React.Component<IProps, IState> {
                 console.log("updated_message", updated_message);
                 //@ts-ignore
                 if (updated_message.image) {
-                  image_get_raw(
-                    //@ts-ignore
-                    updated_message.image,
-                    this.state.resolution
-                  ).then(image => {
-                    console.log("image", image);
-                    //@ts-ignore
-                    updated_message.image = image;
-                    message_container.push(new_message);
-                    this.setState(previousState => ({
-                      messages: GiftedChat.append(
-                        previousState.messages,
-                        message_container
-                      ).sort(this.sortByDate)
-                    }));
-                  });
+                  try {
+                    this.setState({ imageLoading: true });
+                    image_get_raw(
+                      //@ts-ignore
+                      updated_message.image,
+                      this.state.resolution
+                    ).then(image => {
+                      console.log("image", image);
+                      //@ts-ignore
+                      updated_message.image = image;
+                      message_container.push(new_message);
+                      this.setState(previousState => ({
+                        messages: GiftedChat.append(
+                          previousState.messages,
+                          message_container
+                        ).sort(this.sortByDate)
+                      }));
+                    });
+                  } catch (e) {
+                    console.log(e);
+                  } finally {
+                    this.setState({ imageLoading: false });
+                  }
                 } else {
                   message_container.push(new_message);
                   this.setState(previousState => ({

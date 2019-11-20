@@ -94,7 +94,6 @@ export const chat_leave = (
     system: true
   };
   let updates = {};
-  updates[`/members/${chat_id}/${user_id}/member`] = false;
   updates[`/chats/${chat_id}/lastMessage/`] = message.text;
   updates[`/messages/${chat_id}/${new_key}/`] = message;
   return fb_db.ref.update(updates);
@@ -131,6 +130,43 @@ export const chat_send = (chat_id: string, message: ChatMessage) => {
   return fb_db.ref.update(updates);
 };
 
+// fetchMessages = async () => {
+//   const { chatId } = this.state;
+//   this.setState({ loading: true });
+//   await database
+//     .ref("messages")
+//     .child(chatId)
+//     .on("value", snap => {
+//       let messages = [];
+//       snap.forEach(message => {
+//         messages.push(message.val());
+//       });
+//       this.setState({ messages: messages.reverse() });
+//     });
+//   this.setState({ loading: false });
+// };
+
+export const update_message_info = async (msg: any, chat_id: string) => {
+  return new Promise<ChatMessage | SystemMessage>((resolve, reject) => {
+    if (msg.system) {
+      resolve(msg);
+    }
+    let updated_message: ChatMessage;
+    updated_message = msg;
+    resolve(updated_message);
+    // fb_db.ref
+    //   .child("members")
+    //   .child(chat_id)
+    //   .orderByKey()
+    //   .equalTo(msg.user._id)
+    //   .once("value", snapshot => {
+    //     if (!snapshot.exists()) {
+    //       console.log("User doesn't belong to the chat");
+    //       resolve(undefined);
+    //     }
+    //   });
+  });
+};
 export const get_old_chat_messages = async (
   chatId: string,
   resolution: string,
@@ -163,6 +199,7 @@ export const get_old_chat_messages = async (
               } else {
                 let promise = image_get_raw(message.image, resolution).then(
                   image => {
+                    console.log(image);
                     message.image = image;
                     messages.push(message);
                   }
@@ -181,7 +218,6 @@ export const get_old_chat_messages = async (
 };
 
 export const image_get_raw = async (image_path: string, resolution: string) => {
-  console.log("image get raw got a request");
   if (image_path.startsWith("chat_pictures")) {
     if (resolution === "full") {
       return firebase

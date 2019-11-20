@@ -13,7 +13,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import Toast from "react-native-root-toast";
 import { UNMATCH } from "../../../../components/CoffeeBtn/CoffeeBtnQueries";
 import { chat_leave } from "../../../../../Fire";
-import { COMPLETE_EDIT_EMAIL_VERIFICATION } from "../../UserProfileTab/ConfirmEditEmailAddress/ConfirmEditEmailAddressQueries";
+import { COMPLETE_EDIT_EMAIL_VERIFICATION } from "../../UserProfileTab/EditProfile/EditProfileQueries";
 import {
   GetMatches,
   GetMatchesVariables,
@@ -166,12 +166,12 @@ export default ({ navigation }) => {
       buttonIndex => {
         if (buttonIndex === 0) {
           try {
+            chat_leave(matchId, me.user.profile.id, me.user.username);
             unMatchFn({
               variables: {
                 matchId
               }
             });
-            chat_leave(matchId, me.user.profile.id, me.user.username);
             toast("unmatched");
           } catch (e) {
             console.log(e);
@@ -181,11 +181,9 @@ export default ({ navigation }) => {
     );
   };
   const handleOpenURL = async event => {
-    console.log(event);
     const route = await event.url.replace(/.*?:\/\//g, "");
     const key = await route.match(/\/([^\/]+)\/?$/)[0].split("/")[1];
     const routeName = await route.split("/")[2];
-    // console.log("route", route, "key", key, "routeName", routeName);
     const toast = (message: string) => {
       Toast.show(message, {
         duration: Toast.durations.LONG,
@@ -239,10 +237,9 @@ export default ({ navigation }) => {
                     <TouchableBackRow key={data.index}>
                       <Touchable
                         onPress={() => {
-                          console.log(data.item.id),
-                            MarkAsReadMatchFn({
-                              variables: { matchId: data.item.id }
-                            }),
+                          MarkAsReadMatchFn({
+                            variables: { matchId: data.item.id }
+                          }),
                             navigation.push("Chat", {
                               chatId: data.item.id,
                               userId: me.user.profile.id,
