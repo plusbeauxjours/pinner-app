@@ -7,7 +7,14 @@ import * as Permissions from "expo-permissions";
 import firebase from "firebase";
 import CustomView from "./CustomView";
 import { database, chat_send } from "../../../../../Fire";
-import { Platform, TouchableOpacity, Alert, BackHandler } from "react-native";
+import {
+  Platform,
+  TouchableOpacity,
+  Alert,
+  BackHandler,
+  View,
+  Text
+} from "react-native";
 import { BACKEND_URL } from "../../../../../constants";
 import ChatPresenter from "./ChatPresenter";
 import {
@@ -23,6 +30,8 @@ import {
 } from "../../../../../Fire";
 import * as ImageManipulator from "expo-image-manipulator";
 import { Ionicons } from "@expo/vector-icons";
+import * as moment from "moment-timezone";
+import { utc } from "moment-timezone";
 
 const HIGH_WIDTH = 1280;
 const HIGH_HEIGHT = 960;
@@ -95,6 +104,7 @@ class ChatContainer extends React.Component<IProps, IState> {
     if (msg) {
       msg._id = get_new_key("messages");
       msg.user.name = this.state.userName;
+      msg.status = false;
       chat_send(this.state.chatId, msg);
       this.setState(previousState => ({
         messages: GiftedChat.append(previousState.messages, msg)
@@ -268,6 +278,7 @@ class ChatContainer extends React.Component<IProps, IState> {
             _id: new_key,
             createdAt: new Date(),
             user: user,
+            status: false,
             image: resized_uri
           };
           let messages = [];
@@ -283,6 +294,7 @@ class ChatContainer extends React.Component<IProps, IState> {
           let messageServer: ChatMessage = {
             _id: new_key,
             createdAt: new Date(),
+            status: false,
             user: user,
             image: url
           };
@@ -319,6 +331,7 @@ class ChatContainer extends React.Component<IProps, IState> {
       let messageLocal: ChatMessage = {
         _id: new_key,
         createdAt: new Date(),
+        status: false,
         user: user,
         image: resized_uri
       };
@@ -337,6 +350,7 @@ class ChatContainer extends React.Component<IProps, IState> {
       let messageServer: ChatMessage = {
         _id: new_key,
         createdAt: new Date(),
+        status: false,
         user: user,
         image: url
       };
@@ -469,9 +483,72 @@ class ChatContainer extends React.Component<IProps, IState> {
     }
   );
   public componentDidUnMount() {
-    console.log("bybybybybye");
     this.didBlurSubscription.remove();
   }
+  public messageFooter = timeProps => {
+    const { currentMessage, position } = timeProps;
+    const timeZone = moment.tz.guess();
+    const time = moment.tz(currentMessage.createdAt, timeZone).format("LT");
+    if (position === "left") {
+      const text = (
+        <Text style={{ left: 10, fontSize: 8, color: "black" }}>{time}</Text>
+      );
+      return (
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "flex-start",
+            width: 50
+          }}
+        >
+          {text}
+        </View>
+      );
+    } else if (position === "right") {
+      const text = (
+        <Text
+          style={{
+            right: 10,
+            fontSize: 8,
+            color: "white"
+          }}
+        >
+          {time}
+        </Text>
+      );
+      return (
+        <>
+          {!currentMessage.status ? (
+            <View
+              style={{
+                flexDirection: "column",
+                justifyContent: "flex-end",
+                alignItems: "flex-end",
+                width: 50
+              }}
+            >
+              {text}
+              <Text style={{ fontSize: 11, color: "white", right: 10 }}>
+                Read
+              </Text>
+            </View>
+          ) : (
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                width: 50
+              }}
+            >
+              {text}
+            </View>
+          )}
+        </>
+      );
+    } else {
+      return;
+    }
+  };
   public render() {
     const {
       loading,
@@ -508,6 +585,7 @@ class ChatContainer extends React.Component<IProps, IState> {
         leaveChat={this.leaveChat}
         pickFromCamera={this.pickFromCamera}
         pickFromGallery={this.pickFromGallery}
+        messageFooter={this.messageFooter}
       />
     );
   }

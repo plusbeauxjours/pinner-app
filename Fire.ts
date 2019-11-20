@@ -28,15 +28,9 @@ export interface ChatMessage {
   _id: string;
   text?: string;
   createdAt: Date;
+  status: boolean;
   user: UserChatMessage;
   image?: string;
-}
-
-export interface GalleryImage {
-  image: string;
-  created: string;
-  author: string;
-  label: string;
 }
 
 export const image_upload = async (

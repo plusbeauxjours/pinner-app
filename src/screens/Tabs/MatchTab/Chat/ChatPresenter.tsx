@@ -47,6 +47,7 @@ interface IProps {
   leaveChat: () => void;
   pickFromCamera: any;
   pickFromGallery: any;
+  messageFooter: (timeProps: any) => void;
 }
 
 const ChatPresenter: React.FunctionComponent<IProps> = ({
@@ -70,7 +71,8 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   closeModalOpen,
   leaveChat,
   pickFromCamera,
-  pickFromGallery
+  pickFromGallery,
+  messageFooter
 }) => {
   const isDarkMode = useTheme();
   if (loading) {
@@ -157,6 +159,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                 renderMessageImage={
                   isDarkMode ? renderDarkMessageImage : renderLightMessageImage
                 }
+                renderTime={messageFooter}
                 // renderMessageVideo={renderMessageVideo}
               />
               <KeyboardSpacer />
@@ -175,6 +178,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
               renderMessageImage={
                 isDarkMode ? renderDarkMessageImage : renderLightMessageImage
               }
+              renderTime={messageFooter}
               // renderMessageVideo={renderMessageVideo}
             />
           )}
