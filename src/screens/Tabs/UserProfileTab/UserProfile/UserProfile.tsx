@@ -63,7 +63,7 @@ import CoffeeDetail from "../../../CoffeeDetail/index";
 import { GET_COFFEES } from "../../../../sharedQueries";
 
 const Header = styled.View`
-  height: 250;
+  height: 270;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
@@ -1080,17 +1080,31 @@ export default ({ navigation }) => {
             </UserNameContainer>
             {cities && cities.length !== 0 && (
               <UserNameContainer>
-                <EditText>
-                  You guys have been to
-                  {cities.map(city => (
-                    <EditText key={city.id}>
-                      &nbsp;
-                      {city.cityName}
-                      {city.country.countryEmoji}
-                    </EditText>
-                  ))}
-                  .
-                </EditText>
+                {cities.length < 5 ? (
+                  <EditText>
+                    You guys have been to
+                    {cities.map(city => (
+                      <EditText key={city.id}>
+                        &nbsp;
+                        {city.cityName}
+                        {city.country.countryEmoji}
+                      </EditText>
+                    ))}
+                    .
+                  </EditText>
+                ) : (
+                  <EditText>
+                    You guys have been to
+                    {cities.slice(0, 5).map(city => (
+                      <EditText key={city.id}>
+                        &nbsp;
+                        {city.cityName}
+                        {city.country.countryEmoji}
+                      </EditText>
+                    ))}
+                    and {cities.length - 5} more cities.
+                  </EditText>
+                )}
               </UserNameContainer>
             )}
           </Header>
