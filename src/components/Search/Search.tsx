@@ -110,8 +110,8 @@ const Search = ({ navigation }) => {
       result = await createCityFn({
         variables: { cityId }
       });
-      setSearch("");
-      setModalOpen(false);
+      await setSearch("");
+      await setModalOpen(false);
       await navigation.push("CityProfileTabs", {
         cityId: result.data.createCity.cityId,
         countryCode: result.data.createCity.countryCode,
@@ -201,8 +201,9 @@ const Search = ({ navigation }) => {
                     {users.map(user => (
                       <Touchable
                         key={user.profile.id}
-                        onPress={() => {
-                          setModalOpen(false),
+                        onPress={async () => {
+                          await setSearch("");
+                          await setModalOpen(false),
                             navigation.push("UserProfileTabs", {
                               username: user.profile.username,
                               isSelf: user.profile.isSelf
@@ -262,8 +263,9 @@ const Search = ({ navigation }) => {
                     {countries.map(country => (
                       <Touchable
                         key={country.id}
-                        onPress={() => {
-                          setModalOpen(false),
+                        onPress={async () => {
+                          await setSearch("");
+                          await setModalOpen(false),
                             navigation.push("CountryProfileTabs", {
                               countryCode: country.countryCode,
                               continentCode: country.continent.continentCode
@@ -285,8 +287,9 @@ const Search = ({ navigation }) => {
                     {continents.map(continent => (
                       <Touchable
                         key={continent.id}
-                        onPress={() => {
-                          setModalOpen(false),
+                        onPress={async () => {
+                          await setSearch("");
+                          await setModalOpen(false),
                             navigation.push("ContinentProfile", {
                               continentCode: continent.continentCode
                             });

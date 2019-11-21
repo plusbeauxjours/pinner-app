@@ -73,7 +73,6 @@ const Header = styled.View`
 const Body = styled.View`
   justify-content: center;
   align-items: center;
-  flex: 1;
   background-color: ${props => props.theme.bgColor};
   color: ${props => props.theme.color};
   padding: 5px;
@@ -245,7 +244,9 @@ const TripSmallText = styled(SmallText)`
 export default ({ navigation }) => {
   const { me, loading: meLoading } = useMe();
   const location = useLocation();
-  const isSelf = navigation.getParam("isSelf");
+  const isSelf =
+    navigation.getParam("isSelf") ||
+    me.user.username === navigation.getParam("username");
   const isDarkMode = useTheme();
   const [search, setSearch] = useState<string>("");
   const [coffeeId, setCoffeeId] = useState<string>("");
@@ -1078,7 +1079,7 @@ export default ({ navigation }) => {
                 </IconTouchable>
               )}
             </UserNameContainer>
-            {cities && cities.length !== 0 && (
+            {!isSelf && cities && cities.length !== 0 && (
               <UserNameContainer>
                 {cities.length < 5 ? (
                   <EditText>
