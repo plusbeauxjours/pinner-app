@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { GiftedChat } from "react-native-gifted-chat";
 import ImageViewer from "react-native-image-zoom-viewer";
 import { ScreenOrientation } from "expo";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import Loader from "../../../../components/Loader";
 import { Platform, KeyboardAvoidingView, Modal, Image } from "react-native";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import constants from "../../../../../constants";
 import { useTheme } from "../../../../context/ThemeContext";
+import { darkMode, lightMode } from "../../../../styles/mapStyles";
+import { Ionicons } from "@expo/vector-icons";
+import { useLocation } from "../../../../context/LocationContext";
 
 const View = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -16,14 +20,36 @@ const View = styled.View`
   align-items: center;
   flex: 1;
 `;
+
 const ChatContainer = styled.View`
   flex: 1;
   height: ${constants.height};
   background-color: ${props => props.theme.bgColor};
 `;
 
-const Text = styled.Text``;
-const Touchable = styled.TouchableOpacity``;
+const MarkerContainer = styled.View`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+`;
+
+const Touchable = styled.TouchableOpacity`
+  height: 45px;
+  justify-content: center;
+  align-items: center;
+  background-color: #3897f0;
+`;
+
+const Text = styled.Text`
+  font-size: 16;
+  font-weight: 600;
+  color: white;
+`;
 
 interface IProps {
   chatId: string;
@@ -33,17 +59,19 @@ interface IProps {
   userAvatarUrl: string;
   nowShowing: string;
   imageUrl: any;
-  modalOpen: boolean;
+  imageModalOpen: boolean;
+  mapModalOpen: boolean;
   loading: boolean;
   messages: any;
-  onSend: (newMessages: any) => void;
+  onSend: any;
+  onSendLocation: any;
   renderCustomView: any;
   onPressAvatar: () => void;
   renderMessageVideo: () => void;
   renderDarkMessageImage: any;
   renderLightMessageImage: any;
   renderActions: any;
-  closeModalOpen: () => void;
+  closeImageModalOpen: () => void;
   leaveChat: () => void;
   pickFromCamera: any;
   pickFromGallery: any;
@@ -58,23 +86,63 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   userAvatarUrl,
   nowShowing,
   imageUrl,
-  modalOpen,
+  imageModalOpen,
+  mapModalOpen,
   loading,
   messages,
   onSend,
+  onSendLocation,
   renderCustomView,
   onPressAvatar,
   renderMessageVideo,
   renderDarkMessageImage,
   renderLightMessageImage,
   renderActions,
-  closeModalOpen,
+  closeImageModalOpen,
   leaveChat,
   pickFromCamera,
   pickFromGallery,
   messageFooter
 }) => {
+  let mapRef: MapView | null;
   const isDarkMode = useTheme();
+  const location = useLocation();
+  const LATITUDE_DELTA = 0.01;
+  const LONGITUDE_DELTA = 0.01;
+  const [ready, setReady] = useState<boolean>(false);
+  const [region, setRegion] = useState({
+    latitude: location.currentLat,
+    longitude: location.currentLng,
+    latitudeDelta: LATITUDE_DELTA,
+    longitudeDelta: LONGITUDE_DELTA
+  });
+  const onMapReady = () => {
+    if (!ready) {
+      setReady(true);
+    }
+  };
+  const onRegionChangeComplete = region => {
+    setRegion(region);
+    console.log(region);
+    mapRef.animateToRegion(region);
+  };
+  const handleGeoSuccess = (position: Position) => {
+    const {
+      coords: { latitude, longitude }
+    } = position;
+    setRegion({
+      latitude,
+      longitude,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA
+    });
+  };
+  const handleGeoError = () => {
+    console.log("No location");
+  };
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(handleGeoSuccess, handleGeoError);
+  }, []);
   if (loading) {
     return (
       <View>
@@ -85,7 +153,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
     return (
       <>
         {/* {nowShowing == "photo" && ( */}
-        <Modal visible={modalOpen} transparent={true}>
+        <Modal visible={imageModalOpen} transparent={true}>
           <ImageViewer
             imageUrls={[{ url: imageUrl }]}
             enablePreload={true}
@@ -114,9 +182,10 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
               await ScreenOrientation.lockAsync(
                 ScreenOrientation.OrientationLock.PORTRAIT_UP
               );
-              closeModalOpen();
+              closeImageModalOpen();
             }}
             enableSwipeDown={true}
+            //@ts-ignore
             renderIndicator={() => {}}
           />
           {/* )}
@@ -143,6 +212,46 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
             </View>
           )} */}
         </Modal>
+        <Modal visible={mapModalOpen} transparent={true}>
+          <MapView
+            ref={map => {
+              mapRef = map;
+            }}
+            provider={PROVIDER_GOOGLE}
+            style={{
+              flex: 1,
+              borderRadius: 3
+            }}
+            initialRegion={region}
+            showsUserLocation={true}
+            showsMyLocationButton={true}
+            onMapReady={onMapReady}
+            loadingEnabled={true}
+            rotateEnabled={false}
+            onRegionChangeComplete={onRegionChangeComplete}
+            customMapStyle={
+              isDarkMode && isDarkMode === true ? darkMode : lightMode
+            }
+          >
+            <MarkerContainer
+              pointerEvents="none"
+              onPress={() => onSendLocation(region.latitude, region.longitude)}
+            >
+              <Ionicons
+                name={Platform.OS === "ios" ? "ios-pin" : "md-pin"}
+                size={40}
+                color={"#3897f0"}
+                pointerEvents="none"
+                containerStyle={{ marginBottom: 30 }}
+              />
+            </MarkerContainer>
+          </MapView>
+          <Touchable
+            onPress={() => onSendLocation(region.latitude, region.longitude)}
+          >
+            <Text>Tap To Send This Location</Text>
+          </Touchable>
+        </Modal>
         <ChatContainer>
           {Platform.OS === "android" ? (
             <KeyboardAvoidingView behavior="padding" enabled>
@@ -159,6 +268,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                 renderMessageImage={
                   isDarkMode ? renderDarkMessageImage : renderLightMessageImage
                 }
+                //@ts-ignore
                 renderTime={messageFooter}
                 // renderMessageVideo={renderMessageVideo}
               />
@@ -178,6 +288,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
               renderMessageImage={
                 isDarkMode ? renderDarkMessageImage : renderLightMessageImage
               }
+              //@ts-ignore
               renderTime={messageFooter}
               // renderMessageVideo={renderMessageVideo}
             />

@@ -6,6 +6,8 @@ import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useTheme } from "../../../../context/ThemeContext";
 import { darkMode, lightMode } from "../../../../styles/mapStyles";
 import { Platform } from "react-native";
+import { get_new_key, chat_send } from "../../../../../Fire";
+import { GiftedChat } from "react-native-gifted-chat";
 
 const MarkerContainer = styled.View`
   position: absolute;
@@ -53,12 +55,12 @@ export default ({ navigation }) => {
     }
   };
 
-  const onSend = () => {
+  const onSend = async () => {
     const { latitude, longitude } = region;
-    navigation.state.params.onSend({
+    await navigation.state.params.onSend({
       location: { latitude, longitude }
     });
-    navigation.goBack();
+    await navigation.navigate("Chat");
   };
 
   const onRegionChangeComplete = region => {
@@ -116,7 +118,7 @@ export default ({ navigation }) => {
           />
         </MarkerContainer>
       </MapView>
-      <Touchable onPress={onSend}>
+      <Touchable onPress={() => onSend()}>
         <Text>Tap To Send This Location</Text>
       </Touchable>
     </View>

@@ -24,6 +24,11 @@ export interface UserChatMessage {
   avatar?: string;
 }
 
+export interface LocationChatMessage {
+  latitude: number;
+  longitude: number;
+}
+
 export interface ChatMessage {
   _id: string;
   text?: string;
@@ -31,6 +36,7 @@ export interface ChatMessage {
   status: boolean;
   user: UserChatMessage;
   image?: string;
+  location?: LocationChatMessage;
 }
 
 export const image_upload = async (
@@ -119,30 +125,31 @@ export const chat_send = (chat_id: string, message: ChatMessage) => {
       `/chats/${chat_id}/lastMessage/`
     ] = `${message.user.name}: ${message.image}`;
   }
-
+  console.log("onFire", message);
   updates[`/messages/${chat_id}/${new_key}/`] = message;
   return fb_db.ref.update(updates);
 };
 
-export const update_message_info = async (msg: any, chat_id: string) => {
+export const update_message_info = async (
+  msg: any,
+  chat_id: string,
+  user_id: string
+) => {
   return new Promise<ChatMessage | SystemMessage>((resolve, reject) => {
     if (msg.system) {
       resolve(msg);
     }
     let updated_message: ChatMessage;
+    let updates = {};
+    if (msg.user._id !== user_id && msg.status === false) {
+      msg.status = true;
+      updated_message = msg;
+      resolve(updated_message);
+      updates[`/messages/${chat_id}/${msg._id}/`] = updated_message;
+      return fb_db.ref.update(updates);
+    }
     updated_message = msg;
     resolve(updated_message);
-    // fb_db.ref
-    //   .child("members")
-    //   .child(chat_id)
-    //   .orderByKey()
-    //   .equalTo(msg.user._id)
-    //   .once("value", snapshot => {
-    //     if (!snapshot.exists()) {
-    //       console.log("User doesn't belong to the chat");
-    //       resolve(undefined);
-    //     }
-    //   });
   });
 };
 export const get_old_chat_messages = async (

@@ -6,7 +6,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import firebase from "firebase";
 import CustomView from "./CustomView";
-import { database, chat_send } from "../../../../../Fire";
+import { chat_send } from "../../../../../Fire";
 import {
   Platform,
   TouchableOpacity,
@@ -31,7 +31,6 @@ import {
 import * as ImageManipulator from "expo-image-manipulator";
 import { Ionicons } from "@expo/vector-icons";
 import * as moment from "moment-timezone";
-import { utc } from "moment-timezone";
 
 const HIGH_WIDTH = 1280;
 const HIGH_HEIGHT = 960;
@@ -59,7 +58,8 @@ interface IState {
   hasPermission: boolean;
   nowShowing: string;
   imageUrl: string;
-  modalOpen: boolean;
+  imageModalOpen: boolean;
+  mapModalOpen: boolean;
   loading: boolean;
   messages: any;
   resolution: "full" | "high" | "low";
@@ -85,7 +85,8 @@ class ChatContainer extends React.Component<IProps, IState> {
       hasPermission: false,
       nowShowing: "",
       imageUrl: "",
-      modalOpen: false,
+      imageModalOpen: false,
+      mapModalOpen: false,
       loading: false,
       messages: [],
       resolution: "high",
@@ -109,7 +110,32 @@ class ChatContainer extends React.Component<IProps, IState> {
       this.setState(previousState => ({
         messages: GiftedChat.append(previousState.messages, msg)
       }));
+      console.log("ifMsg");
     }
+  };
+
+  public onSendLocation = (latitude: string, longitude: string) => {
+    let new_key = get_new_key("messages");
+    let user: UserChatMessage = {
+      _id: this.state.userId,
+      name: this.state.userName,
+      avatar: this.state.userAvatarUrl
+    };
+    let messageLocation: ChatMessage = {
+      _id: new_key,
+      createdAt: new Date(),
+      status: false,
+      user: user,
+      location: { latitude, longitude }
+    };
+    let messages = [];
+    messages.push(messageLocation);
+    this.setState(previousState => ({
+      messages: GiftedChat.append(previousState.messages, messages),
+      mapModalOpen: false
+    }));
+    chat_send(this.state.chatId, messageLocation).catch(e => console.log(e));
+    console.log("location");
   };
 
   public renderActionsIcon = () => (
@@ -131,7 +157,7 @@ class ChatContainer extends React.Component<IProps, IState> {
   public renderMessageVideo = () => {};
 
   public openImageViewer = images => {
-    this.setState({ modalOpen: true, imageUrl: images[0].url });
+    this.setState({ imageModalOpen: true, imageUrl: images[0].url });
   };
 
   public renderDarkMessageImage = props => {
@@ -192,9 +218,7 @@ class ChatContainer extends React.Component<IProps, IState> {
   public renderActions = props => {
     const options = {
       "Send Location": () => {
-        this.props.navigation.push("SendLocationScreen", {
-          onSend: props.onSend
-        });
+        this.setState({ mapModalOpen: true });
       },
       "Send Image From Gallery": () => {
         this.pickFromGallery();
@@ -359,8 +383,8 @@ class ChatContainer extends React.Component<IProps, IState> {
     }
   };
 
-  public closeModalOpen = () => {
-    this.setState({ modalOpen: false });
+  public closeImageModalOpen = () => {
+    this.setState({ imageModalOpen: false });
   };
 
   public sortByDate = (a, b) => {
@@ -369,27 +393,8 @@ class ChatContainer extends React.Component<IProps, IState> {
     return date1 < date2 ? 1 : date2 < date1 ? -1 : 0;
   };
 
-  // public componentDidMount() {
-  //   this.fetchMessages();
-  // }
-  // public fetchMessages = async () => {
-  //   const { chatId } = this.state;
-  //   this.setState({ loading: true });
-  //   await database
-  //     .ref("messages")
-  //     .child(chatId)
-  //     .on("value", snap => {
-  //       let messages = [];
-  //       snap.forEach(message => {
-  //         messages.push(message.val());
-  //       });
-  //       this.setState({ messages: messages.reverse() });
-  //     });
-  //   this.setState({ loading: false });
-  // };
-
   public componentDidMount() {
-    console.log("hihi");
+    console.log("stateMessages", this.state.messages);
     BackHandler.addEventListener("hardwareBackPress", () => {
       if (!this.state.overlayVisible) {
         this.props.navigation.navigate("Match");
@@ -406,17 +411,35 @@ class ChatContainer extends React.Component<IProps, IState> {
     ).then(messages => {
       if (messages) {
         let promises = messages.map(m =>
-          update_message_info(m, this.state.chatId)
+          update_message_info(m, this.state.chatId, this.state.userId)
         );
         Promise.all(promises).then(results => {
           this.setState({
-            messages: results.filter(r => r).sort(this.sortByDate),
-            loading: false
+            messages: results.filter(r => r).sort(this.sortByDate)
           });
         });
       }
     });
     let start_key = get_new_key("messages");
+    fb_db.ref
+      .child("messages")
+      .child(this.state.chatId)
+      .orderByKey()
+      .startAt(start_key)
+      .on("child_changed", child => {
+        console.log("child", child);
+        if (child && child.val()) {
+          if (child.val()["status"] === true) {
+            this.setState({
+              messages: this.state.messages.map(previousState =>
+                previousState._id === child.val()["_id"]
+                  ? { ...previousState, ...child.val() }
+                  : previousState
+              )
+            });
+          }
+        }
+      });
     fb_db.ref
       .child("messages")
       .child(this.state.chatId)
@@ -431,44 +454,45 @@ class ChatContainer extends React.Component<IProps, IState> {
             new_message.system ||
             new_message.user._id !== this.state.userId
           ) {
-            update_message_info(new_message, this.state.chatId).then(
-              updated_message => {
-                console.log("updated_message", updated_message);
-                //@ts-ignore
-                if (updated_message.image) {
-                  try {
-                    this.setState({ imageLoading: true });
-                    image_get_raw(
-                      //@ts-ignore
-                      updated_message.image,
-                      this.state.resolution
-                    ).then(image => {
-                      //@ts-ignore
-                      updated_message.image = image;
-                      message_container.push(new_message);
-                      this.setState(previousState => ({
-                        messages: GiftedChat.append(
-                          previousState.messages,
-                          message_container
-                        ).sort(this.sortByDate)
-                      }));
-                    });
-                  } catch (e) {
-                    console.log(e);
-                  } finally {
-                    this.setState({ imageLoading: false });
-                  }
-                } else {
-                  message_container.push(new_message);
-                  this.setState(previousState => ({
-                    messages: GiftedChat.append(
-                      previousState.messages,
-                      message_container
-                    ).sort(this.sortByDate)
-                  }));
+            update_message_info(
+              new_message,
+              this.state.chatId,
+              this.state.userId
+            ).then(updated_message => {
+              //@ts-ignore
+              if (updated_message.image) {
+                try {
+                  this.setState({ imageLoading: true });
+                  image_get_raw(
+                    //@ts-ignore
+                    updated_message.image,
+                    this.state.resolution
+                  ).then(image => {
+                    //@ts-ignore
+                    updated_message.image = image;
+                    message_container.push(new_message);
+                    this.setState(previousState => ({
+                      messages: GiftedChat.append(
+                        previousState.messages,
+                        message_container
+                      ).sort(this.sortByDate)
+                    }));
+                  });
+                } catch (e) {
+                  console.log(e);
+                } finally {
+                  this.setState({ imageLoading: false });
                 }
+              } else {
+                message_container.push(new_message);
+                this.setState(previousState => ({
+                  messages: GiftedChat.append(
+                    previousState.messages,
+                    message_container
+                  ).sort(this.sortByDate)
+                }));
               }
-            );
+            });
           }
         }
       });
@@ -518,7 +542,7 @@ class ChatContainer extends React.Component<IProps, IState> {
       );
       return (
         <>
-          {!currentMessage.status ? (
+          {currentMessage.status ? (
             <View
               style={{
                 flexDirection: "column",
@@ -552,7 +576,8 @@ class ChatContainer extends React.Component<IProps, IState> {
   public render() {
     const {
       loading,
-      modalOpen,
+      imageModalOpen,
+      mapModalOpen,
       nowShowing,
       imageUrl,
       messages,
@@ -565,7 +590,8 @@ class ChatContainer extends React.Component<IProps, IState> {
     return (
       <ChatPresenter
         loading={loading}
-        modalOpen={modalOpen}
+        imageModalOpen={imageModalOpen}
+        mapModalOpen={mapModalOpen}
         nowShowing={nowShowing}
         imageUrl={imageUrl}
         messages={messages}
@@ -575,13 +601,14 @@ class ChatContainer extends React.Component<IProps, IState> {
         userName={userName}
         userUrl={userUrl}
         onSend={this.onSend}
+        onSendLocation={this.onSendLocation}
         renderCustomView={this.renderCustomView}
         onPressAvatar={this.onPressAvatar}
         renderMessageVideo={this.renderMessageVideo}
         renderDarkMessageImage={this.renderDarkMessageImage}
         renderLightMessageImage={this.renderLightMessageImage}
         renderActions={this.renderActions}
-        closeModalOpen={this.closeModalOpen}
+        closeImageModalOpen={this.closeImageModalOpen}
         leaveChat={this.leaveChat}
         pickFromCamera={this.pickFromCamera}
         pickFromGallery={this.pickFromGallery}

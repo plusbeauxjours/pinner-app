@@ -166,7 +166,7 @@ export default ({ navigation }) => {
       buttonIndex => {
         if (buttonIndex === 0) {
           try {
-            chat_leave(matchId, me.user.profile.id, me.user.username);
+            // chat_leave(matchId, me.user.profile.id, me.user.username);
             unMatchFn({
               variables: {
                 matchId

@@ -9,7 +9,6 @@ export const MeProvider = ({ children }) => {
   // const { data , loading} = useQuery<Me>(ME);
   // const { data, loading } = useQuery<Me>(ME, { fetchPolicy: "no-cache" });
   const { data, loading } = useQuery<Me>(ME, { fetchPolicy: "network-only" });
-  console.log(data);
   const me = data ? data.me : null;
   return (
     <MeContext.Provider value={{ me, loading }}>{children}</MeContext.Provider>
