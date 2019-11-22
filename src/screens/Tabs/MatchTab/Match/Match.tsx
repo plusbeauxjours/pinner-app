@@ -226,7 +226,6 @@ export default ({ navigation }) => {
         <Container>
           {matches && matches.length !== 0 ? (
             <Item>
-              <Title>MATCHES</Title>
               <UserContainer>
                 <SwipeListView
                   useFlatList={false}

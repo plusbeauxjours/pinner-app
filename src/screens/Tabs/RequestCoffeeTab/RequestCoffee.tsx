@@ -32,6 +32,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import { useMe } from "../../../context/MeContext";
 // import SearchCityPhoto from "../../../components/SearchCityPhoto";
 // import { countries } from "../../../../countryData";
+import constants from "../../../../constants";
 import Toast from "react-native-root-toast";
 import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
 
@@ -66,39 +67,27 @@ const LoaderContainer = styled.View`
   justify-content: center;
   align-items: center;
 `;
-const CoffeeSubmitBtn = styled.TouchableOpacity`
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-  margin: 0 5px 5px 5px;
-  border: 0.5px solid #999;
-  border-radius: 5px;
-`;
 const CoffeeText = styled.Text`
   font-size: 16;
   font-weight: 500;
   color: ${props => props.theme.color};
 `;
 const Footer = styled.View`
-  background-color: ${props => props.theme.bgColor};
+  width: ${constants.width};
+  justify-content: center;
+  background-color: ${props => props.theme.color};
 `;
-
-const CityBold = styled.Text`
-  font-weight: 500;
-  color: ${props => props.theme.color};
-`;
-const Location = styled.Text`
-  font-size: 12px;
-  color: ${props => props.theme.color};
-`;
-const SearchCityContainer = styled.View`
-  flex-direction: row;
+const CoffeeSubmitContainer = styled.View`
+  width: ${constants.width - 40};
   justify-content: center;
   align-items: center;
+  height: 40px;
+  border: 0.5px solid #999;
+  border-radius: 5px;
 `;
-const SearchHeaderUserContainer = styled.View`
-  margin-left: 10px;
-  flex-direction: column;
+const CoffeeSubmitBtn = styled.TouchableOpacity`
+  justify-content: center;
+  padding: 0 5px 5px 5px;
 `;
 export default ({ navigation }) => {
   const { me, loading: meLoading } = useMe();
@@ -787,14 +776,18 @@ export default ({ navigation }) => {
                 )
               }
             >
-              <CoffeeText>CANCEL COFFEE</CoffeeText>
+              <CoffeeSubmitContainer>
+                <CoffeeText>CANCEL COFFEE</CoffeeText>
+              </CoffeeSubmitContainer>
             </CoffeeSubmitBtn>
           ) : (
             <CoffeeSubmitBtn
               // disabled={requestLoading}
               onPress={() => requestCoffee()}
             >
-              <CoffeeText>REQUEST COFFEE</CoffeeText>
+              <CoffeeSubmitContainer>
+                <CoffeeText>REQUEST COFFEE</CoffeeText>
+              </CoffeeSubmitContainer>
             </CoffeeSubmitBtn>
           )}
         </Footer>

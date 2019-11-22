@@ -119,7 +119,7 @@ export const chat_send = (chat_id: string, message: ChatMessage) => {
   if (message.text) {
     updates[`/chats/${chat_id}/lastMessage/`] = `${message.text}`;
   } else if (message.image) {
-    updates[`/chats/${chat_id}/lastMessage/`] = "Image";
+    updates[`/chats/${chat_id}/lastMessage/`] = "Photo";
   } else if (message.location) {
     updates[`/chats/${chat_id}/lastMessage/`] = "Location";
   }

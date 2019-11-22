@@ -29,6 +29,7 @@ const MatchHeaderUserContainer = styled.View`
   width: ${constants.width - 81};
   flex-direction: column;
   margin-left: 10px;
+  justify-content: center;
 `;
 const Bold = styled.Text`
   font-weight: 500;
@@ -103,7 +104,7 @@ const SecondLine = styled.View`
   height: 20px;
 `;
 const LastMessageText = styled(Text)`
-  font-size: 15px;
+  font-size: 16px;
   color: ${props => props.theme.greyColor};
 `;
 const View = styled.View`
@@ -155,15 +156,17 @@ const UserRow: React.FC<IProps> = ({
 }) => {
   const isDarkMode = useTheme();
   const [lastMessage, setLastMessage] = useState<string>("");
-  get_last_chat_messages(match.id).then(message => {
-    setLastMessage(message);
-  });
-  fb_db.ref
-    .child("chats")
-    .child(match.id)
-    .on("child_changed", child => {
-      setLastMessage(child.val()["lastMessage"]);
+  if (match) {
+    get_last_chat_messages(match.id).then(message => {
+      setLastMessage(message);
     });
+    fb_db.ref
+      .child("chats")
+      .child(match.id)
+      .on("child_changed", child => {
+        setLastMessage(child.val()["lastMessage"]);
+      });
+  }
   switch (type) {
     case "user":
       return (
@@ -174,7 +177,11 @@ const UserRow: React.FC<IProps> = ({
                 {user.appAvatarUrl ? (
                   <ProgressiveImage
                     tint={isDarkMode ? "dark" : "light"}
-                    style={{ height: 36, width: 36, borderRadius: 18 }}
+                    style={{
+                      height: 36,
+                      width: 36,
+                      borderRadius: 18
+                    }}
                     preview={{
                       uri: `${BACKEND_URL}/media/${user.appAvatarUrl}`
                     }}
@@ -182,7 +189,11 @@ const UserRow: React.FC<IProps> = ({
                   />
                 ) : (
                   <Image
-                    style={{ height: 36, width: 36, borderRadius: 18 }}
+                    style={{
+                      height: 36,
+                      width: 36,
+                      borderRadius: 18
+                    }}
                     source={randomAvatar[Math.round(Math.random() * 9)]}
                   />
                 )}
@@ -209,7 +220,11 @@ const UserRow: React.FC<IProps> = ({
                 {user.appAvatarUrl ? (
                   <ProgressiveImage
                     tint={isDarkMode ? "dark" : "light"}
-                    style={{ height: 36, width: 36, borderRadius: 18 }}
+                    style={{
+                      height: 36,
+                      width: 36,
+                      borderRadius: 18
+                    }}
                     preview={{
                       uri: `${BACKEND_URL}/media/${user.appAvatarUrl}`
                     }}
@@ -217,7 +232,11 @@ const UserRow: React.FC<IProps> = ({
                   />
                 ) : (
                   <Image
-                    style={{ height: 36, width: 36, borderRadius: 18 }}
+                    style={{
+                      height: 36,
+                      width: 36,
+                      borderRadius: 18
+                    }}
                     source={randomAvatar[Math.round(Math.random() * 9)]}
                   />
                 )}
@@ -592,7 +611,11 @@ const UserRow: React.FC<IProps> = ({
                 {coffee.host.profile.appAvatarUrl ? (
                   <ProgressiveImage
                     tint={isDarkMode ? "dark" : "light"}
-                    style={{ height: 36, width: 36, borderRadius: 18 }}
+                    style={{
+                      height: 36,
+                      width: 36,
+                      borderRadius: 18
+                    }}
                     preview={{
                       uri: `${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`
                     }}
@@ -600,7 +623,11 @@ const UserRow: React.FC<IProps> = ({
                   />
                 ) : (
                   <Image
-                    style={{ height: 36, width: 36, borderRadius: 18 }}
+                    style={{
+                      height: 36,
+                      width: 36,
+                      borderRadius: 18
+                    }}
                     source={randomAvatar[Math.round(Math.random() * 9)]}
                   />
                 )}
@@ -662,7 +689,11 @@ const UserRow: React.FC<IProps> = ({
                   {match.guest.profile.appAvatarUrl ? (
                     <ProgressiveImage
                       tint={isDarkMode ? "dark" : "light"}
-                      style={{ height: 36, width: 36, borderRadius: 18 }}
+                      style={{
+                        height: 36,
+                        width: 36,
+                        borderRadius: 18
+                      }}
                       preview={{
                         uri: `${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`
                       }}
@@ -670,7 +701,11 @@ const UserRow: React.FC<IProps> = ({
                     />
                   ) : (
                     <Image
-                      style={{ height: 36, width: 36, borderRadius: 18 }}
+                      style={{
+                        height: 36,
+                        width: 36,
+                        borderRadius: 18
+                      }}
                       source={randomAvatar[Math.round(Math.random() * 9)]}
                     />
                   )}
@@ -689,7 +724,11 @@ const UserRow: React.FC<IProps> = ({
                     </GreyLocation>
                   </FirstLine>
                   <SecondLine>
-                    <LastMessageText>{lastMessage}</LastMessageText>
+                    <LastMessageText>
+                      {lastMessage.length > 40
+                        ? lastMessage.substring(0, 40) + "..."
+                        : lastMessage}
+                    </LastMessageText>
                   </SecondLine>
                 </MatchHeaderUserContainer>
               </Header>
@@ -701,7 +740,11 @@ const UserRow: React.FC<IProps> = ({
                   {match.host.profile.appAvatarUrl ? (
                     <ProgressiveImage
                       tint={isDarkMode ? "dark" : "light"}
-                      style={{ height: 36, width: 36, borderRadius: 18 }}
+                      style={{
+                        height: 36,
+                        width: 36,
+                        borderRadius: 18
+                      }}
                       preview={{
                         uri: `${BACKEND_URL}/media/${match.host.profile.appAvatarUrl}`
                       }}
@@ -709,7 +752,11 @@ const UserRow: React.FC<IProps> = ({
                     />
                   ) : (
                     <Image
-                      style={{ height: 36, width: 36, borderRadius: 18 }}
+                      style={{
+                        height: 36,
+                        width: 36,
+                        borderRadius: 18
+                      }}
                       source={randomAvatar[Math.round(Math.random() * 9)]}
                     />
                   )}
@@ -728,7 +775,11 @@ const UserRow: React.FC<IProps> = ({
                     </GreyLocation>
                   </FirstLine>
                   <SecondLine>
-                    <LastMessageText>{lastMessage}</LastMessageText>
+                    <LastMessageText>
+                      {lastMessage.length > 40
+                        ? lastMessage.substring(0, 40) + "..."
+                        : lastMessage}
+                    </LastMessageText>
                   </SecondLine>
                 </MatchHeaderUserContainer>
               </Header>

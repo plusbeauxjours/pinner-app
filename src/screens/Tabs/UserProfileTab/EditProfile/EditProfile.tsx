@@ -53,9 +53,11 @@ const EditModalContainer = styled.View`
 
 const ToggleContainer = styled.View``;
 const ToggleText = styled.Text`
+  height: 20px;
   color: ${props => props.theme.color};
 `;
 const CountryView = styled.View`
+  margin-top: 4px;
   align-items: flex-end;
   flex-direction: column;
 `;
@@ -850,7 +852,8 @@ export default ({ navigation }) => {
                     backgroundColor: "transparent",
                     borderBottomWidth: 1,
                     borderBottomColor: "#999",
-                    color: "#999"
+                    color: "#999",
+                    marginBottom: 10
                   }}
                   placeholderTextColor="#999"
                   value={bio}
@@ -937,7 +940,7 @@ export default ({ navigation }) => {
                   </ToggleIcon>
                 )}
               </Item>
-              {profile.isVerifiedPhoneNumber ? (
+              {profile.isVerifiedEmailAddress ? (
                 <ExplainText>
                   Your email address is already verified.
                 </ExplainText>
