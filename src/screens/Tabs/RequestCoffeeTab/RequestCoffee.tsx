@@ -73,9 +73,9 @@ const CoffeeText = styled.Text`
   color: ${props => props.theme.color};
 `;
 const Footer = styled.View`
-  width: ${constants.width};
+  flex-direction: row;
   justify-content: center;
-  background-color: ${props => props.theme.color};
+  background-color: ${props => props.theme.bgColor};
 `;
 const CoffeeSubmitContainer = styled.View`
   width: ${constants.width - 40};

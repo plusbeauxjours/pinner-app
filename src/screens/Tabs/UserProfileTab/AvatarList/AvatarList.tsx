@@ -55,6 +55,9 @@ const LoaderContainer = styled.View`
   justify-content: center;
   align-items: center;
 `;
+const BorderContainer = styled.View`
+  border: 5px solid ${props => props.theme.bgColor};
+`;
 export default ({ navigation }) => {
   const { me, loading: meLoading } = useMe();
   const isDarkMode = useTheme();
@@ -244,17 +247,30 @@ export default ({ navigation }) => {
                         item.image && openModal(item);
                       }}
                     >
-                      <ProgressiveImage
-                        style={{
-                          height: constants.width / 3 - 1,
-                          width: constants.width / 3 - 1
-                        }}
-                        preview={{
-                          uri: `${BACKEND_URL}/media/${item.thumbnail}`
-                        }}
-                        uri={`${BACKEND_URL}/media/${item.thumbnail}`}
-                      />
-                      {item.isMain && isSelf && <Text>M</Text>}
+                      {item.isMain && isSelf ? (
+                        <ProgressiveImage
+                          style={{
+                            height: constants.width / 3 - 1,
+                            width: constants.width / 3 - 1,
+                            borderRadius: constants.width / 3 / 2
+                          }}
+                          preview={{
+                            uri: `${BACKEND_URL}/media/${item.thumbnail}`
+                          }}
+                          uri={`${BACKEND_URL}/media/${item.thumbnail}`}
+                        />
+                      ) : (
+                        <ProgressiveImage
+                          style={{
+                            height: constants.width / 3 - 1,
+                            width: constants.width / 3 - 1
+                          }}
+                          preview={{
+                            uri: `${BACKEND_URL}/media/${item.thumbnail}`
+                          }}
+                          uri={`${BACKEND_URL}/media/${item.thumbnail}`}
+                        />
+                      )}
                     </Touchable>
                   </Container>
                 )}

@@ -174,7 +174,7 @@ const BackLeftBtn = styled.TouchableOpacity`
 `;
 const AddTripBtn = styled.TouchableOpacity`
   justify-content: center;
-  padding: 5px;
+  padding: 0 5px 5px 5px;
 `;
 const AddTripContainer = styled.View`
   width: ${constants.width - 40};
@@ -240,6 +240,11 @@ const Location = styled.Text`
 const TripSmallText = styled(SmallText)`
   margin-left: 15px;
   text-align: auto;
+`;
+const Footer = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  background-color: ${props => props.theme.bgColor};
 `;
 export default ({ navigation }) => {
   const { me, loading: meLoading } = useMe();
@@ -1327,13 +1332,7 @@ export default ({ navigation }) => {
                   </Touchable>
                 ))}
             </ItemContainer>
-            {user.profile.isSelf && (
-              <AddTripBtn onPress={() => setAddTripModalOpen(true)}>
-                <AddTripContainer>
-                  <TripText>ADD TRIP</TripText>
-                </AddTripContainer>
-              </AddTripBtn>
-            )}
+
             {(() => {
               switch (user.profile.isSelf) {
                 case false:
@@ -1412,6 +1411,15 @@ export default ({ navigation }) => {
             })()}
           </Body>
         </ScrollView>
+        <Footer>
+          {user.profile.isSelf && (
+            <AddTripBtn onPress={() => setAddTripModalOpen(true)}>
+              <AddTripContainer>
+                <TripText>ADD TRIP</TripText>
+              </AddTripContainer>
+            </AddTripBtn>
+          )}
+        </Footer>
       </>
     );
   }
