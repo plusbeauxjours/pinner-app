@@ -1,6 +1,6 @@
 import React from "react";
 import uuid from "uuid/v4";
-import { Platform, Alert } from "react-native";
+import { Platform } from "react-native";
 import styled from "styled-components";
 import { withNavigation } from "react-navigation";
 import { useActionSheet } from "@expo/react-native-action-sheet";
@@ -13,6 +13,7 @@ import { UPLOAD_AVATAR } from "../sharedQueries";
 import { useMutation } from "react-apollo";
 import { ReactNativeFile } from "apollo-upload-client";
 import { useTheme } from "../context/ThemeContext";
+import Toast from "react-native-root-toast";
 
 const Container = styled.TouchableOpacity`
   padding-right: 20px;
@@ -24,6 +25,16 @@ export default withNavigation(({ navigation }) => {
   const [UploadAvatarFn] = useMutation<UploadAvatar, UploadAvatarVariables>(
     UPLOAD_AVATAR
   );
+  const toast = (message: string) => {
+    Toast.show(message, {
+      duration: Toast.durations.LONG,
+      position: 40,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      delay: 0
+    });
+  };
   const image_resize = async (
     uri: string,
     orig_width: number,
@@ -73,7 +84,7 @@ export default withNavigation(({ navigation }) => {
         console.log(e);
       }
     } else {
-      Alert.alert("You can't take pictures without CAMERA_ROLL permissions");
+      toast("You can't take pictures without CAMERA_ROLL permissions");
     }
   };
   const pickFromCamera = async () => {
@@ -100,7 +111,7 @@ export default withNavigation(({ navigation }) => {
         navigation.pop();
       }
     } else {
-      Alert.alert("You can't take pictures without CAMERA permissions");
+      toast("You can't take pictures without CAMERA permissions");
     }
   };
   const onOpenActionSheet = () => {

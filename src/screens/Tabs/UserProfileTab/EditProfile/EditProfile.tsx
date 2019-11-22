@@ -445,7 +445,7 @@ export default ({ navigation }) => {
       toast("Please choose a country");
     } else if (!phoneRegex.test(phone)) {
       closeEditPhoneModalOpen();
-      toast("That phone number is invalid");
+      toast("This phone number is invalid");
     } else if (!startEditPhoneVerification.ok) {
       closeEditPhoneModalOpen();
       toast("Could not send you a Key");

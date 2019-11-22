@@ -10,7 +10,6 @@ import { chat_send } from "../../../../../Fire";
 import {
   Platform,
   TouchableOpacity,
-  Alert,
   BackHandler,
   View,
   Text
@@ -31,6 +30,7 @@ import {
 import * as ImageManipulator from "expo-image-manipulator";
 import { Ionicons } from "@expo/vector-icons";
 import * as moment from "moment-timezone";
+import Toast from "react-native-root-toast";
 
 const HIGH_WIDTH = 1280;
 const HIGH_HEIGHT = 960;
@@ -99,7 +99,16 @@ class ChatContainer extends React.Component<IProps, IState> {
       imageLoading: false
     };
   }
-
+  public toast = (message: string) => {
+    Toast.show(message, {
+      duration: Toast.durations.LONG,
+      position: 40,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      delay: 0
+    });
+  };
   public onSend = (messages = []) => {
     let msg = messages[0];
     if (msg) {
@@ -325,10 +334,10 @@ class ChatContainer extends React.Component<IProps, IState> {
           );
         }
       } else {
-        Alert.alert("You can't take pictures without CAMERA permissions");
+        this.toast("You can't take pictures without CAMERA permissions");
       }
     } else {
-      Alert.alert("You can't take pictures without CAMERA_ROLL permissions");
+      this.toast("You can't take pictures without CAMERA_ROLL permissions");
     }
   };
 

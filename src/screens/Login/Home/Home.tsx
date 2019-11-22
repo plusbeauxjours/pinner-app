@@ -1,7 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import Modal from "react-native-modal";
 import constants from "../../../../constants";
 import FacebookApproach from "../Approach/FacebookApproach";
+import { useMutation } from "react-apollo-hooks";
+import {
+  StartPhoneVerification,
+  StartPhoneVerificationVariables,
+  CompletePhoneVerification,
+  CompletePhoneVerificationVariables
+} from "../../../types/api";
+import { PHONE_SIGN_IN } from "../Approach/PhoneApproach/PhoneApproachQueries";
+import Toast from "react-native-root-toast";
+import Loader from "../../../components/Loader";
+import { Platform } from "react-native";
+import { useTheme } from "../../../context/ThemeContext";
+import { DARK_THEME } from "react-native-country-picker-modal";
+import CountryPicker from "react-native-country-picker-modal";
+import { TextInput } from "react-native-gesture-handler";
+import { countries } from "../../../../countryData";
+import { COMPLETE_PHONE_SIGN_IN } from "../Verification/PhoneVerification/PhoneVerificationQueries";
+import { useLocation } from "../../../context/LocationContext";
+import { useLogIn } from "../../../context/AuthContext";
 
 const View = styled.View`
   justify-content: center;
@@ -13,9 +33,6 @@ const Image = styled.Image`
   width: ${constants.width / 2.5};
 `;
 
-const Touchable = styled.TouchableOpacity`
-  margin-bottom: 10px;
-`;
 const LoginLink = styled.View``;
 const LoginLinkText = styled.Text`
   color: ${props => props.theme.blueColor};
@@ -23,19 +40,277 @@ const LoginLinkText = styled.Text`
   font-weight: 600;
 `;
 
+const LoaderContainer = styled.View`
+  flex: 1;
+  background-color: ${props => props.theme.bgColor};
+  justify-content: center;
+  align-items: center;
+`;
+const PhoneApproachModalContainer = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
+const Text = styled.Text`
+  color: ${props => props.theme.color};
+`;
+const Bigtext = styled(Text)`
+  font-weight: 300;
+  font-size: 30;
+`;
+const ButtonContainer = styled.View`
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+`;
+const Void = styled.View`
+  height: 40px;
+`;
+const Touchable = styled.TouchableOpacity``;
+const SubmitLoaderContainer = styled.View`
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  height: 35px;
+`;
+const EmptyView = styled.View`
+  justify-content: center;
+  align-items: center;
+`;
 export default ({ navigation }) => {
+  const logIn = useLogIn();
+  const isDarkMode = useTheme();
+  const location = useLocation();
+  const [phoneApproachModalOpen, setPhoneApproachModalOpen] = useState<boolean>(
+    false
+  );
+  const [isPhoneApproachMode, setIsPhoneApproachMode] = useState<boolean>(true);
+  const [verificationKey, setVerificationKey] = useState<string>("");
+
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [countryPhoneCode, setCountryPhoneCode] = useState<any>(
+    "KR"
+    // location.currentCountryCode
+  );
+  const [countryPhoneNumber, setCountryPhoneNumber] = useState(
+    "+82"
+    // countries.find(i => i.code === location.currentCountryCode).phone
+  );
+
+  const [loading, setLoading] = useState(false);
+  const [
+    startPhoneVerificationFn,
+    { loading: startPhoneVerificationLoading }
+  ] = useMutation<StartPhoneVerification, StartPhoneVerificationVariables>(
+    PHONE_SIGN_IN,
+    {
+      variables: {
+        phoneNumber: `${countryPhoneNumber}${
+          phoneNumber.startsWith("0") ? phoneNumber.substring(1) : phoneNumber
+        }`
+      }
+    }
+  );
+  const [
+    completePhoneVerificationFn,
+    { loading: completePhoneVerificationLoading }
+  ] = useMutation<
+    CompletePhoneVerification,
+    CompletePhoneVerificationVariables
+  >(COMPLETE_PHONE_SIGN_IN, {
+    variables: {
+      key: verificationKey,
+      phoneNumber: phoneNumber.startsWith("0")
+        ? phoneNumber.substring(1)
+        : phoneNumber,
+      countryPhoneNumber,
+      countryPhoneCode,
+      cityId: location.currentCityId
+    }
+  });
+  const toast = (message: string) => {
+    Toast.show(message, {
+      duration: Toast.durations.LONG,
+      position: 40,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      delay: 0
+    });
+  };
+  const onSelectrPhone = (country: any) => {
+    setCountryPhoneNumber(countries.find(i => i.code === country.cca2).phone);
+    setCountryPhoneCode(country.cca2);
+  };
+  const closePhoneApproachModalOpen = () => {
+    setPhoneApproachModalOpen(false);
+    setIsPhoneApproachMode(true);
+    setVerificationKey("");
+  };
+  const handlePhoneNumber = async () => {
+    const phone = `${countryPhoneNumber}${
+      phoneNumber.startsWith("0") ? phoneNumber.substring(1) : phoneNumber
+    }`;
+    const phoneRegex = /(([+][(]?[0-9]{1,3}[)]?)|([(]?[0-9]{4}[)]?))\s*[)]?[-\s\.]?[(]?[0-9]{1,3}[)]?([-\s\.]?[0-9]{3})([-\s\.]?[0-9]{3,4})/;
+    const {
+      data: { startPhoneVerification }
+    } = await startPhoneVerificationFn();
+    if (startPhoneVerification.ok) {
+      setIsPhoneApproachMode(false);
+    } else if (phoneNumber === "") {
+      closePhoneApproachModalOpen();
+      toast("Phone number can't be empty");
+    } else if (countryPhoneNumber === "") {
+      closePhoneApproachModalOpen();
+      toast("Please choose a country");
+    } else if (!phoneRegex.test(phone)) {
+      closePhoneApproachModalOpen();
+      toast("This phone number is invalid");
+    } else if (!startPhoneVerification.ok) {
+      closePhoneApproachModalOpen();
+      toast("Could not send you a Key");
+    } else {
+      closePhoneApproachModalOpen();
+      toast("Please write a valid phone number");
+    }
+  };
+  const handlePhoneVerification = async () => {
+    const {
+      data: { completePhoneVerification }
+    } = await completePhoneVerificationFn();
+    console.log(
+      verificationKey,
+      phoneNumber,
+      countryPhoneNumber,
+      countryPhoneCode
+    );
+    setPhoneApproachModalOpen(false);
+    setIsPhoneApproachMode(true);
+    setVerificationKey("");
+    if (completePhoneVerification.ok) {
+      logIn(completePhoneVerification);
+      toast("Your phone number is verified! Welcome!");
+    } else {
+      toast("Could not be Verified your phone number");
+    }
+  };
+  if (loading) {
+    <LoaderContainer>
+      <Loader />
+    </LoaderContainer>;
+  }
   return (
-    <View>
-      <Image
-        resizeMode={"contain"}
-        source={require("../../../../assets/logo.png")}
-      />
-      <Touchable onPress={() => navigation.push("PhoneApproach")}>
-        <LoginLink>
-          <LoginLinkText>LOG IN WITH PHONE NUMBER</LoginLinkText>
-        </LoginLink>
-      </Touchable>
-      <FacebookApproach />
-    </View>
+    <>
+      <Modal
+        isVisible={phoneApproachModalOpen}
+        backdropColor={isDarkMode ? "#161616" : "#EFEFEF"}
+        onBackdropPress={() => closePhoneApproachModalOpen()}
+        onBackButtonPress={() =>
+          Platform.OS !== "ios" && closePhoneApproachModalOpen()
+        }
+        propagateSwipe={true}
+        scrollHorizontal={true}
+        backdropOpacity={0.9}
+        style={{ justifyContent: "center", alignItems: "center" }}
+      >
+        {isPhoneApproachMode ? (
+          <>
+            <PhoneApproachModalContainer>
+              <CountryPicker
+                theme={isDarkMode && DARK_THEME}
+                countryCode={countryPhoneCode}
+                withFilter={true}
+                withFlag={true}
+                withAlphaFilter={true}
+                withEmoji={true}
+                onSelect={onSelectrPhone}
+              />
+              {/* <Text>{newCountryPhoneCode}</Text> */}
+              <Bigtext>{countryPhoneNumber}</Bigtext>
+              <TextInput
+                style={{
+                  width: 220,
+                  backgroundColor: "transparent",
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#999",
+                  color: isDarkMode ? "white" : "black",
+                  marginLeft: 5,
+                  fontSize: 32,
+                  fontWeight: "300"
+                }}
+                keyboardType="phone-pad"
+                returnKeyType="send"
+                onChangeText={number => setPhoneNumber(number)}
+              />
+            </PhoneApproachModalContainer>
+            <ButtonContainer>
+              <Text>
+                When you tap "Send SMS", Pinner will send a text with
+                verification code. Message and data rates may apply. The
+                verified phone number can be used to login.
+              </Text>
+              <Void />
+              <Touchable
+                disabled={startPhoneVerificationLoading}
+                onPress={handlePhoneNumber}
+              >
+                {startPhoneVerificationLoading ? (
+                  <SubmitLoaderContainer>
+                    <Loader />
+                  </SubmitLoaderContainer>
+                ) : (
+                  <Bigtext>Send SMS</Bigtext>
+                )}
+              </Touchable>
+            </ButtonContainer>
+          </>
+        ) : (
+          <>
+            <TextInput
+              style={{
+                width: 220,
+                backgroundColor: "transparent",
+                borderBottomWidth: 1,
+                borderBottomColor: "#999",
+                color: isDarkMode ? "white" : "black",
+                marginLeft: 5,
+                fontSize: 32,
+                fontWeight: "300",
+                textAlign: "center"
+              }}
+              keyboardType="phone-pad"
+              returnKeyType="send"
+              onChangeText={number => setVerificationKey(number)}
+            />
+            <ButtonContainer>
+              <Touchable
+                disabled={completePhoneVerificationLoading}
+                onPress={handlePhoneVerification}
+              >
+                <EmptyView>
+                  {completePhoneVerificationLoading ? (
+                    <Loader />
+                  ) : (
+                    <Bigtext>Verify Key</Bigtext>
+                  )}
+                </EmptyView>
+              </Touchable>
+            </ButtonContainer>
+          </>
+        )}
+      </Modal>
+      <View>
+        <Image
+          resizeMode={"contain"}
+          source={require("../../../../assets/logo.png")}
+        />
+        <Touchable onPress={() => setPhoneApproachModalOpen(true)}>
+          <LoginLink>
+            <LoginLinkText>LOG IN WITH PHONE NUMBER</LoginLinkText>
+          </LoginLink>
+        </Touchable>
+        <FacebookApproach />
+      </View>
+    </>
   );
 };

@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import * as Facebook from "expo-facebook";
 import AuthButton from "../../../../components/AuthButton";
-import { Alert } from "react-native";
 import React, { useState } from "react";
 import { useMutation } from "react-apollo-hooks";
 import {
@@ -10,6 +9,7 @@ import {
 } from "../../../../types/api";
 import { FACEBOOK_CONNECT } from "./FacebookApproachQueries";
 import { useLogIn } from "../../../../context/AuthContext";
+import Toast from "react-native-root-toast";
 
 const FBContainer = styled.View``;
 
@@ -20,15 +20,25 @@ export default () => {
     FacebookConnect,
     FacebookConnectVariables
   >(FACEBOOK_CONNECT);
+  const toast = (message: string) => {
+    Toast.show(message, {
+      duration: Toast.durations.LONG,
+      position: 40,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      delay: 0
+    });
+  };
   const fbLogin = async () => {
     try {
       setLoading(true);
-      const {
-        type,
-        token
-      } = await Facebook.logInWithReadPermissionsAsync("242663513281642", {
-        permissions: ["public_profile", "email"]
-      });
+      const { type, token } = await Facebook.logInWithReadPermissionsAsync(
+        "242663513281642",
+        {
+          permissions: ["public_profile", "email"]
+        }
+      );
       if (type === "success") {
         const response = await fetch(
           `https://graph.facebook.com/me?access_token=${token}&fields=id,name,last_name,first_name,email,gender`
@@ -54,14 +64,14 @@ export default () => {
           }
         });
         logIn(facebookConnect);
-        Alert.alert(`Welcome ${first_name}!`);
+        toast(`Welcome ${first_name}!`);
         setLoading(false);
       } else {
         // type === 'cancel'
         setLoading(false);
       }
     } catch ({ message }) {
-      alert(`Facebook Login Error: ${message}`);
+      console.log(`Facebook Login Error: ${message}`);
       setLoading(false);
     }
   };
