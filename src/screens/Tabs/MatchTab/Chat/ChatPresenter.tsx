@@ -126,7 +126,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   };
   const onRegionChangeComplete = region => {
     setRegion(region);
-    console.log(region);
   };
   const handleGeoSuccess = (position: Position) => {
     const {

@@ -26,12 +26,6 @@ const View = styled.View`
   justify-content: center;
   align-items: center;
 `;
-
-const Text = styled.Text`
-  position: absolute;
-  padding: 5px 0 0 5px;
-  color: ${props => props.theme.color};
-`;
 const Bold = styled.Text`
   font-weight: 400;
   font-size: 16;
@@ -55,9 +49,7 @@ const LoaderContainer = styled.View`
   justify-content: center;
   align-items: center;
 `;
-const BorderContainer = styled.View`
-  border: 5px solid ${props => props.theme.bgColor};
-`;
+
 export default ({ navigation }) => {
   const { me, loading: meLoading } = useMe();
   const isDarkMode = useTheme();

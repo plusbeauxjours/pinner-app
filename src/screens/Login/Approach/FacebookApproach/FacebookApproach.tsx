@@ -11,13 +11,7 @@ import {
 import { FACEBOOK_CONNECT } from "./FacebookApproachQueries";
 import { useLogIn } from "../../../../context/AuthContext";
 
-const FBContainer = styled.View`
-  margin-top: 25px;
-  padding-top: 25px;
-  border-top-width: 1px;
-  border-style: solid;
-  background-color: ${props => props.theme.bgColor};
-`;
+const FBContainer = styled.View``;
 
 export default () => {
   const [loading, setLoading] = useState(false);
@@ -29,10 +23,12 @@ export default () => {
   const fbLogin = async () => {
     try {
       setLoading(true);
-      const { type, token } = await Facebook.logInWithReadPermissionsAsync(
-        "242663513281642",
-        { permissions: ["public_profile", "email"] }
-      );
+      const {
+        type,
+        token
+      } = await Facebook.logInWithReadPermissionsAsync("242663513281642", {
+        permissions: ["public_profile", "email"]
+      });
       if (type === "success") {
         const response = await fetch(
           `https://graph.facebook.com/me?access_token=${token}&fields=id,name,last_name,first_name,email,gender`

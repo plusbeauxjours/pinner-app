@@ -1,9 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import constants from "../../../../constants";
-import AuthButton from "../../../components/AuthButton";
 import FacebookApproach from "../Approach/FacebookApproach";
-import { useLocation } from "../../../context/LocationContext";
 
 const View = styled.View`
   justify-content: center;
@@ -15,7 +13,9 @@ const Image = styled.Image`
   width: ${constants.width / 2.5};
 `;
 
-const Touchable = styled.TouchableOpacity``;
+const Touchable = styled.TouchableOpacity`
+  margin-bottom: 10px;
+`;
 const LoginLink = styled.View``;
 const LoginLinkText = styled.Text`
   color: ${props => props.theme.blueColor};
@@ -24,16 +24,11 @@ const LoginLinkText = styled.Text`
 `;
 
 export default ({ navigation }) => {
-  const location = useLocation();
   return (
     <View>
       <Image
         resizeMode={"contain"}
         source={require("../../../../assets/logo.png")}
-      />
-      <AuthButton
-        text={"Create New Account"}
-        onPress={() => navigation.push("Signup")}
       />
       <Touchable onPress={() => navigation.push("PhoneApproach")}>
         <LoginLink>

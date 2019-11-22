@@ -30,6 +30,7 @@ export default function App() {
       await Font.loadAsync({ ...Ionicons.font });
       await Asset.loadAsync(require("./assets/logo.png"));
       const cache = new InMemoryCache();
+      await AsyncStorage.clear();
       await persistCache({
         cache,
         storage: AsyncStorage
