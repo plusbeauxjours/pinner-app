@@ -396,6 +396,7 @@ class ChatContainer extends React.Component<IProps, IState> {
   };
 
   public componentDidMount() {
+    this.setState({ mapModalOpen: false });
     BackHandler.addEventListener("hardwareBackPress", () => {
       if (!this.state.overlayVisible) {
         this.props.navigation.navigate("Match");

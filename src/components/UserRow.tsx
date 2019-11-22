@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { FontAwesome } from "@expo/vector-icons";
 import { Image } from "react-native";
 import constants, { BACKEND_URL } from "../../constants";
 import CityLikeBtn from "./CityLikeBtn/CityLikeBtn";
@@ -6,6 +7,7 @@ import moment from "moment";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import styled from "styled-components";
 import { useTheme } from "../context/ThemeContext";
+import { get_last_chat_messages, fb_db } from "../../Fire";
 
 const Container = styled.View`
   padding: 15px 5px 15px 5px;
@@ -20,6 +22,12 @@ const Touchable = styled.View`
   align-items: center;
 `;
 const HeaderUserContainer = styled.View`
+  margin-left: 10px;
+`;
+const MatchHeaderUserContainer = styled.View`
+  height: 45px;
+  width: ${constants.width - 81};
+  flex-direction: column;
   margin-left: 10px;
 `;
 const Bold = styled.Text`
@@ -39,11 +47,11 @@ const SmallText = styled.Text`
   color: #999;
   text-align: center;
 `;
-const Mark = styled.Text`
+const IconContainer = styled.View`
   color: ${props => props.theme.color};
   position: absolute;
-  font-size: 9px;
-  padding: 1px 0 0 1px;
+  left: 0;
+  top: 0;
 `;
 const Text = styled.Text`
   color: ${props => props.theme.color};
@@ -80,6 +88,23 @@ const ImageContainer = styled.View`
 `;
 const GreyLocation = styled(Location)`
   opacity: 0.6;
+`;
+
+const FirstLine = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 20px;
+`;
+const SecondLine = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 25px;
+`;
+const LastMessageText = styled(Text)`
+  font-size: 15px;
+  color: ${props => props.theme.greyColor};
 `;
 const View = styled.View`
   justify-content: center;
@@ -126,9 +151,19 @@ const UserRow: React.FC<IProps> = ({
   count,
   diff,
   naturalTime,
-  type,
+  type
 }) => {
   const isDarkMode = useTheme();
+  const [lastMessage, setLastMessage] = useState<string>("");
+  get_last_chat_messages(match.id).then(message => {
+    setLastMessage(message);
+  });
+  fb_db.ref
+    .child("chats")
+    .child(match.id)
+    .on("child_changed", child => {
+      setLastMessage(child.val()["lastMessage"]);
+    });
   switch (type) {
     case "user":
       return (
@@ -621,85 +656,86 @@ const UserRow: React.FC<IProps> = ({
       return (
         <>
           {match.isHost ? (
-            <Container >
+            <Container>
               <Header>
-                <Touchable>
-                  <ImageContainer>
-                    {match.guest.profile.appAvatarUrl ? (
-                      <ProgressiveImage
-                        tint={isDarkMode ? "dark" : "light"}
-                        style={{ height: 36, width: 36, borderRadius: 18 }}
-                        preview={{
-                          uri: `${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`
-                        }}
-                        uri={`${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`}
-                      />
-                    ) : (
-                      <Image
-                        style={{ height: 36, width: 36, borderRadius: 18 }}
-                        source={randomAvatar[Math.round(Math.random() * 9)]}
-                      />
-                    )}
-                  </ImageContainer>
-                  {!match.isReadByHost && <Mark>N</Mark>}
-                </Touchable>
-                <Touchable>
-                  <HeaderUserContainer>
+                <ImageContainer>
+                  {match.guest.profile.appAvatarUrl ? (
+                    <ProgressiveImage
+                      tint={isDarkMode ? "dark" : "light"}
+                      style={{ height: 36, width: 36, borderRadius: 18 }}
+                      preview={{
+                        uri: `${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`
+                      }}
+                      uri={`${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`}
+                    />
+                  ) : (
+                    <Image
+                      style={{ height: 36, width: 36, borderRadius: 18 }}
+                      source={randomAvatar[Math.round(Math.random() * 9)]}
+                    />
+                  )}
+                  {!match.isReadByHost && (
+                    <IconContainer>
+                      <FontAwesome name={"circle"} color={"red"} size={7} />
+                    </IconContainer>
+                  )}
+                </ImageContainer>
+                <MatchHeaderUserContainer>
+                  <FirstLine>
                     <Bold>{match.guest.username}</Bold>
-                    <Location>
-                      {match.guest.profile.currentCity.cityName},{" "}
-                      {match.guest.profile.currentCity.country.countryName}
-                    </Location>
                     <GreyLocation>
                       Matched in {match.city.cityName}
                       {match.city.country.countryEmoji}
                     </GreyLocation>
-                  </HeaderUserContainer>
-                </Touchable>
+                  </FirstLine>
+                  <SecondLine>
+                    <LastMessageText>{lastMessage}</LastMessageText>
+                  </SecondLine>
+                </MatchHeaderUserContainer>
               </Header>
             </Container>
           ) : (
-            <Container >
+            <Container>
               <Header>
-                <Touchable>
-                  <ImageContainer>
-                    {match.host.profile.appAvatarUrl ? (
-                      <ProgressiveImage
-                        tint={isDarkMode ? "dark" : "light"}
-                        style={{ height: 36, width: 36, borderRadius: 18 }}
-                        preview={{
-                          uri: `${BACKEND_URL}/media/${match.host.profile.appAvatarUrl}`
-                        }}
-                        uri={`${BACKEND_URL}/media/${match.host.profile.appAvatarUrl}`}
-                      />
-                    ) : (
-                      <Image
-                        style={{ height: 36, width: 36, borderRadius: 18 }}
-                        source={randomAvatar[Math.round(Math.random() * 9)]}
-                      />
-                    )}
-                  </ImageContainer>
-                  {!match.isReadByGuest && <Mark>N</Mark>}
-                </Touchable>
-                <Touchable>
-                  <HeaderUserContainer>
+                <ImageContainer>
+                  {match.host.profile.appAvatarUrl ? (
+                    <ProgressiveImage
+                      tint={isDarkMode ? "dark" : "light"}
+                      style={{ height: 36, width: 36, borderRadius: 18 }}
+                      preview={{
+                        uri: `${BACKEND_URL}/media/${match.host.profile.appAvatarUrl}`
+                      }}
+                      uri={`${BACKEND_URL}/media/${match.host.profile.appAvatarUrl}`}
+                    />
+                  ) : (
+                    <Image
+                      style={{ height: 36, width: 36, borderRadius: 18 }}
+                      source={randomAvatar[Math.round(Math.random() * 9)]}
+                    />
+                  )}
+                  {!match.isReadByGuest && (
+                    <IconContainer>
+                      <FontAwesome name={"circle"} color={"red"} size={7} />
+                    </IconContainer>
+                  )}
+                </ImageContainer>
+                <MatchHeaderUserContainer>
+                  <FirstLine>
                     <Bold>{match.host.username}</Bold>
-                    <Location>
-                      {match.host.profile.currentCity.cityName},{" "}
-                      {match.host.profile.currentCity.country.countryName}
-                    </Location>
                     <GreyLocation>
                       Matched in {match.city.cityName}
                       {match.city.country.countryEmoji}
                     </GreyLocation>
-                  </HeaderUserContainer>
-                </Touchable>
+                  </FirstLine>
+                  <SecondLine>
+                    <LastMessageText>{lastMessage}</LastMessageText>
+                  </SecondLine>
+                </MatchHeaderUserContainer>
               </Header>
             </Container>
           )}
         </>
       );
-
     default:
       return null;
   }

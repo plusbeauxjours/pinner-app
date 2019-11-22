@@ -117,13 +117,11 @@ export const chat_send = (chat_id: string, message: ChatMessage) => {
   }
   let updates = {};
   if (message.text) {
-    updates[
-      `/chats/${chat_id}/lastMessage/`
-    ] = `${message.user.name}: ${message.text}`;
-  } else {
-    updates[
-      `/chats/${chat_id}/lastMessage/`
-    ] = `${message.user.name}: ${message.image}`;
+    updates[`/chats/${chat_id}/lastMessage/`] = `${message.text}`;
+  } else if (message.image) {
+    updates[`/chats/${chat_id}/lastMessage/`] = "Image";
+  } else if (message.location) {
+    updates[`/chats/${chat_id}/lastMessage/`] = "Location";
   }
   updates[`/messages/${chat_id}/${new_key}/`] = message;
   return fb_db.ref.update(updates);
@@ -151,6 +149,18 @@ export const update_message_info = async (
     resolve(updated_message);
   });
 };
+export const get_last_chat_messages = async (chatId: string) => {
+  return new Promise<string>((resolve, reject) => {
+    fb_db.ref
+      .child("chats")
+      .child(chatId)
+      .once("value", snapshot => {
+        let lastMessage = snapshot.val()["lastMessage"];
+        resolve(lastMessage);
+      });
+  });
+};
+
 export const get_old_chat_messages = async (
   chatId: string,
   resolution: string,
