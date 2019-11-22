@@ -4,22 +4,16 @@ import { GiftedChat } from "react-native-gifted-chat";
 import ImageViewer from "react-native-image-zoom-viewer";
 import { ScreenOrientation } from "expo";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
-import Loader from "../../../../components/Loader";
+import { Ionicons } from "@expo/vector-icons";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Platform, KeyboardAvoidingView, Modal, Image } from "react-native";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
+import Loader from "../../../../components/Loader";
 import constants from "../../../../../constants";
 import { useTheme } from "../../../../context/ThemeContext";
 import { darkMode, lightMode } from "../../../../styles/mapStyles";
-import { Ionicons } from "@expo/vector-icons";
 import { useLocation } from "../../../../context/LocationContext";
-
-const View = styled.View`
-  background-color: ${props => props.theme.bgColor};
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-`;
 
 const ChatContainer = styled.View`
   flex: 1;
@@ -38,30 +32,28 @@ const MarkerContainer = styled.View`
   background-color: transparent;
 `;
 
-const TripSubmitBtn = styled.TouchableOpacity`
+const Container = styled.View`
+  background-color: ${props => props.theme.bgColor};
   justify-content: center;
   align-items: center;
   flex: 1;
-  height: 40px;
-  margin: 5px;
-  border: 0.5px solid #999;
-  border-radius: 5px;
-  background-color: rgba(230, 230, 230, 0.95);
-`;
-
-const TripBtnContainer = styled.View`
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: ${constants.width};
-  padding: 0 10px 0 10px;
-  bottom: 0;
 `;
 
 const Text = styled.Text`
-  font-size: 16;
-  font-weight: 600;
-  color: white;
+  color: ${props => props.theme.color};
+  font-size: 20px;
+  font-weight: 500;
+`;
+const MapBtnContainer = styled.View`
+  background-color: ${props => props.theme.bgColor};
+`;
+const MapBtn = styled.TouchableOpacity`
+  flex-direction: row;
+  width: ${constants.width};
+  height: 50px;
+  background-color: ${props => props.theme.bgColor};
+  justify-content: center;
+  align-items: center;
 `;
 
 interface IProps {
@@ -87,8 +79,6 @@ interface IProps {
   closeImageModalOpen: () => void;
   closeMapModal: () => void;
   leaveChat: () => void;
-  pickFromCamera: any;
-  pickFromGallery: any;
   messageFooter: (timeProps: any) => void;
 }
 
@@ -115,8 +105,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   closeImageModalOpen,
   closeMapModal,
   leaveChat,
-  pickFromCamera,
-  pickFromGallery,
   messageFooter
 }) => {
   let mapRef: MapView | null;
@@ -154,14 +142,34 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   const handleGeoError = () => {
     console.log("No location");
   };
+  const { showActionSheetWithOptions } = useActionSheet();
+  const onPress = (latitude: string, longitude: string) => {
+    showActionSheetWithOptions(
+      {
+        options: ["Send this location", "Back to chatroom", "Cancel"],
+        cancelButtonIndex: 2
+      },
+      buttonIndex => {
+        if (buttonIndex === 0) {
+          try {
+            onSendLocation(latitude, longitude);
+          } catch (e) {
+            console.log(e);
+          }
+        } else if (buttonIndex === 1) {
+          closeMapModal();
+        }
+      }
+    );
+  };
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(handleGeoSuccess, handleGeoError);
   }, []);
   if (loading) {
     return (
-      <View>
+      <Container>
         <Loader />
-      </View>
+      </Container>
     );
   } else {
     return (
@@ -204,7 +212,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
           />
           {/* )}
           {nowShowing == "video" && (
-            <View
+            <Container
               style={{
                 width: constants.width,
                 height: constants.height,
@@ -223,7 +231,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                 isLooping
                 style={{ width: 300, height: 300 }}
               />
-            </View>
+            </Container>
           )} */}
         </Modal>
         <Modal visible={mapModalOpen} transparent={true}>
@@ -233,8 +241,8 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
             }}
             provider={PROVIDER_GOOGLE}
             style={{
-              flex: 1,
-              borderRadius: 3
+              borderRadius: 5,
+              height: constants.height - 50
             }}
             initialRegion={region}
             showsUserLocation={true}
@@ -247,10 +255,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
               isDarkMode && isDarkMode === true ? darkMode : lightMode
             }
           >
-            <MarkerContainer
-              pointerEvents="none"
-              onPress={() => onSendLocation(region.latitude, region.longitude)}
-            >
+            <MarkerContainer pointerEvents="none">
               <Ionicons
                 name={Platform.OS === "ios" ? "ios-pin" : "md-pin"}
                 size={40}
@@ -259,19 +264,12 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                 containerStyle={{ marginBottom: 30 }}
               />
             </MarkerContainer>
-            <TripBtnContainer>
-              <TripSubmitBtn onPress={() => closeMapModal()}>
-                <Text>Cancel</Text>
-              </TripSubmitBtn>
-              <TripSubmitBtn
-                onPress={() =>
-                  onSendLocation(region.latitude, region.longitude)
-                }
-              >
-                <Text>Send Location</Text>
-              </TripSubmitBtn>
-            </TripBtnContainer>
           </MapView>
+          <MapBtnContainer>
+            <MapBtn onPress={() => onPress(region.latitude, region.longitude)}>
+              <Text>Options</Text>
+            </MapBtn>
+          </MapBtnContainer>
         </Modal>
         <ChatContainer>
           {Platform.OS === "android" ? (

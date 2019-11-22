@@ -612,8 +612,6 @@ class ChatContainer extends React.Component<IProps, IState> {
         closeMapModal={this.closeMapModal}
         closeImageModalOpen={this.closeImageModalOpen}
         leaveChat={this.leaveChat}
-        pickFromCamera={this.pickFromCamera}
-        pickFromGallery={this.pickFromGallery}
         messageFooter={this.messageFooter}
       />
     );

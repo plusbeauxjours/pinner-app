@@ -100,7 +100,7 @@ const SecondLine = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  height: 25px;
+  height: 20px;
 `;
 const LastMessageText = styled(Text)`
   font-size: 15px;
