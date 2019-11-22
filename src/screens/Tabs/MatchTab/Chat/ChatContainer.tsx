@@ -110,7 +110,6 @@ class ChatContainer extends React.Component<IProps, IState> {
       this.setState(previousState => ({
         messages: GiftedChat.append(previousState.messages, msg)
       }));
-      console.log("ifMsg");
     }
   };
 
@@ -135,7 +134,6 @@ class ChatContainer extends React.Component<IProps, IState> {
       mapModalOpen: false
     }));
     chat_send(this.state.chatId, messageLocation).catch(e => console.log(e));
-    console.log("location");
   };
 
   public renderActionsIcon = () => (
@@ -383,6 +381,10 @@ class ChatContainer extends React.Component<IProps, IState> {
     }
   };
 
+  public closeMapModal = () => {
+    this.setState({ mapModalOpen: false });
+  };
+
   public closeImageModalOpen = () => {
     this.setState({ imageModalOpen: false });
   };
@@ -394,7 +396,6 @@ class ChatContainer extends React.Component<IProps, IState> {
   };
 
   public componentDidMount() {
-    console.log("stateMessages", this.state.messages);
     BackHandler.addEventListener("hardwareBackPress", () => {
       if (!this.state.overlayVisible) {
         this.props.navigation.navigate("Match");
@@ -427,7 +428,6 @@ class ChatContainer extends React.Component<IProps, IState> {
       .orderByKey()
       .startAt(start_key)
       .on("child_changed", child => {
-        console.log("child", child);
         if (child && child.val()) {
           if (child.val()["status"] === true) {
             this.setState({
@@ -608,6 +608,7 @@ class ChatContainer extends React.Component<IProps, IState> {
         renderDarkMessageImage={this.renderDarkMessageImage}
         renderLightMessageImage={this.renderLightMessageImage}
         renderActions={this.renderActions}
+        closeMapModal={this.closeMapModal}
         closeImageModalOpen={this.closeImageModalOpen}
         leaveChat={this.leaveChat}
         pickFromCamera={this.pickFromCamera}

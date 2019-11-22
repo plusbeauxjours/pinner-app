@@ -38,11 +38,24 @@ const MarkerContainer = styled.View`
   background-color: transparent;
 `;
 
-const Touchable = styled.TouchableOpacity`
-  height: 45px;
+const TripSubmitBtn = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
-  background-color: #3897f0;
+  flex: 1;
+  height: 40px;
+  margin: 5px;
+  border: 0.5px solid #999;
+  border-radius: 5px;
+  background-color: rgba(230, 230, 230, 0.95);
+`;
+
+const TripBtnContainer = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: ${constants.width};
+  padding: 0 10px 0 10px;
+  bottom: 0;
 `;
 
 const Text = styled.Text`
@@ -72,6 +85,7 @@ interface IProps {
   renderLightMessageImage: any;
   renderActions: any;
   closeImageModalOpen: () => void;
+  closeMapModal: () => void;
   leaveChat: () => void;
   pickFromCamera: any;
   pickFromGallery: any;
@@ -99,6 +113,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   renderLightMessageImage,
   renderActions,
   closeImageModalOpen,
+  closeMapModal,
   leaveChat,
   pickFromCamera,
   pickFromGallery,
@@ -124,7 +139,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   const onRegionChangeComplete = region => {
     setRegion(region);
     console.log(region);
-    mapRef.animateToRegion(region);
   };
   const handleGeoSuccess = (position: Position) => {
     const {
@@ -245,12 +259,19 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                 containerStyle={{ marginBottom: 30 }}
               />
             </MarkerContainer>
+            <TripBtnContainer>
+              <TripSubmitBtn onPress={() => closeMapModal()}>
+                <Text>Cancel</Text>
+              </TripSubmitBtn>
+              <TripSubmitBtn
+                onPress={() =>
+                  onSendLocation(region.latitude, region.longitude)
+                }
+              >
+                <Text>Send Location</Text>
+              </TripSubmitBtn>
+            </TripBtnContainer>
           </MapView>
-          <Touchable
-            onPress={() => onSendLocation(region.latitude, region.longitude)}
-          >
-            <Text>Tap To Send This Location</Text>
-          </Touchable>
         </Modal>
         <ChatContainer>
           {Platform.OS === "android" ? (

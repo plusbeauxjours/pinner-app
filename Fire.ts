@@ -25,8 +25,8 @@ export interface UserChatMessage {
 }
 
 export interface LocationChatMessage {
-  latitude: number;
-  longitude: number;
+  latitude: string;
+  longitude: string;
 }
 
 export interface ChatMessage {
@@ -125,7 +125,6 @@ export const chat_send = (chat_id: string, message: ChatMessage) => {
       `/chats/${chat_id}/lastMessage/`
     ] = `${message.user.name}: ${message.image}`;
   }
-  console.log("onFire", message);
   updates[`/messages/${chat_id}/${new_key}/`] = message;
   return fb_db.ref.update(updates);
 };
