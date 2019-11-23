@@ -1,14 +1,11 @@
 import styled from "styled-components";
 import * as Facebook from "expo-facebook";
-import AuthButton from "../../../../components/AuthButton";
+import AuthButton from "../../../components/AuthButton";
 import React, { useState } from "react";
 import { useMutation } from "react-apollo-hooks";
-import {
-  FacebookConnect,
-  FacebookConnectVariables
-} from "../../../../types/api";
+import { FacebookConnect, FacebookConnectVariables } from "../../../types/api";
 import { FACEBOOK_CONNECT } from "./FacebookApproachQueries";
-import { useLogIn } from "../../../../context/AuthContext";
+import { useLogIn } from "../../../context/AuthContext";
 import Toast from "react-native-root-toast";
 
 const FBContainer = styled.View``;

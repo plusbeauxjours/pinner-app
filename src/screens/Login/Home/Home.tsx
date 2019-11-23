@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Modal from "react-native-modal";
 import constants from "../../../../constants";
-import FacebookApproach from "../Approach/FacebookApproach";
 import { useMutation } from "react-apollo-hooks";
 import {
   StartPhoneVerification,
   StartPhoneVerificationVariables,
   CompletePhoneVerification,
-  CompletePhoneVerificationVariables
+  CompletePhoneVerificationVariables,
+  StartEmailVerification,
+  StartEmailVerificationVariables
 } from "../../../types/api";
-import { PHONE_SIGN_IN } from "../Approach/PhoneApproach/PhoneApproachQueries";
 import Toast from "react-native-root-toast";
 import Loader from "../../../components/Loader";
 import { Platform } from "react-native";
@@ -22,6 +22,8 @@ import { countries } from "../../../../countryData";
 import { COMPLETE_PHONE_SIGN_IN } from "../Verification/PhoneVerification/PhoneVerificationQueries";
 import { useLocation } from "../../../context/LocationContext";
 import { useLogIn } from "../../../context/AuthContext";
+import { EMAIL_SIGN_IN, PHONE_SIGN_IN } from "./HomeQueries";
+import FacebookApproach from "../FacebookApproach";
 
 const View = styled.View`
   justify-content: center;
@@ -33,7 +35,9 @@ const Image = styled.Image`
   width: ${constants.width / 2.5};
 `;
 
-const LoginLink = styled.View``;
+const LoginLink = styled.View`
+  margin-bottom: 10px;
+`;
 const LoginLinkText = styled.Text`
   color: ${props => props.theme.blueColor};
   margin-top: 20px;
@@ -46,7 +50,7 @@ const LoaderContainer = styled.View`
   justify-content: center;
   align-items: center;
 `;
-const PhoneApproachModalContainer = styled.View`
+const ApproachModalContainer = styled.View`
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -81,12 +85,10 @@ export default ({ navigation }) => {
   const logIn = useLogIn();
   const isDarkMode = useTheme();
   const location = useLocation();
-  const [phoneApproachModalOpen, setPhoneApproachModalOpen] = useState<boolean>(
-    false
-  );
-  const [isPhoneApproachMode, setIsPhoneApproachMode] = useState<boolean>(true);
+  const [approachModalOpen, setApproachModalOpen] = useState<boolean>(false);
+  const [modalMode, setModalMode] = useState<string>("phoneApproach");
   const [verificationKey, setVerificationKey] = useState<string>("");
-
+  const [emailAddress, setEmailAddress] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [countryPhoneCode, setCountryPhoneCode] = useState<any>(
     "KR"
@@ -128,6 +130,15 @@ export default ({ navigation }) => {
       cityId: location.currentCityId
     }
   });
+  const [
+    startEmailVerificationFn,
+    { loading: startEmailVerificationLoading }
+  ] = useMutation<StartEmailVerification, StartEmailVerificationVariables>(
+    EMAIL_SIGN_IN,
+    {
+      variables: { emailAddress }
+    }
+  );
   const toast = (message: string) => {
     Toast.show(message, {
       duration: Toast.durations.LONG,
@@ -143,9 +154,15 @@ export default ({ navigation }) => {
     setCountryPhoneCode(country.cca2);
   };
   const closePhoneApproachModalOpen = () => {
-    setPhoneApproachModalOpen(false);
-    setIsPhoneApproachMode(true);
+    setApproachModalOpen(false);
+    setModalMode("phoneApproach");
     setVerificationKey("");
+  };
+  const closeEmailApproachModalOpen = () => {
+    if (!startEmailVerificationLoading) {
+      setApproachModalOpen(false);
+      setModalMode("phoneApproach");
+    }
   };
   const handlePhoneNumber = async () => {
     const phone = `${countryPhoneNumber}${
@@ -156,7 +173,8 @@ export default ({ navigation }) => {
       data: { startPhoneVerification }
     } = await startPhoneVerificationFn();
     if (startPhoneVerification.ok) {
-      setIsPhoneApproachMode(false);
+      setModalMode("phoneVerification");
+      setVerificationKey("");
     } else if (phoneNumber === "") {
       closePhoneApproachModalOpen();
       toast("Phone number can't be empty");
@@ -174,6 +192,30 @@ export default ({ navigation }) => {
       toast("Please write a valid phone number");
     }
   };
+  const handleEmailAddress = async () => {
+    if (emailAddress !== "") {
+      const isValid = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(
+        emailAddress
+      );
+      if (isValid) {
+        const {
+          data: { startEmailVerification }
+        } = await startEmailVerificationFn();
+        if (startEmailVerification.ok) {
+          setModalMode("emailVerification");
+        } else {
+          setApproachModalOpen(false);
+          toast("Requested email address is already verified");
+        }
+      } else {
+        setApproachModalOpen(false);
+        toast("Please write a valid email");
+      }
+    } else {
+      setApproachModalOpen(false);
+      toast("Please write a email address");
+    }
+  };
   const handlePhoneVerification = async () => {
     const {
       data: { completePhoneVerification }
@@ -184,8 +226,8 @@ export default ({ navigation }) => {
       countryPhoneNumber,
       countryPhoneCode
     );
-    setPhoneApproachModalOpen(false);
-    setIsPhoneApproachMode(true);
+    setApproachModalOpen(false);
+    setModalMode("phoneApproach");
     setVerificationKey("");
     if (completePhoneVerification.ok) {
       logIn(completePhoneVerification);
@@ -202,7 +244,7 @@ export default ({ navigation }) => {
   return (
     <>
       <Modal
-        isVisible={phoneApproachModalOpen}
+        isVisible={approachModalOpen}
         backdropColor={isDarkMode ? "#161616" : "#EFEFEF"}
         onBackdropPress={() => closePhoneApproachModalOpen()}
         onBackButtonPress={() =>
@@ -213,98 +255,167 @@ export default ({ navigation }) => {
         backdropOpacity={0.9}
         style={{ justifyContent: "center", alignItems: "center" }}
       >
-        {isPhoneApproachMode ? (
-          <>
-            <PhoneApproachModalContainer>
-              <CountryPicker
-                theme={isDarkMode && DARK_THEME}
-                countryCode={countryPhoneCode}
-                withFilter={true}
-                withFlag={true}
-                withAlphaFilter={true}
-                withEmoji={true}
-                onSelect={onSelectrPhone}
-              />
-              {/* <Text>{newCountryPhoneCode}</Text> */}
-              <Bigtext>{countryPhoneNumber}</Bigtext>
-              <TextInput
-                style={{
-                  width: 220,
-                  backgroundColor: "transparent",
-                  borderBottomWidth: 1,
-                  borderBottomColor: "#999",
-                  color: isDarkMode ? "white" : "black",
-                  marginLeft: 5,
-                  fontSize: 32,
-                  fontWeight: "300"
-                }}
-                keyboardType="phone-pad"
-                returnKeyType="send"
-                onChangeText={number => setPhoneNumber(number)}
-              />
-            </PhoneApproachModalContainer>
-            <ButtonContainer>
-              <Text>
-                When you tap "Send SMS", Pinner will send a text with
-                verification code. Message and data rates may apply. The
-                verified phone number can be used to login.
-              </Text>
-              <Void />
-              <Touchable
-                disabled={startPhoneVerificationLoading}
-                onPress={handlePhoneNumber}
-              >
-                {startPhoneVerificationLoading ? (
-                  <SubmitLoaderContainer>
-                    <Loader />
-                  </SubmitLoaderContainer>
-                ) : (
-                  <Bigtext>Send SMS</Bigtext>
-                )}
-              </Touchable>
-            </ButtonContainer>
-          </>
-        ) : (
-          <>
-            <TextInput
-              style={{
-                width: 220,
-                backgroundColor: "transparent",
-                borderBottomWidth: 1,
-                borderBottomColor: "#999",
-                color: isDarkMode ? "white" : "black",
-                marginLeft: 5,
-                fontSize: 32,
-                fontWeight: "300",
-                textAlign: "center"
-              }}
-              keyboardType="phone-pad"
-              returnKeyType="send"
-              onChangeText={number => setVerificationKey(number)}
-            />
-            <ButtonContainer>
-              <Touchable
-                disabled={completePhoneVerificationLoading}
-                onPress={handlePhoneVerification}
-              >
-                <EmptyView>
-                  {completePhoneVerificationLoading ? (
-                    <Loader />
-                  ) : (
-                    <Bigtext>Verify Key</Bigtext>
-                  )}
-                </EmptyView>
-              </Touchable>
-            </ButtonContainer>
-          </>
-        )}
+        {(() => {
+          switch (modalMode) {
+            case "phoneApproach":
+              return (
+                <>
+                  <ApproachModalContainer>
+                    {countryPhoneCode && (
+                      <CountryPicker
+                        theme={isDarkMode && DARK_THEME}
+                        countryCode={countryPhoneCode}
+                        withFilter={true}
+                        withFlag={true}
+                        withAlphaFilter={true}
+                        withEmoji={true}
+                        onSelect={onSelectrPhone}
+                      />
+                    )}
+                    {countryPhoneNumber && (
+                      <Bigtext>{countryPhoneNumber}</Bigtext>
+                    )}
+                    <TextInput
+                      style={{
+                        width: 220,
+                        backgroundColor: "transparent",
+                        borderBottomWidth: 1,
+                        borderBottomColor: "#999",
+                        color: isDarkMode ? "white" : "black",
+                        marginLeft: 5,
+                        fontSize: 32,
+                        fontWeight: "300"
+                      }}
+                      keyboardType="phone-pad"
+                      returnKeyType="send"
+                      onChangeText={number => setPhoneNumber(number)}
+                    />
+                  </ApproachModalContainer>
+                  <ButtonContainer>
+                    <Text>Changed your phone number? </Text>
+                    <Touchable onPress={() => setModalMode("emailApproach")}>
+                      <Text>Login with email</Text>
+                    </Touchable>
+                    <Text>
+                      When you tap "Send SMS", Pinner will send a text with
+                      verification code. Message and data rates may apply. The
+                      verified phone number can be used to login.
+                    </Text>
+                    <Void />
+                    <Touchable
+                      disabled={startPhoneVerificationLoading}
+                      onPress={handlePhoneNumber}
+                    >
+                      {startPhoneVerificationLoading ? (
+                        <SubmitLoaderContainer>
+                          <Loader />
+                        </SubmitLoaderContainer>
+                      ) : (
+                        <Bigtext>Send SMS</Bigtext>
+                      )}
+                    </Touchable>
+                  </ButtonContainer>
+                </>
+              );
+            case "phoneVerification":
+              return (
+                <>
+                  <TextInput
+                    style={{
+                      width: 220,
+                      backgroundColor: "transparent",
+                      borderBottomWidth: 1,
+                      borderBottomColor: "#999",
+                      color: isDarkMode ? "white" : "black",
+                      marginLeft: 5,
+                      fontSize: 32,
+                      fontWeight: "300",
+                      textAlign: "center"
+                    }}
+                    keyboardType="phone-pad"
+                    returnKeyType="send"
+                    onChangeText={number => setVerificationKey(number)}
+                  />
+                  <ButtonContainer>
+                    <Touchable
+                      disabled={completePhoneVerificationLoading}
+                      onPress={handlePhoneVerification}
+                    >
+                      <EmptyView>
+                        {completePhoneVerificationLoading ? (
+                          <Loader />
+                        ) : (
+                          <Bigtext>Verify Key</Bigtext>
+                        )}
+                      </EmptyView>
+                    </Touchable>
+                  </ButtonContainer>
+                </>
+              );
+            case "emailApproach":
+              return (
+                <>
+                  <ApproachModalContainer>
+                    <TextInput
+                      style={{
+                        width: constants.width - 80,
+                        backgroundColor: "transparent",
+                        borderBottomWidth: 1,
+                        borderBottomColor: "#999",
+                        color: isDarkMode ? "white" : "black",
+                        fontSize: 32,
+                        fontWeight: "300"
+                      }}
+                      keyboardType="email-address"
+                      returnKeyType="send"
+                      onChangeText={adress => setEmailAddress(adress)}
+                    />
+                  </ApproachModalContainer>
+                  <ButtonContainer>
+                    <Text>
+                      When you tap "Send EMAIL", Pinner will email you a link
+                      that will instantly log you in.
+                    </Text>
+                    <Void />
+                    <Touchable
+                      disabled={startEmailVerificationLoading}
+                      onPress={handleEmailAddress}
+                    >
+                      {startEmailVerificationLoading ? (
+                        <SubmitLoaderContainer>
+                          <Loader />
+                        </SubmitLoaderContainer>
+                      ) : (
+                        <Bigtext>Send EMAIL</Bigtext>
+                      )}
+                    </Touchable>
+                  </ButtonContainer>
+                </>
+              );
+            case "emailVerification":
+              return (
+                <>
+                  <Text>{emailAddress}, an email has been sent</Text>
+                  <Text>
+                    Please check your email in a moment to verify email address.
+                  </Text>
+                  <Text>Didn't receive a link?</Text>
+                  <Touchable onPress={() => setModalMode("emailApproach")}>
+                    <Text> Use a different email.</Text>
+                  </Touchable>
+                </>
+              );
+            default:
+              return null;
+          }
+        })()}
       </Modal>
       <View>
         <Image
           resizeMode={"contain"}
           source={require("../../../../assets/logo.png")}
         />
-        <Touchable onPress={() => setPhoneApproachModalOpen(true)}>
+        <Touchable onPress={() => setApproachModalOpen(true)}>
           <LoginLink>
             <LoginLinkText>LOG IN WITH PHONE NUMBER</LoginLinkText>
           </LoginLink>
