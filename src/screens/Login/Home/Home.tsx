@@ -158,12 +158,6 @@ export default ({ navigation }) => {
     setModalMode("phoneApproach");
     setVerificationKey("");
   };
-  const closeEmailApproachModalOpen = () => {
-    if (!startEmailVerificationLoading) {
-      setApproachModalOpen(false);
-      setModalMode("phoneApproach");
-    }
-  };
   const handlePhoneNumber = async () => {
     const phone = `${countryPhoneNumber}${
       phoneNumber.startsWith("0") ? phoneNumber.substring(1) : phoneNumber
