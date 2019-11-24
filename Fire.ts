@@ -155,8 +155,10 @@ export const get_last_chat_messages = async (chatId: string) => {
       .child("chats")
       .child(chatId)
       .once("value", snapshot => {
-        let lastMessage = snapshot.val()["lastMessage"];
-        resolve(lastMessage);
+        if (snapshot.val()) {
+          let lastMessage = snapshot.val()["lastMessage"];
+          resolve(lastMessage);
+        }
       });
   });
 };

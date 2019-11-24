@@ -164,7 +164,9 @@ const UserRow: React.FC<IProps> = ({
       .child("chats")
       .child(match.id)
       .on("child_changed", child => {
-        setLastMessage(child.val()["lastMessage"]);
+        if (child.val()) {
+          setLastMessage(child.val()["lastMessage"]);
+        }
       });
   }
   switch (type) {
@@ -725,7 +727,7 @@ const UserRow: React.FC<IProps> = ({
                   </FirstLine>
                   <SecondLine>
                     <LastMessageText>
-                      {lastMessage.length > 40
+                      {lastMessage && lastMessage.length > 40
                         ? lastMessage.substring(0, 40) + "..."
                         : lastMessage}
                     </LastMessageText>
@@ -776,7 +778,7 @@ const UserRow: React.FC<IProps> = ({
                   </FirstLine>
                   <SecondLine>
                     <LastMessageText>
-                      {lastMessage.length > 40
+                      {lastMessage && lastMessage.length > 40
                         ? lastMessage.substring(0, 40) + "..."
                         : lastMessage}
                     </LastMessageText>
