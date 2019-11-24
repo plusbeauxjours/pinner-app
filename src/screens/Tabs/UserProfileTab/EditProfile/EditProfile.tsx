@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import Modal from "react-native-modal";
@@ -207,6 +207,8 @@ export default ({ navigation }) => {
     EDIT_PROFILE
   );
   const [submitModal, setSubmitModal] = useState<boolean>(false);
+  const [isChanged, setIsChanged] = useState<boolean>(false);
+
   const onPress = () => {
     setSubmitModal(true);
     showActionSheetWithOptions(
@@ -539,6 +541,25 @@ export default ({ navigation }) => {
       }
     );
   };
+  useEffect(() => {
+    if (
+      newUsername !== navigation.getParam("username") ||
+      nationalityCode !==
+        (profile.nationality.countryCode ||
+          nationalityCode !== location.currentCountryCode) ||
+      residenceCode !==
+        (profile.residence.countryCode ||
+          residenceCode !== location.currentCountryCode) ||
+      gender !== profile.gender ||
+      firstName !== navigation.getParam("firstName") ||
+      lastName !== navigation.getParam("lastName") ||
+      bio !== profile.bio
+    ) {
+      setIsChanged(true);
+    }else{
+      setIsChanged(false);
+    }
+  });
   return (
     <ScrollView
       refreshControl={
@@ -776,7 +797,6 @@ export default ({ navigation }) => {
                   </FlagExplainText>
                 </CountryView>
               </CountryContainer>
-
               <Item>
                 <ToggleText>GENDER</ToggleText>
                 {gender ? (
@@ -883,10 +903,15 @@ export default ({ navigation }) => {
                         ? "md-radio-button-on"
                         : "md-radio-button-off"
                     }
-                    color={"#999"}
+                    color={isChanged ? "red" : "#999"}
                   />
                 </Touchable>
               </Item>
+              <ExplainText>
+                Your
+                {newUsername !== navigation.getParam("username") && "username"}
+                is changed. Please press submit to save.
+              </ExplainText>
               <Item>
                 <ToggleText>PHONE</ToggleText>
                 {countryPhoneCode && countryPhoneNumber ? (
