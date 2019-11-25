@@ -55,6 +55,12 @@ const ToggleContainer = styled.View``;
 const ToggleText = styled.Text`
   height: 20px;
   color: ${props => props.theme.color};
+  font-weight: ${props => (props.isChanged ? "300" : "100")};
+`;
+const SubmitText = styled.Text<IProps>`
+  height: 20px;
+  color: ${props => (props.isChanged ? "#d60000" : props.theme.color)};
+  font-weight: ${props => (props.isChanged ? "300" : "100")};
 `;
 const CountryView = styled.View`
   margin-top: 4px;
@@ -97,10 +103,10 @@ const Void = styled.View`
 `;
 const ToggleIcon = styled.TouchableOpacity``;
 const Touchable = styled.TouchableOpacity``;
-const ExplainText = styled.Text`
+const ExplainText = styled.Text<IProps>`
   font-size: 12px;
-  font-weight: 100;
-  color: ${props => props.theme.color};
+  color: ${props => (props.isChanged ? "#d60000" : props.theme.color)};
+  font-weight: ${props => (props.isChanged ? "300" : "100")};
 `;
 const FlagExplainText = styled(ExplainText)`
   top: -5px;
@@ -127,6 +133,9 @@ const SubmitLoaderContainer = styled.View`
   height: 35px;
 `;
 
+interface IProps {
+  isChanged: boolean;
+}
 export default ({ navigation }) => {
   const logOut = useLogOut();
   const location = useLocation();
@@ -352,7 +361,7 @@ export default ({ navigation }) => {
   const toast = (message: string) => {
     Toast.show(message, {
       duration: Toast.durations.LONG,
-      position: 40,
+      position: Toast.positions.CENTER,
       shadow: true,
       animation: true,
       hideOnPress: true,
@@ -556,7 +565,7 @@ export default ({ navigation }) => {
       bio !== profile.bio
     ) {
       setIsChanged(true);
-    }else{
+    } else {
       setIsChanged(false);
     }
   });
@@ -832,7 +841,7 @@ export default ({ navigation }) => {
               </Item>
               <ExplainText>Your gender to match</ExplainText>
               <Item>
-                <ToggleText>FIRST NAME</ToggleText>
+                <ToggleText>FIRSTNAME</ToggleText>
                 <TextInput
                   style={{
                     width: constants.width / 2,
@@ -847,9 +856,9 @@ export default ({ navigation }) => {
                   autoCorrect={false}
                 />
               </Item>
-              <ExplainText>Your first name</ExplainText>
+              <ExplainText>Your firstname</ExplainText>
               <Item>
-                <ToggleText>LAST NAME</ToggleText>
+                <ToggleText>LASTNAME</ToggleText>
                 <TextInput
                   style={{
                     width: constants.width / 2,
@@ -864,7 +873,7 @@ export default ({ navigation }) => {
                   autoCorrect={false}
                 />
               </Item>
-              <ExplainText>Your last name</ExplainText>
+              <ExplainText>Your lastname</ExplainText>
               <Item>
                 <TextInput
                   style={{
@@ -890,7 +899,7 @@ export default ({ navigation }) => {
                 Instagram or your blog for example.
               </ExplainText>
               <Item>
-                <ToggleText>SUBMIT</ToggleText>
+                <SubmitText isChanged={isChanged}>SUBMIT</SubmitText>
                 <Touchable onPress={onPress}>
                   <Ionicons
                     size={20}
@@ -907,10 +916,22 @@ export default ({ navigation }) => {
                   />
                 </Touchable>
               </Item>
-              <ExplainText>
-                Your
-                {newUsername !== navigation.getParam("username") && "username"}
-                is changed. Please press submit to save.
+              <ExplainText isChanged={isChanged}>
+                {isChanged && "Your "}
+                {newUsername !== navigation.getParam("username") && "USERNAME "}
+                {nationalityCode !==
+                  (profile.nationality.countryCode ||
+                    nationalityCode !== location.currentCountryCode) &&
+                  "NATIONALITY "}
+                {residenceCode !==
+                  (profile.residence.countryCode ||
+                    residenceCode !== location.currentCountryCode) &&
+                  "RESIDENCE "}
+                {gender !== profile.gender && "GENDER "}
+                {firstName !== navigation.getParam("firstName") && "FIRSTNAME "}
+                {lastName !== navigation.getParam("lastName") && "LASTNAME "}
+                {bio !== profile.bio && "BIO "}
+                {isChanged && "is changed. Please press submit button to save."}
               </ExplainText>
               <Item>
                 <ToggleText>PHONE</ToggleText>

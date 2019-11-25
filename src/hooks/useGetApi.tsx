@@ -8,7 +8,7 @@ export const useGetApi = async (latitude, longitude) => {
   const toast = (message: string) => {
     Toast.show(message, {
       duration: Toast.durations.LONG,
-      position: 40,
+      position: Toast.positions.CENTER,
       shadow: true,
       animation: true,
       hideOnPress: true,
