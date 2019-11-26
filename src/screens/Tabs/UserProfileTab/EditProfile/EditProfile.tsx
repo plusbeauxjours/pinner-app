@@ -912,7 +912,7 @@ export default ({ navigation }) => {
                         ? "md-radio-button-on"
                         : "md-radio-button-off"
                     }
-                    color={isChanged ? "red" : "#999"}
+                    color={isChanged ? "#d60000" : "#999"}
                   />
                 </Touchable>
               </Item>

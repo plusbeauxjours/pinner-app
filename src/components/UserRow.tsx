@@ -7,7 +7,12 @@ import moment from "moment";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import styled from "styled-components";
 import { useTheme } from "../context/ThemeContext";
-import { get_last_chat_messages, fb_db } from "../../Fire";
+import { useMe } from "../context/MeContext";
+import {
+  get_last_chat_messages,
+  fb_db,
+  get_last_chat_status
+} from "../../Fire";
 
 const Container = styled.View`
   padding: 15px 5px 15px 5px;
@@ -155,10 +160,22 @@ const UserRow: React.FC<IProps> = ({
   type
 }) => {
   const isDarkMode = useTheme();
+  const { me } = useMe();
   const [lastMessage, setLastMessage] = useState<string>("");
+  const [hasUnreadMessage, setHasUnreadMessage] = useState<boolean>(false);
   if (match) {
     get_last_chat_messages(match.id).then(message => {
       setLastMessage(message);
+    });
+    get_last_chat_status(match.id, me.user.profile.id).then(status => {
+      if (status === true) {
+        setHasUnreadMessage(false);
+      } else if (status === false) {
+        setHasUnreadMessage(true);
+      } else {
+        return;
+      }
+      console.log(status);
     });
     fb_db.ref
       .child("chats")
@@ -166,6 +183,19 @@ const UserRow: React.FC<IProps> = ({
       .on("child_changed", child => {
         if (child.val()) {
           setLastMessage(child.val()["lastMessage"]);
+          if (
+            child.val()["lastSender"] !== me.user.profile.id &&
+            child.val()["status"] === true
+          ) {
+            setHasUnreadMessage(false);
+          } else if (
+            child.val()["lastSender"] !== me.user.profile.id &&
+            child.val()["status"] === false
+          ) {
+            setHasUnreadMessage(true);
+          } else {
+            return;
+          }
         }
       });
   }
@@ -711,11 +741,12 @@ const UserRow: React.FC<IProps> = ({
                       source={randomAvatar[Math.round(Math.random() * 9)]}
                     />
                   )}
-                  {!match.isReadByHost && (
-                    <IconContainer>
-                      <FontAwesome name={"circle"} color={"red"} size={7} />
-                    </IconContainer>
-                  )}
+                  {!match.isReadByHost ||
+                    (hasUnreadMessage && (
+                      <IconContainer>
+                        <FontAwesome name={"circle"} color={"red"} size={7} />
+                      </IconContainer>
+                    ))}
                 </ImageContainer>
                 <MatchHeaderUserContainer>
                   <FirstLine>
@@ -762,11 +793,13 @@ const UserRow: React.FC<IProps> = ({
                       source={randomAvatar[Math.round(Math.random() * 9)]}
                     />
                   )}
-                  {!match.isReadByGuest && (
-                    <IconContainer>
-                      <FontAwesome name={"circle"} color={"red"} size={7} />
-                    </IconContainer>
-                  )}
+
+                  {!match.isReadByGuest ||
+                    (hasUnreadMessage && (
+                      <IconContainer>
+                        <FontAwesome name={"circle"} color={"red"} size={7} />
+                      </IconContainer>
+                    ))}
                 </ImageContainer>
                 <MatchHeaderUserContainer>
                   <FirstLine>

@@ -1,4 +1,5 @@
 import firebase from "firebase";
+import { useState } from "react";
 import keys from "./keys";
 import { SystemMessage } from "react-native-gifted-chat";
 import path from "react-native-path";
@@ -118,6 +119,8 @@ export const chat_send = (chat_id: string, message: ChatMessage) => {
   let updates = {};
   if (message.text) {
     updates[`/chats/${chat_id}/lastMessage/`] = `${message.text}`;
+    updates[`/chats/${chat_id}/lastSender/`] = `${message.user._id}`;
+    updates[`/chats/${chat_id}/status/`] = `${message.status}`;
   } else if (message.image) {
     updates[`/chats/${chat_id}/lastMessage/`] = "Photo";
   } else if (message.location) {
@@ -143,6 +146,7 @@ export const update_message_info = async (
       updated_message = msg;
       resolve(updated_message);
       updates[`/messages/${chat_id}/${msg._id}/`] = updated_message;
+      updates[`/chats/${chat_id}/status/`] = true;
       return fb_db.ref.update(updates);
     }
     updated_message = msg;
@@ -158,6 +162,25 @@ export const get_last_chat_messages = async (chatId: string) => {
         if (snapshot.val()) {
           let lastMessage = snapshot.val()["lastMessage"];
           resolve(lastMessage);
+        }
+      });
+  });
+};
+
+export const get_last_chat_status = async (chatId: string, userId: string) => {
+  return new Promise<boolean>((resolve, reject) => {
+    fb_db.ref
+      .child("chats")
+      .child(chatId)
+      .once("value", snapshot => {
+        if (snapshot.val()["lastSender"] !== userId) {
+          if (snapshot.val()["status"] === "false") {
+            resolve(false);
+          } else {
+            resolve(true);
+          }
+        } else {
+          resolve(true);
         }
       });
   });
