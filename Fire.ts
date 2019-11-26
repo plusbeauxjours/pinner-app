@@ -22,7 +22,6 @@ export const database = firebase.database();
 export interface UserChatMessage {
   _id: string;
   name: string;
-  avatar?: string;
 }
 
 export interface LocationChatMessage {

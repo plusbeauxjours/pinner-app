@@ -245,6 +245,9 @@ export default ({ navigation }) => {
                               receiverId: data.item.isHost
                                 ? data.item.guest.profile.id
                                 : data.item.host.profile.id,
+                              receiverAvatar: data.item.isHost
+                                ? data.item.guest.profile.appAvatarUrl
+                                : data.item.host.profile.appAvatarUrl,
                               userName: me.user.username,
                               userUrl: me.user.profile.appAvatarUrl,
                               targetName: data.item.isHost

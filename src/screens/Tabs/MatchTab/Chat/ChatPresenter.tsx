@@ -71,7 +71,6 @@ interface IProps {
   onSend: any;
   onSendLocation: any;
   renderCustomView: any;
-  onPressAvatar: () => void;
   renderMessageVideo: () => void;
   renderDarkMessageImage: any;
   renderLightMessageImage: any;
@@ -80,6 +79,7 @@ interface IProps {
   closeMapModal: () => void;
   leaveChat: () => void;
   messageFooter: (timeProps: any) => void;
+  renderAvatar: any;
 }
 
 const ChatPresenter: React.FunctionComponent<IProps> = ({
@@ -97,7 +97,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   onSend,
   onSendLocation,
   renderCustomView,
-  onPressAvatar,
   renderMessageVideo,
   renderDarkMessageImage,
   renderLightMessageImage,
@@ -105,7 +104,8 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   closeImageModalOpen,
   closeMapModal,
   leaveChat,
-  messageFooter
+  messageFooter,
+  renderAvatar
 }) => {
   let mapRef: MapView | null;
   const isDarkMode = useTheme();
@@ -277,18 +277,17 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                 messages={messages}
                 onSend={messages => onSend(messages)}
                 user={{
-                  _id: userId,
-                  avatar: userAvatarUrl
+                  _id: userId
                 }}
                 renderCustomView={renderCustomView}
                 renderActions={renderActions}
-                onPressAvatar={onPressAvatar}
                 renderMessageImage={
                   isDarkMode ? renderDarkMessageImage : renderLightMessageImage
                 }
                 //@ts-ignore
                 renderTime={messageFooter}
                 // renderMessageVideo={renderMessageVideo}
+                renderAvatar={renderAvatar}
               />
               <KeyboardSpacer />
             </KeyboardAvoidingView>
@@ -297,18 +296,17 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
               messages={messages}
               onSend={messages => onSend(messages)}
               user={{
-                _id: userId,
-                avatar: userAvatarUrl
+                _id: userId
               }}
               renderCustomView={renderCustomView}
               renderActions={renderActions}
-              onPressAvatar={onPressAvatar}
               renderMessageImage={
                 isDarkMode ? renderDarkMessageImage : renderLightMessageImage
               }
               //@ts-ignore
               renderTime={messageFooter}
               // renderMessageVideo={renderMessageVideo}
+              renderAvatar={renderAvatar}
             />
           )}
         </ChatContainer>

@@ -214,12 +214,6 @@ export default ({ navigation }) => {
     const {
       data: { completePhoneVerification }
     } = await completePhoneVerificationFn();
-    console.log(
-      verificationKey,
-      phoneNumber,
-      countryPhoneNumber,
-      countryPhoneCode
-    );
     setApproachModalOpen(false);
     setModalMode("phoneApproach");
     setVerificationKey("");

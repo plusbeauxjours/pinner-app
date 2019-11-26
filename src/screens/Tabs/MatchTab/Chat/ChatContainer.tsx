@@ -31,6 +31,7 @@ import * as ImageManipulator from "expo-image-manipulator";
 import { Ionicons } from "@expo/vector-icons";
 import * as moment from "moment-timezone";
 import Toast from "react-native-root-toast";
+import { Image } from "react-native";
 
 const HIGH_WIDTH = 1280;
 const HIGH_HEIGHT = 960;
@@ -51,6 +52,7 @@ interface IState {
   chatId: string;
   userId: string;
   receiverId: string;
+  receiverAvatar: string;
   userName: string;
   userUrl: string;
   userAvatarUrl: string;
@@ -76,6 +78,7 @@ class ChatContainer extends React.Component<IProps, IState> {
       chatId: this.props.navigation.getParam("chatId"),
       userId: this.props.navigation.getParam("userId"),
       receiverId: this.props.navigation.getParam("receiverId"),
+      receiverAvatar: this.props.navigation.getParam("receiverAvatar"),
       userName: this.props.navigation.getParam("userName"),
       userUrl: this.props.navigation.getParam("userUrl"),
       userAvatarUrl: `${BACKEND_URL}/media/${this.props.navigation.getParam(
@@ -126,8 +129,7 @@ class ChatContainer extends React.Component<IProps, IState> {
     let new_key = get_new_key("messages");
     let user: UserChatMessage = {
       _id: this.state.userId,
-      name: this.state.userName,
-      avatar: this.state.userAvatarUrl
+      name: this.state.userName
     };
     let messageLocation: ChatMessage = {
       _id: new_key,
@@ -151,14 +153,6 @@ class ChatContainer extends React.Component<IProps, IState> {
 
   public renderCustomView = props => {
     return <CustomView {...props} />;
-  };
-
-  public onPressAvatar = () => {
-    const { targetName } = this.state;
-    this.props.navigation.push("UserProfileTabs", {
-      username: targetName,
-      isSelf: false
-    });
   };
 
   public renderMessageVideo = () => {};
@@ -189,6 +183,66 @@ class ChatContainer extends React.Component<IProps, IState> {
           uri={props.currentMessage.image}
         />
       </TouchableOpacity>
+    );
+  };
+
+  public renderAvatar = () => {
+    const { targetName } = this.state;
+    const randomAvatar = {
+      1: require(`../../../../Images/thumbnails/earth1.png`),
+      2: require(`../../../../Images/thumbnails/earth2.png`),
+      3: require(`../../../../Images/thumbnails/earth3.png`),
+      4: require(`../../../../Images/thumbnails/earth4.png`),
+      5: require(`../../../../Images/thumbnails/earth5.png`),
+      6: require(`../../../../Images/thumbnails/earth6.png`),
+      7: require(`../../../../Images/thumbnails/earth7.png`),
+      8: require(`../../../../Images/thumbnails/earth8.png`),
+      9: require(`../../../../Images/thumbnails/earth9.png`)
+    };
+    return (
+      <>
+        {this.state.receiverAvatar ? (
+          <TouchableOpacity
+            onPress={() =>
+              this.props.navigation.push("UserProfileTabs", {
+                username: targetName,
+                isSelf: false
+              })
+            }
+          >
+            <ProgressiveImage
+              tint={"light"}
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 18
+              }}
+              preview={{
+                uri: `${BACKEND_URL}/media/${this.state.receiverAvatar}`
+              }}
+              uri={`${BACKEND_URL}/media/${this.state.receiverAvatar}`}
+            />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() =>
+              this.props.navigation.push("UserProfileTabs", {
+                username: targetName,
+                isSelf: false
+              })
+            }
+          >
+            <Image
+              style={{
+                height: 36,
+                width: 36,
+                borderRadius: 18
+              }}
+              source={randomAvatar[Math.round(Math.random() * 9)]}
+            />
+          </TouchableOpacity>
+        )}
+      </>
     );
   };
 
@@ -301,8 +355,7 @@ class ChatContainer extends React.Component<IProps, IState> {
           let new_key = get_new_key("messages");
           let user: UserChatMessage = {
             _id: this.state.userId,
-            name: this.state.userName,
-            avatar: this.state.userAvatarUrl
+            name: this.state.userName
           };
 
           let messageLocal: ChatMessage = {
@@ -355,8 +408,7 @@ class ChatContainer extends React.Component<IProps, IState> {
       let new_key = get_new_key("messages");
       let user: UserChatMessage = {
         _id: this.state.userId,
-        name: this.state.userName,
-        avatar: this.state.userAvatarUrl
+        name: this.state.userName
       };
 
       let messageLocal: ChatMessage = {
@@ -613,11 +665,11 @@ class ChatContainer extends React.Component<IProps, IState> {
         onSend={this.onSend}
         onSendLocation={this.onSendLocation}
         renderCustomView={this.renderCustomView}
-        onPressAvatar={this.onPressAvatar}
         renderMessageVideo={this.renderMessageVideo}
         renderDarkMessageImage={this.renderDarkMessageImage}
         renderLightMessageImage={this.renderLightMessageImage}
         renderActions={this.renderActions}
+        renderAvatar={this.renderAvatar}
         closeMapModal={this.closeMapModal}
         closeImageModalOpen={this.closeImageModalOpen}
         leaveChat={this.leaveChat}

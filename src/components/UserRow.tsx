@@ -175,7 +175,6 @@ const UserRow: React.FC<IProps> = ({
       } else {
         return;
       }
-      console.log(status);
     });
     fb_db.ref
       .child("chats")
