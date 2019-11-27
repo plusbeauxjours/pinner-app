@@ -524,27 +524,6 @@ export interface CoffeeDetailVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: StartEmailVerification
-// ====================================================
-
-export interface StartEmailVerification_startEmailVerification {
-  __typename: "StartEmailVerificationResponse";
-  ok: boolean | null;
-}
-
-export interface StartEmailVerification {
-  startEmailVerification: StartEmailVerification_startEmailVerification;
-}
-
-export interface StartEmailVerificationVariables {
-  emailAddress: string;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
 // GraphQL mutation operation: FacebookConnect
 // ====================================================
 
@@ -572,20 +551,20 @@ export interface FacebookConnectVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: StartPhoneVerification
+// GraphQL mutation operation: StartEmailVerification
 // ====================================================
 
-export interface StartPhoneVerification_startPhoneVerification {
-  __typename: "StartPhoneVerificationResponse";
+export interface StartEmailVerification_startEmailVerification {
+  __typename: "StartEmailVerificationResponse";
   ok: boolean | null;
 }
 
-export interface StartPhoneVerification {
-  startPhoneVerification: StartPhoneVerification_startPhoneVerification;
+export interface StartEmailVerification {
+  startEmailVerification: StartEmailVerification_startEmailVerification;
 }
 
-export interface StartPhoneVerificationVariables {
-  phoneNumber: string;
+export interface StartEmailVerificationVariables {
+  emailAddress: string;
 }
 
 /* tslint:disable */
@@ -632,6 +611,27 @@ export interface CompleteEmailVerification {
 export interface CompleteEmailVerificationVariables {
   key: string;
   cityId: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: StartPhoneVerification
+// ====================================================
+
+export interface StartPhoneVerification_startPhoneVerification {
+  __typename: "StartPhoneVerificationResponse";
+  ok: boolean | null;
+}
+
+export interface StartPhoneVerification {
+  startPhoneVerification: StartPhoneVerification_startPhoneVerification;
+}
+
+export interface StartPhoneVerificationVariables {
+  phoneNumber: string;
 }
 
 /* tslint:disable */
@@ -1685,50 +1685,6 @@ export interface FrequentVisitsVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: CompleteEditEmailVerification
-// ====================================================
-
-export interface CompleteEditEmailVerification_completeEditEmailVerification_user_profile_currentCity {
-  __typename: "CityType";
-  cityId: string | null;
-  cityName: string | null;
-}
-
-export interface CompleteEditEmailVerification_completeEditEmailVerification_user_profile {
-  __typename: "ProfileType";
-  avatarUrl: string | null;
-  currentCity: CompleteEditEmailVerification_completeEditEmailVerification_user_profile_currentCity | null;
-}
-
-export interface CompleteEditEmailVerification_completeEditEmailVerification_user {
-  __typename: "UserType";
-  /**
-   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
-   */
-  username: string;
-  profile: CompleteEditEmailVerification_completeEditEmailVerification_user_profile | null;
-}
-
-export interface CompleteEditEmailVerification_completeEditEmailVerification {
-  __typename: "CompleteEditEmailVerificationResponse";
-  ok: boolean | null;
-  token: string | null;
-  user: CompleteEditEmailVerification_completeEditEmailVerification_user | null;
-}
-
-export interface CompleteEditEmailVerification {
-  completeEditEmailVerification: CompleteEditEmailVerification_completeEditEmailVerification;
-}
-
-export interface CompleteEditEmailVerificationVariables {
-  key: string;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
 // GraphQL query operation: TopContinents
 // ====================================================
 
@@ -2053,6 +2009,50 @@ export interface ToggleSettings {
 
 export interface ToggleSettingsVariables {
   payload: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: CompleteEditEmailVerification
+// ====================================================
+
+export interface CompleteEditEmailVerification_completeEditEmailVerification_user_profile_currentCity {
+  __typename: "CityType";
+  cityId: string | null;
+  cityName: string | null;
+}
+
+export interface CompleteEditEmailVerification_completeEditEmailVerification_user_profile {
+  __typename: "ProfileType";
+  avatarUrl: string | null;
+  currentCity: CompleteEditEmailVerification_completeEditEmailVerification_user_profile_currentCity | null;
+}
+
+export interface CompleteEditEmailVerification_completeEditEmailVerification_user {
+  __typename: "UserType";
+  /**
+   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+   */
+  username: string;
+  profile: CompleteEditEmailVerification_completeEditEmailVerification_user_profile | null;
+}
+
+export interface CompleteEditEmailVerification_completeEditEmailVerification {
+  __typename: "CompleteEditEmailVerificationResponse";
+  ok: boolean | null;
+  token: string | null;
+  user: CompleteEditEmailVerification_completeEditEmailVerification_user | null;
+}
+
+export interface CompleteEditEmailVerification {
+  completeEditEmailVerification: CompleteEditEmailVerification_completeEditEmailVerification;
+}
+
+export interface CompleteEditEmailVerificationVariables {
+  key: string;
 }
 
 /* tslint:disable */

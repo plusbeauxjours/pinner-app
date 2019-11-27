@@ -1,5 +1,4 @@
 import firebase from "firebase";
-import { useState } from "react";
 import keys from "./keys";
 import { SystemMessage } from "react-native-gifted-chat";
 import path from "react-native-path";

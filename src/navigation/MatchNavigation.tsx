@@ -9,7 +9,6 @@ import ContinentProfile from "../screens/Tabs/LocationTab/ContinentProfile";
 import Cities from "../screens/Tabs/UserProfileTab/Cities";
 import Countries from "../screens/Tabs/UserProfileTab/Countries";
 import Continents from "../screens/Tabs/UserProfileTab/Continents";
-import Coffees from "../screens/Tabs/UserProfileTab/Coffees";
 import UserProfile from "../screens/Tabs/UserProfileTab/UserProfile";
 import EditProfile from "../screens/Tabs/UserProfileTab/EditProfile";
 import AvatarList from "../screens/Tabs/UserProfileTab/AvatarList";
@@ -137,7 +136,6 @@ export default createStackNavigator(
     Cities,
     Countries,
     Continents,
-    Coffees,
     Chat,
     SendLocationScreen
   },
