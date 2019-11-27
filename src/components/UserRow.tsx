@@ -740,12 +740,11 @@ const UserRow: React.FC<IProps> = ({
                       source={randomAvatar[Math.round(Math.random() * 9)]}
                     />
                   )}
-                  {!match.isReadByHost ||
-                    (hasUnreadMessage && (
-                      <IconContainer>
-                        <FontAwesome name={"circle"} color={"red"} size={7} />
-                      </IconContainer>
-                    ))}
+                  {(!match.isReadByHost || hasUnreadMessage) && (
+                    <IconContainer>
+                      <FontAwesome name={"circle"} color={"red"} size={7} />
+                    </IconContainer>
+                  )}
                 </ImageContainer>
                 <MatchHeaderUserContainer>
                   <FirstLine>
@@ -793,12 +792,11 @@ const UserRow: React.FC<IProps> = ({
                     />
                   )}
 
-                  {!match.isReadByGuest ||
-                    (hasUnreadMessage && (
-                      <IconContainer>
-                        <FontAwesome name={"circle"} color={"red"} size={7} />
-                      </IconContainer>
-                    ))}
+                  {(!match.isReadByGuest || hasUnreadMessage) && (
+                    <IconContainer>
+                      <FontAwesome name={"circle"} color={"red"} size={7} />
+                    </IconContainer>
+                  )}
                 </ImageContainer>
                 <MatchHeaderUserContainer>
                   <FirstLine>

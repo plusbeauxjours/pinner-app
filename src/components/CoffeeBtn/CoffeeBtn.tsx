@@ -153,9 +153,9 @@ const CoffeeBtn: React.FC<IProps> = ({
       },
       buttonIndex => {
         if (buttonIndex === 0) {
+          chat_leave(matchId, me.user.profile.id, me.user.username);
           unMatchFn();
           setModalOpen(false);
-          chat_leave(matchId, me.user.profile.id, me.user.username);
           toast("unmatched");
         }
       }

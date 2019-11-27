@@ -116,8 +116,7 @@ const CoffeeDetails: React.FC<IProps> = ({
     data: { coffeeDetail: { coffee = null } = {} } = {},
     loading: coffeeDetailLoading
   } = useQuery<CoffeeDetail, CoffeeDetailVariables>(COFFEE_DETAIL, {
-    variables: { coffeeId },
-    fetchPolicy: "network-only"
+    variables: { coffeeId }
   });
   const onPress = username => {
     setModalOpen(false);

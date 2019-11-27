@@ -14,6 +14,7 @@ import Toast from "react-native-root-toast";
 import { UNMATCH } from "../../../../components/CoffeeBtn/CoffeeBtnQueries";
 import { chat_leave } from "../../../../../Fire";
 import { COMPLETE_EDIT_EMAIL_VERIFICATION } from "../../UserProfileTab/EditProfile/EditProfileQueries";
+import { GET_COFFEES } from "../../../../sharedQueries";
 import {
   GetMatches,
   GetMatchesVariables,
@@ -22,7 +23,9 @@ import {
   UnMatch,
   UnMatchVariables,
   CompleteEditEmailVerification,
-  CompleteEditEmailVerificationVariables
+  CompleteEditEmailVerificationVariables,
+  GetCoffees,
+  GetCoffeesVariables
 } from "../../../../types/api";
 
 const Container = styled.View`
@@ -93,10 +96,16 @@ const TouchableBackRow = styled.View`
 export default ({ navigation }) => {
   const { me, loading: meLoading } = useMe();
   const [refreshing, setRefreshing] = useState(false);
-  const [completeEditEmailVerificationFn] = useMutation<
+  const [matchId, setMatchId] = useState<number>(0);
+
+  const [
+    completeEditEmailVerificationFn,
+    { loading: completeEditEmailVerificationLoading }
+  ] = useMutation<
     CompleteEditEmailVerification,
     CompleteEditEmailVerificationVariables
   >(COMPLETE_EDIT_EMAIL_VERIFICATION);
+
   const [MarkAsReadMatchFn] = useMutation<
     MarkAsReadMatch,
     MarkAsReadMatchVariables
@@ -127,13 +136,51 @@ export default ({ navigation }) => {
     data: { getMatches: { matches = null } = {} } = {},
     loading: matchLoading,
     refetch: matchRefetch
-  } = useQuery<GetMatches, GetMatchesVariables>(GET_MATCHES, {
-    fetchPolicy: "network-only"
-  });
+  } = useQuery<GetMatches, GetMatchesVariables>(GET_MATCHES);
+
   const [unMatchFn, { loading: unMatchLoading }] = useMutation<
     UnMatch,
     UnMatchVariables
-  >(UNMATCH);
+  >(UNMATCH, {
+    update(cache, { data: { unMatch } }) {
+      console.log("cache on unmatch update", cache);
+      console.log("unMatch on unmatch update", unMatch);
+      try {
+        const matchData = cache.readQuery<GetMatches, GetMatchesVariables>({
+          query: GET_MATCHES
+        });
+        if (matchData) {
+          matchData.getMatches.matches = matchData.getMatches.matches.filter(
+            i => parseInt(i.id, 10) !== unMatch.matchId
+          );
+          cache.writeQuery({
+            query: GET_MATCHES,
+            data: matchData
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      // try {
+      //   const cityData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
+      //     query: GET_COFFEES,
+      //     variables: { cityId: unMatch.cityId, location: "city" }
+      //   });
+      //   if (unMatch.coffee.status !== "expired" && unMatch.coffee) {
+      //     if (cityData) {
+      //       cityData.getCoffees.coffees.push(unMatch.coffee);
+      //       cache.writeQuery({
+      //         query: GET_COFFEES,
+      //         variables: { cityId: unMatch.cityId, location: "city" },
+      //         data: cityData
+      //       });
+      //     }
+      //   }
+      // } catch (e) {
+      //   console.log(e);
+      // }
+    }
+  });
   const onRefresh = async () => {
     try {
       setRefreshing(true);
@@ -163,18 +210,15 @@ export default ({ navigation }) => {
         cancelButtonIndex: 1,
         title: "Are you sure to unmatch?"
       },
-      buttonIndex => {
+      async buttonIndex => {
         if (buttonIndex === 0) {
           try {
-            // chat_leave(matchId, me.user.profile.id, me.user.username);
-            unMatchFn({
-              variables: {
-                matchId
-              }
-            });
-            toast("unmatched");
+            await unMatchFn({ variables: { matchId: parseInt(matchId, 10) } });
+            chat_leave(matchId, me.user.profile.id, me.user.username);
           } catch (e) {
             console.log(e);
+          } finally {
+            toast("unmatched");
           }
         }
       }
@@ -210,7 +254,12 @@ export default ({ navigation }) => {
   useEffect(() => {
     Linking.addEventListener("url", handleOpenURL);
   }, []);
-  if (matchLoading || meLoading) {
+  if (
+    matchLoading ||
+    meLoading ||
+    unMatchLoading ||
+    completeEditEmailVerificationLoading
+  ) {
     return (
       <LoaderContainer>
         <Loader />
@@ -237,7 +286,7 @@ export default ({ navigation }) => {
                       <Touchable
                         onPress={() => {
                           MarkAsReadMatchFn({
-                            variables: { matchId: data.item.id }
+                            variables: { matchId: parseInt(data.item.id, 10) }
                           }),
                             navigation.navigate("Chat", {
                               chatId: data.item.id,

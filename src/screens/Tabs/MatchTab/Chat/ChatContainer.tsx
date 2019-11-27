@@ -17,7 +17,6 @@ import {
 import { BACKEND_URL } from "../../../../../constants";
 import ChatPresenter from "./ChatPresenter";
 import {
-  chat_leave,
   get_new_key,
   UserChatMessage,
   ChatMessage,
@@ -269,11 +268,6 @@ class ChatContainer extends React.Component<IProps, IState> {
         />
       </TouchableOpacity>
     );
-  };
-
-  public leaveChat = () => {
-    chat_leave(this.state.chatId, this.state.userId, this.state.userName);
-    this.props.navigation.navigate("Match");
   };
 
   public renderActions = props => {
@@ -672,7 +666,6 @@ class ChatContainer extends React.Component<IProps, IState> {
         renderAvatar={this.renderAvatar}
         closeMapModal={this.closeMapModal}
         closeImageModalOpen={this.closeImageModalOpen}
-        leaveChat={this.leaveChat}
         messageFooter={this.messageFooter}
       />
     );

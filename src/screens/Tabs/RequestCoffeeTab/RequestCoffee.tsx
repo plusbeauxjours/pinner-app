@@ -302,8 +302,7 @@ export default ({ navigation }) => {
     loading: coffeeLoading,
     refetch: coffeeRefetch
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
-    variables: { location: "city", cityId: location.currentCityId },
-    fetchPolicy: "network-only"
+    variables: { location: "city", cityId: location.currentCityId }
   });
   const [requestCoffeeFn, { loading: requestLoading }] = useMutation<
     RequestCoffee,
@@ -545,8 +544,7 @@ export default ({ navigation }) => {
       toast("Requested");
     }
   };
-  const renderHeader = (section, isActive) => {
-    console.log(isActive);
+  const renderHeader = (section, _, isActive) => {
     if (section.city.hasCoffee) {
       return (
         <AccordionTitleContainer>
@@ -558,7 +556,7 @@ export default ({ navigation }) => {
             <SimpleLineIcons
               size={10}
               color={"#999"}
-              name={isActive ? "arrow-down" : "arrow-up"}
+              name={isActive ?  "arrow-up": "arrow-down" }
             />
           </AccordionIcon>
         </AccordionTitleContainer>

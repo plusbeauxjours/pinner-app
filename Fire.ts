@@ -88,13 +88,14 @@ export const chat_leave = (
   let new_key = fb_db.ref.child("messages").push().key;
   let message = {
     _id: new_key,
-    text: `User ${user_name} left`,
+    text: `User ${user_name} left. This chat room will be disappeared`,
     createdAt: new Date(),
     system: true
   };
   let updates = {};
   updates[`/chats/${chat_id}/lastMessage/`] = message.text;
   updates[`/messages/${chat_id}/${new_key}/`] = message;
+  console.log("byebye");
   return fb_db.ref.update(updates);
 };
 
@@ -171,14 +172,16 @@ export const get_last_chat_status = async (chatId: string, userId: string) => {
       .child("chats")
       .child(chatId)
       .once("value", snapshot => {
-        if (snapshot.val()["lastSender"] !== userId) {
-          if (snapshot.val()["status"] === "false") {
-            resolve(false);
+        if (snapshot.val()) {
+          if (snapshot.val()["lastSender"] !== userId) {
+            if (snapshot.val()["status"] === "false") {
+              resolve(false);
+            } else {
+              resolve(true);
+            }
           } else {
             resolve(true);
           }
-        } else {
-          resolve(true);
         }
       });
   });

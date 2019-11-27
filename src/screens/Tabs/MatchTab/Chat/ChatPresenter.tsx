@@ -77,7 +77,6 @@ interface IProps {
   renderActions: any;
   closeImageModalOpen: () => void;
   closeMapModal: () => void;
-  leaveChat: () => void;
   messageFooter: (timeProps: any) => void;
   renderAvatar: any;
 }
@@ -103,7 +102,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   renderActions,
   closeImageModalOpen,
   closeMapModal,
-  leaveChat,
   messageFooter,
   renderAvatar
 }) => {
