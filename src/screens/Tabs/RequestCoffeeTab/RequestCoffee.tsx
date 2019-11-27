@@ -1,5 +1,15 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
+import {
+  RefreshControl,
+  Platform,
+  TouchableOpacity,
+  SectionList
+} from "react-native";
+import Swiper from "react-native-swiper";
+import Toast from "react-native-root-toast";
+import { SimpleLineIcons } from "@expo/vector-icons";
 import Loader from "../../../components/Loader";
 import UserRow from "../../../components/UserRow";
 import { useQuery, useMutation } from "react-apollo-hooks";
@@ -9,8 +19,6 @@ import {
   REQUEST_COFFEE
 } from "./RequestCoffeeQueries";
 import { useLocation } from "../../../context/LocationContext";
-import { RefreshControl, Platform } from "react-native";
-import Swiper from "react-native-swiper";
 import { GET_COFFEES, ME, DELETE_COFFEE } from "../../../sharedQueries";
 import {
   Me,
@@ -23,28 +31,50 @@ import {
   RequestCoffee,
   RequestCoffeeVariables,
   DeleteCoffee,
-  DeleteCoffeeVariables
+  DeleteCoffeeVariables,
+  GetTripCities,
+  GetTripCitiesVariables
 } from "../../../types/api";
 import Modal from "react-native-modal";
 import { useTheme } from "../../../context/ThemeContext";
-import CoffeeDetail from "../../CoffeeDetail/index";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { useMe } from "../../../context/MeContext";
-// import SearchCityPhoto from "../../../components/SearchCityPhoto";
-// import { countries } from "../../../../countryData";
 import constants from "../../../../constants";
-import Toast from "react-native-root-toast";
-import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
+import Accordion from "react-native-collapsible/Accordion";
+import CollapsibleAccordion from "../../../components/CollapsibleAccordion";
+import { GET_TRIP_CITIES } from "./RequestCoffeeQueries";
 
+const AccordionTitleContainer = styled.View`
+  flex-direction: row;
+  height: 20px;
+  align-items: center;
+  /* opacity: 0.1; */
+  width: ${constants.width - 40};
+  margin: 0 5px 0 5px;
+  /* border-top-width: 0.5px;
+  border-top-color: ${props => props.theme.shadowColor}; */
+`;
+const AccordionIcon = styled.View`
+  width: 20;
+  height: 20;
+  position: absolute;
+  top: 5;
+  right: 0;
+`;
+const AccordionTitle = styled.Text`
+  font-size: 9px;
+  color: ${props => props.theme.color};
+`;
 const Container = styled.View`
   flex: 1;
   background-color: ${props => props.theme.bgColor};
-  padding: 0 10px 0 10px;
+  padding: 0 15px 0 15px;
 `;
-
-const UserContainer = styled.View`
-  padding: 0 5px 0 5px;
+const CoffeeContainer = styled.View`
+  /* border-bottom-width: 0.5px;
+  border-bottom-color: ${props => props.theme.shadowColor}; */
 `;
+const UserContainer = styled.View``;
 const UserColumn = styled.View``;
 const Item = styled.View`
   flex: 1;
@@ -89,6 +119,9 @@ const CoffeeSubmitBtn = styled.TouchableOpacity`
   justify-content: center;
   padding: 0 5px 5px 5px;
 `;
+const EmptyView = styled.View`
+  height: 10px;
+`;
 export default ({ navigation }) => {
   const { me, loading: meLoading } = useMe();
   const location = useLocation();
@@ -96,13 +129,12 @@ export default ({ navigation }) => {
   const [nationalityModalOpen, setNationalityModalOpen] = useState<boolean>(
     false
   );
+  const [activeSections, setActiveSections] = useState<any>([0]);
   const [residenceModalOpen, setResidenceModalOpen] = useState<boolean>(false);
   const [nationalityCode, setNationalityCode] = useState<any>("");
   const [residenceCode, setResidenceCode] = useState<any>("");
   const userName = me.user.username;
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [coffeeId, setCoffeeId] = useState<string>("");
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const { showActionSheetWithOptions } = useActionSheet();
   const requestCoffee = () => {
     showActionSheetWithOptions(
@@ -273,82 +305,89 @@ export default ({ navigation }) => {
     variables: { location: "city", cityId: location.currentCityId },
     fetchPolicy: "network-only"
   });
-  const [requestCoffeeFn] = useMutation<RequestCoffee, RequestCoffeeVariables>(
-    REQUEST_COFFEE,
-    {
-      update(cache, { data: { requestCoffee } }) {
-        try {
-          const meData = cache.readQuery<Me>({
-            query: ME
-          });
-          if (meData) {
-            if (!meData.me.user.profile.nationality) {
-              meData.me.user.profile.nationality =
-                requestCoffee.coffee.host.profile.nationality;
-            }
-            if (!meData.me.user.profile.residence) {
-              meData.me.user.profile.residence =
-                requestCoffee.coffee.host.profile.residence;
-            }
-            if (!meData.me.user.profile.gender) {
-              meData.me.user.profile.gender =
-                requestCoffee.coffee.host.profile.gender;
-            }
-            cache.writeQuery({
-              query: ME,
-              data: meData
-            });
+  const [requestCoffeeFn, { loading: requestLoading }] = useMutation<
+    RequestCoffee,
+    RequestCoffeeVariables
+  >(REQUEST_COFFEE, {
+    update(cache, { data: { requestCoffee } }) {
+      try {
+        const meData = cache.readQuery<Me>({
+          query: ME
+        });
+        if (meData) {
+          if (!meData.me.user.profile.nationality) {
+            meData.me.user.profile.nationality =
+              requestCoffee.coffee.host.profile.nationality;
           }
-        } catch (e) {
-          console.log(e);
+          if (!meData.me.user.profile.residence) {
+            meData.me.user.profile.residence =
+              requestCoffee.coffee.host.profile.residence;
+          }
+          if (!meData.me.user.profile.gender) {
+            meData.me.user.profile.gender =
+              requestCoffee.coffee.host.profile.gender;
+          }
+          cache.writeQuery({
+            query: ME,
+            data: meData
+          });
         }
-        try {
-          const profileData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
+      } catch (e) {
+        console.log(e);
+      }
+      try {
+        const profileData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
+          query: GET_COFFEES,
+          variables: {
+            userName,
+            location: "profile"
+          }
+        });
+        if (profileData) {
+          profileData.getCoffees.coffees.push(requestCoffee.coffee);
+          cache.writeQuery({
             query: GET_COFFEES,
             variables: {
               userName,
               location: "profile"
-            }
+            },
+            data: profileData
           });
-          if (profileData) {
-            profileData.getCoffees.coffees.push(requestCoffee.coffee);
-            cache.writeQuery({
-              query: GET_COFFEES,
-              variables: {
-                userName,
-                location: "profile"
-              },
-              data: profileData
-            });
-          }
-        } catch (e) {
-          console.log(e);
         }
-        try {
-          const feedData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
+      } catch (e) {
+        console.log(e);
+      }
+      try {
+        const feedData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
+          query: GET_COFFEES,
+          variables: {
+            cityId: location.currentCityId,
+            location: "city"
+          }
+        });
+        if (feedData) {
+          feedData.getCoffees.coffees.unshift(requestCoffee.coffee);
+          cache.writeQuery({
             query: GET_COFFEES,
             variables: {
               cityId: location.currentCityId,
               location: "city"
-            }
+            },
+            data: feedData
           });
-          if (feedData) {
-            feedData.getCoffees.coffees.unshift(requestCoffee.coffee);
-            cache.writeQuery({
-              query: GET_COFFEES,
-              variables: {
-                cityId: location.currentCityId,
-                location: "city"
-              },
-              data: feedData
-            });
-          }
-        } catch (e) {
-          console.log(e);
         }
+      } catch (e) {
+        console.log(e);
       }
     }
-  );
+  });
+  const {
+    data: { getTripCities: { trip = null } = {} } = {},
+    loading: tripLoading,
+    refetch: tripRefetch
+  } = useQuery<GetTripCities, GetTripCitiesVariables>(GET_TRIP_CITIES, {
+    variables: { username: me.user.username }
+  });
   const {
     data: { recommendUsers: { users: recommendUsers = null } = {} } = {},
     loading: recommendUserLoading,
@@ -434,7 +473,6 @@ export default ({ navigation }) => {
                 coffeeId
               }
             });
-            setModalOpen(false);
             toast("Canceld");
           } catch (e) {
             console.log(e);
@@ -459,15 +497,12 @@ export default ({ navigation }) => {
       await coffeeRefetch();
       await recommendUserRefetch();
       await recommendLocationRefetch();
+      await tripRefetch();
     } catch (e) {
       console.log(e);
     } finally {
       setRefreshing(false);
     }
-  };
-  const onPress = coffeeId => {
-    setModalOpen(true);
-    setCoffeeId(coffeeId);
   };
   const chunk = arr => {
     let chunks = [],
@@ -510,11 +545,41 @@ export default ({ navigation }) => {
       toast("Requested");
     }
   };
+  const renderHeader = (section, isActive) => {
+    console.log(isActive);
+    if (section.city.hasCoffee) {
+      return (
+        <AccordionTitleContainer>
+          <AccordionTitle>
+            {section.city.cityName}
+            {section.city.country.countryEmoji}
+          </AccordionTitle>
+          <AccordionIcon>
+            <SimpleLineIcons
+              size={10}
+              color={"#999"}
+              name={isActive ? "arrow-down" : "arrow-up"}
+            />
+          </AccordionIcon>
+        </AccordionTitleContainer>
+      );
+    }
+  };
+
+  const renderContent = section => (
+    <CoffeeContainer>
+      <CollapsibleAccordion cityId={section.city.cityId} />
+    </CoffeeContainer>
+  );
+  const onChange = (activeSections: any) => {
+    setActiveSections(activeSections.includes(undefined) ? [] : activeSections);
+  };
   if (
     recommendUserLoading ||
     recommendLocationLoading ||
     coffeeLoading ||
-    meLoading
+    meLoading ||
+    tripLoading
   ) {
     return (
       <LoaderContainer>
@@ -600,73 +665,22 @@ export default ({ navigation }) => {
             }}
           />
         </Modal>
-        <Modal
-          style={{
-            margin: 0,
-            alignItems: "flex-start"
-          }}
-          isVisible={modalOpen}
-          backdropColor={
-            isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
-          }
-          onBackdropPress={() => setModalOpen(false)}
-          onBackButtonPress={() => Platform.OS !== "ios" && setModalOpen(false)}
-          onModalHide={() => setModalOpen(false)}
-          propagateSwipe={true}
-          scrollHorizontal={true}
-          backdropOpacity={0.9}
-          animationIn="zoomInDown"
-          animationOut="zoomOutUp"
-          animationInTiming={200}
-          animationOutTiming={200}
-          backdropTransitionInTiming={200}
-          backdropTransitionOutTiming={200}
-        >
-          <CoffeeDetail
-            coffeeId={coffeeId}
-            setModalOpen={setModalOpen}
-            isStaying={true}
-          />
-        </Modal>
         <ScrollView
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
         >
           <Container>
-            {coffees && coffees.length !== 0 && (
-              <Item>
-                <Title>NEED SOME COFFEE NOW</Title>
-                <UserContainer>
-                  <Swiper
-                    style={{ height: coffees.length < 3 ? 90 : 135 }}
-                    paginationStyle={{ bottom: -15 }}
-                    loop={false}
-                  >
-                    {chunk(coffees).map((coffeeColumn, index) => {
-                      return (
-                        <UserColumn key={index}>
-                          {coffeeColumn.map((coffee: any, index: any) => {
-                            return (
-                              <Touchable
-                                key={index}
-                                onPress={() => onPress(coffee.uuid)}
-                              >
-                                <UserRow
-                                  key={coffee.id}
-                                  coffee={coffee}
-                                  type={"coffee"}
-                                />
-                              </Touchable>
-                            );
-                          })}
-                        </UserColumn>
-                      );
-                    })}
-                  </Swiper>
-                </UserContainer>
-              </Item>
-            )}
+            <Accordion
+              sections={trip}
+              expandMultiple={true}
+              activeSections={activeSections}
+              renderHeader={renderHeader}
+              renderContent={renderContent}
+              onChange={onChange}
+              touchableComponent={TouchableOpacity}
+            />
+            <EmptyView />
             {recommendUsers && recommendUsers.length !== 0 && (
               <Item>
                 <Title>RECOMMEND USERS</Title>
@@ -740,36 +754,10 @@ export default ({ navigation }) => {
           </Container>
         </ScrollView>
         <Footer>
-          {/* <Touchable
-            onPress={() =>
-              navigation.push("CityProfileTabs", {
-                cityId: location.currentCityId,
-                countryCode: location.currentCountryCode,
-                continentCode: countries.find(
-                  i => i.code === location.currentCountryCode
-                ).continent
-              })
-            }
-          >
-            <SearchCityContainer>
-              <SearchCityPhoto cityId={location.currentCityId} />
-              <SearchHeaderUserContainer>
-                <CityBold>{location.currentCityName}</CityBold>
-                <Location>
-                  {location.currentCountryCode
-                    ? countries.find(
-                        i => i.code === location.currentCountryCode
-                      ).name
-                    : location.currentCountryCode}
-                </Location>
-              </SearchHeaderUserContainer>
-            </SearchCityContainer>
-          </Touchable> */}
           {coffees &&
           coffees.length !== 0 &&
           coffees.find(i => i.host.username === userName) ? (
             <CoffeeSubmitBtn
-              // disabled={deleteCoffeeLoading}
               onPress={() =>
                 cancelCoffee(
                   coffees.find(i => i.host.username === userName).uuid
@@ -782,7 +770,7 @@ export default ({ navigation }) => {
             </CoffeeSubmitBtn>
           ) : (
             <CoffeeSubmitBtn
-              // disabled={requestLoading}
+              disabled={requestLoading}
               onPress={() => requestCoffee()}
             >
               <CoffeeSubmitContainer>

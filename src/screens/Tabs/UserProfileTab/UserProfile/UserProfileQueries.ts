@@ -72,6 +72,7 @@ export const GET_TRIPS = gql`
           cityName
           cityThumbnail
           country {
+            countryEmoji
             countryName
             countryCode
             continent {

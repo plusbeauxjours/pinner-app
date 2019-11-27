@@ -104,3 +104,21 @@ export const REQUEST_COFFEE = gql`
   }
   ${COUNTRY_FRAGMENT}
 `;
+
+export const GET_TRIP_CITIES = gql`
+  query GetTripCities($username: String!) {
+    getTripCities(username: $username) {
+      trip {
+        id
+        city {
+          hasCoffee
+          cityId
+          cityName
+          country {
+            countryEmoji
+          }
+        }
+      }
+    }
+  }
+`;

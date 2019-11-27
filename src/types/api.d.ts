@@ -1522,6 +1522,46 @@ export interface RequestCoffeeVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: GetTripCities
+// ====================================================
+
+export interface GetTripCities_getTripCities_trip_city_country {
+  __typename: "CountryType";
+  countryEmoji: string | null;
+}
+
+export interface GetTripCities_getTripCities_trip_city {
+  __typename: "CityType";
+  hasCoffee: boolean | null;
+  cityId: string | null;
+  cityName: string | null;
+  country: GetTripCities_getTripCities_trip_city_country;
+}
+
+export interface GetTripCities_getTripCities_trip {
+  __typename: "MoveNotificationType";
+  id: string;
+  city: GetTripCities_getTripCities_trip_city | null;
+}
+
+export interface GetTripCities_getTripCities {
+  __typename: "TripResponse";
+  trip: (GetTripCities_getTripCities_trip | null)[] | null;
+}
+
+export interface GetTripCities {
+  getTripCities: GetTripCities_getTripCities;
+}
+
+export interface GetTripCitiesVariables {
+  username: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: GetAvatarDetail
 // ====================================================
 
@@ -2189,6 +2229,7 @@ export interface GetTrips_getTrips_trip_city_country_continent {
 
 export interface GetTrips_getTrips_trip_city_country {
   __typename: "CountryType";
+  countryEmoji: string | null;
   countryName: string | null;
   countryCode: string | null;
   continent: GetTrips_getTrips_trip_city_country_continent | null;
