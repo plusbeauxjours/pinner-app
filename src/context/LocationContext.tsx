@@ -28,6 +28,10 @@ export const LocationProvider = ({ children }) => {
     currentCityName: "",
     currentCountryCode: ""
   });
+  const [reportLocationFn] = useMutation<
+    ReportLocation,
+    ReportLocationVariables
+  >(REPORT_LOCATION);
   const handleGeoSuccess = (position: Position) => {
     const {
       coords: { latitude, longitude }
@@ -47,6 +51,15 @@ export const LocationProvider = ({ children }) => {
         currentCityName: address.storableLocation.cityName,
         currentCountryCode: address.storableLocation.countryCode
       });
+      await reportLocationFn({
+        variables: {
+          currentLat: cityInfo.storableLocation.latitude,
+          currentLng: cityInfo.storableLocation.longitude,
+          currentCityId: address.storableLocation.cityId,
+          currentCityName: address.storableLocation.cityName,
+          currentCountryCode: address.storableLocation.countryCode
+        }
+      });
       await AsyncStorage.setItem("cityId", address.storableLocation.cityId);
       await AsyncStorage.setItem(
         "countryCode",
@@ -54,28 +67,16 @@ export const LocationProvider = ({ children }) => {
       );
     }
   };
+
   const handleGeoError = () => {
     console.log("No location");
   };
-  const [reportLocationFn] = useMutation<
-    ReportLocation,
-    ReportLocationVariables
-  >(REPORT_LOCATION, {
-    variables: {
-      currentLat: location.currentCityLat,
-      currentLng: location.currentCityLng,
-      currentCityId: location.currentCityId,
-      currentCityName: location.currentCityName,
-      currentCountryCode: location.currentCountryCode
-    }
-  });
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(handleGeoSuccess, handleGeoError);
   }, []);
   return (
-    <LocationContext.Provider
-      value={{ location, useLocation, reportLocationFn }}
-    >
+    <LocationContext.Provider value={{ location, useLocation }}>
       {children}
     </LocationContext.Provider>
   );
@@ -84,9 +85,4 @@ export const LocationProvider = ({ children }) => {
 export const useLocation = () => {
   const { location } = useContext(LocationContext);
   return location;
-};
-
-export const useReportLocation = () => {
-  const { reportLocationFn } = useContext(LocationContext);
-  return reportLocationFn;
 };
