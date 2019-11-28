@@ -25,6 +25,39 @@ export const UNMATCH = gql`
       cityId
       countryCode
       continentCode
+      coffee {
+        id
+        uuid
+        city {
+          cityId
+          cityName
+          cityThumbnail
+          country {
+            countryCode
+            countryName
+          }
+        }
+        host {
+          id
+          username
+          profile {
+            avatarUrl
+            appAvatarUrl
+            isSelf
+            currentCity {
+              cityName
+              country {
+                countryName
+              }
+            }
+          }
+        }
+        status
+        naturalTime
+        target
+        createdAt
+        matchCount
+      }
     }
   }
 `;

@@ -8,7 +8,9 @@ import {
   DeleteCoffee,
   DeleteCoffeeVariables,
   GetCoffees,
-  GetCoffeesVariables
+  GetCoffeesVariables,
+  GetMatches,
+  GetMatchesVariables
 } from "../../types/api";
 import { useMutation } from "react-apollo";
 import styled from "styled-components";
@@ -18,6 +20,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import { DELETE_COFFEE, GET_COFFEES } from "../../sharedQueries";
 import { chat_leave } from "../../../Fire";
 import { useMe } from "../../context/MeContext";
+import { GET_MATCHES } from "../../screens/Tabs/MatchTab/Match/MatchQueries";
 
 const Touchable = styled.TouchableOpacity`
   justify-content: center;
@@ -62,13 +65,54 @@ const CoffeeBtn: React.FC<IProps> = ({
     Match,
     MatchVariables
   >(MATCH, {
-    variables: { coffeeId }
+    variables: { coffeeId },
+    update(cache, { data: { match } }) {
+      try {
+        const matchData = cache.readQuery<GetMatches, GetMatchesVariables>({
+          query: GET_MATCHES
+        });
+        if (matchData) {
+          matchData.getMatches.matches.unshift(match.match);
+          cache.writeQuery({
+            query: GET_MATCHES,
+            data: matchData
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      try {
+        const cityData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
+          query: GET_COFFEES,
+          variables: {
+            cityId: match.cityId,
+            location: "city"
+          }
+        });
+        if (cityData) {
+          cityData.getCoffees.coffees = cityData.getCoffees.coffees.filter(
+            i => i.uuid !== match.coffeeId
+          );
+          cache.writeQuery({
+            query: GET_COFFEES,
+            variables: {
+              cityId: match.cityId,
+              location: "city"
+            },
+            data: cityData
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
   });
   const [unMatchFn, { loading: unMatchLoading }] = useMutation<
     UnMatch,
     UnMatchVariables
   >(UNMATCH, {
-    variables: { matchId }
+    // unmatch btn won't be shown
+    variables: { matchId: parseInt(matchId, 10) }
   });
   const [deleteCoffeeFn, { loading: deleteCoffeeLoading }] = useMutation<
     DeleteCoffee,

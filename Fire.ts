@@ -95,7 +95,6 @@ export const chat_leave = (
   let updates = {};
   updates[`/chats/${chat_id}/lastMessage/`] = message.text;
   updates[`/messages/${chat_id}/${new_key}/`] = message;
-  console.log("byebye");
   return fb_db.ref.update(updates);
 };
 

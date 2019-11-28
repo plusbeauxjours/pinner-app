@@ -136,15 +136,15 @@ export default ({ navigation }) => {
     data: { getMatches: { matches = null } = {} } = {},
     loading: matchLoading,
     refetch: matchRefetch
-  } = useQuery<GetMatches, GetMatchesVariables>(GET_MATCHES);
+  } = useQuery<GetMatches, GetMatchesVariables>(GET_MATCHES, {
+    fetchPolicy: "network-only"
+  });
 
   const [unMatchFn, { loading: unMatchLoading }] = useMutation<
     UnMatch,
     UnMatchVariables
   >(UNMATCH, {
     update(cache, { data: { unMatch } }) {
-      console.log("cache on unmatch update", cache);
-      console.log("unMatch on unmatch update", unMatch);
       try {
         const matchData = cache.readQuery<GetMatches, GetMatchesVariables>({
           query: GET_MATCHES
@@ -161,24 +161,24 @@ export default ({ navigation }) => {
       } catch (e) {
         console.log(e);
       }
-      // try {
-      //   const cityData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
-      //     query: GET_COFFEES,
-      //     variables: { cityId: unMatch.cityId, location: "city" }
-      //   });
-      //   if (unMatch.coffee.status !== "expired" && unMatch.coffee) {
-      //     if (cityData) {
-      //       cityData.getCoffees.coffees.push(unMatch.coffee);
-      //       cache.writeQuery({
-      //         query: GET_COFFEES,
-      //         variables: { cityId: unMatch.cityId, location: "city" },
-      //         data: cityData
-      //       });
-      //     }
-      //   }
-      // } catch (e) {
-      //   console.log(e);
-      // }
+      try {
+        const cityData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
+          query: GET_COFFEES,
+          variables: { cityId: unMatch.cityId, location: "city" }
+        });
+        if (unMatch.coffee.status !== "expired" && unMatch.coffee) {
+          if (cityData) {
+            cityData.getCoffees.coffees.push(unMatch.coffee);
+            cache.writeQuery({
+              query: GET_COFFEES,
+              variables: { cityId: unMatch.cityId, location: "city" },
+              data: cityData
+            });
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
     }
   });
   const onRefresh = async () => {
@@ -254,12 +254,7 @@ export default ({ navigation }) => {
   useEffect(() => {
     Linking.addEventListener("url", handleOpenURL);
   }, []);
-  if (
-    matchLoading ||
-    meLoading ||
-    unMatchLoading ||
-    completeEditEmailVerificationLoading
-  ) {
+  if (matchLoading || meLoading || completeEditEmailVerificationLoading) {
     return (
       <LoaderContainer>
         <Loader />

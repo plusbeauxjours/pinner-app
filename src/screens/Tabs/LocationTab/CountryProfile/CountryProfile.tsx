@@ -163,7 +163,6 @@ export default ({ navigation }) => {
     refetch: profileRefetch
   } = useQuery<CountryProfile, CountryProfileVariables>(COUNTRY_PROFILE, {
     variables: { countryCode, page: 1 },
-    fetchPolicy: "network-only"
   });
   const {
     data: { getCountries: { countries = null } = {} } = {},

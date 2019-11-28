@@ -189,7 +189,6 @@ export default ({ navigation }) => {
     refetch: nearCitiesRefetch
   } = useQuery<NearCities, NearCitiesVariables>(NEAR_CITIES, {
     variables: { cityId },
-    fetchPolicy: "network-only"
   });
   const {
     data: { getSamenameCities: { cities: samenameCities = null } = {} } = {},
