@@ -219,43 +219,43 @@ export default ({ navigation }) => {
   } = useQuery<UserProfile, UserProfileVariables>(GET_USER, {
     variables: { username }
   });
-  const [editProfileFn] = useMutation<EditProfile, EditProfileVariables>(
-    EDIT_PROFILE,
-    {
-      update(cache, { data: { editProfile } }) {
-        try {
-          const data = cache.readQuery<UserProfile, UserProfileVariables>({
+  const [editProfileFn, { loading: editProfileLoading }] = useMutation<
+    EditProfile,
+    EditProfileVariables
+  >(EDIT_PROFILE, {
+    update(cache, { data: { editProfile } }) {
+      try {
+        const data = cache.readQuery<UserProfile, UserProfileVariables>({
+          query: GET_USER,
+          variables: { username }
+        });
+        if (data) {
+          data.userProfile.user = editProfile.user;
+          cache.writeQuery({
             query: GET_USER,
-            variables: { username }
+            variables: { username },
+            data
           });
-          if (data) {
-            data.userProfile.user = editProfile.user;
-            cache.writeQuery({
-              query: GET_USER,
-              variables: { username },
-              data
-            });
-          }
-        } catch (e) {
-          console.log(e);
         }
-        try {
-          const data = cache.readQuery<Me>({
-            query: ME
+      } catch (e) {
+        console.log(e);
+      }
+      try {
+        const data = cache.readQuery<Me>({
+          query: ME
+        });
+        if (data) {
+          data.me.user.username = editProfile.user.username;
+          cache.writeQuery({
+            query: ME,
+            data
           });
-          if (data) {
-            data.me.user.username = editProfile.user.username;
-            cache.writeQuery({
-              query: ME,
-              data
-            });
-          }
-        } catch (e) {
-          console.log(e);
         }
+      } catch (e) {
+        console.log(e);
       }
     }
-  );
+  });
   const [submitModal, setSubmitModal] = useState<boolean>(false);
   const [isChanged, setIsChanged] = useState<boolean>(false);
 
@@ -390,7 +390,7 @@ export default ({ navigation }) => {
     }
   });
 
-  const [toggleSettingsFn] = useMutation<
+  const [toggleSettingsFn, { loading: toggleSettingsLoading }] = useMutation<
     ToggleSettings,
     ToggleSettingsVariables
   >(TOGGLE_SETTINGS, {
@@ -645,7 +645,7 @@ export default ({ navigation }) => {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      {loading ? (
+      {loading || deleteeLoading ? (
         <LoaderContainer>
           <Loader />
         </LoaderContainer>
@@ -970,7 +970,7 @@ export default ({ navigation }) => {
               </ExplainText>
               <Item>
                 <SubmitText isChanged={isChanged}>SUBMIT</SubmitText>
-                <Touchable onPress={onPress}>
+                <Touchable disabled={editProfileLoading} onPress={onPress}>
                   <Ionicons
                     size={20}
                     name={
@@ -1068,7 +1068,10 @@ export default ({ navigation }) => {
               <Bold>SETTINGS</Bold>
               <Item>
                 <ToggleText>DARK MODE</ToggleText>
-                <ToggleIcon onPress={toggleTheme}>
+                <ToggleIcon
+                  disabled={toggleSettingsLoading}
+                  onPress={toggleTheme}
+                >
                   <Ionicons
                     size={20}
                     name={
@@ -1092,7 +1095,10 @@ export default ({ navigation }) => {
 
               <Item>
                 <ToggleText>HIDE TRIPS</ToggleText>
-                <ToggleIcon onPress={() => onPressToggleIcon("HIDE_TRIPS")}>
+                <ToggleIcon
+                  disabled={toggleSettingsLoading}
+                  onPress={() => onPressToggleIcon("HIDE_TRIPS")}
+                >
                   <Ionicons
                     size={20}
                     name={
@@ -1115,7 +1121,7 @@ export default ({ navigation }) => {
 
               {/* <Item>
               <ToggleText>HIDE COFFEES</ToggleText>
-              <ToggleIcon onPress={() => onPressToggleIcon("HIDE_COFFEES")}>
+              <ToggleIcon  disabled={toggleSettingsLoading} onPress={() => onPressToggleIcon("HIDE_COFFEES")}>
                 <Ionicons
                   size={20}
                   name={
@@ -1138,7 +1144,10 @@ export default ({ navigation }) => {
 
               <Item>
                 <ToggleText>HIDE CITIES</ToggleText>
-                <ToggleIcon onPress={() => onPressToggleIcon("HIDE_CITIES")}>
+                <ToggleIcon
+                  disabled={toggleSettingsLoading}
+                  onPress={() => onPressToggleIcon("HIDE_CITIES")}
+                >
                   <Ionicons
                     size={20}
                     name={
@@ -1185,6 +1194,7 @@ export default ({ navigation }) => {
               <Item>
                 <ToggleText>HIDE CONTINENTS</ToggleText>
                 <ToggleIcon
+                  disabled={toggleSettingsLoading}
                   onPress={() => onPressToggleIcon("HIDE_CONTINENTS")}
                 >
                   <Ionicons
@@ -1210,6 +1220,7 @@ export default ({ navigation }) => {
               <Item>
                 <ToggleText>AUTO LOCATION REPORT</ToggleText>
                 <ToggleIcon
+                  disabled={toggleSettingsLoading}
                   onPress={() => onPressToggleIcon("AUTO_LOCATION_REPORT")}
                 >
                   <Ionicons

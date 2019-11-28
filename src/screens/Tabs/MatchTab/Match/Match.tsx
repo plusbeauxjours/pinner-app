@@ -106,7 +106,7 @@ export default ({ navigation }) => {
     CompleteEditEmailVerificationVariables
   >(COMPLETE_EDIT_EMAIL_VERIFICATION);
 
-  const [MarkAsReadMatchFn] = useMutation<
+  const [MarkAsReadMatchFn, { loading: MarkAsReadMatchLoading }] = useMutation<
     MarkAsReadMatch,
     MarkAsReadMatchVariables
   >(MARK_AS_READ_MATCH, {

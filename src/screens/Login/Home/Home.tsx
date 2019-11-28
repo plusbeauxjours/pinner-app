@@ -87,7 +87,7 @@ const EmptyView = styled.View`
 export default ({ navigation }) => {
   const logIn = useLogIn();
   const isDarkMode = useTheme();
-  const location = useLocation();
+  const { location, loading: locationLoading } = useLocation();
   const [approachModalOpen, setApproachModalOpen] = useState<boolean>(false);
   const [modalMode, setModalMode] = useState<string>("phoneApproach");
   const [verificationKey, setVerificationKey] = useState<string>("");
@@ -130,7 +130,7 @@ export default ({ navigation }) => {
         : phoneNumber,
       countryPhoneNumber,
       countryPhoneCode,
-      cityId: location.currentCityId
+      cityId: location&&location.currentCityId
     }
   });
   const [
@@ -227,7 +227,7 @@ export default ({ navigation }) => {
       toast("Could not be Verified your phone number");
     }
   };
-  if (loading) {
+  if (loading || locationLoading) {
     <LoaderContainer>
       <Loader />
     </LoaderContainer>;

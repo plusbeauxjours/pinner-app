@@ -398,14 +398,20 @@ export default ({ navigation }) => {
       location: "profile"
     }
   });
-  const [addTripFn] = useMutation<AddTrip, AddTripVariables>(ADD_TRIP, {
+  const [addTripFn, { loading: addTripLoading }] = useMutation<
+    AddTrip,
+    AddTripVariables
+  >(ADD_TRIP, {
     variables: {
       cityId: searchCityId,
       startDate: moment(tripStartDate),
       endDate: moment(tripEndDate)
     }
   });
-  const [editTripFn] = useMutation<EditTrip, EditTripVariables>(EDIT_TRIP, {
+  const [editTripFn, { loading: editTripLoading }] = useMutation<
+    EditTrip,
+    EditTripVariables
+  >(EDIT_TRIP, {
     variables: {
       moveNotificationId: parseInt(moveNotificationId, 10),
       cityId: searchCityId,
@@ -413,38 +419,41 @@ export default ({ navigation }) => {
       endDate: moment(tripEndDate)
     }
   });
-  const [deleteTripFn] = useMutation<DeleteTrip, DeleteTripVariables>(
-    DELETE_TRIP,
-    {
-      update(cache, { data: { deleteTrip } }) {
-        try {
-          const data = cache.readQuery<GetTrips, GetTripsVariables>({
+  const [deleteTripFn, { laoding: deleteTripLoading }] = useMutation<
+    DeleteTrip,
+    DeleteTripVariables
+  >(DELETE_TRIP, {
+    update(cache, { data: { deleteTrip } }) {
+      try {
+        const data = cache.readQuery<GetTrips, GetTripsVariables>({
+          query: GET_TRIPS,
+          variables: { username }
+        });
+        if (data) {
+          data.getTrips.trip = data.getTrips.trip.filter(
+            i => parseInt(i.id, 10) !== deleteTrip.tripId
+          );
+          cache.writeQuery({
             query: GET_TRIPS,
-            variables: { username }
+            variables: { username },
+            data
           });
-          if (data) {
-            data.getTrips.trip = data.getTrips.trip.filter(
-              i => parseInt(i.id, 10) !== deleteTrip.tripId
-            );
-            cache.writeQuery({
-              query: GET_TRIPS,
-              variables: { username },
-              data
-            });
-          }
-        } catch (e) {
-          console.log(e);
         }
+      } catch (e) {
+        console.log(e);
       }
     }
+  });
+  const [
+    calculateDistanceFn,
+    { loading: calculateDistanceLoading }
+  ] = useMutation<CalculateDistance>(CALCULATE_DISTANCE);
+  const [
+    slackReportUsersFn,
+    { loading: slackReportUsersLoading }
+  ] = useMutation<SlackReportUsers, SlackReportUsersVariables>(
+    SLACK_REPORT_USERS
   );
-  const [calculateDistanceFn] = useMutation<CalculateDistance>(
-    CALCULATE_DISTANCE
-  );
-  const [slackReportUsersFn] = useMutation<
-    SlackReportUsers,
-    SlackReportUsersVariables
-  >(SLACK_REPORT_USERS);
   const [createCityFn, { loading: createCityLoading }] = useMutation<
     CreateCity,
     CreateCityVariables
@@ -645,7 +654,8 @@ export default ({ navigation }) => {
     tripLoading ||
     coffeeLoading ||
     getSameTripsLoading ||
-    meLoading
+    meLoading ||
+    createCityLoading
   ) {
     return (
       <LoaderContainer>
@@ -732,7 +742,10 @@ export default ({ navigation }) => {
                 >
                   <TripText>CANCEL</TripText>
                 </TripSubmitBtn>
-                <TripSubmitBtn onPress={() => onAddTripPress()}>
+                <TripSubmitBtn
+                  disabled={addTripLoading}
+                  onPress={() => onAddTripPress()}
+                >
                   <TripText>ADD TRIP</TripText>
                 </TripSubmitBtn>
               </TripBtnContainer>
@@ -913,7 +926,10 @@ export default ({ navigation }) => {
                 >
                   <TripText>CANCEL</TripText>
                 </TripSubmitBtn>
-                <TripSubmitBtn onPress={() => onEditTripPress()}>
+                <TripSubmitBtn
+                  disabled={editTripLoading}
+                  onPress={() => onEditTripPress()}
+                >
                   <TripText>EDIT TRIP</TripText>
                 </TripSubmitBtn>
               </TripBtnContainer>
@@ -1420,7 +1436,10 @@ export default ({ navigation }) => {
                               <SmallText>EDIT TRIP</SmallText>
                             </IconContainer>
                           </BackLeftBtn>
-                          <BackLeftBtn onPress={() => deleteTrip(data.item.id)}>
+                          <BackLeftBtn
+                            disabled={deleteTripLoading}
+                            onPress={() => deleteTrip(data.item.id)}
+                          >
                             <IconContainer>
                               <SmallText>DELETE TRIP</SmallText>
                             </IconContainer>

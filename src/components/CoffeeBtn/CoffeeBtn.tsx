@@ -21,24 +21,26 @@ import { DELETE_COFFEE, GET_COFFEES } from "../../sharedQueries";
 import { chat_leave } from "../../../Fire";
 import { useMe } from "../../context/MeContext";
 import { GET_MATCHES } from "../../screens/Tabs/MatchTab/Match/MatchQueries";
+import constants from "../../../constants";
 
 const Touchable = styled.TouchableOpacity`
   justify-content: center;
-  height: 45px;
+  padding: 0 5px 5px 5px;
 `;
 
 const Text = styled.Text`
-  color: #999;
+  font-size: 16;
+  font-weight: 500;
+  color: ${props => props.theme.color};
 `;
 
 const Container = styled.View`
-  background-color: ${props => props.theme.bgColor};
-  border: 0.5px solid #999;
-  border-radius: 4px;
-  width: 150px;
-  height: 25px;
-  align-items: center;
+  width: ${constants.width - 40};
   justify-content: center;
+  align-items: center;
+  height: 40px;
+  border: 0.5px solid #999;
+  border-radius: 5px;
 `;
 
 interface IProps {

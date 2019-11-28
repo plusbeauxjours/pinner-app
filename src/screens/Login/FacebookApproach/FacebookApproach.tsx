@@ -13,7 +13,7 @@ const FBContainer = styled.View``;
 export default () => {
   const [loading, setLoading] = useState(false);
   const logIn = useLogIn();
-  const [facebookConnectFn] = useMutation<
+  const [facebookConnectFn, { loading: facebookConnectLoading }] = useMutation<
     FacebookConnect,
     FacebookConnectVariables
   >(FACEBOOK_CONNECT);

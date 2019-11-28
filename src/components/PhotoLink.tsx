@@ -34,66 +34,66 @@ export default withNavigation(({ navigation }) => {
   const { me } = useMe();
   const isDarkMode = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
-  const [uploadAvatarFn] = useMutation<UploadAvatar, UploadAvatarVariables>(
-    UPLOAD_AVATAR,
-    {
-      update(cache, { data: { uploadAvatar } }) {
-        try {
-          const data = cache.readQuery<GetAvatars, GetAvatarsVariables>({
+  const [uploadAvatarFn, { loading: uploadAvatarLoading }] = useMutation<
+    UploadAvatar,
+    UploadAvatarVariables
+  >(UPLOAD_AVATAR, {
+    update(cache, { data: { uploadAvatar } }) {
+      try {
+        const data = cache.readQuery<GetAvatars, GetAvatarsVariables>({
+          query: GET_AVATARS,
+          variables: { userName: me.user.username }
+        });
+        if (data) {
+          data.getAvatars.avatars.unshift(uploadAvatar.avatar);
+          data.getAvatars.avatars.find(
+            i => i.uuid === uploadAvatar.preAvatarUUID
+          ).isMain = false;
+          data.getAvatars.avatars.find(
+            i => i.uuid === uploadAvatar.newAvatarUUID
+          ).isMain = true;
+          cache.writeQuery({
             query: GET_AVATARS,
-            variables: { userName: me.user.username }
+            variables: { userName: me.user.username },
+            data
           });
-          if (data) {
-            data.getAvatars.avatars.unshift(uploadAvatar.avatar);
-            data.getAvatars.avatars.find(
-              i => i.uuid === uploadAvatar.preAvatarUUID
-            ).isMain = false;
-            data.getAvatars.avatars.find(
-              i => i.uuid === uploadAvatar.newAvatarUUID
-            ).isMain = true;
-            cache.writeQuery({
-              query: GET_AVATARS,
-              variables: { userName: me.user.username },
-              data
-            });
-          }
-        } catch (e) {
-          console.log(e);
         }
-        try {
-          const data = cache.readQuery<UserProfile, UserProfileVariables>({
+      } catch (e) {
+        console.log(e);
+      }
+      try {
+        const data = cache.readQuery<UserProfile, UserProfileVariables>({
+          query: GET_USER,
+          variables: { username: me.user.username }
+        });
+        if (data) {
+          data.userProfile.user.profile.avatarUrl =
+            uploadAvatar.avatar.thumbnail;
+          cache.writeQuery({
             query: GET_USER,
-            variables: { username: me.user.username }
+            variables: { username: me.user.username },
+            data
           });
-          if (data) {
-            data.userProfile.user.profile.avatarUrl =
-              uploadAvatar.avatar.thumbnail;
-            cache.writeQuery({
-              query: GET_USER,
-              variables: { username: me.user.username },
-              data
-            });
-          }
-        } catch (e) {
-          console.log(e);
         }
-        try {
-          const data = cache.readQuery<Me>({
-            query: ME
+      } catch (e) {
+        console.log(e);
+      }
+      try {
+        const data = cache.readQuery<Me>({
+          query: ME
+        });
+        if (data) {
+          data.me.user.profile.avatarUrl = uploadAvatar.avatar.thumbnail;
+          cache.writeQuery({
+            query: ME,
+            data
           });
-          if (data) {
-            data.me.user.profile.avatarUrl = uploadAvatar.avatar.thumbnail;
-            cache.writeQuery({
-              query: ME,
-              data
-            });
-          }
-        } catch (e) {
-          console.log(e);
         }
+      } catch (e) {
+        console.log(e);
       }
     }
-  );
+  });
   const toast = (message: string) => {
     Toast.show(message, {
       duration: Toast.durations.LONG,

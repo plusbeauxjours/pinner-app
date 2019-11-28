@@ -304,7 +304,7 @@ export default ({ navigation }) => {
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
     variables: { location: "city", cityId: location.currentCityId }
   });
-  const [requestCoffeeFn, { loading: requestLoading }] = useMutation<
+  const [requestCoffeeFn, { loading: requestCoffeeLoading }] = useMutation<
     RequestCoffee,
     RequestCoffeeVariables
   >(REQUEST_COFFEE, {
@@ -401,61 +401,61 @@ export default ({ navigation }) => {
   } = useQuery<RecommendLocations, RecommendLocationsVariables>(
     RECOMMEND_LOCATIONS
   );
-  const [deleteCoffeeFn] = useMutation<DeleteCoffee, DeleteCoffeeVariables>(
-    DELETE_COFFEE,
-    {
-      update(cache, { data: { deleteCoffee } }) {
-        try {
-          const profileData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
+  const [deleteCoffeeFn, { loading: deleteCoffeeLoading }] = useMutation<
+    DeleteCoffee,
+    DeleteCoffeeVariables
+  >(DELETE_COFFEE, {
+    update(cache, { data: { deleteCoffee } }) {
+      try {
+        const profileData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
+          query: GET_COFFEES,
+          variables: {
+            userName,
+            location: "profile"
+          }
+        });
+        if (profileData) {
+          profileData.getCoffees.coffees = profileData.getCoffees.coffees.filter(
+            i => i.uuid !== deleteCoffee.coffeeId
+          );
+          cache.writeQuery({
             query: GET_COFFEES,
             variables: {
               userName,
               location: "profile"
-            }
+            },
+            data: profileData
           });
-          if (profileData) {
-            profileData.getCoffees.coffees = profileData.getCoffees.coffees.filter(
-              i => i.uuid !== deleteCoffee.coffeeId
-            );
-            cache.writeQuery({
-              query: GET_COFFEES,
-              variables: {
-                userName,
-                location: "profile"
-              },
-              data: profileData
-            });
-          }
-        } catch (e) {
-          console.log(e);
         }
-        try {
-          const feedData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
+      } catch (e) {
+        console.log(e);
+      }
+      try {
+        const feedData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
+          query: GET_COFFEES,
+          variables: {
+            cityId: location.currentCityId,
+            location: "city"
+          }
+        });
+        if (feedData) {
+          feedData.getCoffees.coffees = feedData.getCoffees.coffees.filter(
+            i => i.uuid !== deleteCoffee.coffeeId
+          );
+          cache.writeQuery({
             query: GET_COFFEES,
             variables: {
               cityId: location.currentCityId,
               location: "city"
-            }
+            },
+            data: feedData
           });
-          if (feedData) {
-            feedData.getCoffees.coffees = feedData.getCoffees.coffees.filter(
-              i => i.uuid !== deleteCoffee.coffeeId
-            );
-            cache.writeQuery({
-              query: GET_COFFEES,
-              variables: {
-                cityId: location.currentCityId,
-                location: "city"
-              },
-              data: feedData
-            });
-          }
-        } catch (e) {
-          console.log(e);
         }
+      } catch (e) {
+        console.log(e);
       }
     }
-  );
+  });
   const cancelCoffee = coffeeId => {
     showActionSheetWithOptions(
       {
@@ -556,7 +556,7 @@ export default ({ navigation }) => {
             <SimpleLineIcons
               size={10}
               color={"#999"}
-              name={isActive ?  "arrow-up": "arrow-down" }
+              name={isActive ? "arrow-up" : "arrow-down"}
             />
           </AccordionIcon>
         </AccordionTitleContainer>
@@ -756,6 +756,7 @@ export default ({ navigation }) => {
           coffees.length !== 0 &&
           coffees.find(i => i.host.username === userName) ? (
             <CoffeeSubmitBtn
+              disabled={deleteCoffeeFn}
               onPress={() =>
                 cancelCoffee(
                   coffees.find(i => i.host.username === userName).uuid
@@ -768,7 +769,7 @@ export default ({ navigation }) => {
             </CoffeeSubmitBtn>
           ) : (
             <CoffeeSubmitBtn
-              disabled={requestLoading}
+              disabled={requestCoffeeLoading}
               onPress={() => requestCoffee()}
             >
               <CoffeeSubmitContainer>

@@ -149,10 +149,12 @@ export default ({ navigation }) => {
   } = useQuery<ContinentProfile, ContinentProfileVariables>(CONTINENT_PROFILE, {
     variables: { continentCode, page: 1 }
   });
-  const [slackReportLocationsFn] = useMutation<
-    SlackReportLocations,
-    SlackReportLocationsVariables
-  >(SLACK_REPORT_LOCATIONS);
+  const [
+    slackReportLocationsFn,
+    { loading: slackReportLocationsLoading }
+  ] = useMutation<SlackReportLocations, SlackReportLocationsVariables>(
+    SLACK_REPORT_LOCATIONS
+  );
   const onRefresh = async () => {
     try {
       setRefreshing(true);

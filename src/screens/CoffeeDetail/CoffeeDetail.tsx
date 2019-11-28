@@ -19,9 +19,9 @@ const View = styled.View`
 const Container = styled.View`
   width: ${constants.width};
   height: ${constants.width};
-  border-top-width: 0.5px;
+  border-top-width: 0.5;
   border-top-color: #999;
-  border-bottom-width: 0.5px;
+  border-bottom-width: 0.5;
   border-bottom-color: #999;
   justify-content: center;
   align-items: center;

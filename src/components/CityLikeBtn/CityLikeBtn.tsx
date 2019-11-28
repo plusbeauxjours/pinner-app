@@ -121,7 +121,7 @@ const CityLikeBtn: React.FC<IProps> = ({
     setLikeCount(likeCountProp);
   }, [likeCountProp]);
   return (
-    <Touchable onPress={handleLike} height={height}>
+    <Touchable disabled={loading} nPress={handleLike} height={height}>
       <IconContainer>
         <Ionicons
           size={16}

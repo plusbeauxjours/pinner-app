@@ -151,10 +151,12 @@ export default ({ navigation }) => {
       delay: 0
     });
   };
-  const [slackReportLocationsFn] = useMutation<
-    SlackReportLocations,
-    SlackReportLocationsVariables
-  >(SLACK_REPORT_LOCATIONS);
+  const [
+    slackReportLocationsFn,
+    { loading: slackReportLocationsLoading }
+  ] = useMutation<SlackReportLocations, SlackReportLocationsVariables>(
+    SLACK_REPORT_LOCATIONS
+  );
   const {
     data: {
       countryProfile: { count = null, country = null, cities = null } = {}
@@ -162,7 +164,7 @@ export default ({ navigation }) => {
     loading: profileLoading,
     refetch: profileRefetch
   } = useQuery<CountryProfile, CountryProfileVariables>(COUNTRY_PROFILE, {
-    variables: { countryCode, page: 1 },
+    variables: { countryCode, page: 1 }
   });
   const {
     data: { getCountries: { countries = null } = {} } = {},

@@ -28,7 +28,7 @@ export const LocationProvider = ({ children }) => {
     currentCityName: "",
     currentCountryCode: ""
   });
-  const [reportLocationFn] = useMutation<
+  const [reportLocationFn, { loading: reportLocationLoading }] = useMutation<
     ReportLocation,
     ReportLocationVariables
   >(REPORT_LOCATION);

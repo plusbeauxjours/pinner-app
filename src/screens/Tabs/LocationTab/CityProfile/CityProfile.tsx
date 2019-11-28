@@ -165,10 +165,12 @@ export default ({ navigation }) => {
       delay: 0
     });
   };
-  const [slackReportLocationsFn] = useMutation<
-    SlackReportLocations,
-    SlackReportLocationsVariables
-  >(SLACK_REPORT_LOCATIONS);
+  const [
+    slackReportLocationsFn,
+    { loading: slackReportLocationsLoading }
+  ] = useMutation<SlackReportLocations, SlackReportLocationsVariables>(
+    SLACK_REPORT_LOCATIONS
+  );
   const {
     data: {
       cityProfile: {
@@ -188,7 +190,7 @@ export default ({ navigation }) => {
     loading: nearCitiesLoading,
     refetch: nearCitiesRefetch
   } = useQuery<NearCities, NearCitiesVariables>(NEAR_CITIES, {
-    variables: { cityId },
+    variables: { cityId }
   });
   const {
     data: { getSamenameCities: { cities: samenameCities = null } = {} } = {},
