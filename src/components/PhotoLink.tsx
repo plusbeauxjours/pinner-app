@@ -8,22 +8,91 @@ import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 import { Ionicons } from "@expo/vector-icons";
-import { UploadAvatar, UploadAvatarVariables } from "../types/api";
-import { UPLOAD_AVATAR } from "../sharedQueries";
+import {
+  Me,
+  UploadAvatar,
+  UploadAvatarVariables,
+  GetAvatars,
+  GetAvatarsVariables,
+  UserProfile,
+  UserProfileVariables
+} from "../types/api";
+import { UPLOAD_AVATAR, ME } from "../sharedQueries";
 import { useMutation } from "react-apollo";
 import { ReactNativeFile } from "apollo-upload-client";
 import { useTheme } from "../context/ThemeContext";
 import Toast from "react-native-root-toast";
+import { useMe } from "../context/MeContext";
+import { GET_AVATARS } from "../screens/Tabs/UserProfileTab/AvatarList/AvatarListQueries";
+import { GET_USER } from "../screens/Tabs/UserProfileTab/UserProfile/UserProfileQueries";
 
 const Container = styled.TouchableOpacity`
   padding-right: 20px;
 `;
 
 export default withNavigation(({ navigation }) => {
+  const { me } = useMe();
   const isDarkMode = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
   const [UploadAvatarFn] = useMutation<UploadAvatar, UploadAvatarVariables>(
-    UPLOAD_AVATAR
+    UPLOAD_AVATAR,
+    {
+      update(cache, { data: { uploadAvatar } }) {
+        try {
+          const data = cache.readQuery<GetAvatars, GetAvatarsVariables>({
+            query: GET_AVATARS,
+            variables: { userName: me.user.username }
+          });
+          if (data) {
+            data.getAvatars.avatars.unshift(uploadAvatar.avatar);
+            data.getAvatars.avatars.find(
+              i => i.uuid === uploadAvatar.preAvatarUUID
+            ).isMain = false;
+            data.getAvatars.avatars.find(
+              i => i.uuid === uploadAvatar.newAvatarUUID
+            ).isMain = true;
+            cache.writeQuery({
+              query: GET_AVATARS,
+              variables: { userName: me.user.username },
+              data
+            });
+          }
+        } catch (e) {
+          console.log(e);
+        }
+        try {
+          const data = cache.readQuery<UserProfile, UserProfileVariables>({
+            query: GET_USER,
+            variables: { username: me.user.username }
+          });
+          if (data) {
+            data.userProfile.user.profile.avatarUrl =
+              uploadAvatar.avatar.thumbnail;
+            cache.writeQuery({
+              query: GET_USER,
+              variables: { username: me.user.username },
+              data
+            });
+          }
+        } catch (e) {
+          console.log(e);
+        }
+        try {
+          const data = cache.readQuery<Me>({
+            query: ME
+          });
+          if (data) {
+            data.me.user.profile.avatarUrl = uploadAvatar.avatar.thumbnail;
+            cache.writeQuery({
+              query: ME,
+              data
+            });
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
   );
   const toast = (message: string) => {
     Toast.show(message, {

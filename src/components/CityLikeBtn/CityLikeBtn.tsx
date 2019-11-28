@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { TOGGLE_LIKE_CITY } from "./CityLikeBtnQueries";
-import { ToggleLikeCity, ToggleLikeCityVariables, CityProfile, CityProfileVariables , CountryProfile, CountryProfileVariables>} from "../../types/api";
+import {
+  ToggleLikeCity,
+  ToggleLikeCityVariables,
+  CityProfile,
+  CityProfileVariables,
+  CountryProfile,
+  CountryProfileVariables
+} from "../../types/api";
 import { useMutation } from "react-apollo";
 import { Ionicons } from "@expo/vector-icons";
 import { Platform } from "react-native";
 import { theme } from "../../styles/theme";
 import styled from "styled-components";
-import { CITY_PROFILE } from '../../screens/Tabs/LocationTab/CityProfile/CityProfileQueries';
-import { COUNTRY_PROFILE } from '../../screens/Tabs/LocationTab/CountryProfile/CountryProfileQueries';
+import { CITY_PROFILE } from "../../screens/Tabs/LocationTab/CityProfile/CityProfileQueries";
+import { COUNTRY_PROFILE } from "../../screens/Tabs/LocationTab/CountryProfile/CountryProfileQueries";
 
 const Touchable = styled.TouchableOpacity<ITheme>`
   margin-left: 3px;
