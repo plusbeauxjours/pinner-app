@@ -756,7 +756,7 @@ export default ({ navigation }) => {
           coffees.length !== 0 &&
           coffees.find(i => i.host.username === userName) ? (
             <CoffeeSubmitBtn
-              disabled={deleteCoffeeFn}
+              disabled={deleteCoffeeLoading}
               onPress={() =>
                 cancelCoffee(
                   coffees.find(i => i.host.username === userName).uuid
