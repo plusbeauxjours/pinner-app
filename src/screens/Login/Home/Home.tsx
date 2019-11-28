@@ -19,10 +19,13 @@ import { DARK_THEME } from "react-native-country-picker-modal";
 import CountryPicker from "react-native-country-picker-modal";
 import { TextInput } from "react-native-gesture-handler";
 import { countries } from "../../../../countryData";
-import { COMPLETE_PHONE_SIGN_IN } from "../Verification/PhoneVerification/PhoneVerificationQueries";
 import { useLocation } from "../../../context/LocationContext";
 import { useLogIn } from "../../../context/AuthContext";
-import { EMAIL_SIGN_IN, PHONE_SIGN_IN } from "./HomeQueries";
+import {
+  EMAIL_SIGN_IN,
+  PHONE_SIGN_IN,
+  COMPLETE_PHONE_SIGN_IN
+} from "./HomeQueries";
 import FacebookApproach from "../FacebookApproach";
 
 const View = styled.View`

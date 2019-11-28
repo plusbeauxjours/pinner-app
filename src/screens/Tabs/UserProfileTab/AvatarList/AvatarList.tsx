@@ -104,7 +104,7 @@ export default ({ navigation }) => {
         showSeparators: true
       },
       buttonIndex => {
-        if (buttonIndex === 0) {
+        if (buttonIndex === 0 && !deleteAvatarLoading && !markAsMainLoading) {
           markAsMainFn({ variables: { uuid: avatar.uuid } });
         } else if (buttonIndex === 1) {
           onConfirmPress();
@@ -122,7 +122,7 @@ export default ({ navigation }) => {
         cancelButtonIndex: 1
       },
       buttonIndex => {
-        if (buttonIndex === 0) {
+        if (buttonIndex === 0 && !deleteAvatarLoading && !markAsMainLoading) {
           deleteAvatar(avatar.uuid);
         } else {
           null;
@@ -130,7 +130,7 @@ export default ({ navigation }) => {
       }
     );
   };
-  if (avatarLoading || deleteAvatarLoading || meLoading) {
+  if (avatarLoading || meLoading) {
     return (
       <LoaderContainer>
         <Loader />

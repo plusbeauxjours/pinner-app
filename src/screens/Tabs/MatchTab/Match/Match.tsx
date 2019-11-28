@@ -279,6 +279,7 @@ export default ({ navigation }) => {
                   renderItem={data => (
                     <TouchableBackRow key={data.index}>
                       <Touchable
+                        disabled={unMatchLoading}
                         onPress={() => {
                           MarkAsReadMatchFn({
                             variables: { matchId: parseInt(data.item.id, 10) }

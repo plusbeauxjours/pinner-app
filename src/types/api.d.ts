@@ -181,9 +181,8 @@ export interface MatchVariables {
 
 export interface UnMatch_unMatch_coffee_city_country {
   __typename: "CountryType";
-  countryName: string | null;
   countryCode: string | null;
-  countryEmoji: string | null;
+  countryName: string | null;
 }
 
 export interface UnMatch_unMatch_coffee_city {
@@ -192,20 +191,6 @@ export interface UnMatch_unMatch_coffee_city {
   cityName: string | null;
   cityThumbnail: string | null;
   country: UnMatch_unMatch_coffee_city_country;
-}
-
-export interface UnMatch_unMatch_coffee_host_profile_residence {
-  __typename: "CountryType";
-  countryCode: string | null;
-  countryName: string | null;
-  countryEmoji: string | null;
-}
-
-export interface UnMatch_unMatch_coffee_host_profile_nationality {
-  __typename: "CountryType";
-  countryCode: string | null;
-  countryName: string | null;
-  countryEmoji: string | null;
 }
 
 export interface UnMatch_unMatch_coffee_host_profile_currentCity_country {
@@ -224,8 +209,6 @@ export interface UnMatch_unMatch_coffee_host_profile {
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
-  residence: UnMatch_unMatch_coffee_host_profile_residence | null;
-  nationality: UnMatch_unMatch_coffee_host_profile_nationality | null;
   currentCity: UnMatch_unMatch_coffee_host_profile_currentCity | null;
 }
 
@@ -255,7 +238,7 @@ export interface UnMatch_unMatch_coffee {
 export interface UnMatch_unMatch {
   __typename: "UnMatchResponse";
   ok: boolean | null;
-  matchId: string | null;
+  matchId: number | null;
   cityId: string | null;
   countryCode: string | null;
   continentCode: string | null;
