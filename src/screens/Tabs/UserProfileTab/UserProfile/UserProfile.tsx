@@ -414,7 +414,29 @@ export default ({ navigation }) => {
     }
   });
   const [deleteTripFn] = useMutation<DeleteTrip, DeleteTripVariables>(
-    DELETE_TRIP
+    DELETE_TRIP,
+    {
+      update(cache, { data: { deleteTrip } }) {
+        try {
+          const data = cache.readQuery<GetTrips, GetTripsVariables>({
+            query: GET_TRIPS,
+            variables: { username }
+          });
+          if (data) {
+            data.getTrips.trip = data.getTrips.trip.filter(
+              i => parseInt(i.id, 10) !== deleteTrip.tripId
+            );
+            cache.writeQuery({
+              query: GET_TRIPS,
+              variables: { username },
+              data
+            });
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
   );
   const [calculateDistanceFn] = useMutation<CalculateDistance>(
     CALCULATE_DISTANCE
@@ -478,6 +500,7 @@ export default ({ navigation }) => {
       setTripMarkedDates({});
       if (addTrip.ok) {
         calculateDistanceFn();
+        tripRefetch();
         toast("Trip Added");
       }
     } catch (e) {
@@ -495,6 +518,7 @@ export default ({ navigation }) => {
       setTripMarkedDates({});
       if (editTrip.ok) {
         calculateDistanceFn();
+        tripRefetch();
         toast("Trip Edited");
       }
     } catch (e) {

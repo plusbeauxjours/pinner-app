@@ -624,10 +624,10 @@ export default ({ navigation }) => {
     if (
       newUsername !== user.username ||
       nationalityCode !==
-        (user.profile.nationality.countryCode ||
+        ((user.profile.nationality && user.profile.nationality.countryCode) ||
           nationalityCode !== location.currentCountryCode) ||
       residenceCode !==
-        (user.profile.residence.countryCode ||
+        ((user.profile.residence && user.profile.residence.countryCode) ||
           residenceCode !== location.currentCountryCode) ||
       gender !== profile.gender ||
       firstName !== user.firstName ||
@@ -990,11 +990,13 @@ export default ({ navigation }) => {
                 {isChanged && "Your "}
                 {newUsername !== navigation.getParam("username") && "USERNAME "}
                 {nationalityCode !==
-                  (user.profile.nationality.countryCode ||
+                  ((user.profile.nationality &&
+                    user.profile.nationality.countryCode) ||
                     nationalityCode !== location.currentCountryCode) &&
                   "NATIONALITY "}
                 {residenceCode !==
-                  (user.profile.residence.countryCode ||
+                  ((user.profile.residence &&
+                    user.profile.residence.countryCode) ||
                     residenceCode !== location.currentCountryCode) &&
                   "RESIDENCE "}
                 {gender !== user.profile.gender && "GENDER "}
