@@ -34,7 +34,7 @@ export default withNavigation(({ navigation }) => {
   const { me } = useMe();
   const isDarkMode = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
-  const [UploadAvatarFn] = useMutation<UploadAvatar, UploadAvatarVariables>(
+  const [uploadAvatarFn] = useMutation<UploadAvatar, UploadAvatarVariables>(
     UPLOAD_AVATAR,
     {
       update(cache, { data: { uploadAvatar } }) {
@@ -146,7 +146,7 @@ export default withNavigation(({ navigation }) => {
             type: type.toLowerCase(),
             name
           });
-          UploadAvatarFn({ variables: { file } });
+          uploadAvatarFn({ variables: { file } });
           navigation.pop();
         }
       } catch (e) {
@@ -176,7 +176,7 @@ export default withNavigation(({ navigation }) => {
           type: type.toLowerCase(),
           name
         });
-        UploadAvatarFn({ variables: { file } });
+        uploadAvatarFn({ variables: { file } });
         navigation.pop();
       }
     } else {
