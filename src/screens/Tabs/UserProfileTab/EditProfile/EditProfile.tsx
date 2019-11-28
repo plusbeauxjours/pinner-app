@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useMutation } from "react-apollo-hooks";
+import { useMutation, useQuery } from "react-apollo-hooks";
 import styled from "styled-components";
 import Modal from "react-native-modal";
 import Toast from "react-native-root-toast";
 import { useTheme } from "../../../../hooks/useTheme";
 import {
+  Me,
   EditProfile,
   EditProfileVariables,
   DeleteProfile,
@@ -15,6 +16,7 @@ import {
   ToggleSettings,
   ToggleSettingsVariables,
   UserProfile,
+  UserProfileVariables,
   StartEditEmailVerification,
   StartEditEmailVerificationVariables
 } from "../../../../types/api";
@@ -28,7 +30,6 @@ import {
 } from "./EditProfileQueries";
 import Loader from "../../../../components/Loader";
 import { GET_USER } from "../UserProfile/UserProfileQueries";
-import { UserProfileVariables } from "../../../../types/api";
 import { RefreshControl, Platform, TextInput } from "react-native";
 import constants from "../../../../../constants";
 import { countries } from "../../../../../countryData";
@@ -37,6 +38,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
 import { useLocation } from "../../../../context/LocationContext";
 import { Ionicons } from "@expo/vector-icons";
+import { ME } from "../../../../sharedQueries";
 
 const View = styled.View`
   flex: 1;
@@ -142,7 +144,6 @@ export default ({ navigation }) => {
   const isDarkMode = useTheme();
   const { theme, toggleTheme } = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
-  const profileRefetch = navigation.getParam("profileRefetch");
   const profile = navigation.getParam("profile");
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [isProfileSubmitted, setIsProfileSubmitted] = useState<boolean>(false);
@@ -212,8 +213,48 @@ export default ({ navigation }) => {
   const [newEmailAddress, setNewEmailAddress] = useState<string>("");
   const [editEmailModalOpen, setEditEmailModalOpen] = useState<boolean>(false);
   const [isEditEmailMode, setIsEditEmailMode] = useState<boolean>(true);
+  const {
+    data: { userProfile: { user = null } = {} } = {},
+    refetch: profileRefetch
+  } = useQuery<UserProfile, UserProfileVariables>(GET_USER, {
+    variables: { username }
+  });
   const [editProfileFn] = useMutation<EditProfile, EditProfileVariables>(
-    EDIT_PROFILE
+    EDIT_PROFILE,
+    {
+      update(cache, { data: { editProfile } }) {
+        try {
+          const data = cache.readQuery<UserProfile, UserProfileVariables>({
+            query: GET_USER,
+            variables: { username }
+          });
+          if (data) {
+            data.userProfile.user = editProfile.user;
+            cache.writeQuery({
+              query: GET_USER,
+              variables: { username },
+              data
+            });
+          }
+        } catch (e) {
+          console.log(e);
+        }
+        try {
+          const data = cache.readQuery<Me>({
+            query: ME
+          });
+          if (data) {
+            data.me.user.username = editProfile.user.username;
+            cache.writeQuery({
+              query: ME,
+              data
+            });
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
   );
   const [submitModal, setSubmitModal] = useState<boolean>(false);
   const [isChanged, setIsChanged] = useState<boolean>(false);
@@ -270,7 +311,9 @@ export default ({ navigation }) => {
       buttonIndex => {
         if (buttonIndex === 0) {
           deleteProfileFn();
+          logOut();
           setDeleteModal(false);
+          navigation.navigate("Home");
         } else {
           setDeleteModal(false);
         }
@@ -308,6 +351,31 @@ export default ({ navigation }) => {
         : newPhoneNumber,
       countryPhoneNumber: newCountryPhoneNumber,
       countryPhoneCode: newCountryPhoneCode
+    },
+    update(cache, { data: { completeEditPhoneVerification } }) {
+      try {
+        const data = cache.readQuery<UserProfile, UserProfileVariables>({
+          query: GET_USER,
+          variables: { username }
+        });
+        if (data) {
+          data.userProfile.user.profile.phoneNumber =
+            completeEditPhoneVerification.phoneNumber;
+          data.userProfile.user.profile.countryPhoneNumber =
+            completeEditPhoneVerification.countryPhoneNumber;
+          data.userProfile.user.profile.countryPhoneCode =
+            completeEditPhoneVerification.countryPhoneCode;
+          data.userProfile.user.profile.isVerifiedPhoneNumber =
+            completeEditPhoneVerification.isVerifiedPhoneNumber;
+          cache.writeQuery({
+            query: GET_USER,
+            variables: { username },
+            data
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
     }
   });
   const [
@@ -495,6 +563,8 @@ export default ({ navigation }) => {
                 residenceCode
               }
             });
+            setIsChanged(false);
+            profileRefetch();
             toast("Profile edited");
           }
         }
@@ -552,17 +622,17 @@ export default ({ navigation }) => {
   };
   useEffect(() => {
     if (
-      newUsername !== navigation.getParam("username") ||
+      newUsername !== user.username ||
       nationalityCode !==
-        (profile.nationality.countryCode ||
+        (user.profile.nationality.countryCode ||
           nationalityCode !== location.currentCountryCode) ||
       residenceCode !==
-        (profile.residence.countryCode ||
+        (user.profile.residence.countryCode ||
           residenceCode !== location.currentCountryCode) ||
       gender !== profile.gender ||
-      firstName !== navigation.getParam("firstName") ||
-      lastName !== navigation.getParam("lastName") ||
-      bio !== profile.bio
+      firstName !== user.firstName ||
+      lastName !== user.lastName ||
+      bio !== user.profile.bio
     ) {
       setIsChanged(true);
     } else {
@@ -920,17 +990,17 @@ export default ({ navigation }) => {
                 {isChanged && "Your "}
                 {newUsername !== navigation.getParam("username") && "USERNAME "}
                 {nationalityCode !==
-                  (profile.nationality.countryCode ||
+                  (user.profile.nationality.countryCode ||
                     nationalityCode !== location.currentCountryCode) &&
                   "NATIONALITY "}
                 {residenceCode !==
-                  (profile.residence.countryCode ||
+                  (user.profile.residence.countryCode ||
                     residenceCode !== location.currentCountryCode) &&
                   "RESIDENCE "}
-                {gender !== profile.gender && "GENDER "}
-                {firstName !== navigation.getParam("firstName") && "FIRSTNAME "}
-                {lastName !== navigation.getParam("lastName") && "LASTNAME "}
-                {bio !== profile.bio && "BIO "}
+                {gender !== user.profile.gender && "GENDER "}
+                {firstName !== user.firstName && "FIRSTNAME "}
+                {lastName !== user.lastName && "LASTNAME "}
+                {bio !== user.profile.bio && "BIO "}
                 {isChanged && "is changed. Please press submit button to save."}
               </ExplainText>
               <Item>

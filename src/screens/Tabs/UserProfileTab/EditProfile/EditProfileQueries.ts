@@ -31,6 +31,7 @@ export const EDIT_PROFILE = gql`
           bio
           gender
           avatarUrl
+          appAvatarUrl
           website
           distance
           countryPhoneNumber
@@ -64,9 +65,9 @@ export const EDIT_PROFILE = gql`
           currentCity {
             latitude
             longitude
-            cityId
             cityName
-            cityThumbnail
+            cityId
+            cityPhoto
             country {
               countryName
               countryCode

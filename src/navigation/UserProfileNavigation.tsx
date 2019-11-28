@@ -10,6 +10,7 @@ import CityProfile from "../screens/Tabs/LocationTab/CityProfile";
 import CountryProfile from "../screens/Tabs/LocationTab/CountryProfile";
 import ContinentProfile from "../screens/Tabs/LocationTab/ContinentProfile";
 import AvatarDetail from "../screens/Tabs/UserProfileTab/AvatarDetail";
+import Home from "../screens/Login/Home/index";
 
 export const UserProfileTabs = createMaterialTopTabNavigator(
   {
@@ -131,7 +132,8 @@ export default createStackNavigator(
     AvatarList,
     Cities,
     Countries,
-    Continents
+    Continents,
+    Home
   },
   {
     defaultNavigationOptions: {
