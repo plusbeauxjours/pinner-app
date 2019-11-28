@@ -6,12 +6,15 @@ import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
 import { GET_AVATARS, DELETE_AVATAR, MARK_AS_MAIN } from "./AvatarListQueries";
 import {
+  Me,
   GetAvatars,
   GetAvatarsVariables,
   DeleteAvatar,
   DeleteAvatarVariables,
   MarkAsMain,
-  MarkAsMainVariables
+  MarkAsMainVariables,
+  UserProfile,
+  UserProfileVariables
 } from "../../../../types/api";
 import Loader from "../../../../components/Loader";
 import constants, { BACKEND_URL } from "../../../../../constants";
@@ -20,6 +23,8 @@ import ImageViewer from "react-native-image-zoom-viewer";
 import { useTheme } from "../../../../context/ThemeContext";
 import { Entypo } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import { GET_USER } from "../UserProfile/UserProfileQueries";
+import { ME } from "../../../../sharedQueries";
 
 const View = styled.View`
   flex: 1;
@@ -69,11 +74,86 @@ export default ({ navigation }) => {
   const [deleteAvatarFn, { loading: deleteAvatarLoading }] = useMutation<
     DeleteAvatar,
     DeleteAvatarVariables
-  >(DELETE_AVATAR);
+  >(DELETE_AVATAR, {
+    update(cache, { data: { deleteAvatar } }) {
+      try {
+        const data = cache.readQuery<GetAvatars, GetAvatarsVariables>({
+          query: GET_AVATARS,
+          variables: { userName: username }
+        });
+        if (data) {
+          data.getAvatars.avatars = data.getAvatars.avatars.filter(
+            i => i.uuid !== deleteAvatar.uuid
+          );
+          cache.writeQuery({
+            query: GET_AVATARS,
+            variables: { userName: username },
+            data
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  });
   const [markAsMainFn, { loading: markAsMainLoading }] = useMutation<
     MarkAsMain,
     MarkAsMainVariables
-  >(MARK_AS_MAIN);
+  >(MARK_AS_MAIN, {
+    update(cache, { data: { markAsMain } }) {
+      try {
+        const data = cache.readQuery<UserProfile, UserProfileVariables>({
+          query: GET_USER,
+          variables: { username }
+        });
+        if (data) {
+          data.userProfile.user.profile.avatarUrl = markAsMain.avatar.thumbnail;
+          cache.writeQuery({
+            query: GET_USER,
+            variables: { username },
+            data
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      try {
+        const data = cache.readQuery<Me>({
+          query: ME
+        });
+        if (data) {
+          data.me.user.profile.avatarUrl = markAsMain.avatar.thumbnail;
+          cache.writeQuery({
+            query: ME,
+            data
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      try {
+        const data = cache.readQuery<GetAvatars, GetAvatarsVariables>({
+          query: GET_AVATARS,
+          variables: { userName: username }
+        });
+        if (data) {
+          data.getAvatars.avatars.find(
+            i => i.uuid === markAsMain.preAvatarUUID
+          ).isMain = false;
+          data.getAvatars.avatars.find(
+            i => i.uuid === markAsMain.newAvatarUUID
+          ).isMain = true;
+          cache.writeQuery({
+            query: GET_AVATARS,
+            variables: { userName: username },
+            data
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  });
   const openModal = async (item: any) => {
     await setAvatar(item);
     await setModalOpen(true);
