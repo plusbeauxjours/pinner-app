@@ -16,6 +16,7 @@ import CoffeeHeader from "../components/Header/CoffeeHeader";
 import LocationLeftHeader from "../components/Header/LocationLeftHeader";
 import BackArrow from "../components/Header/BackArrow";
 import UserProfileHeader from "../components/Header/UserProfileHeader";
+import LocationRightHeader from "../components/Header/LocationRightHeader";
 
 export const UserProfileTabs = createMaterialTopTabNavigator(
   {
@@ -144,7 +145,12 @@ export default createStackNavigator({
         backgroundColor: "#161616"
       },
       headerLeft: <LocationLeftHeader />,
-      headerRight: <Search />
+      headerRight: (
+        <>
+          <LocationRightHeader />
+          <Search />
+        </>
+      )
     }
   },
   ContinentProfile: {
@@ -154,7 +160,12 @@ export default createStackNavigator({
         backgroundColor: "#161616"
       },
       headerLeft: <LocationLeftHeader />,
-      headerRight: <Search />
+      headerRight: (
+        <>
+          <LocationRightHeader />
+          <Search />
+        </>
+      )
     }
   },
   CountryProfileTabs: {
@@ -164,7 +175,12 @@ export default createStackNavigator({
         backgroundColor: "#161616"
       },
       headerLeft: <LocationLeftHeader />,
-      headerRight: <Search />
+      headerRight: (
+        <>
+          <LocationRightHeader />
+          <Search />
+        </>
+      )
     }
   },
   UserProfileTabs: {

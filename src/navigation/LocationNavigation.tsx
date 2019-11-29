@@ -10,11 +10,11 @@ import Continents from "../screens/Tabs/UserProfileTab/Continents";
 import UserProfile from "../screens/Tabs/UserProfileTab/UserProfile";
 import EditProfile from "../screens/Tabs/UserProfileTab/EditProfile";
 import AvatarList from "../screens/Tabs/UserProfileTab/AvatarList";
-import AvatarDetail from "../screens/Tabs/UserProfileTab/AvatarDetail";
 import Search from "../components/Search/index";
 import LocationLeftHeader from "../components/Header/LocationLeftHeader";
 import UserProfileHeader from "../components/Header/UserProfileHeader";
 import BackArrow from "../components/Header/BackArrow";
+import LocationRightHeader from "../components/Header/LocationRightHeader";
 
 export const UserProfileTabs = createMaterialTopTabNavigator(
   {
@@ -133,7 +133,12 @@ export default createStackNavigator({
         backgroundColor: "#161616"
       },
       headerLeft: <LocationLeftHeader />,
-      headerRight: <Search />
+      headerRight: (
+        <>
+          <LocationRightHeader />
+          <Search />
+        </>
+      )
     }
   },
   ContinentProfile: {
@@ -143,7 +148,12 @@ export default createStackNavigator({
         backgroundColor: "#161616"
       },
       headerLeft: <LocationLeftHeader />,
-      headerRight: <Search />
+      headerRight: (
+        <>
+          <LocationRightHeader />
+          <Search />
+        </>
+      )
     }
   },
   CountryProfileTabs: {
@@ -153,7 +163,12 @@ export default createStackNavigator({
         backgroundColor: "#161616"
       },
       headerLeft: <LocationLeftHeader />,
-      headerRight: <Search />
+      headerRight: (
+        <>
+          <LocationRightHeader />
+          <Search />
+        </>
+      )
     }
   },
   UserProfileTabs: {

@@ -15,7 +15,7 @@ import Search from "../components/Search/index";
 import UserProfileHeader from "../components/Header/UserProfileHeader";
 import LocationLeftHeader from "../components/Header/LocationLeftHeader";
 import BackArrow from "../components/Header/BackArrow";
-
+import LocationRightHeader from "../components/Header/LocationRightHeader";
 
 export const UserProfileTabs = createMaterialTopTabNavigator(
   {
@@ -145,7 +145,12 @@ export default createStackNavigator({
         backgroundColor: "#161616"
       },
       headerLeft: <LocationLeftHeader />,
-      headerRight: <Search />
+      headerRight: (
+        <>
+          <LocationRightHeader />
+          <Search />
+        </>
+      )
     }
   },
   ContinentProfile: {
@@ -155,7 +160,12 @@ export default createStackNavigator({
         backgroundColor: "#161616"
       },
       headerLeft: <LocationLeftHeader />,
-      headerRight: <Search />
+      headerRight: (
+        <>
+          <LocationRightHeader />
+          <Search />
+        </>
+      )
     }
   },
   CountryProfileTabs: {
@@ -165,7 +175,12 @@ export default createStackNavigator({
         backgroundColor: "#161616"
       },
       headerLeft: <LocationLeftHeader />,
-      headerRight: <Search />
+      headerRight: (
+        <>
+          <LocationRightHeader />
+          <Search />
+        </>
+      )
     }
   },
   EditProfile: {
@@ -175,7 +190,12 @@ export default createStackNavigator({
         backgroundColor: "#161616"
       },
       headerLeft: <BackArrow />,
-      headerRight: <Search />
+      headerRight: (
+        <>
+          <LocationRightHeader />
+          <Search />
+        </>
+      )
     }
   },
   Cities: {

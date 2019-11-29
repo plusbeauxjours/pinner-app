@@ -282,7 +282,7 @@ export default ({ navigation }) => {
       });
     };
 
-    console.log(routeName);
+    console.log("routeName", routeName);
 
     if (routeName === "confirm") {
       const {
