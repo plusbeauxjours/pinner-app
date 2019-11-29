@@ -30,7 +30,12 @@ import {
 } from "./EditProfileQueries";
 import Loader from "../../../../components/Loader";
 import { GET_USER } from "../UserProfile/UserProfileQueries";
-import { RefreshControl, Platform, TextInput } from "react-native";
+import {
+  RefreshControl,
+  Platform,
+  TextInput,
+  ActivityIndicator
+} from "react-native";
 import constants from "../../../../../constants";
 import { countries } from "../../../../../countryData";
 import { useLogOut } from "../../../../context/AuthContext";
@@ -705,9 +710,7 @@ export default ({ navigation }) => {
                     onPress={handlePhoneNumber}
                   >
                     {startEditPhoneVerificationLoading ? (
-                      <SubmitLoaderContainer>
-                        <Loader />
-                      </SubmitLoaderContainer>
+                      <ActivityIndicator color={"#999"} />
                     ) : (
                       <Bigtext>Send SMS</Bigtext>
                     )}
@@ -739,7 +742,7 @@ export default ({ navigation }) => {
                   >
                     <EmptyView>
                       {completeEditPhoneVerificationLoading ? (
-                        <Loader />
+                        <ActivityIndicator color={"#999"} />
                       ) : (
                         <Bigtext>Verify Key</Bigtext>
                       )}
@@ -790,9 +793,7 @@ export default ({ navigation }) => {
                     onPress={handleEmailAddress}
                   >
                     {startEditEmailVerificationLoading ? (
-                      <SubmitLoaderContainer>
-                        <Loader />
-                      </SubmitLoaderContainer>
+                      <ActivityIndicator color={"#999"} />
                     ) : (
                       <Bigtext>Send EMAIL</Bigtext>
                     )}

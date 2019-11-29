@@ -13,7 +13,7 @@ import {
 } from "../../../types/api";
 import Toast from "react-native-root-toast";
 import Loader from "../../../components/Loader";
-import { Platform } from "react-native";
+import { Platform, ActivityIndicator } from "react-native";
 import { useTheme } from "../../../context/ThemeContext";
 import { DARK_THEME } from "react-native-country-picker-modal";
 import CountryPicker from "react-native-country-picker-modal";
@@ -33,7 +33,6 @@ const View = styled.View`
   align-items: center;
   flex: 1;
 `;
-
 const Image = styled.Image`
   width: ${constants.width / 2.5};
 `;
@@ -84,6 +83,23 @@ const EmptyView = styled.View`
   justify-content: center;
   align-items: center;
 `;
+const AddTripContainer = styled.View`
+  width: ${constants.width - 80};
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+  border: 0.5px solid #999;
+  border-radius: 5px;
+`;
+const TripText = styled.Text`
+  font-size: 16;
+  font-weight: 500;
+  color: ${props => props.theme.color};
+`;
+const AddTripBtn = styled.TouchableOpacity`
+  justify-content: center;
+  padding: 0 5px 5px 5px;
+`;
 export default ({ navigation }) => {
   const logIn = useLogIn();
   const isDarkMode = useTheme();
@@ -130,7 +146,7 @@ export default ({ navigation }) => {
         : phoneNumber,
       countryPhoneNumber,
       countryPhoneCode,
-      cityId: location&&location.currentCityId
+      cityId: location && location.currentCityId
     }
   });
   const [
@@ -283,28 +299,32 @@ export default ({ navigation }) => {
                     />
                   </ApproachModalContainer>
                   <ButtonContainer>
-                    <Text>Changed your phone number? </Text>
-                    <Touchable onPress={() => setModalMode("emailApproach")}>
-                      <Text>Login with email</Text>
-                    </Touchable>
                     <Text>
-                      When you tap "Send SMS", Pinner will send a text with
+                      When you tap "SEND SMS", Pinner will send a text with
                       verification code. Message and data rates may apply. The
                       verified phone number can be used to login.
                     </Text>
+                    <Text style={{ marginTop: 15 }}>
+                      Changed your phone number?{" "}
+                    </Text>
+                    <Touchable onPress={() => setModalMode("emailApproach")}>
+                      <Text style={{ textDecorationLine: "underline" }}>
+                        Login with email
+                      </Text>
+                    </Touchable>
                     <Void />
-                    <Touchable
+                    <AddTripBtn
                       disabled={startPhoneVerificationLoading}
                       onPress={handlePhoneNumber}
                     >
-                      {startPhoneVerificationLoading ? (
-                        <SubmitLoaderContainer>
-                          <Loader />
-                        </SubmitLoaderContainer>
-                      ) : (
-                        <Bigtext>Send SMS</Bigtext>
-                      )}
-                    </Touchable>
+                      <AddTripContainer>
+                        {startPhoneVerificationLoading ? (
+                          <ActivityIndicator color={"#999"} />
+                        ) : (
+                          <TripText>SEND SMS</TripText>
+                        )}
+                      </AddTripContainer>
+                    </AddTripBtn>
                   </ButtonContainer>
                 </>
               );
@@ -313,7 +333,7 @@ export default ({ navigation }) => {
                 <>
                   <TextInput
                     style={{
-                      width: 220,
+                      width: constants.width - 80,
                       backgroundColor: "transparent",
                       borderBottomWidth: 1,
                       borderBottomColor: "#999",
@@ -328,18 +348,19 @@ export default ({ navigation }) => {
                     onChangeText={number => setVerificationKey(number)}
                   />
                   <ButtonContainer>
-                    <Touchable
+                    <Void />
+                    <AddTripBtn
                       disabled={completePhoneVerificationLoading}
                       onPress={handlePhoneVerification}
                     >
-                      <EmptyView>
+                      <AddTripContainer>
                         {completePhoneVerificationLoading ? (
-                          <Loader />
+                          <ActivityIndicator color={"#999"} />
                         ) : (
-                          <Bigtext>Verify Key</Bigtext>
+                          <TripText>VERIFY KEY</TripText>
                         )}
-                      </EmptyView>
-                    </Touchable>
+                      </AddTripContainer>
+                    </AddTripBtn>
                   </ButtonContainer>
                 </>
               );
@@ -364,22 +385,22 @@ export default ({ navigation }) => {
                   </ApproachModalContainer>
                   <ButtonContainer>
                     <Text>
-                      When you tap "Send EMAIL", Pinner will email you a link
+                      When you tap "SEND EMAIL", Pinner will email you a link
                       that will instantly log you in.
                     </Text>
                     <Void />
-                    <Touchable
+                    <AddTripBtn
                       disabled={startEmailVerificationLoading}
                       onPress={handleEmailAddress}
                     >
-                      {startEmailVerificationLoading ? (
-                        <SubmitLoaderContainer>
-                          <Loader />
-                        </SubmitLoaderContainer>
-                      ) : (
-                        <Bigtext>Send EMAIL</Bigtext>
-                      )}
-                    </Touchable>
+                      <AddTripContainer>
+                        {startEmailVerificationLoading ? (
+                          <ActivityIndicator color={"#999"} />
+                        ) : (
+                          <TripText>SEND EMAIL</TripText>
+                        )}
+                      </AddTripContainer>
+                    </AddTripBtn>
                   </ButtonContainer>
                 </>
               );
