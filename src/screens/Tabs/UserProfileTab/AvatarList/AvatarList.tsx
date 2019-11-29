@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import { ScreenOrientation } from "expo";
 import { RefreshControl, FlatList, Modal } from "react-native";
+import Toast from "react-native-root-toast";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
 import { GET_AVATARS, DELETE_AVATAR, MARK_AS_MAIN } from "./AvatarListQueries";
@@ -179,13 +180,14 @@ export default ({ navigation }) => {
   const onPress = () => {
     showActionSheetWithOptions(
       {
-        options: ["Mark As Main", "Delete Avatar", "Cancel"],
+        options: ["Change Main Avatar", "Delete Photo", "Cancel"],
         cancelButtonIndex: 2,
         showSeparators: true
       },
       buttonIndex => {
         if (buttonIndex === 0 && !deleteAvatarLoading && !markAsMainLoading) {
           markAsMainFn({ variables: { uuid: avatar.uuid } });
+          toast("Main Avatar Changed");
         } else if (buttonIndex === 1) {
           onConfirmPress();
         } else {
@@ -204,11 +206,22 @@ export default ({ navigation }) => {
       buttonIndex => {
         if (buttonIndex === 0 && !deleteAvatarLoading && !markAsMainLoading) {
           deleteAvatar(avatar.uuid);
+          toast("Photo Deleted");
         } else {
           null;
         }
       }
     );
+  };
+  const toast = (message: string) => {
+    Toast.show(message, {
+      duration: Toast.durations.LONG,
+      position: Toast.positions.CENTER,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      delay: 0
+    });
   };
   if (avatarLoading || meLoading) {
     return (
