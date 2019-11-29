@@ -55,57 +55,54 @@ const CityLikeBtn: React.FC<IProps> = ({
   const [toggleLikeFn, { loading }] = useMutation<
     ToggleLikeCity,
     ToggleLikeCityVariables
-  >(
-    TOGGLE_LIKE_CITY
-    //   , {
-    //   variables: { cityId },
-    //   update(cache, { data: { toggleLikeCity } }) {
-    //     try {
-    //       const data = cache.readQuery<CityProfile, CityProfileVariables>({
-    //         query: CITY_PROFILE,
-    //         variables: { cityId }
-    //       });
-    //       if (data) {
-    //         data.cityProfile.city.isLiked = toggleLikeCity.city.isLiked;
-    //         data.cityProfile.city.likeCount = toggleLikeCity.city.likeCount;
-    //         cache.writeQuery({
-    //           query: CITY_PROFILE,
-    //           variables: { cityId },
-    //           data
-    //         });
-    //       }
-    //     } catch (e) {
-    //       console.log(e);
-    //     }
-    //     try {
-    //       const {
-    //         city: {
-    //           country: { countryCode }
-    //         }
-    //       } = toggleLikeCity;
-    //       const data = cache.readQuery<CountryProfile, CountryProfileVariables>({
-    //         query: COUNTRY_PROFILE,
-    //         variables: { countryCode }
-    //       });
-    //       if (data) {
-    //         data.countryProfile.cities.find(
-    //           i => i.cityId === toggleLikeCity.city.cityId
-    //         ).isLiked = toggleLikeCity.city.isLiked;
-    //         data.countryProfile.cities.find(
-    //           i => i.cityId === toggleLikeCity.city.cityId
-    //         ).likeCount = toggleLikeCity.city.likeCount;
-    //         cache.writeQuery({
-    //           query: COUNTRY_PROFILE,
-    //           variables: { countryCode },
-    //           data
-    //         });
-    //       }
-    //     } catch (e) {
-    //       console.log(e);
-    //     }
-    //   }
-    // }
-  );
+  >(TOGGLE_LIKE_CITY, {
+    variables: { cityId },
+    update(cache, { data: { toggleLikeCity } }) {
+      try {
+        const data = cache.readQuery<CityProfile, CityProfileVariables>({
+          query: CITY_PROFILE,
+          variables: { cityId }
+        });
+        if (data) {
+          data.cityProfile.city.isLiked = toggleLikeCity.city.isLiked;
+          data.cityProfile.city.likeCount = toggleLikeCity.city.likeCount;
+          cache.writeQuery({
+            query: CITY_PROFILE,
+            variables: { cityId },
+            data
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      try {
+        const {
+          city: {
+            country: { countryCode }
+          }
+        } = toggleLikeCity;
+        const data = cache.readQuery<CountryProfile, CountryProfileVariables>({
+          query: COUNTRY_PROFILE,
+          variables: { countryCode }
+        });
+        if (data) {
+          data.countryProfile.cities.find(
+            i => i.cityId === toggleLikeCity.city.cityId
+          ).isLiked = toggleLikeCity.city.isLiked;
+          data.countryProfile.cities.find(
+            i => i.cityId === toggleLikeCity.city.cityId
+          ).likeCount = toggleLikeCity.city.likeCount;
+          cache.writeQuery({
+            query: COUNTRY_PROFILE,
+            variables: { countryCode },
+            data
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  });
   const handleLike = async () => {
     if (!loading) {
       if (isLiked === true) {
