@@ -73,17 +73,7 @@ const Void = styled.View`
   height: 40px;
 `;
 const Touchable = styled.TouchableOpacity``;
-const SubmitLoaderContainer = styled.View`
-  justify-content: center;
-  align-items: center;
-  padding: 15px;
-  height: 35px;
-`;
-const EmptyView = styled.View`
-  justify-content: center;
-  align-items: center;
-`;
-const AddTripContainer = styled.View`
+const SubmitButtonContainer = styled.View`
   width: ${constants.width - 80};
   height: 40px;
   justify-content: center;
@@ -91,12 +81,12 @@ const AddTripContainer = styled.View`
   border: 0.5px solid #999;
   border-radius: 5px;
 `;
-const TripText = styled.Text`
+const SubmitButtonText = styled.Text`
   font-size: 16;
   font-weight: 500;
   color: ${props => props.theme.color};
 `;
-const AddTripBtn = styled.TouchableOpacity`
+const SubmitButton = styled.TouchableOpacity`
   justify-content: center;
   padding: 0 5px 5px 5px;
 `;
@@ -118,7 +108,6 @@ export default ({ navigation }) => {
     // countries.find(i => i.code === location.currentCountryCode).phone
   );
 
-  const [loading, setLoading] = useState(false);
   const [
     startPhoneVerificationFn,
     { loading: startPhoneVerificationLoading }
@@ -243,7 +232,7 @@ export default ({ navigation }) => {
       toast("Could not be Verified your phone number");
     }
   };
-  if (loading || locationLoading) {
+  if (locationLoading) {
     <LoaderContainer>
       <Loader />
     </LoaderContainer>;
@@ -313,18 +302,18 @@ export default ({ navigation }) => {
                       </Text>
                     </Touchable>
                     <Void />
-                    <AddTripBtn
+                    <SubmitButton
                       disabled={startPhoneVerificationLoading}
                       onPress={handlePhoneNumber}
                     >
-                      <AddTripContainer>
+                      <SubmitButtonContainer>
                         {startPhoneVerificationLoading ? (
                           <ActivityIndicator color={"#999"} />
                         ) : (
-                          <TripText>SEND SMS</TripText>
+                          <SubmitButtonText>SEND SMS</SubmitButtonText>
                         )}
-                      </AddTripContainer>
-                    </AddTripBtn>
+                      </SubmitButtonContainer>
+                    </SubmitButton>
                   </ButtonContainer>
                 </>
               );
@@ -349,18 +338,18 @@ export default ({ navigation }) => {
                   />
                   <ButtonContainer>
                     <Void />
-                    <AddTripBtn
+                    <SubmitButton
                       disabled={completePhoneVerificationLoading}
                       onPress={handlePhoneVerification}
                     >
-                      <AddTripContainer>
+                      <SubmitButtonContainer>
                         {completePhoneVerificationLoading ? (
                           <ActivityIndicator color={"#999"} />
                         ) : (
-                          <TripText>VERIFY KEY</TripText>
+                          <SubmitButtonText>VERIFY KEY</SubmitButtonText>
                         )}
-                      </AddTripContainer>
-                    </AddTripBtn>
+                      </SubmitButtonContainer>
+                    </SubmitButton>
                   </ButtonContainer>
                 </>
               );
@@ -389,18 +378,18 @@ export default ({ navigation }) => {
                       that will instantly log you in.
                     </Text>
                     <Void />
-                    <AddTripBtn
+                    <SubmitButton
                       disabled={startEmailVerificationLoading}
                       onPress={handleEmailAddress}
                     >
-                      <AddTripContainer>
+                      <SubmitButtonContainer>
                         {startEmailVerificationLoading ? (
                           <ActivityIndicator color={"#999"} />
                         ) : (
-                          <TripText>SEND EMAIL</TripText>
+                          <SubmitButtonText>SEND EMAIL</SubmitButtonText>
                         )}
-                      </AddTripContainer>
-                    </AddTripBtn>
+                      </SubmitButtonContainer>
+                    </SubmitButton>
                   </ButtonContainer>
                 </>
               );

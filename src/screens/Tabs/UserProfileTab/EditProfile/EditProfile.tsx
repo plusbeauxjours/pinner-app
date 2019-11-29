@@ -133,13 +133,23 @@ const ButtonContainer = styled.View`
   align-items: center;
   padding: 15px;
 `;
-const SubmitLoaderContainer = styled.View`
+const SubmitButtonContainer = styled.View`
+  width: ${constants.width - 80};
+  height: 40px;
   justify-content: center;
   align-items: center;
-  padding: 15px;
-  height: 35px;
+  border: 0.5px solid #999;
+  border-radius: 5px;
 `;
-
+const SubmitButtonText = styled.Text`
+  font-size: 16;
+  font-weight: 500;
+  color: ${props => props.theme.color};
+`;
+const SubmitButton = styled.TouchableOpacity`
+  justify-content: center;
+  padding: 0 5px 5px 5px;
+`;
 interface IProps {
   isChanged: boolean;
 }
@@ -700,21 +710,23 @@ export default ({ navigation }) => {
                 </EditModalContainer>
                 <ButtonContainer>
                   <Text>
-                    When you tap "Send SMS", Pinner will send a text with
+                    When you tap "SEND SMS", Pinner will send a text with
                     verification code. Message and data rates may apply. The
                     verified phone number can be used to login.
                   </Text>
                   <Void />
-                  <Touchable
-                    disabled={startEditPhoneVerificationLoading}
-                    onPress={handlePhoneNumber}
-                  >
-                    {startEditPhoneVerificationLoading ? (
-                      <ActivityIndicator color={"#999"} />
-                    ) : (
-                      <Bigtext>Send SMS</Bigtext>
-                    )}
-                  </Touchable>
+                  <SubmitButton
+                      disabled={startEditPhoneVerificationLoading}
+                      onPress={handlePhoneNumber}
+                    >
+                      <SubmitButtonContainer>
+                        {startEditPhoneVerificationLoading ? (
+                          <ActivityIndicator color={"#999"} />
+                        ) : (
+                          <SubmitButtonText>SEND SMS</SubmitButtonText>
+                        )}
+                      </SubmitButtonContainer>
+                    </SubmitButton>
                 </ButtonContainer>
               </>
             ) : (
@@ -736,18 +748,20 @@ export default ({ navigation }) => {
                   onChangeText={number => setVerificationKey(number)}
                 />
                 <ButtonContainer>
-                  <Touchable
-                    disabled={completeEditPhoneVerificationLoading}
-                    onPress={handlePhoneVerification}
-                  >
-                    <EmptyView>
-                      {completeEditPhoneVerificationLoading ? (
-                        <ActivityIndicator color={"#999"} />
-                      ) : (
-                        <Bigtext>Verify Key</Bigtext>
-                      )}
-                    </EmptyView>
-                  </Touchable>
+                <Void />
+                <SubmitButton
+                      disabled={completeEditPhoneVerificationLoading}
+                      onPress={handlePhoneVerification}
+                    >
+                      <SubmitButtonContainer>
+                        {completeEditPhoneVerificationLoading ? (
+                          <ActivityIndicator color={"#999"} />
+                        ) : (
+                          <SubmitButtonText>VERIFY KEY</SubmitButtonText>
+                        )}
+                      </SubmitButtonContainer>
+                    </SubmitButton>
+                  
                 </ButtonContainer>
               </>
             )}
@@ -784,20 +798,22 @@ export default ({ navigation }) => {
                 </EditModalContainer>
                 <ButtonContainer>
                   <Text>
-                    When you tap "Send EMAIL", Pinner will email you a link that
+                    When you tap "SEND EMAIL", Pinner will email you a link that
                     will instantly log you in.
                   </Text>
                   <Void />
-                  <Touchable
-                    disabled={startEditEmailVerificationLoading}
-                    onPress={handleEmailAddress}
-                  >
-                    {startEditEmailVerificationLoading ? (
-                      <ActivityIndicator color={"#999"} />
-                    ) : (
-                      <Bigtext>Send EMAIL</Bigtext>
-                    )}
-                  </Touchable>
+                    <SubmitButton
+                      disabled={startEditEmailVerificationLoading}
+                      onPress={handleEmailAddress}
+                    >
+                      <SubmitButtonContainer>
+                        {startEditEmailVerificationLoading ? (
+                          <ActivityIndicator color={"#999"} />
+                        ) : (
+                          <SubmitButtonText>SEND EMAIL</SubmitButtonText>
+                        )}
+                      </SubmitButtonContainer>
+                    </SubmitButton>
                 </ButtonContainer>
               </>
             ) : (
