@@ -19,17 +19,18 @@ const View = styled.View`
 const UserProfileHeader = ({ navigation }) => {
   const { me } = useMe();
   const isDarkMode = useTheme();
-  console.log(navigation);
-  console.log("me", me.user.username);
-  console.log("me", me.user.username);
-  if (!navigation.state.params && navigation.state.index === 0) {
-    return (
-      <View>
-        <Text>USER PROFILE</Text>
-      </View>
-    );
-  } else if (!navigation.state.params && navigation.state.index === 1) {
-    return <PhotoLink />;
+  if (!navigation.state.params) {
+    if (navigation.state.index === 0) {
+      return (
+        <View>
+          <Text>USER PROFILE</Text>
+        </View>
+      );
+    } else if (navigation.state.index === 1) {
+      return <PhotoLink />;
+    } else {
+      return null;
+    }
   } else if (
     navigation.state.params.username === me.user.username &&
     navigation.state.index === 1
