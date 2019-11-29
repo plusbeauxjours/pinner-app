@@ -1,3 +1,4 @@
+import React from "react";
 import { createStackNavigator } from "react-navigation";
 import { createMaterialTopTabNavigator } from "react-navigation";
 import UserProfile from "../screens/Tabs/UserProfileTab/UserProfile";
@@ -11,6 +12,7 @@ import CountryProfile from "../screens/Tabs/LocationTab/CountryProfile";
 import ContinentProfile from "../screens/Tabs/LocationTab/ContinentProfile";
 import AvatarDetail from "../screens/Tabs/UserProfileTab/AvatarDetail";
 import Home from "../screens/Login/Home/index";
+import Search from "../components/Search/index";
 
 export const UserProfileTabs = createMaterialTopTabNavigator(
   {
@@ -137,7 +139,10 @@ export default createStackNavigator(
   },
   {
     defaultNavigationOptions: {
-      header: null
+      headerStyle: {
+        backgroundColor: "#161616"
+      },
+      headerRight: <Search />
     }
   }
 );

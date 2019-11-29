@@ -52,7 +52,7 @@ const Touchable = styled.TouchableOpacity`
 `;
 
 const TouchableIcon = styled.TouchableOpacity`
-  margin-left: 15px;
+  margin-right: 15px;
 `;
 
 const HeaderUserContainer = styled.View`

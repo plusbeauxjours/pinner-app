@@ -17,11 +17,7 @@ const stackFactory = initialRoute =>
     InitialRoute: {
       screen: initialRoute,
       navigationOptions: {
-        headerStyle: {
-          backgroundColor: "#161616"
-        },
-        headerLeft: <Search />,
-        headerRight: <PhotoLink />
+        header: null
       }
     }
   });
