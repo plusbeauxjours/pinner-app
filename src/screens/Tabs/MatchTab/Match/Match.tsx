@@ -4,7 +4,11 @@ import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import { Linking } from "expo";
-import { GET_MATCHES } from "./MatchQueries";
+import {
+  GET_MATCHES,
+  COMPLETE_EDIT_EMAIL_VERIFICATION,
+  COMPLETE_EMAIL_SIGN_IN
+} from "./MatchQueries";
 import { useMe } from "../../../../context/MeContext";
 import { RefreshControl } from "react-native";
 import { MARK_AS_READ_MATCH } from "./MatchQueries";
@@ -13,9 +17,13 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import Toast from "react-native-root-toast";
 import { UNMATCH } from "../../../../components/CoffeeBtn/CoffeeBtnQueries";
 import { chat_leave } from "../../../../../Fire";
-import { COMPLETE_EDIT_EMAIL_VERIFICATION } from "../../UserProfileTab/EditProfile/EditProfileQueries";
-import { GET_COFFEES } from "../../../../sharedQueries";
+import { GET_COFFEES, ME } from "../../../../sharedQueries";
+import { useLogIn } from "../../../../context/AuthContext";
+import { useLocation } from "../../../../context/LocationContext";
 import {
+  Me,
+  CompleteEmailVerification,
+  CompleteEmailVerificationVariables,
   GetMatches,
   GetMatchesVariables,
   MarkAsReadMatch,
@@ -33,7 +41,6 @@ const Container = styled.View`
   padding: 0 10px 0 10px;
 `;
 const Touchable = styled.TouchableOpacity``;
-const View = styled.View``;
 const Text = styled.Text`
   color: ${props => props.theme.color};
   font-size: 9px;
@@ -42,17 +49,9 @@ const Text = styled.Text`
 const UserContainer = styled.View`
   padding: 0 5px 0 5px;
 `;
-
 const Item = styled.View`
   flex: 1;
   margin-bottom: 25px;
-`;
-const Title = styled.Text`
-  font-weight: 500;
-  margin-left: 5px;
-  font-size: 18px;
-  margin-bottom: 5px;
-  color: ${props => props.theme.color};
 `;
 const ScrollView = styled.ScrollView`
   background-color: ${props => props.theme.bgColor};
@@ -94,9 +93,10 @@ const TouchableBackRow = styled.View`
   background-color: ${props => props.theme.bgColor};
 `;
 export default ({ navigation }) => {
+  const logIn = useLogIn();
+  const location = useLocation();
   const { me, loading: meLoading } = useMe();
   const [refreshing, setRefreshing] = useState(false);
-  const [matchId, setMatchId] = useState<number>(0);
 
   const [
     completeEditEmailVerificationFn,
@@ -104,7 +104,49 @@ export default ({ navigation }) => {
   ] = useMutation<
     CompleteEditEmailVerification,
     CompleteEditEmailVerificationVariables
-  >(COMPLETE_EDIT_EMAIL_VERIFICATION);
+  >(COMPLETE_EDIT_EMAIL_VERIFICATION, {
+    update(cache, { data: { completeEditEmailVerification } }) {
+      try {
+        const data = cache.readQuery<Me>({
+          query: ME
+        });
+        if (data) {
+          data.me.user = completeEditEmailVerification.user;
+          cache.writeQuery({
+            query: ME,
+            data
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  });
+
+  const [
+    CompleteEmailVerificationFn,
+    { loading: CompleteEmailVerificationLoading }
+  ] = useMutation<
+    CompleteEmailVerification,
+    CompleteEmailVerificationVariables
+  >(COMPLETE_EMAIL_SIGN_IN, {
+    update(cache, { data: { completeEmailVerification } }) {
+      try {
+        const data = cache.readQuery<Me>({
+          query: ME
+        });
+        if (data) {
+          data.me.user = completeEmailVerification.user;
+          cache.writeQuery({
+            query: ME,
+            data
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  });
 
   const [MarkAsReadMatchFn, { loading: MarkAsReadMatchLoading }] = useMutation<
     MarkAsReadMatch,
@@ -132,6 +174,7 @@ export default ({ navigation }) => {
       }
     }
   });
+
   const {
     data: { getMatches: { matches = null } = {} } = {},
     loading: matchLoading,
@@ -238,23 +281,52 @@ export default ({ navigation }) => {
         delay: 0
       });
     };
-    const {
-      data: { completeEditEmailVerification }
-    } = await completeEditEmailVerificationFn({
-      variables: {
-        key
+
+    console.log(routeName);
+
+    if (routeName === "confirm") {
+      const {
+        data: { completeEditEmailVerification }
+      } = await completeEditEmailVerificationFn({
+        variables: {
+          key
+        }
+      });
+      if (completeEditEmailVerification.ok) {
+        logIn(completeEditEmailVerification);
+        toast("Your new email address is verified");
+      } else {
+        toast("Could not be verified your new email address, please try again");
       }
-    });
-    if (completeEditEmailVerification.ok) {
-      toast("Your new email address is verified");
+    } else if (routeName === "verification") {
+      const {
+        data: { completeEmailVerification }
+      } = await CompleteEmailVerificationFn({
+        variables: {
+          cityId: location.currentCityId,
+          key
+        }
+      });
+      if (completeEmailVerification.ok) {
+        logIn(completeEmailVerification);
+        toast("Your new email address is verified");
+      } else {
+        toast("Could not be verified your new email address, please try again");
+      }
     } else {
-      toast("Could not be verified your new email address, please try again");
+      return;
     }
   };
+
   useEffect(() => {
     Linking.addEventListener("url", handleOpenURL);
   }, []);
-  if (matchLoading || meLoading || completeEditEmailVerificationLoading) {
+  if (
+    matchLoading ||
+    meLoading ||
+    completeEditEmailVerificationLoading ||
+    CompleteEmailVerificationLoading
+  ) {
     return (
       <LoaderContainer>
         <Loader />

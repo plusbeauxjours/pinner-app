@@ -22,3 +22,63 @@ export const MARK_AS_READ_MATCH = gql`
     }
   }
 `;
+
+export const COMPLETE_EDIT_EMAIL_VERIFICATION = gql`
+  mutation CompleteEditEmailVerification($key: String!) {
+    completeEditEmailVerification(key: $key) {
+      ok
+      token
+      user {
+        username
+        profile {
+          id
+          gender
+          residence {
+            countryEmoji
+            ...CountryParts
+          }
+          nationality {
+            countryEmoji
+            ...CountryParts
+          }
+          avatarUrl
+          appAvatarUrl
+          currentCity {
+            cityId
+            cityName
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const COMPLETE_EMAIL_SIGN_IN = gql`
+  mutation CompleteEmailVerification($key: String!, $cityId: String!) {
+    completeEmailVerification(key: $key, cityId: $cityId) {
+      ok
+      token
+      user {
+        username
+        profile {
+          id
+          gender
+          residence {
+            countryEmoji
+            ...CountryParts
+          }
+          nationality {
+            countryEmoji
+            ...CountryParts
+          }
+          avatarUrl
+          appAvatarUrl
+          currentCity {
+            cityId
+            cityName
+          }
+        }
+      }
+    }
+  }
+`;
