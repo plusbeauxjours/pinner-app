@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { AsyncStorage } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, AntDesign, Entypo, FontAwesome } from "@expo/vector-icons";
 import * as Font from "expo-font";
 import { Asset } from "expo-asset";
 import { persistCache } from "apollo-cache-persist";
@@ -27,7 +27,12 @@ export default function App() {
   const [isDarkMode, setDarkMode] = useState<boolean>(null);
   const preLoad = async () => {
     try {
-      await Font.loadAsync({ ...Ionicons.font });
+      await Font.loadAsync({
+        ...Ionicons.font,
+        ...AntDesign.font,
+        ...Entypo.font,
+        ...FontAwesome.font
+      });
       await Asset.loadAsync(require("./assets/logo.png"));
       const cache = new InMemoryCache();
       // await AsyncStorage.clear();

@@ -52,7 +52,7 @@ const Touchable = styled.TouchableOpacity`
 `;
 
 const TouchableIcon = styled.TouchableOpacity`
-  margin-right: 15px;
+  margin-right: 20px;
 `;
 
 const HeaderUserContainer = styled.View`
@@ -158,7 +158,7 @@ const Search = ({ navigation }) => {
             top: 200,
             backgroundColor: "transparent",
             textAlign: "center",
-            fontSize: 30,
+            fontSize: 40,
             position: "absolute",
             borderBottomWidth: 1,
             borderBottomColor: "#999",

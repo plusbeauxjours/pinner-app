@@ -12,6 +12,9 @@ import EditProfile from "../screens/Tabs/UserProfileTab/EditProfile";
 import AvatarList from "../screens/Tabs/UserProfileTab/AvatarList";
 import AvatarDetail from "../screens/Tabs/UserProfileTab/AvatarDetail";
 import Search from "../components/Search/index";
+import LocationLeftHeader from "../components/Header/LocationLeftHeader";
+import UserProfileHeader from "../components/Header/UserProfileHeader";
+import BackArrow from "../components/Header/BackArrow";
 
 export const UserProfileTabs = createMaterialTopTabNavigator(
   {
@@ -122,25 +125,86 @@ export const CityProfileTabs = createMaterialTopTabNavigator(
   }
 );
 
-export default createStackNavigator(
-  {
-    CityProfileTabs,
-    ContinentProfile,
-    CountryProfileTabs,
-    UserProfileTabs,
-    AvatarDetail,
-    EditProfile,
-    AvatarList,
-    Cities,
-    Countries,
-    Continents
-  },
-  {
-    defaultNavigationOptions: {
+export default createStackNavigator({
+  CityProfileTabs: {
+    screen: CityProfileTabs,
+    navigationOptions: {
       headerStyle: {
         backgroundColor: "#161616"
       },
+      headerLeft: <LocationLeftHeader />,
       headerRight: <Search />
     }
-  }
-);
+  },
+  ContinentProfile: {
+    screen: ContinentProfile,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: "#161616"
+      },
+      headerLeft: <LocationLeftHeader />,
+      headerRight: <Search />
+    }
+  },
+  CountryProfileTabs: {
+    screen: CountryProfileTabs,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: "#161616"
+      },
+      headerLeft: <LocationLeftHeader />,
+      headerRight: <Search />
+    }
+  },
+  UserProfileTabs: {
+    screen: UserProfileTabs,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: "#161616"
+      },
+      headerLeft: <UserProfileHeader />,
+      headerRight: <Search />
+    }
+  },
+  EditProfile: {
+    screen: EditProfile,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: "#161616"
+      },
+      headerLeft: <BackArrow />,
+      headerRight: <Search />
+    }
+  },
+  Cities: {
+    screen: Cities,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: "#161616"
+      },
+      headerLeft: <BackArrow />,
+      headerRight: <Search />
+    }
+  },
+  Countries: {
+    screen: Countries,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: "#161616"
+      },
+      headerLeft: <BackArrow />,
+      headerRight: <Search />
+    }
+  },
+  Continents: {
+    screen: Continents,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: "#161616"
+      },
+      headerLeft: <BackArrow />,
+      headerRight: <Search />
+    }
+  },
+  AvatarList
+});

@@ -27,7 +27,7 @@ import { GET_AVATARS } from "../screens/Tabs/UserProfileTab/AvatarList/AvatarLis
 import { GET_USER } from "../screens/Tabs/UserProfileTab/UserProfile/UserProfileQueries";
 
 const Container = styled.TouchableOpacity`
-  padding-right: 20px;
+  padding-left: 20px;
 `;
 
 export default withNavigation(({ navigation }) => {
