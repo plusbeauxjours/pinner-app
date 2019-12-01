@@ -4,7 +4,7 @@ import {
   RefreshControl,
   Platform,
   Image,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
 } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -12,7 +12,7 @@ import { SwipeListView } from "react-native-swipe-list-view";
 import Toast from "react-native-root-toast";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
-import { Ionicons, Entypo } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { range } from "lodash";
 import { useMe } from "../../../../context/MeContext";
 import { useLocation } from "../../../../context/LocationContext";
@@ -1116,11 +1116,11 @@ export default ({ navigation }) => {
                 </IconTouchable>
               ) : (
                 <IconTouchable onPress={() => selectReportUser()}>
-                  <Entypo
-                    size={22}
-                    color={"#999"}
-                    name={"dots-three-horizontal"}
-                  />
+                <Ionicons
+                      name={Platform.OS === "ios" ? "ios-flag" : "md-flag"}
+                      size={25}
+                      color={"#999"}
+                    />
                 </IconTouchable>
               )}
             </UserNameContainer>

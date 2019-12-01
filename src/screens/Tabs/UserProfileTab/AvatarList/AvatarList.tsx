@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import { ScreenOrientation } from "expo";
-import { RefreshControl, FlatList, Modal } from "react-native";
+import { RefreshControl, FlatList, Modal, Platform } from "react-native";
 import Toast from "react-native-root-toast";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
@@ -22,7 +22,7 @@ import constants, { BACKEND_URL } from "../../../../../constants";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import ImageViewer from "react-native-image-zoom-viewer";
 import { useTheme } from "../../../../context/ThemeContext";
-import { Entypo } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { GET_USER } from "../UserProfile/UserProfileQueries";
 import { ME } from "../../../../sharedQueries";
@@ -279,11 +279,11 @@ export default ({ navigation }) => {
                           onPress();
                         }}
                       >
-                        <Entypo
-                          size={25}
-                          color={"#999"}
-                          name={"dots-three-horizontal"}
-                        />
+                      <Ionicons
+                      name={Platform.OS === "ios" ? "ios-flag" : "md-flag"}
+                      size={25}
+                      color={"#999"}
+                    />
                       </FooterIconTouchable>
                     );
                   } else {

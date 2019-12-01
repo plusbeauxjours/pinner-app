@@ -157,7 +157,7 @@ export default createStackNavigator({
         backgroundColor: "#161616"
       },
       headerLeft: <LocationLeftHeader />,
-      header: <LocationCenterHeader />,
+      headerTitle: <LocationCenterHeader />,
       headerRight: <Search />
     }
   },
@@ -168,7 +168,7 @@ export default createStackNavigator({
         backgroundColor: "#161616"
       },
       headerLeft: <LocationLeftHeader />,
-      header: <LocationCenterHeader />,
+      headerTitle: <LocationCenterHeader />,
       headerRight: <Search />
     }
   },
@@ -179,7 +179,7 @@ export default createStackNavigator({
         backgroundColor: "#161616"
       },
       headerLeft: <LocationLeftHeader />,
-      header: <LocationCenterHeader />,
+      headerTitle: <LocationCenterHeader />,
       headerRight: <Search />
     }
   },

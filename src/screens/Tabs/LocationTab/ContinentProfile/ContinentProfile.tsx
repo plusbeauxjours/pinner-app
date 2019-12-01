@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { RefreshControl, Image } from "react-native";
+import { RefreshControl, Image, Platform } from 'react-native';
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useLocation } from "../../../../context/LocationContext";
+import { useTheme } from "../../../../context/ThemeContext";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
 import Swiper from "react-native-swiper";
@@ -17,7 +18,7 @@ import { CONTINENT_PROFILE } from "./ContinentProfileQueries";
 import { countries as countryData } from "../../../../../countryData";
 import constants from "../../../../../constants";
 import Toast from "react-native-root-toast";
-import { Entypo } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 
 const Container = styled.View`
@@ -76,6 +77,7 @@ const LocationNameContainer = styled.View`
 `;
 export default ({ navigation }) => {
   const location = useLocation();
+  const isDarkMode = useTheme();
   const [continentCode, setContinentCode] = useState<string>(
     navigation.getParam("continentCode") ||
       countryData.find(i => i.code === location.currentCountryCode).continent
@@ -205,11 +207,11 @@ export default ({ navigation }) => {
               <LocationNameContainer>
                 <Bold>{continent.continentName}</Bold>
                 <IconTouchable onPress={() => selectReportLocation()}>
-                  <Entypo
-                    size={22}
-                    color={"#999"}
-                    name={"dots-three-horizontal"}
-                  />
+                <Ionicons
+                      name={Platform.OS === "ios" ? "ios-flag" : "md-flag"}
+                      size={25}
+                      color={"#999"}
+                    />
                 </IconTouchable>
               </LocationNameContainer>
               {count && count !== 0 ? (
@@ -228,6 +230,17 @@ export default ({ navigation }) => {
                   style={{ height: 135 }}
                   paginationStyle={{ bottom: -15 }}
                   loop={false}
+                  dotColor={isDarkMode ? "#424242" : "#DADADA"}
+                  activeDotStyle={{
+                    backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",
+                    width: 10,
+                    height: 10,
+                    borderRadius: 5,
+                    marginLeft: 3,
+                    marginRight: 3,
+                    marginTop: 3,
+                    marginBottom: 3
+                  }}
                 >
                   {chunk(continents).map((continentItem, index) => {
                     return (

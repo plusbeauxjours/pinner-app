@@ -38,7 +38,7 @@ import {
 } from "react-native";
 import constants from "../../../../../constants";
 import { countries } from "../../../../../countryData";
-import { useLogOut } from "../../../../context/AuthContext";
+import { useLogOut, useLogIn } from "../../../../context/AuthContext";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
 import { useLocation } from "../../../../context/LocationContext";
@@ -154,6 +154,7 @@ interface IProps {
   isChanged: boolean;
 }
 export default ({ navigation }) => {
+  const logIn = useLogIn();
   const logOut = useLogOut();
   const location = useLocation();
   const isDarkMode = useTheme();
@@ -567,7 +568,7 @@ export default ({ navigation }) => {
         setIsProfileSubmitted(true);
         if (newUsername || newUsername !== "") {
           {
-            await editProfileFn({
+            const { editProfile } = await editProfileFn({
               variables: {
                 username: newUsername,
                 bio,
@@ -578,6 +579,7 @@ export default ({ navigation }) => {
                 residenceCode
               }
             });
+            logIn(editProfile);
             setIsChanged(false);
             profileRefetch();
             toast("Profile edited");
@@ -716,17 +718,17 @@ export default ({ navigation }) => {
                   </Text>
                   <Void />
                   <SubmitButton
-                      disabled={startEditPhoneVerificationLoading}
-                      onPress={handlePhoneNumber}
-                    >
-                      <SubmitButtonContainer>
-                        {startEditPhoneVerificationLoading ? (
-                          <ActivityIndicator color={"#999"} />
-                        ) : (
-                          <SubmitButtonText>SEND SMS</SubmitButtonText>
-                        )}
-                      </SubmitButtonContainer>
-                    </SubmitButton>
+                    disabled={startEditPhoneVerificationLoading}
+                    onPress={handlePhoneNumber}
+                  >
+                    <SubmitButtonContainer>
+                      {startEditPhoneVerificationLoading ? (
+                        <ActivityIndicator color={"#999"} />
+                      ) : (
+                        <SubmitButtonText>SEND SMS</SubmitButtonText>
+                      )}
+                    </SubmitButtonContainer>
+                  </SubmitButton>
                 </ButtonContainer>
               </>
             ) : (
@@ -748,20 +750,19 @@ export default ({ navigation }) => {
                   onChangeText={number => setVerificationKey(number)}
                 />
                 <ButtonContainer>
-                <Void />
-                <SubmitButton
-                      disabled={completeEditPhoneVerificationLoading}
-                      onPress={handlePhoneVerification}
-                    >
-                      <SubmitButtonContainer>
-                        {completeEditPhoneVerificationLoading ? (
-                          <ActivityIndicator color={"#999"} />
-                        ) : (
-                          <SubmitButtonText>VERIFY KEY</SubmitButtonText>
-                        )}
-                      </SubmitButtonContainer>
-                    </SubmitButton>
-                  
+                  <Void />
+                  <SubmitButton
+                    disabled={completeEditPhoneVerificationLoading}
+                    onPress={handlePhoneVerification}
+                  >
+                    <SubmitButtonContainer>
+                      {completeEditPhoneVerificationLoading ? (
+                        <ActivityIndicator color={"#999"} />
+                      ) : (
+                        <SubmitButtonText>VERIFY KEY</SubmitButtonText>
+                      )}
+                    </SubmitButtonContainer>
+                  </SubmitButton>
                 </ButtonContainer>
               </>
             )}
@@ -802,18 +803,18 @@ export default ({ navigation }) => {
                     will instantly log you in.
                   </Text>
                   <Void />
-                    <SubmitButton
-                      disabled={startEditEmailVerificationLoading}
-                      onPress={handleEmailAddress}
-                    >
-                      <SubmitButtonContainer>
-                        {startEditEmailVerificationLoading ? (
-                          <ActivityIndicator color={"#999"} />
-                        ) : (
-                          <SubmitButtonText>SEND EMAIL</SubmitButtonText>
-                        )}
-                      </SubmitButtonContainer>
-                    </SubmitButton>
+                  <SubmitButton
+                    disabled={startEditEmailVerificationLoading}
+                    onPress={handleEmailAddress}
+                  >
+                    <SubmitButtonContainer>
+                      {startEditEmailVerificationLoading ? (
+                        <ActivityIndicator color={"#999"} />
+                      ) : (
+                        <SubmitButtonText>SEND EMAIL</SubmitButtonText>
+                      )}
+                    </SubmitButtonContainer>
+                  </SubmitButton>
                 </ButtonContainer>
               </>
             ) : (

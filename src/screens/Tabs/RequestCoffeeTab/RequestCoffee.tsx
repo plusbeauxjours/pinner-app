@@ -687,6 +687,17 @@ export default ({ navigation }) => {
                     style={{ height: recommendUsers.length < 3 ? 90 : 135 }}
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
+                    dotColor={isDarkMode ? "#424242" : "#DADADA"}
+                    activeDotStyle={{
+                      backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",
+                      width: 10,
+                      height: 10,
+                      borderRadius: 5,
+                      marginLeft: 3,
+                      marginRight: 3,
+                      marginTop: 3,
+                      marginBottom: 3
+                    }}
                   >
                     {chunk(recommendUsers).map((users, index) => {
                       return (
@@ -721,6 +732,17 @@ export default ({ navigation }) => {
                     style={{ height: recommendLocations.length < 3 ? 90 : 135 }}
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
+                    dotColor={isDarkMode ? "#424242" : "#DADADA"}
+                    activeDotStyle={{
+                      backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",
+                      width: 10,
+                      height: 10,
+                      borderRadius: 5,
+                      marginLeft: 3,
+                      marginRight: 3,
+                      marginTop: 3,
+                      marginBottom: 3
+                    }}
                   >
                     {chunk(recommendLocations).map((locations, index) => {
                       return (

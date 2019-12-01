@@ -35,7 +35,7 @@ import Weather from "../../../../components/Weather";
 import { useTheme } from "../../../../context/ThemeContext";
 import Modal from "react-native-modal";
 import Toast from "react-native-root-toast";
-import { Entypo } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import CoffeeDetail from "../../../CoffeeDetail";
 
@@ -323,10 +323,10 @@ export default ({ navigation }) => {
                 <LocationNameContainer>
                   <Bold>{city.cityName}</Bold>
                   <IconTouchable onPress={() => selectReportLocation()}>
-                    <Entypo
-                      size={22}
+                    <Ionicons
+                      name={Platform.OS === "ios" ? "ios-flag" : "md-flag"}
+                      size={25}
                       color={"#999"}
-                      name={"dots-three-horizontal"}
                     />
                   </IconTouchable>
                 </LocationNameContainer>
@@ -361,6 +361,17 @@ export default ({ navigation }) => {
                     style={{ height: nearCities.length < 3 ? 90 : 135 }}
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
+                    dotColor={isDarkMode ? "#424242" : "#DADADA"}
+                    activeDotStyle={{
+                      backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",
+                      width: 10,
+                      height: 10,
+                      borderRadius: 5,
+                      marginLeft: 3,
+                      marginRight: 3,
+                      marginTop: 3,
+                      marginBottom: 3
+                    }}
                   >
                     {chunk(nearCities).map((cities, index: any) => {
                       return (
@@ -398,6 +409,17 @@ export default ({ navigation }) => {
                     style={{ height: samenameCities.length < 3 ? 90 : 135 }}
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
+                    dotColor={isDarkMode ? "#424242" : "#DADADA"}
+                    activeDotStyle={{
+                      backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",
+                      width: 10,
+                      height: 10,
+                      borderRadius: 5,
+                      marginLeft: 3,
+                      marginRight: 3,
+                      marginTop: 3,
+                      marginBottom: 3
+                    }}
                   >
                     {chunk(samenameCities).map((cities, index: any) => {
                       return (
@@ -435,6 +457,17 @@ export default ({ navigation }) => {
                     style={{ height: coffees.length < 3 ? 90 : 135 }}
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
+                    dotColor={isDarkMode ? "#424242" : "#DADADA"}
+                    activeDotStyle={{
+                      backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",
+                      width: 10,
+                      height: 10,
+                      borderRadius: 5,
+                      marginLeft: 3,
+                      marginRight: 3,
+                      marginTop: 3,
+                      marginBottom: 3
+                    }}
                   >
                     {chunk(coffees).map((coffeeColumn, index: any) => {
                       return (
@@ -468,6 +501,17 @@ export default ({ navigation }) => {
                     style={{ height: usersBefore.length < 3 ? 90 : 135 }}
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
+                    dotColor={isDarkMode ? "#424242" : "#DADADA"}
+                    activeDotStyle={{
+                      backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",
+                      width: 10,
+                      height: 10,
+                      borderRadius: 5,
+                      marginLeft: 3,
+                      marginRight: 3,
+                      marginTop: 3,
+                      marginBottom: 3
+                    }}
                   >
                     {chunk(usersBefore).map((users, index: any) => {
                       return (
