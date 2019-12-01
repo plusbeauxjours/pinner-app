@@ -14,7 +14,7 @@ const View = styled.View`
   margin-left: 20px;
 `;
 
-const LocationRightHeader = ({ navigation }) => {
+const LocationCenterHeader = ({ navigation }) => {
   const isDarkMode = useTheme();
   if (navigation.state.params === undefined) {
     return (
@@ -36,4 +36,4 @@ const LocationRightHeader = ({ navigation }) => {
   }
 };
 
-export default withNavigation(LocationRightHeader);
+export default withNavigation(LocationCenterHeader);
