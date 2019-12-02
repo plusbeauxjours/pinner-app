@@ -17,6 +17,9 @@ import LocationLeftHeader from "../components/Header/LocationLeftHeader";
 import BackArrow from "../components/Header/BackArrow";
 import UserProfileHeader from "../components/Header/UserProfileHeader";
 import LocationCenterHeader from "../components/Header/LocationCenterHeader";
+import constants from "../../constants";
+import { Header } from "native-base";
+import { useTheme } from "../context/ThemeContext";
 
 export const UserProfileTabs = createMaterialTopTabNavigator(
   {
@@ -124,98 +127,129 @@ export const CityProfileTabs = createMaterialTopTabNavigator(
   }
 );
 
+const CoffeeCustomHeader = () => {
+  const isDarkMode = useTheme();
+  return (
+    <Header
+      style={{
+        backgroundColor: isDarkMode ? "#161616" : "#EFEFEF",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-end",
+        width: constants.width
+      }}
+    >
+      <CoffeeHeader />
+      <Search />
+    </Header>
+  );
+};
+const LocationCustomHeader = () => {
+  const isDarkMode = useTheme();
+  return (
+    <Header
+      style={{
+        backgroundColor: isDarkMode ? "#161616" : "#EFEFEF",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-end",
+        width: constants.width
+      }}
+    >
+      <LocationLeftHeader />
+      <LocationCenterHeader />
+      <Search />
+    </Header>
+  );
+};
+const UserProfileCustomHeader = () => {
+  const isDarkMode = useTheme();
+  return (
+    <Header
+      style={{
+        backgroundColor: isDarkMode ? "#161616" : "#EFEFEF",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-end",
+        width: constants.width
+      }}
+    >
+      <UserProfileHeader />
+      <Search />
+    </Header>
+  );
+};
+const BackCustomHeader = () => {
+  const isDarkMode = useTheme();
+  return (
+    <Header
+      style={{
+        backgroundColor: isDarkMode ? "#161616" : "#EFEFEF",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-end",
+        width: constants.width
+      }}
+    >
+      <BackArrow />
+      <Search />
+    </Header>
+  );
+};
+
 export default createStackNavigator({
   RequestCoffee: {
     screen: RequestCoffee,
     navigationOptions: {
-      headerStyle: {
-        backgroundColor: "#161616"
-      },
-      headerLeft: <CoffeeHeader />,
-      headerRight: <Search />
+      header: props => <CoffeeCustomHeader />
     }
   },
   CityProfileTabs: {
     screen: CityProfileTabs,
     navigationOptions: {
-      headerStyle: {
-        backgroundColor: "#161616"
-      },
-      headerLeft: <LocationLeftHeader />,
-      headerTitle: <LocationCenterHeader />,
-      headerRight: <Search />
+      header: props => <LocationCustomHeader />
     }
   },
   ContinentProfile: {
     screen: ContinentProfile,
     navigationOptions: {
-      headerStyle: {
-        backgroundColor: "#161616"
-      },
-      headerLeft: <LocationLeftHeader />,
-      headerTitle: <LocationCenterHeader />,
-      headerRight: <Search />
+      header: props => <LocationCustomHeader />
     }
   },
   CountryProfileTabs: {
     screen: CountryProfileTabs,
     navigationOptions: {
-      headerStyle: {
-        backgroundColor: "#161616"
-      },
-      headerLeft: <LocationLeftHeader />,
-      headerTitle: <LocationCenterHeader />,
-      headerRight: <Search />
+      header: props => <LocationCustomHeader />
     }
   },
   UserProfileTabs: {
     screen: UserProfileTabs,
     navigationOptions: {
-      headerStyle: {
-        backgroundColor: "#161616"
-      },
-      headerLeft: <UserProfileHeader />,
-      headerRight: <Search />
+      header: props => <UserProfileCustomHeader />
     }
   },
   EditProfile: {
     screen: EditProfile,
     navigationOptions: {
-      headerStyle: {
-        backgroundColor: "#161616"
-      },
-      headerLeft: <BackArrow />,
-      headerRight: <Search />
+      header: props => <BackCustomHeader />
     }
   },
   Cities: {
     screen: Cities,
     navigationOptions: {
-      headerStyle: {
-        backgroundColor: "#161616"
-      },
-      headerLeft: <BackArrow />,
-      headerRight: <Search />
+      header: props => <BackCustomHeader />
     }
   },
   Countries: {
     screen: Countries,
     navigationOptions: {
-      headerStyle: {
-        backgroundColor: "#161616"
-      },
-      headerLeft: <BackArrow />,
-      headerRight: <Search />
+      header: props => <BackCustomHeader />
     }
   },
   Continents: {
     screen: Continents,
     navigationOptions: {
-      headerStyle: {
-        backgroundColor: "#161616"
-      },
-      headerLeft: <BackArrow />,
-      headerRight: <Search />
+      header: props => <BackCustomHeader />
     }
   },
   AvatarList

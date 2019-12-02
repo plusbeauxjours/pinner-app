@@ -281,9 +281,6 @@ export default ({ navigation }) => {
         delay: 0
       });
     };
-
-    console.log("routeName", routeName);
-
     if (routeName === "confirm") {
       const {
         data: { completeEditEmailVerification }

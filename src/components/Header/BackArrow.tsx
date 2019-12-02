@@ -4,21 +4,22 @@ import { withNavigation } from "react-navigation";
 import { AntDesign } from "@expo/vector-icons";
 import { useTheme } from "../../context/ThemeContext";
 
-const View = styled.View`
-  margin-left: 20px;
+const IconContainer = styled.TouchableOpacity`
+  margin-bottom: 5px;
+  margin-left: 10px;
+  width: 50px;
 `;
 
 const BackArrow = ({ navigation }) => {
   const isDarkMode = useTheme();
   return (
-    <View>
+    <IconContainer onPress={() => navigation.goBack()}>
       <AntDesign
-        size={30}
+        size={25}
         color={isDarkMode ? "#EFEFEF" : "#161616"}
         name={"left"}
-        onPress={() => navigation.goBack()}
       />
-    </View>
+    </IconContainer>
   );
 };
 

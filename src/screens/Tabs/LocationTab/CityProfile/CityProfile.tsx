@@ -38,6 +38,7 @@ import Toast from "react-native-root-toast";
 import { Ionicons } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import CoffeeDetail from "../../../CoffeeDetail";
+import LocationCenterHeader from "../../../../components/Header/LocationCenterHeader";
 
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -327,6 +328,7 @@ export default ({ navigation }) => {
                   </Touchable>
                 )}
                 <LocationNameContainer>
+                  <LocationCenterHeader />
                   <Bold>{city.cityName}</Bold>
                   <IconTouchable onPress={() => selectReportLocation()}>
                     <Ionicons

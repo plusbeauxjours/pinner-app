@@ -52,7 +52,8 @@ const Touchable = styled.TouchableOpacity`
 `;
 
 const TouchableIcon = styled.TouchableOpacity`
-  margin-right: 20px;
+  margin-right: 10px;
+  margin-bottom: 5px;
 `;
 
 const HeaderUserContainer = styled.View`
@@ -308,7 +309,7 @@ const Search = ({ navigation }) => {
       <TouchableIcon onPress={() => setModalOpen(true)}>
         <Ionicons
           name={Platform.OS === "ios" ? "ios-search" : "md-search"}
-          size={36}
+          size={25}
           color={isDarkMode ? "#EFEFEF" : "#161616"}
         />
       </TouchableIcon>

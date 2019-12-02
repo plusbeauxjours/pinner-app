@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RefreshControl, Image, Platform } from 'react-native';
+import { RefreshControl, Image, Platform } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useLocation } from "../../../../context/LocationContext";
@@ -207,11 +207,11 @@ export default ({ navigation }) => {
               <LocationNameContainer>
                 <Bold>{continent.continentName}</Bold>
                 <IconTouchable onPress={() => selectReportLocation()}>
-                <Ionicons
-                      name={Platform.OS === "ios" ? "ios-flag" : "md-flag"}
-                      size={25}
-                      color={"#999"}
-                    />
+                  <Ionicons
+                    name={Platform.OS === "ios" ? "ios-flag" : "md-flag"}
+                    size={25}
+                    color={"#999"}
+                  />
                 </IconTouchable>
               </LocationNameContainer>
               {count && count !== 0 ? (

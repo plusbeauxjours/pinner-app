@@ -8,12 +8,19 @@ import PhotoLink from "../PhotoLink";
 
 const Text = styled.Text`
   font-weight: 500;
-  font-size: 20;
+  font-size: 18px;
   color: ${props => props.theme.color};
+  margin-bottom: 10px;
+  margin-top: 10px;
+  margin-left: 15px;
 `;
 
-const View = styled.View`
-  margin-left: 20px;
+const View = styled.View``;
+
+const IconContainer = styled.TouchableOpacity`
+  margin-bottom: 5px;
+  margin-left: 10px;
+  width: 50px;
 `;
 
 const UserProfileHeader = ({ navigation }) => {
@@ -38,14 +45,13 @@ const UserProfileHeader = ({ navigation }) => {
     return <PhotoLink />;
   } else {
     return (
-      <View>
+      <IconContainer onPress={() => console.log("navigation.goBack")}>
         <AntDesign
-          size={30}
+          size={25}
           color={isDarkMode ? "#EFEFEF" : "#161616"}
           name={"left"}
-          onPress={() => navigation.goBack()}
         />
-      </View>
+      </IconContainer>
     );
   }
 };

@@ -3,16 +3,19 @@ import styled from "styled-components";
 import { withNavigation } from "react-navigation";
 import { FontAwesome } from "@expo/vector-icons";
 import { useTheme } from "../../context/ThemeContext";
+import constants from "../../../constants";
 
 const View = styled.View`
   flex-direction: row;
-  margin-left: 20px;
-  align-items: center;
+  justify-content: center;
+  right: 0px;
+  left: 0px;
+  margin-bottom: 10px;
 `;
 
 const LocationCenterHeader = ({ navigation }) => {
   const isDarkMode = useTheme();
-  if (navigation.state.routeName === "CityProfileTabs") {
+  if (navigation && navigation.state.routeName === "CityProfileTabs") {
     if (navigation.state.index === 0) {
       return (
         <View>
@@ -127,6 +130,8 @@ const LocationCenterHeader = ({ navigation }) => {
           />
         </View>
       );
+    } else {
+      return null;
     }
   } else if (navigation.state.routeName === "CountryProfileTabs") {
     if (navigation.state.index === 0) {
@@ -183,6 +188,8 @@ const LocationCenterHeader = ({ navigation }) => {
           />
         </View>
       );
+    } else {
+      return null;
     }
   } else if (navigation.state.routeName === "ContinentProfile") {
     return (
@@ -200,6 +207,8 @@ const LocationCenterHeader = ({ navigation }) => {
         />
       </View>
     );
+  } else {
+    return null;
   }
 };
 
