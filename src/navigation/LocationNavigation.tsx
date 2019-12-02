@@ -234,5 +234,6 @@ export default createStackNavigator({
     navigationOptions: {
       header: props => <BackCustomHeader />
     }
-  }
+  },
+  initialRouteName: "CityProfileTabs"
 });

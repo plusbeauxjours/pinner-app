@@ -8,9 +8,12 @@ import constants from "../../../constants";
 const View = styled.View`
   flex-direction: row;
   justify-content: center;
+  position: absolute;
+  width: 100px;
   right: 0px;
   left: 0px;
-  margin-bottom: 10px;
+  margin-left: ${constants.width / 2 - 50};
+  bottom: 10px;
 `;
 
 const LocationCenterHeader = ({ navigation }) => {
