@@ -68,6 +68,7 @@ const Item = styled.View`
 `;
 const Title = styled.Text`
   font-weight: 500;
+  margin-left: 5px;
   font-size: 18px;
   margin-bottom: 5px;
   color: ${props => props.theme.color};
@@ -83,7 +84,7 @@ const LoaderContainer = styled.View`
   align-items: center;
 `;
 const InfoRow = styled.View`
-  width: ${constants.width - 30};
+  width: ${constants.width - 40};
   justify-content: space-between;
   flex-direction: row;
   align-items: center;
@@ -94,11 +95,16 @@ const IconTouchable = styled.TouchableOpacity`
   margin-right: 10px;
 `;
 const LocationNameContainer = styled.View`
-  width: ${constants.width - 30};
+  width: ${constants.width - 40};
+  margin-left: 5px;
   align-self: flex-start;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+`;
+const LocationInfoContainer = styled.View`
+  width: ${constants.width - 40};
+  margin-left: 5px;
 `;
 export default ({ navigation }) => {
   const location = useLocation();
@@ -330,27 +336,29 @@ export default ({ navigation }) => {
                     />
                   </IconTouchable>
                 </LocationNameContainer>
-                <Text>
-                  {city.country.countryName} {city.country.countryEmoji}
-                </Text>
-                {count && count !== 0 ? (
+                <LocationInfoContainer>
                   <Text>
-                    You've been to {city.cityName} {count}
-                    {count === 1 ? " time" : " times"}
+                    {city.country.countryName} {city.country.countryEmoji}
                   </Text>
-                ) : null}
-                <InfoRow>
-                  <Weather
-                    latitude={city.latitude}
-                    longitude={city.longitude}
-                  />
-                  <CityLikeBtn
-                    height={"15px"}
-                    isLiked={city.isLiked}
-                    cityId={city.cityId}
-                    likeCount={city.likeCount}
-                  />
-                </InfoRow>
+                  {count && count !== 0 ? (
+                    <Text>
+                      You've been to {city.cityName} {count}
+                      {count === 1 ? " time" : " times"}
+                    </Text>
+                  ) : null}
+                  <InfoRow>
+                    <Weather
+                      latitude={city.latitude}
+                      longitude={city.longitude}
+                    />
+                    <CityLikeBtn
+                      height={"15px"}
+                      isLiked={city.isLiked}
+                      cityId={city.cityId}
+                      likeCount={city.likeCount}
+                    />
+                  </InfoRow>
+                </LocationInfoContainer>
               </View>
             )}
             {nearCities && nearCities.length !== 0 && (

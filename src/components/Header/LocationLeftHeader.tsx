@@ -8,6 +8,7 @@ const Text = styled.Text`
   font-weight: 500;
   font-size: 20;
   color: ${props => props.theme.color};
+  margin-bottom: 5px;
 `;
 
 const View = styled.View`

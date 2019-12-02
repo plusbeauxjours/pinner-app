@@ -156,7 +156,7 @@ const Search = ({ navigation }) => {
             alignSelf: "center",
             width: constants.width - 30,
             top: 200,
-            backgroundColor: "transparent",
+            backgroundColor: isDarkMode ? "#161616" : "#EFEFEF",
             textAlign: "center",
             fontSize: 40,
             position: "absolute",
@@ -180,7 +180,7 @@ const Search = ({ navigation }) => {
           <ScrollView
             style={{
               width: constants.width - 30,
-              marginTop: 237,
+              marginTop: 249,
               marginBottom: 25,
               marginLeft: 30 / 2
             }}
@@ -305,15 +305,13 @@ const Search = ({ navigation }) => {
           </ScrollView>
         </Touchable>
       </Modal>
-      <View>
-        <TouchableIcon onPress={() => setModalOpen(true)}>
-          <Ionicons
-            name={Platform.OS === "ios" ? "ios-search" : "md-search"}
-            size={36}
-            color={isDarkMode ? "#EFEFEF" : "#161616"}
-          />
-        </TouchableIcon>
-      </View>
+      <TouchableIcon onPress={() => setModalOpen(true)}>
+        <Ionicons
+          name={Platform.OS === "ios" ? "ios-search" : "md-search"}
+          size={36}
+          color={isDarkMode ? "#EFEFEF" : "#161616"}
+        />
+      </TouchableIcon>
     </>
   );
 };

@@ -12,30 +12,119 @@ const View = styled.View`
 
 const LocationCenterHeader = ({ navigation }) => {
   const isDarkMode = useTheme();
-  console.log(navigation);
   if (navigation.state.routeName === "CityProfileTabs") {
     if (navigation.state.index === 0) {
       return (
         <View>
-          <FontAwesome name={"circle"} color={"#EFEFEF"} size={12} style={{marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3}}/>
-          <FontAwesome name={"circle"} color={"#424242"} size={10} style={{marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3}}/>
-          <FontAwesome name={"circle"} color={"#424242"} size={10} style={{marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3}}/>
+          <FontAwesome
+            name={"circle"}
+            color={isDarkMode ? "#EFEFEF" : "#161616"}
+            size={12}
+            style={{
+              marginLeft: 3,
+              marginRight: 3,
+              marginTop: 3,
+              marginBottom: 3
+            }}
+          />
+          <FontAwesome
+            name={"circle"}
+            color={isDarkMode ? "#424242" : "#DADADA"}
+            size={10}
+            style={{
+              marginLeft: 3,
+              marginRight: 3,
+              marginTop: 3,
+              marginBottom: 3
+            }}
+          />
+          <FontAwesome
+            name={"circle"}
+            color={isDarkMode ? "#424242" : "#DADADA"}
+            size={10}
+            style={{
+              marginLeft: 3,
+              marginRight: 3,
+              marginTop: 3,
+              marginBottom: 3
+            }}
+          />
         </View>
       );
     } else if (navigation.state.index === 1) {
       return (
         <View>
-          <FontAwesome name={"circle"} color={"#424242"} size={10} style={{marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3}}/>
-          <FontAwesome name={"circle"} color={"#EFEFEF"} size={12} style={{marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3}}/>
-          <FontAwesome name={"circle"} color={"#424242"} size={10} style={{marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3}}/>
+          <FontAwesome
+            name={"circle"}
+            color={isDarkMode ? "#424242" : "#DADADA"}
+            size={10}
+            style={{
+              marginLeft: 3,
+              marginRight: 3,
+              marginTop: 3,
+              marginBottom: 3
+            }}
+          />
+          <FontAwesome
+            name={"circle"}
+            color={isDarkMode ? "#EFEFEF" : "#161616"}
+            size={12}
+            style={{
+              marginLeft: 3,
+              marginRight: 3,
+              marginTop: 3,
+              marginBottom: 3
+            }}
+          />
+          <FontAwesome
+            name={"circle"}
+            color={isDarkMode ? "#424242" : "#DADADA"}
+            size={10}
+            style={{
+              marginLeft: 3,
+              marginRight: 3,
+              marginTop: 3,
+              marginBottom: 3
+            }}
+          />
         </View>
       );
     } else if (navigation.state.index === 2) {
       return (
         <View>
-          <FontAwesome name={"circle"} color={"#424242"} size={10} style={{marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3}}/>
-          <FontAwesome name={"circle"} color={"#424242"} size={10} style={{marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3}}/>
-          <FontAwesome name={"circle"} color={"#EFEFEF"} size={12} style={{marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3}}/>
+          <FontAwesome
+            name={"circle"}
+            color={isDarkMode ? "#424242" : "#DADADA"}
+            size={10}
+            style={{
+              marginLeft: 3,
+              marginRight: 3,
+              marginTop: 3,
+              marginBottom: 3
+            }}
+          />
+          <FontAwesome
+            name={"circle"}
+            color={isDarkMode ? "#424242" : "#DADADA"}
+            size={10}
+            style={{
+              marginLeft: 3,
+              marginRight: 3,
+              marginTop: 3,
+              marginBottom: 3
+            }}
+          />
+          <FontAwesome
+            name={"circle"}
+            color={isDarkMode ? "#EFEFEF" : "#161616"}
+            size={12}
+            style={{
+              marginLeft: 3,
+              marginRight: 3,
+              marginTop: 3,
+              marginBottom: 3
+            }}
+          />
         </View>
       );
     }
@@ -43,22 +132,72 @@ const LocationCenterHeader = ({ navigation }) => {
     if (navigation.state.index === 0) {
       return (
         <View>
-          <FontAwesome name={"circle"} color={"#EFEFEF"} size={12} style={{marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3}}/>
-          <FontAwesome name={"circle"} color={"#424242"} size={10} style={{marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3}}/>
+          <FontAwesome
+            name={"circle"}
+            color={isDarkMode ? "#EFEFEF" : "#161616"}
+            size={12}
+            style={{
+              marginLeft: 3,
+              marginRight: 3,
+              marginTop: 3,
+              marginBottom: 3
+            }}
+          />
+          <FontAwesome
+            name={"circle"}
+            color={isDarkMode ? "#424242" : "#DADADA"}
+            size={10}
+            style={{
+              marginLeft: 3,
+              marginRight: 3,
+              marginTop: 3,
+              marginBottom: 3
+            }}
+          />
         </View>
       );
     } else if (navigation.state.index === 1) {
       return (
         <View>
-          <FontAwesome name={"circle"} color={"#424242"} size={10} style={{marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3}}/>
-          <FontAwesome name={"circle"} color={"#EFEFEF"} size={12} style={{marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3}}/>
+          <FontAwesome
+            name={"circle"}
+            color={isDarkMode ? "#424242" : "#DADADA"}
+            size={10}
+            style={{
+              marginLeft: 3,
+              marginRight: 3,
+              marginTop: 3,
+              marginBottom: 3
+            }}
+          />
+          <FontAwesome
+            name={"circle"}
+            color={isDarkMode ? "#EFEFEF" : "#161616"}
+            size={12}
+            style={{
+              marginLeft: 3,
+              marginRight: 3,
+              marginTop: 3,
+              marginBottom: 3
+            }}
+          />
         </View>
       );
     }
   } else if (navigation.state.routeName === "ContinentProfile") {
     return (
       <View>
-        <FontAwesome name={"circle"} color={"#EFEFEF"} size={12} style={{marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3}}/>
+        <FontAwesome
+          name={"circle"}
+          color={isDarkMode ? "#EFEFEF" : "#161616"}
+          size={12}
+          style={{
+            marginLeft: 3,
+            marginRight: 3,
+            marginTop: 3,
+            marginBottom: 3
+          }}
+        />
       </View>
     );
   }

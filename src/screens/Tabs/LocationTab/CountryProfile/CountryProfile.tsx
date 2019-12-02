@@ -61,6 +61,7 @@ const Item = styled.View`
 `;
 const Title = styled.Text`
   font-weight: 500;
+  margin-left: 5px;
   font-size: 18px;
   margin-bottom: 5px;
   text-transform: uppercase;
@@ -83,7 +84,8 @@ const IconTouchable = styled.TouchableOpacity`
   margin-right: 10px;
 `;
 const LocationNameContainer = styled.View`
-  width: ${constants.width - 30};
+  width: ${constants.width - 40};
+  margin-left: 5px;
   align-self: flex-start;
   flex-direction: row;
   justify-content: space-between;
@@ -253,11 +255,11 @@ export default ({ navigation }) => {
                   <Flag>{country.countryEmoji}</Flag>
                 </CountryNameContainer>
                 <IconTouchable onPress={() => selectReportLocation()}>
-                <Ionicons
-                      name={Platform.OS === "ios" ? "ios-flag" : "md-flag"}
-                      size={25}
-                      color={"#999"}
-                    />
+                  <Ionicons
+                    name={Platform.OS === "ios" ? "ios-flag" : "md-flag"}
+                    size={25}
+                    color={"#999"}
+                  />
                 </IconTouchable>
               </LocationNameContainer>
               {count && count !== 0 ? (

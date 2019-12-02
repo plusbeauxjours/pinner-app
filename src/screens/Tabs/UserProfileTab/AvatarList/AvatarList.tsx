@@ -279,11 +279,11 @@ export default ({ navigation }) => {
                           onPress();
                         }}
                       >
-                      <Ionicons
-                      name={Platform.OS === "ios" ? "ios-flag" : "md-flag"}
-                      size={25}
-                      color={"#999"}
-                    />
+                        <Ionicons
+                          name={Platform.OS === "ios" ? "ios-flag" : "md-flag"}
+                          size={25}
+                          color={"#999"}
+                        />
                       </FooterIconTouchable>
                     );
                   } else {

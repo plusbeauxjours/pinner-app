@@ -44,7 +44,6 @@ export const UserProfileTabs = createMaterialTopTabNavigator(
         display: "none"
       },
       activeTintColor: "#000",
-      inactiveTintColor: "#d1cece",
       upperCaseLabel: false,
       showLabel: false,
       showIcon: false
@@ -78,7 +77,6 @@ export const CountryProfileTabs = createMaterialTopTabNavigator(
         display: "none"
       },
       activeTintColor: "#000",
-      inactiveTintColor: "#d1cece",
       upperCaseLabel: false,
       showLabel: false,
       showIcon: false
@@ -119,7 +117,6 @@ export const CityProfileTabs = createMaterialTopTabNavigator(
         display: "none"
       },
       activeTintColor: "#000",
-      inactiveTintColor: "#d1cece",
       upperCaseLabel: false,
       showLabel: false,
       showIcon: false

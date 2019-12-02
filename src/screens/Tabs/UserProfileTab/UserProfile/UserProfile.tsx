@@ -4,7 +4,7 @@ import {
   RefreshControl,
   Platform,
   Image,
-  KeyboardAvoidingView,
+  KeyboardAvoidingView
 } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -129,10 +129,6 @@ const LoaderContainer = styled.View`
   justify-content: center;
   align-items: center;
 `;
-const TextContainer = styled.View`
-  flex-wrap: wrap;
-  width: ${constants.width - 30};
-`;
 const EditText = styled.Text`
   color: ${props => props.theme.color};
   font-size: 12px;
@@ -159,7 +155,6 @@ const SmallText = styled.Text`
   text-align: center;
   font-size: 9px;
 `;
-const CitySmallText = styled(SmallText)``;
 const RowBack = styled.View`
   align-items: center;
   flex: 1;
@@ -255,7 +250,6 @@ export default ({ navigation }) => {
   const isDarkMode = useTheme();
   const [search, setSearch] = useState<string>("");
   const [coffeeId, setCoffeeId] = useState<string>("");
-  const [cityId, setCityId] = useState<string>(location.currentCityId);
   const [moveNotificationId, setMoveNotificationId] = useState<string>();
   const [coffeeModalOpen, setCoffeeModalOpen] = useState<boolean>(false);
   const [addTripModalOpen, setAddTripModalOpen] = useState<boolean>(false);
@@ -419,7 +413,7 @@ export default ({ navigation }) => {
       endDate: moment(tripEndDate)
     }
   });
-  const [deleteTripFn, { laoding: deleteTripLoading }] = useMutation<
+  const [deleteTripFn, { loading: deleteTripLoading }] = useMutation<
     DeleteTrip,
     DeleteTripVariables
   >(DELETE_TRIP, {
@@ -1116,17 +1110,17 @@ export default ({ navigation }) => {
                 </IconTouchable>
               ) : (
                 <IconTouchable onPress={() => selectReportUser()}>
-                <Ionicons
-                      name={Platform.OS === "ios" ? "ios-flag" : "md-flag"}
-                      size={25}
-                      color={"#999"}
-                    />
+                  <Ionicons
+                    name={Platform.OS === "ios" ? "ios-flag" : "md-flag"}
+                    size={25}
+                    color={"#999"}
+                  />
                 </IconTouchable>
               )}
             </UserNameContainer>
             {!isSelf && cities && cities.length !== 0 && (
               <UserNameContainer>
-                {cities.length < 5 ? (
+                {cities.length < 6 ? (
                   <EditText>
                     You guys have been to
                     {cities.map(city => (

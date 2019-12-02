@@ -24,7 +24,6 @@ const Touchable = styled.TouchableOpacity<ITheme>`
 const IconContainer = styled.View`
   flex: 1;
   flex-direction: row;
-  margin-right: 10px;
   justify-content: center;
   align-items: center;
 `;

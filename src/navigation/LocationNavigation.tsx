@@ -1,6 +1,10 @@
 import React from "react";
-import { createStackNavigator } from "react-navigation";
-import { createMaterialTopTabNavigator } from "react-navigation";
+import {
+  createStackNavigator,
+  createMaterialTopTabNavigator
+} from "react-navigation";
+import { Header } from "native-base";
+import { useTheme } from "../context/ThemeContext";
 import CityProfile from "../screens/Tabs/LocationTab/CityProfile";
 import CountryProfile from "../screens/Tabs/LocationTab/CountryProfile";
 import ContinentProfile from "../screens/Tabs/LocationTab/ContinentProfile";
@@ -42,7 +46,6 @@ export const UserProfileTabs = createMaterialTopTabNavigator(
         display: "none"
       },
       activeTintColor: "#000",
-      inactiveTintColor: "#d1cece",
       upperCaseLabel: false,
       showLabel: false,
       showIcon: false
@@ -76,7 +79,6 @@ export const CountryProfileTabs = createMaterialTopTabNavigator(
         display: "none"
       },
       activeTintColor: "#000",
-      inactiveTintColor: "#d1cece",
       upperCaseLabel: false,
       showLabel: false,
       showIcon: false
@@ -117,7 +119,6 @@ export const CityProfileTabs = createMaterialTopTabNavigator(
         display: "none"
       },
       activeTintColor: "#000",
-      inactiveTintColor: "#d1cece",
       upperCaseLabel: false,
       showLabel: false,
       showIcon: false
@@ -125,16 +126,33 @@ export const CityProfileTabs = createMaterialTopTabNavigator(
   }
 );
 
+const MatchHeader = props => {
+  const isDarkMOde = useTheme();
+};
+const LocationHeader = props => {
+  const isDarkMode = useTheme();
+  return (
+    <Header
+      {...props}
+      style={{
+        backgroundColor: isDarkMode ? "#161616" : "#EFEFEF",
+        flexDirection: "row",
+        justifyContents: "space-between",
+        alignItems: "center"
+      }}
+    >
+      <LocationLeftHeader />
+      <LocationCenterHeader />
+      <Search />
+    </Header>
+  );
+};
+
 export default createStackNavigator({
   CityProfileTabs: {
     screen: CityProfileTabs,
     navigationOptions: {
-      headerStyle: {
-        backgroundColor: "#161616"
-      },
-      headerLeft: <LocationLeftHeader />,
-      headerTitle: <LocationCenterHeader />,
-      headerRight: <Search />
+      header: props => <LocationHeader />
     }
   },
   ContinentProfile: {

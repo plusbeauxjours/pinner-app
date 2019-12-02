@@ -1,6 +1,8 @@
 import React from "react";
-import { createStackNavigator } from "react-navigation";
-import { createMaterialTopTabNavigator } from "react-navigation";
+import {
+  createStackNavigator,
+  createMaterialTopTabNavigator
+} from "react-navigation";
 import Chat from "../screens/Tabs/MatchTab/Chat";
 import SendLocationScreen from "../screens/Tabs/MatchTab/Chat/SendLocationScreen";
 import Match from "../screens/Tabs/MatchTab/Match";
@@ -19,6 +21,8 @@ import LocationLeftHeader from "../components/Header/LocationLeftHeader";
 import UserProfileHeader from "../components/Header/UserProfileHeader";
 import BackArrow from "../components/Header/BackArrow";
 import LocationCenterHeader from "../components/Header/LocationCenterHeader";
+import { Header } from "native-base";
+import { useTheme } from "../context/ThemeContext";
 
 const UserProfileTabs = createMaterialTopTabNavigator(
   {
@@ -46,7 +50,6 @@ const UserProfileTabs = createMaterialTopTabNavigator(
         display: "none"
       },
       activeTintColor: "#000",
-      inactiveTintColor: "#d1cece",
       upperCaseLabel: false,
       showLabel: false,
       showIcon: false
@@ -80,7 +83,6 @@ const CountryProfileTabs = createMaterialTopTabNavigator(
         display: "none"
       },
       activeTintColor: "#000",
-      inactiveTintColor: "#d1cece",
       upperCaseLabel: false,
       showLabel: false,
       showIcon: false
@@ -121,13 +123,25 @@ const CityProfileTabs = createMaterialTopTabNavigator(
         display: "none"
       },
       activeTintColor: "#000",
-      inactiveTintColor: "#d1cece",
       upperCaseLabel: false,
       showLabel: false,
       showIcon: false
     }
   }
 );
+
+const CustomHeader = props => {
+  const isDarkMode = useTheme();
+  return (
+    <Header
+      {...props}
+      style={{ backgroundColor: isDarkMode ? "#161616" : "#EFEFEF" }}
+    >
+      <LocationLeftHeader />
+      <Search />
+    </Header>
+  );
+};
 
 export default createStackNavigator({
   Match: {
