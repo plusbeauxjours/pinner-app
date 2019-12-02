@@ -88,6 +88,15 @@ export default createBottomTabNavigator(
           showIcon={true}
         />
       );
+    },
+    defaultNavigationOptions: {
+      tabBarOnPress: ({ navigation, defaultHandler }) => {
+        console.log(navigation.state);
+        defaultHandler();
+        if (navigation.state.routes[0].index > 0) {
+          navigation.popToTop();
+        }
+      }
     }
   }
 );

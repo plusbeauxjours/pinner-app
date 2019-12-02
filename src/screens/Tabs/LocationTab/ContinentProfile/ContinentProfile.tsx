@@ -291,7 +291,7 @@ export default ({ navigation }) => {
                         continentCode: country.continent.continentCode
                       });
                     } else {
-                      navigation.goBack();
+                      navigation.goBack(null);
                     }
                   }}
                 >

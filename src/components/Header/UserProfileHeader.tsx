@@ -45,7 +45,7 @@ const UserProfileHeader = ({ navigation }) => {
     return <PhotoLink />;
   } else {
     return (
-      <IconContainer onPress={() => console.log("navigation.goBack")}>
+      <IconContainer onPress={() => navigation.goBack(null)}>
         <AntDesign
           size={25}
           color={isDarkMode ? "#EFEFEF" : "#161616"}

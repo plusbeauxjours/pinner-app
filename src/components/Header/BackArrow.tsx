@@ -13,7 +13,7 @@ const IconContainer = styled.TouchableOpacity`
 const BackArrow = ({ navigation }) => {
   const isDarkMode = useTheme();
   return (
-    <IconContainer onPress={() => navigation.goBack()}>
+    <IconContainer onPress={() => navigation.goBack(null)}>
       <AntDesign
         size={25}
         color={isDarkMode ? "#EFEFEF" : "#161616"}
