@@ -43,6 +43,7 @@ import constants from "../../../../constants";
 import Accordion from "react-native-collapsible/Accordion";
 import CollapsibleAccordion from "../../../components/CollapsibleAccordion";
 import { GET_TRIP_CITIES } from "./RequestCoffeeQueries";
+import { countries } from "../../../../countryData";
 
 const AccordionTitleContainer = styled.View`
   flex-direction: row;
@@ -399,8 +400,10 @@ export default ({ navigation }) => {
     loading: recommendLocationLoading,
     refetch: recommendLocationRefetch
   } = useQuery<RecommendLocations, RecommendLocationsVariables>(
-    RECOMMEND_LOCATIONS
+    RECOMMEND_LOCATIONS,
+    { fetchPolicy: "no-cache" }
   );
+  console.log(recommendLocations);
   const [deleteCoffeeFn, { loading: deleteCoffeeLoading }] = useMutation<
     DeleteCoffee,
     DeleteCoffeeVariables
@@ -755,12 +758,13 @@ export default ({ navigation }) => {
                                   navigation.push("CityProfileTabs", {
                                     cityId: city.cityId,
                                     countryCode: city.country.countryCode,
-                                    continentCode:
-                                      city.country.continent.continentCode
+                                    continentCode: countries.find(
+                                      i => i.code === city.country.countryCode
+                                    ).continent
                                   })
                                 }
                               >
-                                <UserRow city={city} type={"city"} />
+                                <UserRow city={city} type={"nearCity"} />
                               </Touchable>
                             );
                           })}

@@ -1,5 +1,9 @@
 import gql from "graphql-tag";
-import { PROFILE_FRAGMENT, COUNTRY_FRAGMENT } from "../../../fragmentQueries";
+import {
+  PROFILE_FRAGMENT,
+  COUNTRY_FRAGMENT,
+  CITY_FRAGMENT
+} from "../../../fragmentQueries";
 
 export const RECOMMEND_USERS = gql`
   query RecommendUsers($page: Int) {
@@ -20,27 +24,11 @@ export const RECOMMEND_LOCATIONS = gql`
       page
       hasNextPage
       cities {
-        id
-        latitude
-        longitude
-        cityName
-        cityId
-        cityPhoto
-        cityThumbnail
-        distance
-        country {
-          countryName
-          countryCode
-          continent {
-            continentCode
-            continentName
-          }
-        }
-        likeCount
-        isLiked
+        ...CityParts
       }
     }
   }
+  ${CITY_FRAGMENT}
 `;
 
 export const REQUEST_COFFEE = gql`
