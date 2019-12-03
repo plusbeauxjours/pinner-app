@@ -187,7 +187,7 @@ export default ({ navigation }) => {
       buttonIndex => {
         if (buttonIndex === 0 && !deleteAvatarLoading && !markAsMainLoading) {
           markAsMainFn({ variables: { uuid: avatar.uuid } });
-          toast("Main Avatar Changed");
+          toast("Main avatar changed");
         } else if (buttonIndex === 1) {
           onConfirmPress();
         } else {
@@ -206,7 +206,7 @@ export default ({ navigation }) => {
       buttonIndex => {
         if (buttonIndex === 0 && !deleteAvatarLoading && !markAsMainLoading) {
           deleteAvatar(avatar.uuid);
-          toast("Photo Deleted");
+          toast("Photo deleted");
         } else {
           null;
         }

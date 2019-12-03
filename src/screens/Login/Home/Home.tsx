@@ -188,7 +188,7 @@ export default ({ navigation }) => {
       toast("This phone number is invalid");
     } else if (!startPhoneVerification.ok) {
       closePhoneApproachModalOpen();
-      toast("Could not send you a Key");
+      toast("Could not send you a key");
     } else {
       closePhoneApproachModalOpen();
       toast("Please write a valid phone number");
@@ -227,9 +227,9 @@ export default ({ navigation }) => {
     setVerificationKey("");
     if (completePhoneVerification.ok) {
       logIn(completePhoneVerification);
-      toast("Your phone number is verified! Welcome!");
+      toast("Your phone number is verified! welcome!");
     } else {
-      toast("Could not be Verified your phone number");
+      toast("Could not be verified your phone number");
     }
   };
   return (

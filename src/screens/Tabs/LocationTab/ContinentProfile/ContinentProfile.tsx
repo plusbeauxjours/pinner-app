@@ -76,6 +76,11 @@ const LocationNameContainer = styled.View`
   justify-content: space-between;
   align-items: center;
 `;
+const NoPhotoContainer = styled.View`
+  justify-content: center;
+  align-items: center;
+  background-color: ${props => props.theme.bgColor};
+`;
 export default ({ navigation }) => {
   const location = useLocation();
   const isDarkMode = useTheme();
@@ -107,6 +112,16 @@ export default ({ navigation }) => {
     );
   };
   const reportLocation = (payload: string) => {
+    const toast = (message: string) => {
+      Toast.show(message, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.CENTER,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0
+      });
+    };
     showActionSheetWithOptions(
       {
         options: ["Yes", "No"],
@@ -127,16 +142,6 @@ export default ({ navigation }) => {
         }
       }
     );
-  };
-  const toast = (message: string) => {
-    Toast.show(message, {
-      duration: Toast.durations.LONG,
-      position: Toast.positions.CENTER,
-      shadow: true,
-      animation: true,
-      hideOnPress: true,
-      delay: 0
-    });
   };
   const {
     data: {
@@ -193,22 +198,25 @@ export default ({ navigation }) => {
         <Container>
           {continent && (
             <View>
-               {continent.continentPhoto ? (
-                    <ProgressiveImage
-                      tint={isDarkMode ? "dark" : "light"}
-                      style={{
-                        height: constants.width - 30,
-                        width: constants.width - 30,
-                        borderRadius: 3
-                      }}
-                      preview={{
-                        uri: continent.continentPhoto
-                      }}
-                      uri={continent.continentPhoto}
-                    />
-                  ) : (
-                    <Bold>{continent.continentName}</Bold>
-                  )}
+              {continent.continentPhoto ? (
+                <ProgressiveImage
+                  tint={isDarkMode ? "dark" : "light"}
+                  style={{
+                    height: constants.width - 30,
+                    width: constants.width - 30,
+                    borderRadius: 3
+                  }}
+                  preview={{
+                    uri: continent.continentPhoto
+                  }}
+                  uri={continent.continentPhoto}
+                />
+              ) : (
+                <NoPhotoContainer>
+                  <Text>NO</Text>
+                  <Text>PHOTO</Text>
+                </NoPhotoContainer>
+              )}
               <LocationNameContainer>
                 <Bold>{continent.continentName}</Bold>
                 <IconTouchable onPress={() => selectReportLocation()}>

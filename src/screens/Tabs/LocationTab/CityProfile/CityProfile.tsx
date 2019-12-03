@@ -108,6 +108,15 @@ const LocationInfoContainer = styled.View`
   width: ${constants.width - 40};
   margin-left: 5px;
 `;
+const NoPhotoContainer = styled.View`
+  justify-content: center;
+  align-items: center;
+  background-color: ${props => props.theme.bgColor};
+  height: ${constants.width - 30};
+  width: ${constants.width - 30};
+  border-radius: 3;
+  border: 0.5px solid #999;
+`;
 export default ({ navigation }) => {
   const location = useLocation();
   const isDarkMode = useTheme();
@@ -141,6 +150,16 @@ export default ({ navigation }) => {
     );
   };
   const reportLocation = (payload: string) => {
+    const toast = (message: string) => {
+      Toast.show(message, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.CENTER,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0
+      });
+    };
     showActionSheetWithOptions(
       {
         options: ["Yes", "No"],
@@ -161,16 +180,6 @@ export default ({ navigation }) => {
         }
       }
     );
-  };
-  const toast = (message: string) => {
-    Toast.show(message, {
-      duration: Toast.durations.LONG,
-      position: Toast.positions.CENTER,
-      shadow: true,
-      animation: true,
-      hideOnPress: true,
-      delay: 0
-    });
   };
   const [
     slackReportLocationsFn,
@@ -327,7 +336,10 @@ export default ({ navigation }) => {
                         uri={city.cityPhoto}
                       />
                     ) : (
-                      <Bold>{city.cityName}</Bold>
+                      <NoPhotoContainer>
+                        <Text>NO</Text>
+                        <Text>PHOTO</Text>
+                      </NoPhotoContainer>
                     )}
                   </Touchable>
                 )}

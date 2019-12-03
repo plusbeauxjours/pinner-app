@@ -543,7 +543,7 @@ export default ({ navigation }) => {
       toast("This phone number is invalid");
     } else if (!startEditPhoneVerification.ok) {
       closeEditPhoneModalOpen();
-      toast("Could not send you a Key");
+      toast("Could not send you a key");
     } else {
       closeEditPhoneModalOpen();
       toast("Please write a valid phone number");

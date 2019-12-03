@@ -296,7 +296,7 @@ export default ({ navigation }) => {
             }
           });
           calculateDistanceFn();
-          toast("Trip Deleted");
+          toast("Trip deleted");
         }
       }
     );
@@ -504,7 +504,7 @@ export default ({ navigation }) => {
       if (addTrip.ok) {
         calculateDistanceFn();
         tripRefetch();
-        toast("Trip Added");
+        toast("Trip added");
       }
     } catch (e) {
       toast("Overlapping dates! Please check your trip dates.");
@@ -522,7 +522,7 @@ export default ({ navigation }) => {
       if (editTrip.ok) {
         calculateDistanceFn();
         tripRefetch();
-        toast("Trip Edited");
+        toast("Trip edited");
       }
     } catch (e) {
       toast("Overlapping dates! Please check your trip dates.");
