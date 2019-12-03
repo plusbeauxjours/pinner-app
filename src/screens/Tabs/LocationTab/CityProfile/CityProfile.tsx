@@ -332,7 +332,7 @@ export default ({ navigation }) => {
                   <Bold>{city.cityName}</Bold>
                   <IconTouchable onPress={() => selectReportLocation()}>
                     <Ionicons
-                      name={Platform.OS === "ios" ? "ios-flag" : "md-flag"}
+                      name={Platform.OS === "ios" ? "ios-list" : "md-list"}
                       size={25}
                       color={"#999"}
                     />

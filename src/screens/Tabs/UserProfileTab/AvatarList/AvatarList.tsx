@@ -251,6 +251,7 @@ export default ({ navigation }) => {
                 renderImage={() => {
                   return (
                     <ProgressiveImage
+                      tint={isDarkMode ? "dark" : "light"}
                       style={{
                         height: constants.width,
                         width: constants.width,
@@ -280,7 +281,7 @@ export default ({ navigation }) => {
                         }}
                       >
                         <Ionicons
-                          name={Platform.OS === "ios" ? "ios-flag" : "md-flag"}
+                          name={Platform.OS === "ios" ? "ios-list" : "md-list"}
                           size={25}
                           color={"#999"}
                         />
@@ -334,6 +335,7 @@ export default ({ navigation }) => {
                     >
                       {item.isMain && isSelf ? (
                         <ProgressiveImage
+                          tint={isDarkMode ? "dark" : "light"}
                           style={{
                             height: constants.width / 3 - 1,
                             width: constants.width / 3 - 1,
@@ -346,6 +348,7 @@ export default ({ navigation }) => {
                         />
                       ) : (
                         <ProgressiveImage
+                          tint={isDarkMode ? "dark" : "light"}
                           style={{
                             height: constants.width / 3 - 1,
                             width: constants.width / 3 - 1

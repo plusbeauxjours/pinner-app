@@ -185,6 +185,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
             renderImage={() => {
               return (
                 <ProgressiveImage
+                  tint={isDarkMode ? "dark" : "light"}
                   style={{
                     height: constants.width,
                     width: constants.width,

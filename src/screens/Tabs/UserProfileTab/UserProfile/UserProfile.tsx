@@ -99,17 +99,18 @@ const ItemContainer = styled.View`
   flex-direction: row;
   margin-bottom: 10px;
 `;
-
 const UserNameContainer = styled.View`
-  align-self: flex-start;
   flex-direction: row;
+  align-self: flex-start;
+  justify-content: center;
 `;
 const Touchable = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
 `;
 const IconTouchable = styled(Touchable)`
-  margin-left: 5;
+  margin-left: 5px;
+  margin-top: 5px;
 `;
 const ImageTouchable = styled(Touchable)`
   margin-bottom: 15px;
@@ -191,7 +192,6 @@ const TripSubmitBtn = styled.TouchableOpacity`
   border: 0.5px solid #999;
   border-radius: 5px;
 `;
-const TripSubmitContainer = styled.View``;
 const TripBtnContainer = styled.View`
   flex-direction: row;
   justify-content: center;
@@ -1111,8 +1111,8 @@ export default ({ navigation }) => {
               ) : (
                 <IconTouchable onPress={() => selectReportUser()}>
                   <Ionicons
-                    name={Platform.OS === "ios" ? "ios-flag" : "md-flag"}
-                    size={25}
+                    name={Platform.OS === "ios" ? "ios-list" : "md-list"}
+                    size={22}
                     color={"#999"}
                   />
                 </IconTouchable>

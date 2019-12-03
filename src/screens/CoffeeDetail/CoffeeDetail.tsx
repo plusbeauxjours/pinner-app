@@ -161,12 +161,12 @@ const CoffeeDetails: React.FC<IProps> = ({
             <ImageTouchable onPress={() => onPress(coffee.host.username)}>
               {coffee.host.profile.avatarUrl ? (
                 <ProgressiveImage
+                  tint={isDarkMode ? "dark" : "light"}
                   style={{
                     height: 150,
                     width: 150,
                     borderRadius: 150 / 2
                   }}
-                  tint={isDarkMode ? "dark" : "light"}
                   preview={{
                     uri: `${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`
                   }}

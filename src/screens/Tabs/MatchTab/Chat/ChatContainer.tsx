@@ -31,6 +31,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as moment from "moment-timezone";
 import Toast from "react-native-root-toast";
 import { Image } from "react-native";
+import { useTheme } from "../../../../context/ThemeContext";
 
 const HIGH_WIDTH = 1280;
 const HIGH_HEIGHT = 960;
@@ -161,6 +162,7 @@ class ChatContainer extends React.Component<IProps, IState> {
   };
 
   public renderDarkMessageImage = props => {
+    const isDarkMode = useTheme();
     const images = [{ url: props.currentMessage.image }];
     return (
       <TouchableOpacity
@@ -168,7 +170,7 @@ class ChatContainer extends React.Component<IProps, IState> {
         onPress={() => this.openImageViewer(images)}
       >
         <ProgressiveImage
-          tint={"dark"}
+          tint={isDarkMode ? "dark" : "light"}
           style={{
             width: 200,
             height: 200,

@@ -93,7 +93,7 @@ const SubmitButton = styled.TouchableOpacity`
 export default ({ navigation }) => {
   const logIn = useLogIn();
   const isDarkMode = useTheme();
-  const { location, loading: locationLoading } = useLocation();
+  const { location } = useLocation();
   const [approachModalOpen, setApproachModalOpen] = useState<boolean>(false);
   const [modalMode, setModalMode] = useState<string>("phoneApproach");
   const [verificationKey, setVerificationKey] = useState<string>("");
@@ -232,11 +232,6 @@ export default ({ navigation }) => {
       toast("Could not be Verified your phone number");
     }
   };
-  if (locationLoading) {
-    <LoaderContainer>
-      <Loader />
-    </LoaderContainer>;
-  }
   return (
     <>
       <Modal

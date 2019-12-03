@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { Image } from "react-native";
 import constants, { BACKEND_URL } from "../../constants";
@@ -293,6 +293,7 @@ const UserRow: React.FC<IProps> = ({
             <Touchable>
               {trip.city.cityThumbnail ? (
                 <ProgressiveImage
+                  tint={isDarkMode ? "dark" : "light"}
                   style={{ height: 40, width: 40, borderRadius: 5 }}
                   preview={
                     trip.city.cityThumbnail && {
@@ -348,6 +349,7 @@ const UserRow: React.FC<IProps> = ({
             <Touchable>
               {city.cityThumbnail ? (
                 <ProgressiveImage
+                  tint={isDarkMode ? "dark" : "light"}
                   style={{ height: 40, width: 40, borderRadius: 5 }}
                   preview={
                     city.cityThumbnail && {
@@ -383,6 +385,7 @@ const UserRow: React.FC<IProps> = ({
             <Touchable>
               {city.cityThumbnail ? (
                 <ProgressiveImage
+                  tint={isDarkMode ? "dark" : "light"}
                   style={{ height: 40, width: 40, borderRadius: 5 }}
                   preview={
                     city.cityThumbnail && {
@@ -421,6 +424,7 @@ const UserRow: React.FC<IProps> = ({
             <Touchable>
               {city.cityThumbnail ? (
                 <ProgressiveImage
+                  tint={isDarkMode ? "dark" : "light"}
                   style={{ height: 40, width: 40, borderRadius: 5 }}
                   preview={
                     city.cityThumbnail && {
@@ -471,6 +475,7 @@ const UserRow: React.FC<IProps> = ({
             <Touchable>
               {country.countryThumbnail ? (
                 <ProgressiveImage
+                  tint={isDarkMode ? "dark" : "light"}
                   style={{ height: 40, width: 40, borderRadius: 5 }}
                   preview={
                     country.countryThumbnail && {
@@ -504,6 +509,7 @@ const UserRow: React.FC<IProps> = ({
             <Touchable>
               {country.countryThumbnail ? (
                 <ProgressiveImage
+                  tint={isDarkMode ? "dark" : "light"}
                   style={{ height: 40, width: 40, borderRadius: 5 }}
                   preview={
                     country.countryThumbnail && {
@@ -554,6 +560,7 @@ const UserRow: React.FC<IProps> = ({
             <Touchable>
               {continent.continentThumbnail ? (
                 <ProgressiveImage
+                  tint={isDarkMode ? "dark" : "light"}
                   style={{ height: 40, width: 40, borderRadius: 5 }}
                   preview={
                     continent.continentThumbnail && {
@@ -589,6 +596,7 @@ const UserRow: React.FC<IProps> = ({
             <Touchable>
               {continent.continentThumbnail ? (
                 <ProgressiveImage
+                  tint={isDarkMode ? "dark" : "light"}
                   style={{ height: 40, width: 40, borderRadius: 5 }}
                   preview={
                     continent.continentThumbnail && {
@@ -682,6 +690,7 @@ const UserRow: React.FC<IProps> = ({
             <Touchable>
               {coffee.city.cityThumbnail ? (
                 <ProgressiveImage
+                  tint={isDarkMode ? "dark" : "light"}
                   style={{ height: 40, width: 40, borderRadius: 5 }}
                   preview={
                     coffee.city.cityThumbnail && {
