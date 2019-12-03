@@ -155,38 +155,6 @@ class ChatContainer extends React.Component<IProps, IState> {
     return <CustomView {...props} />;
   };
 
-  public renderMessageVideo = () => {};
-
-  public openImageViewer = images => {
-    this.setState({ imageModalOpen: true, imageUrl: images[0].url });
-  };
-
-  public renderDarkMessageImage = props => {
-    const isDarkMode = useTheme();
-    const images = [{ url: props.currentMessage.image }];
-    return (
-      <TouchableOpacity
-        disabled={this.state.imageLoading}
-        onPress={() => this.openImageViewer(images)}
-      >
-        <ProgressiveImage
-          tint={isDarkMode ? "dark" : "light"}
-          style={{
-            width: 200,
-            height: 200,
-            borderRadius: 13,
-            margin: 3,
-            resizeMode: "cover"
-          }}
-          preview={{
-            uri: props.currentMessage.image
-          }}
-          uri={props.currentMessage.image}
-        />
-      </TouchableOpacity>
-    );
-  };
-
   public renderAvatar = () => {
     const { targetName } = this.state;
     const randomAvatar = {
@@ -247,41 +215,10 @@ class ChatContainer extends React.Component<IProps, IState> {
     );
   };
 
-  public renderLightMessageImage = props => {
-    const images = [{ url: props.currentMessage.image }];
-    return (
-      <TouchableOpacity
-        disabled={this.state.imageLoading}
-        onPress={() => this.openImageViewer(images)}
-      >
-        <ProgressiveImage
-          tint={"light"}
-          style={{
-            width: 200,
-            height: 200,
-            borderRadius: 13,
-            margin: 3,
-            resizeMode: "cover"
-          }}
-          preview={{
-            uri: props.currentMessage.image
-          }}
-          uri={props.currentMessage.image}
-        />
-      </TouchableOpacity>
-    );
-  };
-
   public renderActions = props => {
     const options = {
       "Send Location": () => {
         this.setState({ mapModalOpen: true });
-      },
-      "Send Image From Gallery": () => {
-        this.pickFromGallery();
-      },
-      "Send Image From Camera": () => {
-        this.pickFromCamera();
       },
       Cancel: () => {}
     };
@@ -290,160 +227,8 @@ class ChatContainer extends React.Component<IProps, IState> {
     );
   };
 
-  public image_resize = async (
-    uri: string,
-    orig_width: number,
-    orig_height: number
-  ) => {
-    if (this.state.resolution === "full") {
-      console.log("Didn't resize because resolution was full");
-      return uri;
-    } else if (this.state.resolution === "high") {
-      if (orig_width > HIGH_WIDTH || orig_height > HIGH_HEIGHT) {
-        let manipResult;
-        if (orig_width / HIGH_WIDTH >= orig_height / HIGH_HEIGHT) {
-          manipResult = await ImageManipulator.manipulateAsync(uri, [
-            { resize: { width: HIGH_WIDTH } }
-          ]);
-        } else {
-          manipResult = await ImageManipulator.manipulateAsync(uri, [
-            { resize: { height: HIGH_HEIGHT } }
-          ]);
-        }
-        return manipResult.uri;
-      } else {
-        return uri;
-      }
-    } else {
-      if (orig_width > LOW_WIDTH || orig_height > LOW_HEIGHT) {
-        let manipResult;
-        if (orig_width / LOW_WIDTH >= orig_height / LOW_HEIGHT) {
-          manipResult = await ImageManipulator.manipulateAsync(uri, [
-            { resize: { width: LOW_WIDTH } }
-          ]);
-        } else {
-          manipResult = await ImageManipulator.manipulateAsync(uri, [
-            { resize: { height: LOW_HEIGHT } }
-          ]);
-        }
-        return manipResult.uri;
-      } else {
-        return uri;
-      }
-    }
-  };
-
-  public pickFromCamera = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    if (status === "granted") {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA);
-      if (status === "granted") {
-        /* tslint:enable:no-shadowed-variable */
-        let result = await ImagePicker.launchCameraAsync({
-          allowsEditing: true
-        });
-        if (result.cancelled !== true) {
-          const resized_uri = await this.image_resize(
-            result.uri,
-            result.width,
-            result.height
-          );
-          let new_key = get_new_key("messages");
-          let user: UserChatMessage = {
-            _id: this.state.userId,
-            name: this.state.userName
-          };
-
-          let messageLocal: ChatMessage = {
-            _id: new_key,
-            createdAt: new Date(),
-            user: user,
-            status: false,
-            image: resized_uri
-          };
-          let messages = [];
-          messages.push(messageLocal);
-          this.setState(previousState => ({
-            messages: GiftedChat.append(previousState.messages, messages)
-          }));
-          const url = await image_upload_chat(
-            this.state.chatId,
-            resized_uri,
-            this.state.resolution
-          );
-          let messageServer: ChatMessage = {
-            _id: new_key,
-            createdAt: new Date(),
-            status: false,
-            user: user,
-            image: url
-          };
-          chat_send(this.state.chatId, messageServer).catch(e =>
-            console.log(e)
-          );
-        }
-      } else {
-        this.toast("You can't take pictures without CAMERA permissions");
-      }
-    } else {
-      this.toast("You can't take pictures without CAMERA_ROLL permissions");
-    }
-  };
-
-  public pickFromGallery = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true
-    });
-
-    if (result.cancelled !== true) {
-      const resized_uri = await this.image_resize(
-        result.uri,
-        result.width,
-        result.height
-      );
-      let new_key = get_new_key("messages");
-      let user: UserChatMessage = {
-        _id: this.state.userId,
-        name: this.state.userName
-      };
-
-      let messageLocal: ChatMessage = {
-        _id: new_key,
-        createdAt: new Date(),
-        status: false,
-        user: user,
-        image: resized_uri
-      };
-      let messages = [];
-      messages.push(messageLocal);
-      this.setState(previousState => ({
-        messages: GiftedChat.append(previousState.messages, messages)
-      }));
-
-      const url = await image_upload_chat(
-        this.state.chatId,
-        resized_uri,
-        this.state.resolution
-      );
-
-      let messageServer: ChatMessage = {
-        _id: new_key,
-        createdAt: new Date(),
-        status: false,
-        user: user,
-        image: url
-      };
-
-      chat_send(this.state.chatId, messageServer).catch(e => console.log(e));
-    }
-  };
-
   public closeMapModal = () => {
     this.setState({ mapModalOpen: false });
-  };
-
-  public closeImageModalOpen = () => {
-    this.setState({ imageModalOpen: false });
   };
 
   public sortByDate = (a, b) => {
@@ -517,39 +302,14 @@ class ChatContainer extends React.Component<IProps, IState> {
               this.state.chatId,
               this.state.userId
             ).then(updated_message => {
-              //@ts-ignore
-              if (updated_message.image) {
-                try {
-                  this.setState({ imageLoading: true });
-                  image_get_raw(
-                    //@ts-ignore
-                    updated_message.image,
-                    this.state.resolution
-                  ).then(image => {
-                    //@ts-ignore
-                    updated_message.image = image;
-                    message_container.push(new_message);
-                    this.setState(previousState => ({
-                      messages: GiftedChat.append(
-                        previousState.messages,
-                        message_container
-                      ).sort(this.sortByDate)
-                    }));
-                  });
-                } catch (e) {
-                  console.log(e);
-                } finally {
-                  this.setState({ imageLoading: false });
-                }
-              } else {
-                message_container.push(new_message);
-                this.setState(previousState => ({
-                  messages: GiftedChat.append(
-                    previousState.messages,
-                    message_container
-                  ).sort(this.sortByDate)
-                }));
-              }
+              message_container.push(new_message);
+              this.setState(previousState => ({
+                messages: GiftedChat.append(
+                  previousState.messages,
+                  message_container
+                ).sort(this.sortByDate)
+              }));
+              // }
             });
           }
         }
@@ -632,43 +392,20 @@ class ChatContainer extends React.Component<IProps, IState> {
     }
   };
   public render() {
-    const {
-      loading,
-      imageModalOpen,
-      mapModalOpen,
-      nowShowing,
-      imageUrl,
-      messages,
-      userId,
-      userAvatarUrl,
-      chatId,
-      userName,
-      userUrl
-    } = this.state;
+    const { loading, mapModalOpen, messages, userId } = this.state;
     return (
       <ChatPresenter
-        loading={loading}
-        imageModalOpen={imageModalOpen}
-        mapModalOpen={mapModalOpen}
-        nowShowing={nowShowing}
-        imageUrl={imageUrl}
-        messages={messages}
         userId={userId}
-        userAvatarUrl={userAvatarUrl}
-        chatId={chatId}
-        userName={userName}
-        userUrl={userUrl}
+        mapModalOpen={mapModalOpen}
+        loading={loading}
+        messages={messages}
         onSend={this.onSend}
         onSendLocation={this.onSendLocation}
         renderCustomView={this.renderCustomView}
-        renderMessageVideo={this.renderMessageVideo}
-        renderDarkMessageImage={this.renderDarkMessageImage}
-        renderLightMessageImage={this.renderLightMessageImage}
         renderActions={this.renderActions}
-        renderAvatar={this.renderAvatar}
         closeMapModal={this.closeMapModal}
-        closeImageModalOpen={this.closeImageModalOpen}
         messageFooter={this.messageFooter}
+        renderAvatar={this.renderAvatar}
       />
     );
   }
