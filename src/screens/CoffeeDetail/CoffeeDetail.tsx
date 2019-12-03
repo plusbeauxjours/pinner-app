@@ -39,7 +39,9 @@ const Touchable = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
 `;
-const ImageTouchable = styled.TouchableOpacity`
+const ImageTouchable = styled.TouchableOpacity``;
+const ImageView = styled.View`
+  background-color: ${props => props.theme.headerColor};
   margin-bottom: 15;
   position: absolute;
   top: -75;
@@ -158,27 +160,29 @@ const CoffeeDetails: React.FC<IProps> = ({
       <Container>
         {coffee && (
           <>
-            <ImageTouchable onPress={() => onPress(coffee.host.username)}>
-              {coffee.host.profile.avatarUrl ? (
-                <ProgressiveImage
-                  tint={isDarkMode ? "dark" : "light"}
-                  style={{
-                    height: 150,
-                    width: 150,
-                    borderRadius: 150 / 2
-                  }}
-                  preview={{
-                    uri: `${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`
-                  }}
-                  uri={`${BACKEND_URL}/media/${coffee.host.profile.avatarUrl}`}
-                />
-              ) : (
-                <Image
-                  resizeMode={"contain"}
-                  source={randomAvatar[imageNumber]}
-                />
-              )}
-            </ImageTouchable>
+            <ImageView>
+              <ImageTouchable onPress={() => onPress(coffee.host.username)}>
+                {coffee.host.profile.avatarUrl ? (
+                  <ProgressiveImage
+                    tint={isDarkMode ? "dark" : "light"}
+                    style={{
+                      height: 150,
+                      width: 150,
+                      borderRadius: 150 / 2
+                    }}
+                    preview={{
+                      uri: `${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`
+                    }}
+                    uri={`${BACKEND_URL}/media/${coffee.host.profile.avatarUrl}`}
+                  />
+                ) : (
+                  <Image
+                    resizeMode={"contain"}
+                    source={randomAvatar[imageNumber]}
+                  />
+                )}
+              </ImageTouchable>
+            </ImageView>
             <Touchable onPress={() => onPress(coffee.host.username)}>
               <UserName>
                 {coffee.host.username.length > 24

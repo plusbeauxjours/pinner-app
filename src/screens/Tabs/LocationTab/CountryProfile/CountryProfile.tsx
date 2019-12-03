@@ -23,6 +23,7 @@ import { useTheme } from "../../../../context/ThemeContext";
 import { darkMode, lightMode } from "../../../../styles/mapStyles";
 import Toast from "react-native-root-toast";
 import { Ionicons } from "@expo/vector-icons";
+import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 
 const Container = styled.View`
@@ -235,18 +236,22 @@ export default ({ navigation }) => {
                 </Touchable>
               ) : (
                 <Touchable onPress={() => setMapOpen(true)}>
-                  <Image
-                    style={{
-                      height: constants.width - 30,
-                      width: constants.width - 30,
-                      borderRadius: 3
-                    }}
-                    source={
-                      country.countryPhoto && {
+                  {country.countryPhoto ? (
+                    <ProgressiveImage
+                      tint={isDarkMode ? "dark" : "light"}
+                      style={{
+                        height: constants.width - 30,
+                        width: constants.width - 30,
+                        borderRadius: 3
+                      }}
+                      preview={{
                         uri: country.countryPhoto
-                      }
-                    }
-                  />
+                      }}
+                      uri={country.countryPhoto}
+                    />
+                  ) : (
+                    <Bold>{country.countryName}</Bold>
+                  )}
                 </Touchable>
               )}
               <LocationNameContainer>

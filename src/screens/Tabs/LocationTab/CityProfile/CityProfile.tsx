@@ -38,6 +38,7 @@ import Toast from "react-native-root-toast";
 import { Ionicons } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import CoffeeDetail from "../../../CoffeeDetail";
+import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import LocationCenterHeader from "../../../../components/Header/LocationCenterHeader";
 
 const Container = styled.View`
@@ -113,7 +114,6 @@ export default ({ navigation }) => {
   const [cityId, setCityId] = useState<string>(
     navigation.getParam("cityId") || location.currentCityId
   );
-  const isStaying = cityId === location.currentCityId;
   const [coffeeId, setCoffeeId] = useState<string>("");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -313,18 +313,22 @@ export default ({ navigation }) => {
                   </Touchable>
                 ) : (
                   <Touchable onPress={() => setMapOpen(true)}>
-                    <Image
-                      style={{
-                        height: constants.width - 30,
-                        width: constants.width - 30,
-                        borderRadius: 3
-                      }}
-                      source={
-                        city.cityPhoto && {
+                    {city.cityPhoto ? (
+                      <ProgressiveImage
+                        tint={isDarkMode ? "dark" : "light"}
+                        style={{
+                          height: constants.width - 30,
+                          width: constants.width - 30,
+                          borderRadius: 3
+                        }}
+                        preview={{
                           uri: city.cityPhoto
-                        }
-                      }
-                    />
+                        }}
+                        uri={city.cityPhoto}
+                      />
+                    ) : (
+                      <Bold>{city.cityName}</Bold>
+                    )}
                   </Touchable>
                 )}
                 <LocationNameContainer>
