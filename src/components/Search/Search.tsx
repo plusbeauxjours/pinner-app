@@ -113,14 +113,15 @@ const Search = ({ navigation }) => {
       });
       await setSearch("");
       await setModalOpen(false);
+    } catch (e) {
+      setSearch("");
+      console.log(e);
+    } finally {
       await navigation.push("CityProfileTabs", {
         cityId: result.data.createCity.cityId,
         countryCode: result.data.createCity.countryCode,
         continentCode: result.data.createCity.continentCode
       });
-    } catch (e) {
-      setSearch("");
-      console.log(e);
     }
   };
   const onChange = (text: string) => {
@@ -157,7 +158,7 @@ const Search = ({ navigation }) => {
             alignSelf: "center",
             width: constants.width - 30,
             top: 200,
-            backgroundColor: isDarkMode ? "#161616" : "#EFEFEF",
+            backgroundColor: "transparent",
             textAlign: "center",
             fontSize: 40,
             position: "absolute",
