@@ -1,20 +1,9 @@
 import axios from "axios";
 import keys from "../../keys";
-import Toast from "react-native-root-toast";
 
 export const useReversePlaceId = async (placeId: string) => {
   const URL = `https://maps.googleapis.com/maps/api/geocode/json?&language=en&place_id=${placeId}&key=${keys.REACT_APP_GOOGLE_MAPS_KEY}`;
   const { data } = await axios(URL);
-  const toast = (message: string) => {
-    Toast.show(message, {
-      duration: Toast.durations.LONG,
-      position: Toast.positions.CENTER,
-      shadow: true,
-      animation: true,
-      hideOnPress: true,
-      delay: 0
-    });
-  };
   if (!data.error_message) {
     const { results } = data;
 
@@ -44,7 +33,6 @@ export const useReversePlaceId = async (placeId: string) => {
     storableLocation.longitude = results[0].geometry.location.lng;
     return { storableLocation };
   } else {
-    toast(data.error_message);
     return null;
   }
 };
