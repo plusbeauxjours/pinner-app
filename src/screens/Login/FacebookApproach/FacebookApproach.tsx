@@ -59,9 +59,7 @@ export default () => {
             cityId: "ChIJuQhD6D7sfDURB6J0Dx5TGW8",
             countryCode: "KR",
             fbId: id
-          },
-          refetchQueries: [{ query: ME }]
-          // awaitRefetchQueries: true
+          }
         });
         await logIn(facebookConnect);
         await toast(`Welcome ${first_name}!`);

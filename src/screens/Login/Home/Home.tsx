@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Modal from "react-native-modal";
 import constants from "../../../../constants";
@@ -18,7 +18,6 @@ import { DARK_THEME } from "react-native-country-picker-modal";
 import CountryPicker from "react-native-country-picker-modal";
 import { TextInput } from "react-native-gesture-handler";
 import { countries } from "../../../../countryData";
-import { useLocation } from "../../../context/LocationContext";
 import { useLogIn } from "../../../context/AuthContext";
 import {
   EMAIL_SIGN_IN,
@@ -26,6 +25,7 @@ import {
   COMPLETE_PHONE_SIGN_IN
 } from "./HomeQueries";
 import FacebookApproach from "../FacebookApproach";
+import { useReverseGeoCode } from "../../../hooks/useReverseGeoCode";
 
 const View = styled.View`
   justify-content: center;
@@ -85,21 +85,34 @@ const SubmitButton = styled.TouchableOpacity`
 export default ({ navigation }) => {
   const logIn = useLogIn();
   const isDarkMode = useTheme();
-  const { location } = useLocation();
+  const [cityId, setCityId] = useState<string>("");
   const [approachModalOpen, setApproachModalOpen] = useState<boolean>(false);
   const [modalMode, setModalMode] = useState<string>("phoneApproach");
   const [verificationKey, setVerificationKey] = useState<string>("");
   const [emailAddress, setEmailAddress] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [countryPhoneCode, setCountryPhoneCode] = useState<any>(
-    "KR"
-    // location.currentCountryCode
-  );
-  const [countryPhoneNumber, setCountryPhoneNumber] = useState(
-    "+82"
-    // countries.find(i => i.code === location.currentCountryCode).phone
-  );
-
+  const [countryPhoneCode, setCountryPhoneCode] = useState<any>("");
+  const [countryPhoneNumber, setCountryPhoneNumber] = useState("");
+  const handleGeoSuccess = (position: Position) => {
+    const {
+      coords: { latitude, longitude }
+    } = position;
+    getAddress(latitude, longitude);
+  };
+  const getAddress = async (latitude: number, longitude: number) => {
+    const address = await useReverseGeoCode(latitude, longitude);
+    if (address) {
+      setCityId(address.storableLocation.cityId);
+      setCountryPhoneCode(address.storableLocation.countryCode);
+      setCountryPhoneNumber(
+        countries.find(i => i.code === address.storableLocation.countryCode)
+          .phone
+      );
+    }
+  };
+  const handleGeoError = () => {
+    console.log("No location");
+  };
   const [
     startPhoneVerificationFn,
     { loading: startPhoneVerificationLoading }
@@ -127,7 +140,7 @@ export default ({ navigation }) => {
         : phoneNumber,
       countryPhoneNumber,
       countryPhoneCode,
-      cityId: location && location.currentCityId
+      cityId
     }
   });
   const [
@@ -211,9 +224,17 @@ export default ({ navigation }) => {
     }
   };
   const handlePhoneVerification = async () => {
+    console.log(
+      verificationKey,
+      phoneNumber,
+      countryPhoneNumber,
+      countryPhoneCode,
+      cityId
+    );
     const {
       data: { completePhoneVerification }
     } = await completePhoneVerificationFn();
+    console.log("completePhoneVerification", completePhoneVerification);
     setApproachModalOpen(false);
     setModalMode("phoneApproach");
     setVerificationKey("");
@@ -224,6 +245,9 @@ export default ({ navigation }) => {
       toast("Could not be verified your phone number");
     }
   };
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(handleGeoSuccess, handleGeoError);
+  }, []);
   return (
     <>
       <Modal
@@ -403,7 +427,16 @@ export default ({ navigation }) => {
           resizeMode={"contain"}
           source={require("../../../../assets/logo.png")}
         />
-        <Touchable onPress={() => setApproachModalOpen(true)}>
+        <Touchable
+          onPress={() => {
+            // setCountryPhoneCode(location.currentCountryCode),
+            //   setCountryPhoneNumber(
+            //     countries.find(i => i.code === location.currentCountryCode)
+            //       .phone
+            //   ),
+            setApproachModalOpen(true);
+          }}
+        >
           <LoginLink>
             <LoginLinkText>LOG IN WITH PHONE NUMBER</LoginLinkText>
           </LoginLink>

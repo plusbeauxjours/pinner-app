@@ -51,6 +51,7 @@ export const LocationProvider = ({ children }) => {
         currentCityName: address.storableLocation.cityName,
         currentCountryCode: address.storableLocation.countryCode
       });
+      console.log("!");
       await reportLocationFn({
         variables: {
           currentLat: cityInfo.storableLocation.latitude,
@@ -60,6 +61,7 @@ export const LocationProvider = ({ children }) => {
           currentCountryCode: address.storableLocation.countryCode
         }
       });
+      console.log("@");
       await AsyncStorage.setItem("cityId", address.storableLocation.cityId);
       await AsyncStorage.setItem(
         "countryCode",

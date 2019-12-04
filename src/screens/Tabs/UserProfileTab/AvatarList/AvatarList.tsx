@@ -187,6 +187,7 @@ export default ({ navigation }) => {
       buttonIndex => {
         if (buttonIndex === 0 && !deleteAvatarLoading && !markAsMainLoading) {
           markAsMainFn({ variables: { uuid: avatar.uuid } });
+          setModalOpen(false);
           toast("Main avatar changed");
         } else if (buttonIndex === 1) {
           onConfirmPress();
