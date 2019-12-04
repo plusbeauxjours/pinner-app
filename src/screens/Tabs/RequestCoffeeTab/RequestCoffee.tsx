@@ -403,7 +403,6 @@ export default ({ navigation }) => {
     RECOMMEND_LOCATIONS,
     { fetchPolicy: "no-cache" }
   );
-  console.log(recommendLocations);
   const [deleteCoffeeFn, { loading: deleteCoffeeLoading }] = useMutation<
     DeleteCoffee,
     DeleteCoffeeVariables

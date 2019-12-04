@@ -26,6 +26,8 @@ import { useMe } from "../context/MeContext";
 import { GET_AVATARS } from "../screens/Tabs/UserProfileTab/AvatarList/AvatarListQueries";
 import { GET_USER } from "../screens/Tabs/UserProfileTab/UserProfile/UserProfileQueries";
 
+import { RNCamera } from "react-native-camera";
+
 const Container = styled.TouchableOpacity`
   padding-left: 20px;
 `;
@@ -109,15 +111,16 @@ export default withNavigation(({ navigation }) => {
     orig_width: number,
     orig_height: number
   ) => {
-    if (orig_width > 1280 || orig_height > 960) {
+    console.log(orig_width, orig_height);
+    if (orig_width > 1280 || orig_height > 1280) {
       let manipResult;
-      if (orig_width / 1280 >= orig_height / 960) {
+      if (orig_width / 1280 >= orig_height / 1280) {
         manipResult = await ImageManipulator.manipulateAsync(uri, [
           { resize: { width: 1280 } }
         ]);
       } else {
         manipResult = await ImageManipulator.manipulateAsync(uri, [
-          { resize: { height: 960 } }
+          { resize: { height: 1280 } }
         ]);
       }
       return manipResult.uri;
@@ -161,7 +164,11 @@ export default withNavigation(({ navigation }) => {
     if (status === "granted") {
       /* tslint:enable:no-shadowed-variable */
       let result = await ImagePicker.launchCameraAsync({
-        allowsEditing: true
+        quality: 1,
+        aspect: [1, 1],
+        allowsEditing: true,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        base64: true
       });
       if (result.cancelled !== true) {
         const resized_uri = await image_resize(

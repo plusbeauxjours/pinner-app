@@ -140,6 +140,7 @@ export const UPLOAD_AVATAR = gql`
         image
         isMain
         likeCount
+        image
         thumbnail
       }
     }

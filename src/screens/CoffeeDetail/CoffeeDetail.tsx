@@ -12,10 +12,6 @@ import CoffeeBtn from "../../components/CoffeeBtn";
 import { withNavigation } from "react-navigation";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 
-const View = styled.View`
-  align-items: center;
-  justify-content: center;
-`;
 const Container = styled.View`
   width: ${constants.width};
   height: ${constants.width};

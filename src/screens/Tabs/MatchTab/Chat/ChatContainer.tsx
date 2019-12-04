@@ -2,8 +2,6 @@ import React from "react";
 import { GiftedChat, Actions } from "react-native-gifted-chat";
 import { withNavigation, NavigationScreenProp } from "react-navigation";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
-import * as ImagePicker from "expo-image-picker";
-import * as Permissions from "expo-permissions";
 import firebase from "firebase";
 import CustomView from "./CustomView";
 import { chat_send } from "../../../../../Fire";
@@ -20,23 +18,14 @@ import {
   get_new_key,
   UserChatMessage,
   ChatMessage,
-  image_upload_chat,
   get_old_chat_messages,
-  image_get_raw,
   update_message_info,
   fb_db
 } from "../../../../../Fire";
-import * as ImageManipulator from "expo-image-manipulator";
 import { Ionicons } from "@expo/vector-icons";
 import * as moment from "moment-timezone";
 import Toast from "react-native-root-toast";
 import { Image } from "react-native";
-import { useTheme } from "../../../../context/ThemeContext";
-
-const HIGH_WIDTH = 1280;
-const HIGH_HEIGHT = 960;
-const LOW_WIDTH = 640;
-const LOW_HEIGHT = 480;
 
 interface IProps {
   navigation: NavigationScreenProp<{
