@@ -30,12 +30,6 @@ const Text = styled.Text`
   font-size: 9px;
   margin-left: 5px;
 `;
-const View = styled.View`
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-`;
-
 const Container = styled.View`
   padding: 15px;
   margin-left: 10px;
