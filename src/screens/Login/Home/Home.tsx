@@ -12,7 +12,6 @@ import {
   StartEmailVerificationVariables
 } from "../../../types/api";
 import Toast from "react-native-root-toast";
-import Loader from "../../../components/Loader";
 import { Platform, ActivityIndicator } from "react-native";
 import { useTheme } from "../../../context/ThemeContext";
 import { DARK_THEME } from "react-native-country-picker-modal";
@@ -44,13 +43,6 @@ const LoginLinkText = styled.Text`
   color: ${props => props.theme.blueColor};
   margin-top: 20px;
   font-weight: 600;
-`;
-
-const LoaderContainer = styled.View`
-  flex: 1;
-  background-color: ${props => props.theme.bgColor};
-  justify-content: center;
-  align-items: center;
 `;
 const ApproachModalContainer = styled.View`
   flex-direction: row;

@@ -252,5 +252,10 @@ export default createStackNavigator({
       header: props => <BackCustomHeader />
     }
   },
-  AvatarList
+  AvatarList: {
+    screen: AvatarList,
+    navigationOptions: {
+      header: props => <BackCustomHeader />
+    }
+  }
 });

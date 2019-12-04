@@ -108,7 +108,6 @@ export default withNavigation(({ navigation }) => {
     orig_width: number,
     orig_height: number
   ) => {
-    console.log(orig_width, orig_height);
     if (orig_width > 1280 || orig_height > 1280) {
       let manipResult;
       if (orig_width / 1280 >= orig_height / 1280) {

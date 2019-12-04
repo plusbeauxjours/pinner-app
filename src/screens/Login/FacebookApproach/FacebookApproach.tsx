@@ -7,6 +7,7 @@ import { FacebookConnect, FacebookConnectVariables } from "../../../types/api";
 import { FACEBOOK_CONNECT } from "./FacebookApproachQueries";
 import { useLogIn } from "../../../context/AuthContext";
 import Toast from "react-native-root-toast";
+import { ME } from "../../../sharedQueries";
 
 const FBContainer = styled.View``;
 
@@ -58,11 +59,13 @@ export default () => {
             cityId: "ChIJuQhD6D7sfDURB6J0Dx5TGW8",
             countryCode: "KR",
             fbId: id
-          }
+          },
+          refetchQueries: [{ query: ME }]
+          // awaitRefetchQueries: true
         });
-        logIn(facebookConnect);
-        toast(`Welcome ${first_name}!`);
-        setLoading(false);
+        await logIn(facebookConnect);
+        await toast(`Welcome ${first_name}!`);
+        await setLoading(false);
       } else {
         // type === 'cancel'
         setLoading(false);
