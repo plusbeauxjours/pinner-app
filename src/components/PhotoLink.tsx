@@ -129,7 +129,8 @@ export default withNavigation(({ navigation }) => {
     if (status === "granted") {
       try {
         let result = await ImagePicker.launchImageLibraryAsync({
-          allowsEditing: true
+          allowsEditing: true,
+          quality: 1
         });
 
         if (result.cancelled !== true) {

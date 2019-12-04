@@ -9,7 +9,7 @@ import {
   COMPLETE_EDIT_EMAIL_VERIFICATION,
   COMPLETE_EMAIL_SIGN_IN
 } from "./MatchQueries";
-// import { useMe } from "../../../../context/MeContext";
+import { useMe } from "../../../../context/MeContext";
 import { RefreshControl } from "react-native";
 import { MARK_AS_READ_MATCH } from "./MatchQueries";
 import { SwipeListView } from "react-native-swipe-list-view";
@@ -95,10 +95,7 @@ const TouchableBackRow = styled.View`
 export default ({ navigation }) => {
   const logIn = useLogIn();
   const location = useLocation();
-  const { data: { me = null } = {}, loading: meLoading } = useQuery<Me>(ME, {
-    fetchPolicy: "network-only"
-  });
-  console.log(me);
+  const { me } = useMe();
   const [refreshing, setRefreshing] = useState(false);
   const [
     completeEditEmailVerificationFn,
@@ -322,7 +319,6 @@ export default ({ navigation }) => {
   }, []);
   if (
     matchLoading ||
-    meLoading ||
     completeEditEmailVerificationLoading ||
     CompleteEmailVerificationLoading
   ) {

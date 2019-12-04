@@ -300,6 +300,7 @@ export default ({ navigation }) => {
                 }}
                 //@ts-ignore
                 renderIndicator={() => {}}
+                saveToLocalByLongPress={false}
               />
             </Modal>
             {/* {isSelf && !avatar.isMain && (

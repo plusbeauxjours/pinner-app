@@ -4,7 +4,8 @@ import {
   RefreshControl,
   Platform,
   Image,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Modal as AvatarModal
 } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -61,6 +62,7 @@ import SearchCityPhoto from "../../../../components/SearchCityPhoto";
 import { countries } from "../../../../../countryData";
 import CoffeeDetail from "../../../CoffeeDetail/index";
 import { GET_COFFEES } from "../../../../sharedQueries";
+import ImageViewer from "react-native-image-zoom-viewer";
 
 const Header = styled.View`
   height: 270;
@@ -259,6 +261,7 @@ export default ({ navigation }) => {
   const [searchCityName, setSearchCityName] = useState<string>("");
   const [searchCountryCode, setSearchCountryCode] = useState<string>("");
   const [searchCountryName, setSearchCountryName] = useState<string>("");
+  const [avatarModalOpen, setAvatarModalOpen] = useState<boolean>(false);
   const [searchContinentCode, setSearchContinentCode] = useState<string>("");
   const [username, setUsername] = useState<string>(
     navigation.getParam("username") || me.user.username
@@ -659,6 +662,49 @@ export default ({ navigation }) => {
   } else {
     return (
       <>
+        <AvatarModal visible={avatarModalOpen} transparent={true}>
+          <ImageViewer
+            imageUrls={[
+              { url: `${BACKEND_URL}/media/${user.profile.avatarUrl}` }
+            ]}
+            enablePreload={true}
+            style={{
+              height: constants.width,
+              width: constants.width,
+              padding: 0,
+              margin: 0
+            }}
+            renderImage={() => {
+              return (
+                <ProgressiveImage
+                  tint={isDarkMode ? "dark" : "light"}
+                  style={{
+                    height: constants.width,
+                    width: constants.width,
+                    padding: 0,
+                    margin: 0,
+                    position: "absolute"
+                  }}
+                  preview={{
+                    uri: `${BACKEND_URL}/media/${user.profile.avatarUrl}`
+                  }}
+                  uri={`${BACKEND_URL}/media/${user.profile.avatarUrl}`}
+                />
+              );
+            }}
+            onSwipeDown={() => setAvatarModalOpen(false)}
+            backgroundColor={
+              isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
+            }
+            enableSwipeDown={true}
+            loadingRender={() => {
+              return <Loader />;
+            }}
+            //@ts-ignore
+            renderIndicator={() => {}}
+            saveToLocalByLongPress={false}
+          />
+        </AvatarModal>
         <Modal
           style={{ margin: 0, alignItems: "flex-start" }}
           isVisible={addTripModalOpen}
@@ -1056,14 +1102,7 @@ export default ({ navigation }) => {
           }
         >
           <Header>
-            <ImageTouchable
-              onPress={() =>
-                navigation.push("AvatarList", {
-                  username: user.username,
-                  isSelf: user.profile.isSelf
-                })
-              }
-            >
+            <ImageTouchable onPress={() => setAvatarModalOpen(true)}>
               {user.profile.avatarUrl ? (
                 <ProgressiveImage
                   tint={isDarkMode ? "dark" : "light"}
