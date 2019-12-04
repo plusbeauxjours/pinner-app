@@ -13,7 +13,6 @@ import { ApolloProvider as ApolloHooksProvider } from "react-apollo-hooks";
 import { ApolloProvider } from "react-apollo";
 import { ThemeProvider } from "./src/context/ThemeContext";
 import { AuthProvider } from "./src/context/AuthContext";
-import { MeProvider } from "./src/context/MeContext";
 import { LocationProvider } from "./src/context/LocationContext";
 import NavController from "./src/components/NavController";
 import { createUploadLink } from "apollo-upload-client";
@@ -34,7 +33,6 @@ export default function App() {
       });
       await Asset.loadAsync(require("./assets/logo.png"));
       const cache = new InMemoryCache();
-      // await AsyncStorage.clear();
       await persistCache({
         cache,
         storage: AsyncStorage
@@ -82,13 +80,11 @@ export default function App() {
       <ApolloProvider client={client}>
         <ThemeProvider isDarkMode={isDarkMode}>
           <AuthProvider isLoggedIn={isLoggedIn} client={client}>
-            <MeProvider>
-              <LocationProvider>
-                <ActionSheetProvider>
-                  <NavController />
-                </ActionSheetProvider>
-              </LocationProvider>
-            </MeProvider>
+            <LocationProvider>
+              <ActionSheetProvider>
+                <NavController />
+              </ActionSheetProvider>
+            </LocationProvider>
           </AuthProvider>
         </ThemeProvider>
       </ApolloProvider>

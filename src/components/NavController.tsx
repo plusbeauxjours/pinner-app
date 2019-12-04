@@ -3,6 +3,7 @@ import { useIsLoggedIn } from "../context/AuthContext";
 import AuthNavigation from "../navigation/AuthNavigation";
 import { useTheme } from "../context/ThemeContext";
 import MainNavigation from "../navigation/MainNavigation";
+import { MeProvider } from "../../src/context/MeContext";
 import { StatusBar } from "react-native";
 
 export default () => {
@@ -13,5 +14,11 @@ export default () => {
   } else {
     StatusBar.setBarStyle("dark-content", true);
   }
-  return isLoggedIn ? <MainNavigation /> : <AuthNavigation />;
+  return isLoggedIn ? (
+    <MeProvider>
+      <MainNavigation />
+    </MeProvider>
+  ) : (
+    <AuthNavigation />
+  );
 };
