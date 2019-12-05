@@ -28,6 +28,7 @@ export const EDIT_PROFILE = gql`
         firstName
         lastName
         profile {
+          id
           bio
           gender
           avatarUrl
@@ -153,4 +154,3 @@ export const TOGGLE_SETTINGS = gql`
     }
   }
 `;
-

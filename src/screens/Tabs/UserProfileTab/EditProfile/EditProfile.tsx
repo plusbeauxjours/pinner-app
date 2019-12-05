@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useMutation, useQuery } from "react-apollo-hooks";
+import { useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import Modal from "react-native-modal";
 import Toast from "react-native-root-toast";
@@ -28,14 +28,8 @@ import {
   START_EDIT_EMAIL_VERIFICATION,
   TOGGLE_SETTINGS
 } from "./EditProfileQueries";
-import Loader from "../../../../components/Loader";
 import { GET_USER } from "../UserProfile/UserProfileQueries";
-import {
-  RefreshControl,
-  Platform,
-  TextInput,
-  ActivityIndicator
-} from "react-native";
+import { Platform, TextInput, ActivityIndicator } from "react-native";
 import constants from "../../../../../constants";
 import { countries } from "../../../../../countryData";
 import { useLogOut, useLogIn } from "../../../../context/AuthContext";
@@ -44,6 +38,7 @@ import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
 import { useLocation } from "../../../../context/LocationContext";
 import { Ionicons } from "@expo/vector-icons";
 import { ME } from "../../../../sharedQueries";
+import { useMe } from "../../../../context/MeContext";
 
 const View = styled.View`
   flex: 1;
@@ -121,13 +116,6 @@ const FlagExplainText = styled(ExplainText)`
 const ScrollView = styled.ScrollView`
   background-color: ${props => props.theme.bgColor};
 `;
-
-const LoaderContainer = styled.View`
-  flex: 1;
-  background-color: ${props => props.theme.bgColor};
-  justify-content: center;
-  align-items: center;
-`;
 const ButtonContainer = styled.View`
   justify-content: center;
   align-items: center;
@@ -155,37 +143,27 @@ interface IProps {
 }
 export default ({ navigation }) => {
   const logIn = useLogIn();
+  const { me } = useMe();
   const logOut = useLogOut();
   const location = useLocation();
   const isDarkMode = useTheme();
   const { theme, toggleTheme } = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
   const profile = navigation.getParam("profile");
-  const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [isProfileSubmitted, setIsProfileSubmitted] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [username, setUsername] = useState<string>(
-    navigation.getParam("username")
-  );
-  const [newUsername, setNewUsername] = useState<string>(
-    navigation.getParam("username")
-  );
+  const [username, setUsername] = useState<string>(me.user.username);
+  const [newUsername, setNewUsername] = useState<string>(me.user.username);
   const [bio, setBio] = useState<string>(profile.bio);
   const [gender, setGender] = useState<string>(profile.gender);
-  const [firstName, setFirstName] = useState<string>(
-    navigation.getParam("firstName")
-  );
-  const [lastName, setLastName] = useState<string>(
-    navigation.getParam("lastName")
-  );
+  const [firstName, setFirstName] = useState<string>(me.user.firstName);
+  const [lastName, setLastName] = useState<string>(me.user.lastName);
   const [nationalityCode, setNationalityCode] = useState<any>(
-    profile.nationality
-      ? profile.nationality.countryCode
+    me.user.profile.nationality
+      ? me.user.profile.nationality.countryCode
       : location.currentCountryCode
   );
   const [residenceCode, setResidenceCode] = useState<any>(
-    profile.residence
-      ? profile.residence.countryCode
+    me.user.profile.residence
+      ? me.user.profile.residence.countryCode
       : location.currentCountryCode
   );
   const [isHideTrips, setIsHideTrips] = useState<boolean>(profile.isHideTrips);
@@ -204,7 +182,6 @@ export default ({ navigation }) => {
   const [isAutoLocationReport, setIsAutoLocationReport] = useState<boolean>(
     profile.isAutoLocationReport
   );
-
   const phoneNumber = profile.phoneNumber;
   const countryPhoneNumber = profile.countryPhoneNumber;
   const countryPhoneCode = profile.countryPhoneCode;
@@ -224,44 +201,35 @@ export default ({ navigation }) => {
   const [editPhoneModalOpen, setEditPhoneModalOpen] = useState<boolean>(false);
   const [isEditPhoneMode, setIsEditPhoneMode] = useState<boolean>(true);
   const [verificationKey, setVerificationKey] = useState<string>("");
-
   const emailAddress = profile.emailAddress;
   const [newEmailAddress, setNewEmailAddress] = useState<string>("");
   const [editEmailModalOpen, setEditEmailModalOpen] = useState<boolean>(false);
   const [isEditEmailMode, setIsEditEmailMode] = useState<boolean>(true);
-  const {
-    data: { userProfile: { user = null } = {} } = {},
-    refetch: profileRefetch
-  } = useQuery<UserProfile, UserProfileVariables>(GET_USER, {
-    variables: { username }
-  });
+  const [submitModal, setSubmitModal] = useState<boolean>(false);
+  const [isChanged, setIsChanged] = useState<boolean>(false);
+  const [logoutModal, setLogoutModal] = useState<boolean>(false);
+  const [deleteModal, setDeleteModal] = useState<boolean>(false);
+
   const [editProfileFn, { loading: editProfileLoading }] = useMutation<
     EditProfile,
     EditProfileVariables
   >(EDIT_PROFILE, {
+    variables: {
+      username: newUsername,
+      bio,
+      gender,
+      firstName,
+      lastName,
+      nationalityCode,
+      residenceCode
+    },
     update(cache, { data: { editProfile } }) {
-      try {
-        const data = cache.readQuery<UserProfile, UserProfileVariables>({
-          query: GET_USER,
-          variables: { username }
-        });
-        if (data) {
-          data.userProfile.user = editProfile.user;
-          cache.writeQuery({
-            query: GET_USER,
-            variables: { username },
-            data
-          });
-        }
-      } catch (e) {
-        console.log(e);
-      }
       try {
         const data = cache.readQuery<Me>({
           query: ME
         });
         if (data) {
-          data.me.user.username = editProfile.user.username;
+          data.me.user = editProfile.user;
           cache.writeQuery({
             query: ME,
             data
@@ -270,10 +238,24 @@ export default ({ navigation }) => {
       } catch (e) {
         console.log(e);
       }
+      try {
+        const data = cache.readQuery<UserProfile, UserProfileVariables>({
+          query: GET_USER,
+          variables: { username: newUsername }
+        });
+        if (data) {
+          data.userProfile.user = editProfile.user;
+          cache.writeQuery({
+            query: GET_USER,
+            variables: { username: newUsername },
+            data
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
     }
   });
-  const [submitModal, setSubmitModal] = useState<boolean>(false);
-  const [isChanged, setIsChanged] = useState<boolean>(false);
 
   const onPress = () => {
     setSubmitModal(true);
@@ -294,7 +276,7 @@ export default ({ navigation }) => {
       }
     );
   };
-  const [logoutModal, setLogoutModal] = useState<boolean>(false);
+
   const onLogout = () => {
     setLogoutModal(true);
     showActionSheetWithOptions(
@@ -314,7 +296,7 @@ export default ({ navigation }) => {
       }
     );
   };
-  const [deleteModal, setDeleteModal] = useState<boolean>(false);
+
   const onDelete = () => {
     setDeleteModal(true);
     showActionSheetWithOptions(
@@ -493,16 +475,6 @@ export default ({ navigation }) => {
       variables: { payload }
     });
   };
-  const onRefresh = async () => {
-    try {
-      setRefreshing(true);
-      await profileRefetch();
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setRefreshing(false);
-    }
-  };
   const onInputTextChange = (text, state) => {
     const replaceChar = /[~!@\#$%^&*\()\-=+_'\;<>0-9\/.\`:\"\\,\[\]?|{}]/gi;
     const item = text
@@ -510,7 +482,7 @@ export default ({ navigation }) => {
       .replace(/\s\s*$/, "")
       .replace(replaceChar, "")
       .replace(/[^a-z|^A-Z|^0-9]/, "");
-    if (state === "newUsername" && item !== "") {
+    if (state === "newUsername") {
       setNewUsername(item);
     } else if (state === "firstName") {
       setFirstName(item);
@@ -563,34 +535,27 @@ export default ({ navigation }) => {
     }
   };
   const onSubmit = async () => {
-    try {
-      if (!isProfileSubmitted) {
-        setIsProfileSubmitted(true);
-        if (newUsername || newUsername !== "") {
-          {
-            const { editProfile } = await editProfileFn({
-              variables: {
-                username: newUsername,
-                bio,
-                gender,
-                firstName,
-                lastName,
-                nationalityCode,
-                residenceCode
-              }
-            });
-            logIn(editProfile);
-            setIsChanged(false);
-            profileRefetch();
-            toast("Profile edited");
-          }
-        }
+    if (!newUsername || newUsername === "") {
+      toast("Username could not be empty");
+    } else {
+      console.log("submit me.user.username", me.user.username);
+      console.log("submit username", username);
+      console.log("submit newUsername", newUsername);
+      console.log("1");
+      const {
+        data: { editProfile }
+      } = await editProfileFn();
+      if (editProfile) {
+        console.log("2");
+        console.log("editProfile", editProfile);
+        logIn(editProfile);
+        console.log("3");
+        setUsername(newUsername);
+        console.log("4");
+        setIsChanged(false);
+        console.log("5");
+        toast("Profile edited");
       }
-    } catch (e) {
-      console.log(e);
-      toast("Could not edit your profile");
-    } finally {
-      setIsProfileSubmitted(false);
     }
   };
   const handleEmailAddress = async () => {
@@ -639,17 +604,18 @@ export default ({ navigation }) => {
   };
   useEffect(() => {
     if (
-      newUsername !== user.username ||
+      newUsername !== me.user.username ||
       nationalityCode !==
-        ((user.profile.nationality && user.profile.nationality.countryCode) ||
+        ((me.user.profile.nationality &&
+          me.user.profile.nationality.countryCode) ||
           nationalityCode !== location.currentCountryCode) ||
       residenceCode !==
-        ((user.profile.residence && user.profile.residence.countryCode) ||
+        ((me.user.profile.residence && me.user.profile.residence.countryCode) ||
           residenceCode !== location.currentCountryCode) ||
-      gender !== profile.gender ||
-      firstName !== user.firstName ||
-      lastName !== user.lastName ||
-      bio !== user.profile.bio
+      gender !== me.user.profile.gender ||
+      firstName !== me.user.firstName ||
+      lastName !== me.user.lastName ||
+      bio !== me.user.profile.bio
     ) {
       setIsChanged(true);
     } else {
@@ -657,340 +623,334 @@ export default ({ navigation }) => {
     }
   });
   return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      {loading || deleteeLoading ? (
-        <LoaderContainer>
-          <Loader />
-        </LoaderContainer>
-      ) : (
-        <>
-          <Modal
-            isVisible={editPhoneModalOpen}
-            backdropColor={theme ? "#161616" : "#EFEFEF"}
-            onBackdropPress={() => closeEditPhoneModalOpen()}
-            onBackButtonPress={() =>
-              Platform.OS !== "ios" && closeEditPhoneModalOpen()
-            }
-            propagateSwipe={true}
-            scrollHorizontal={true}
-            backdropOpacity={0.9}
-            style={{ justifyContent: "center", alignItems: "center" }}
-          >
-            {isEditPhoneMode ? (
-              <>
-                <EditModalContainer>
-                  <CountryPicker
-                    theme={theme && DARK_THEME}
-                    countryCode={newCountryPhoneCode}
-                    withFilter={true}
-                    withFlag={true}
-                    withAlphaFilter={true}
-                    withEmoji={true}
-                    onSelect={onSelectrEditPhone}
-                  />
-                  {/* <Text>{newCountryPhoneCode}</Text> */}
-                  <Bigtext>{newCountryPhoneNumber}</Bigtext>
-                  <TextInput
-                    style={{
-                      width: 220,
-                      backgroundColor: "transparent",
-                      borderBottomWidth: 1,
-                      borderBottomColor: "#999",
-                      color: theme ? "white" : "black",
-                      marginLeft: 5,
-                      fontSize: 32,
-                      fontWeight: "300"
-                    }}
-                    keyboardType="phone-pad"
-                    returnKeyType="send"
-                    onChangeText={number => setNewPhoneNumber(number)}
-                  />
-                </EditModalContainer>
-                <ButtonContainer>
-                  <Text>
-                    When you tap "SEND SMS", Pinner will send a text with
-                    verification code. Message and data rates may apply. The
-                    verified phone number can be used to login.
-                  </Text>
-                  <Void />
-                  <SubmitButton
-                    disabled={startEditPhoneVerificationLoading}
-                    onPress={handlePhoneNumber}
-                  >
-                    <SubmitButtonContainer>
-                      {startEditPhoneVerificationLoading ? (
-                        <ActivityIndicator color={"#999"} />
-                      ) : (
-                        <SubmitButtonText>SEND SMS</SubmitButtonText>
-                      )}
-                    </SubmitButtonContainer>
-                  </SubmitButton>
-                </ButtonContainer>
-              </>
-            ) : (
-              <>
-                <TextInput
-                  style={{
-                    width: 220,
-                    backgroundColor: "transparent",
-                    borderBottomWidth: 1,
-                    borderBottomColor: "#999",
-                    color: theme ? "white" : "black",
-                    marginLeft: 5,
-                    fontSize: 32,
-                    fontWeight: "300",
-                    textAlign: "center"
-                  }}
-                  keyboardType="phone-pad"
-                  returnKeyType="send"
-                  onChangeText={number => setVerificationKey(number)}
-                />
-                <ButtonContainer>
-                  <Void />
-                  <SubmitButton
-                    disabled={completeEditPhoneVerificationLoading}
-                    onPress={handlePhoneVerification}
-                  >
-                    <SubmitButtonContainer>
-                      {completeEditPhoneVerificationLoading ? (
-                        <ActivityIndicator color={"#999"} />
-                      ) : (
-                        <SubmitButtonText>VERIFY KEY</SubmitButtonText>
-                      )}
-                    </SubmitButtonContainer>
-                  </SubmitButton>
-                </ButtonContainer>
-              </>
-            )}
-          </Modal>
-          <Modal
-            isVisible={editEmailModalOpen}
-            backdropColor={theme ? "#161616" : "#EFEFEF"}
-            onBackdropPress={() => closeEditEmailModalOpen()}
-            onBackButtonPress={() =>
-              Platform.OS !== "ios" && closeEditEmailModalOpen()
-            }
-            propagateSwipe={true}
-            scrollHorizontal={true}
-            backdropOpacity={0.9}
-            style={{ justifyContent: "center", alignItems: "center" }}
-          >
-            {isEditEmailMode ? (
-              <>
-                <EditModalContainer>
-                  <TextInput
-                    style={{
-                      width: constants.width - 80,
-                      backgroundColor: "transparent",
-                      borderBottomWidth: 1,
-                      borderBottomColor: "#999",
-                      color: theme ? "white" : "black",
-                      fontSize: 32,
-                      fontWeight: "300"
-                    }}
-                    keyboardType="email-address"
-                    returnKeyType="send"
-                    onChangeText={adress => setNewEmailAddress(adress)}
-                  />
-                </EditModalContainer>
-                <ButtonContainer>
-                  <Text>
-                    When you tap "SEND EMAIL", Pinner will email you a link that
-                    will instantly log you in.
-                  </Text>
-                  <Void />
-                  <SubmitButton
-                    disabled={startEditEmailVerificationLoading}
-                    onPress={handleEmailAddress}
-                  >
-                    <SubmitButtonContainer>
-                      {startEditEmailVerificationLoading ? (
-                        <ActivityIndicator color={"#999"} />
-                      ) : (
-                        <SubmitButtonText>SEND EMAIL</SubmitButtonText>
-                      )}
-                    </SubmitButtonContainer>
-                  </SubmitButton>
-                </ButtonContainer>
-              </>
-            ) : (
-              <>
-                <Text>{newEmailAddress}, an email has been sent</Text>
-                <Text>
-                  Please check your email in a moment to verify email address.
-                </Text>
-                <Text>Didn't receive a link?</Text>
-                {/* <Underline onClick={toggleVerifyEmailAddressModal}>
+    <>
+      <Modal
+        isVisible={editPhoneModalOpen}
+        backdropColor={theme ? "#161616" : "#EFEFEF"}
+        onBackdropPress={() => closeEditPhoneModalOpen()}
+        onBackButtonPress={() =>
+          Platform.OS !== "ios" && closeEditPhoneModalOpen()
+        }
+        propagateSwipe={true}
+        scrollHorizontal={true}
+        backdropOpacity={0.9}
+        style={{ justifyContent: "center", alignItems: "center" }}
+      >
+        {isEditPhoneMode ? (
+          <>
+            <EditModalContainer>
+              <CountryPicker
+                theme={theme && DARK_THEME}
+                countryCode={newCountryPhoneCode}
+                withFilter={true}
+                withFlag={true}
+                withAlphaFilter={true}
+                withEmoji={true}
+                onSelect={onSelectrEditPhone}
+              />
+              {/* <Text>{newCountryPhoneCode}</Text> */}
+              <Bigtext>{newCountryPhoneNumber}</Bigtext>
+              <TextInput
+                style={{
+                  width: 220,
+                  backgroundColor: "transparent",
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#999",
+                  color: theme ? "white" : "black",
+                  marginLeft: 5,
+                  fontSize: 32,
+                  fontWeight: "300"
+                }}
+                keyboardType="phone-pad"
+                returnKeyType="send"
+                onChangeText={number => setNewPhoneNumber(number)}
+              />
+            </EditModalContainer>
+            <ButtonContainer>
+              <Text>
+                When you tap "SEND SMS", Pinner will send a text with
+                verification code. Message and data rates may apply. The
+                verified phone number can be used to login.
+              </Text>
+              <Void />
+              <SubmitButton
+                disabled={startEditPhoneVerificationLoading}
+                onPress={handlePhoneNumber}
+              >
+                <SubmitButtonContainer>
+                  {startEditPhoneVerificationLoading ? (
+                    <ActivityIndicator color={"#999"} />
+                  ) : (
+                    <SubmitButtonText>SEND SMS</SubmitButtonText>
+                  )}
+                </SubmitButtonContainer>
+              </SubmitButton>
+            </ButtonContainer>
+          </>
+        ) : (
+          <>
+            <TextInput
+              style={{
+                width: 220,
+                backgroundColor: "transparent",
+                borderBottomWidth: 1,
+                borderBottomColor: "#999",
+                color: theme ? "white" : "black",
+                marginLeft: 5,
+                fontSize: 32,
+                fontWeight: "300",
+                textAlign: "center"
+              }}
+              keyboardType="phone-pad"
+              returnKeyType="send"
+              onChangeText={number => setVerificationKey(number)}
+            />
+            <ButtonContainer>
+              <Void />
+              <SubmitButton
+                disabled={completeEditPhoneVerificationLoading}
+                onPress={handlePhoneVerification}
+              >
+                <SubmitButtonContainer>
+                  {completeEditPhoneVerificationLoading ? (
+                    <ActivityIndicator color={"#999"} />
+                  ) : (
+                    <SubmitButtonText>VERIFY KEY</SubmitButtonText>
+                  )}
+                </SubmitButtonContainer>
+              </SubmitButton>
+            </ButtonContainer>
+          </>
+        )}
+      </Modal>
+      <Modal
+        isVisible={editEmailModalOpen}
+        backdropColor={theme ? "#161616" : "#EFEFEF"}
+        onBackdropPress={() => closeEditEmailModalOpen()}
+        onBackButtonPress={() =>
+          Platform.OS !== "ios" && closeEditEmailModalOpen()
+        }
+        propagateSwipe={true}
+        scrollHorizontal={true}
+        backdropOpacity={0.9}
+        style={{ justifyContent: "center", alignItems: "center" }}
+      >
+        {isEditEmailMode ? (
+          <>
+            <EditModalContainer>
+              <TextInput
+                style={{
+                  width: constants.width - 80,
+                  backgroundColor: "transparent",
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#999",
+                  color: theme ? "white" : "black",
+                  fontSize: 32,
+                  fontWeight: "300"
+                }}
+                keyboardType="email-address"
+                returnKeyType="send"
+                onChangeText={adress => setNewEmailAddress(adress)}
+              />
+            </EditModalContainer>
+            <ButtonContainer>
+              <Text>
+                When you tap "SEND EMAIL", Pinner will email you a link that
+                will instantly log you in.
+              </Text>
+              <Void />
+              <SubmitButton
+                disabled={startEditEmailVerificationLoading}
+                onPress={handleEmailAddress}
+              >
+                <SubmitButtonContainer>
+                  {startEditEmailVerificationLoading ? (
+                    <ActivityIndicator color={"#999"} />
+                  ) : (
+                    <SubmitButtonText>SEND EMAIL</SubmitButtonText>
+                  )}
+                </SubmitButtonContainer>
+              </SubmitButton>
+            </ButtonContainer>
+          </>
+        ) : (
+          <>
+            <Text>{newEmailAddress}, an email has been sent</Text>
+            <Text>
+              Please check your email in a moment to verify email address.
+            </Text>
+            <Text>Didn't receive a link?</Text>
+            {/* <Underline onClick={toggleVerifyEmailAddressModal}>
                   Use a different email
                 </Underline> */}
-              </>
-            )}
-          </Modal>
-          <View>
-            <Bold>EDIT PROFILE</Bold>
-            <ToggleContainer>
-              <Item>
-                <ToggleText>USERNAME</ToggleText>
-                <TextInput
-                  style={{
-                    width: constants.width / 2,
-                    backgroundColor: "transparent",
-                    borderBottomWidth: 1,
-                    borderBottomColor: "#999",
-                    color: "#999"
-                  }}
-                  value={newUsername}
-                  returnKeyType="done"
-                  onChangeText={text => onInputTextChange(text, "newUsername")}
-                  autoCorrect={false}
+          </>
+        )}
+      </Modal>
+      <ScrollView>
+        <View>
+          <Bold>EDIT PROFILE</Bold>
+          <ToggleContainer>
+            <Item>
+              <ToggleText>USERNAME</ToggleText>
+              <TextInput
+                style={{
+                  width: constants.width / 2,
+                  backgroundColor: "transparent",
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#999",
+                  color: "#999"
+                }}
+                value={newUsername}
+                returnKeyType="done"
+                onChangeText={text => onInputTextChange(text, "newUsername")}
+                autoCorrect={false}
+              />
+            </Item>
+            <ExplainText>
+              Default username is automatically generated. Set your own username
+              here. Your username cannot be any combination of numbers or
+              symbols.
+            </ExplainText>
+            <CountryContainer>
+              <CountryItem>
+                <ToggleText>NATIONALITY</ToggleText>
+                <ExplainText>Your Nationality to match</ExplainText>
+              </CountryItem>
+              <CountryView>
+                <CountryPicker
+                  theme={theme && DARK_THEME}
+                  countryCode={nationalityCode}
+                  withFilter={true}
+                  withFlag={true}
+                  withAlphaFilter={true}
+                  withEmoji={true}
+                  onSelect={onSelectNationality}
                 />
-              </Item>
-              <ExplainText>
-                Default username is automatically generated. Set your own
-                username here. Your username cannot be any combination of
-                numbers or symbols.
-              </ExplainText>
-              <CountryContainer>
-                <CountryItem>
-                  <ToggleText>NATIONALITY</ToggleText>
-                  <ExplainText>Your Nationality to match</ExplainText>
-                </CountryItem>
-                <CountryView>
-                  <CountryPicker
-                    theme={theme && DARK_THEME}
-                    countryCode={nationalityCode}
-                    withFilter={true}
-                    withFlag={true}
-                    withAlphaFilter={true}
-                    withEmoji={true}
-                    onSelect={onSelectNationality}
-                  />
-                  <FlagExplainText>
-                    {countries.find(i => i.code === nationalityCode).name}
-                  </FlagExplainText>
-                </CountryView>
-              </CountryContainer>
-              <CountryContainer>
-                <CountryItem>
-                  <ToggleText>RESIDENCE</ToggleText>
-                  <ExplainText>Your Residence to match</ExplainText>
-                </CountryItem>
-                <CountryView>
-                  <CountryPicker
-                    theme={theme && DARK_THEME}
-                    countryCode={residenceCode}
-                    withFilter={true}
-                    withFlag={true}
-                    withAlphaFilter={true}
-                    withEmoji={true}
-                    onSelect={onSelectrRsidence}
-                  />
-                  <FlagExplainText>
-                    {countries.find(i => i.code === residenceCode).name}
-                  </FlagExplainText>
-                </CountryView>
-              </CountryContainer>
-              <Item>
-                <ToggleText>GENDER</ToggleText>
-                {gender ? (
-                  <Touchable onPress={() => onOpenGenderActionSheet()}>
-                    <EmptyView>
-                      {(() => {
-                        switch (gender) {
-                          case "MALE":
-                            return <Text>Male</Text>;
-                          case "FEMALE":
-                            return <Text>Female</Text>;
-                          case "OTHER":
-                            return <Text>Other</Text>;
-                          default:
-                            return null;
-                        }
-                      })()}
-                    </EmptyView>
-                  </Touchable>
-                ) : (
-                  <ToggleIcon onPress={() => onOpenGenderActionSheet()}>
-                    <Ionicons
-                      size={20}
-                      name={
-                        Platform.OS === "ios"
-                          ? "ios-radio-button-off"
-                          : "md-radio-button-off"
+                <FlagExplainText>
+                  {countries.find(i => i.code === nationalityCode).name}
+                </FlagExplainText>
+              </CountryView>
+            </CountryContainer>
+            <CountryContainer>
+              <CountryItem>
+                <ToggleText>RESIDENCE</ToggleText>
+                <ExplainText>Your Residence to match</ExplainText>
+              </CountryItem>
+              <CountryView>
+                <CountryPicker
+                  theme={theme && DARK_THEME}
+                  countryCode={residenceCode}
+                  withFilter={true}
+                  withFlag={true}
+                  withAlphaFilter={true}
+                  withEmoji={true}
+                  onSelect={onSelectrRsidence}
+                />
+                <FlagExplainText>
+                  {countries.find(i => i.code === residenceCode).name}
+                </FlagExplainText>
+              </CountryView>
+            </CountryContainer>
+            <Item>
+              <ToggleText>GENDER</ToggleText>
+              {gender ? (
+                <Touchable onPress={() => onOpenGenderActionSheet()}>
+                  <EmptyView>
+                    {(() => {
+                      switch (gender) {
+                        case "MALE":
+                          return <Text>Male</Text>;
+                        case "FEMALE":
+                          return <Text>Female</Text>;
+                        case "OTHER":
+                          return <Text>Other</Text>;
+                        default:
+                          return null;
                       }
-                      color={"#999"}
-                    />
-                  </ToggleIcon>
-                )}
-              </Item>
-              <ExplainText>Your gender to match</ExplainText>
-              <Item>
-                <ToggleText>FIRSTNAME</ToggleText>
-                <TextInput
-                  style={{
-                    width: constants.width / 2,
-                    backgroundColor: "transparent",
-                    borderBottomWidth: 1,
-                    borderBottomColor: "#999",
-                    color: "#999"
-                  }}
-                  value={firstName}
-                  returnKeyType="done"
-                  onChangeText={text => onInputTextChange(text, "firstName")}
-                  autoCorrect={false}
-                />
-              </Item>
-              <ExplainText>Your firstname</ExplainText>
-              <Item>
-                <ToggleText>LASTNAME</ToggleText>
-                <TextInput
-                  style={{
-                    width: constants.width / 2,
-                    backgroundColor: "transparent",
-                    borderBottomWidth: 1,
-                    borderBottomColor: "#999",
-                    color: "#999"
-                  }}
-                  value={lastName}
-                  returnKeyType="done"
-                  onChangeText={text => onInputTextChange(text, "lastName")}
-                  autoCorrect={false}
-                />
-              </Item>
-              <ExplainText>Your lastname</ExplainText>
-              <Item>
-                <TextInput
-                  style={{
-                    width: constants.width - 30,
-                    backgroundColor: "transparent",
-                    borderBottomWidth: 1,
-                    borderBottomColor: "#999",
-                    color: "#999",
-                    marginBottom: 10
-                  }}
-                  placeholderTextColor="#999"
-                  value={bio}
-                  placeholder={"BIO"}
-                  returnKeyType="done"
-                  onChangeText={text => setBio(text)}
-                  autoCorrect={false}
-                />
-              </Item>
-              <ExplainText>
-                Your BIO is displayed on your profile. You can write about who
-                you are and what you're looking for on Pinner. You can also add
-                links to your website and profiles on other websites, like
-                Instagram or your blog for example.
-              </ExplainText>
-              <Item>
-                <SubmitText isChanged={isChanged}>SUBMIT</SubmitText>
-                <Touchable disabled={editProfileLoading} onPress={onPress}>
+                    })()}
+                  </EmptyView>
+                </Touchable>
+              ) : (
+                <ToggleIcon onPress={() => onOpenGenderActionSheet()}>
                   <Ionicons
-                    size={20}
+                    size={18}
+                    name={
+                      Platform.OS === "ios"
+                        ? "ios-radio-button-off"
+                        : "md-radio-button-off"
+                    }
+                    color={"#999"}
+                  />
+                </ToggleIcon>
+              )}
+            </Item>
+            <ExplainText>Your gender to match</ExplainText>
+            <Item>
+              <ToggleText>FIRSTNAME</ToggleText>
+              <TextInput
+                style={{
+                  width: constants.width / 2,
+                  backgroundColor: "transparent",
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#999",
+                  color: "#999"
+                }}
+                value={firstName}
+                returnKeyType="done"
+                onChangeText={text => onInputTextChange(text, "firstName")}
+                autoCorrect={false}
+              />
+            </Item>
+            <ExplainText>Your firstname</ExplainText>
+            <Item>
+              <ToggleText>LASTNAME</ToggleText>
+              <TextInput
+                style={{
+                  width: constants.width / 2,
+                  backgroundColor: "transparent",
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#999",
+                  color: "#999"
+                }}
+                value={lastName}
+                returnKeyType="done"
+                onChangeText={text => onInputTextChange(text, "lastName")}
+                autoCorrect={false}
+              />
+            </Item>
+            <ExplainText>Your lastname</ExplainText>
+            <Item>
+              <TextInput
+                style={{
+                  width: constants.width - 30,
+                  backgroundColor: "transparent",
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#999",
+                  color: "#999",
+                  marginBottom: 10
+                }}
+                placeholderTextColor="#999"
+                value={bio}
+                placeholder={"BIO"}
+                returnKeyType="done"
+                onChangeText={text => setBio(text)}
+                autoCorrect={false}
+              />
+            </Item>
+            <ExplainText>
+              Your BIO is displayed on your profile. You can write about who you
+              are and what you're looking for on Pinner. You can also add links
+              to your website and profiles on other websites, like Instagram or
+              your blog for example.
+            </ExplainText>
+            <Item>
+              <SubmitText isChanged={isChanged}>SUBMIT</SubmitText>
+              <Touchable disabled={editProfileLoading} onPress={onPress}>
+                {editProfileLoading ? (
+                  <ActivityIndicator color={isChanged ? "#d60000" : "#999"} />
+                ) : (
+                  <Ionicons
+                    size={18}
                     name={
                       Platform.OS === "ios"
                         ? submitModal
@@ -1002,146 +962,145 @@ export default ({ navigation }) => {
                     }
                     color={isChanged ? "#d60000" : "#999"}
                   />
+                )}
+              </Touchable>
+            </Item>
+            <ExplainText isChanged={isChanged}>
+              {isChanged && "Your "}
+              {newUsername !== me.user.username && "USERNAME "}
+              {nationalityCode !==
+                ((me.user.profile.nationality &&
+                  me.user.profile.nationality.countryCode) ||
+                  nationalityCode !== location.currentCountryCode) &&
+                "NATIONALITY "}
+              {residenceCode !==
+                ((me.user.profile.residence &&
+                  me.user.profile.residence.countryCode) ||
+                  residenceCode !== location.currentCountryCode) &&
+                "RESIDENCE "}
+              {gender !== me.user.profile.gender && "GENDER "}
+              {firstName !== me.user.firstName && "FIRSTNAME "}
+              {lastName !== me.user.lastName && "LASTNAME "}
+              {bio !== me.user.profile.bio && "BIO "}
+              {isChanged && "is changed. Please press submit button to save."}
+            </ExplainText>
+            <Item>
+              <ToggleText>PHONE</ToggleText>
+              {countryPhoneCode && countryPhoneNumber ? (
+                <Touchable onPress={() => setEditPhoneModalOpen(true)}>
+                  <ToggleText>
+                    {countries.find(i => i.code === countryPhoneCode).emoji}
+                    &nbsp;
+                    {countryPhoneNumber}&nbsp;
+                    {phoneNumber}
+                  </ToggleText>
                 </Touchable>
-              </Item>
-              <ExplainText isChanged={isChanged}>
-                {isChanged && "Your "}
-                {newUsername !== navigation.getParam("username") && "USERNAME "}
-                {nationalityCode !==
-                  ((user.profile.nationality &&
-                    user.profile.nationality.countryCode) ||
-                    nationalityCode !== location.currentCountryCode) &&
-                  "NATIONALITY "}
-                {residenceCode !==
-                  ((user.profile.residence &&
-                    user.profile.residence.countryCode) ||
-                    residenceCode !== location.currentCountryCode) &&
-                  "RESIDENCE "}
-                {gender !== user.profile.gender && "GENDER "}
-                {firstName !== user.firstName && "FIRSTNAME "}
-                {lastName !== user.lastName && "LASTNAME "}
-                {bio !== user.profile.bio && "BIO "}
-                {isChanged && "is changed. Please press submit button to save."}
-              </ExplainText>
-              <Item>
-                <ToggleText>PHONE</ToggleText>
-                {countryPhoneCode && countryPhoneNumber ? (
-                  <Touchable onPress={() => setEditPhoneModalOpen(true)}>
-                    <ToggleText>
-                      {countries.find(i => i.code === countryPhoneCode).emoji}
-                      &nbsp;
-                      {countryPhoneNumber}&nbsp;
-                      {phoneNumber}
-                    </ToggleText>
-                  </Touchable>
-                ) : (
-                  <ToggleIcon onPress={() => setEditPhoneModalOpen(true)}>
-                    <Ionicons
-                      size={20}
-                      name={
-                        Platform.OS === "ios"
-                          ? "ios-radio-button-off"
-                          : "md-radio-button-off"
-                      }
-                      color={"#999"}
-                    />
-                  </ToggleIcon>
-                )}
-              </Item>
-              {profile.isVerifiedPhoneNumber ? (
-                <ExplainText>
-                  Your phone number is already verified in&nbsp;
-                  {countries.find(i => i.code === countryPhoneCode).name}.
-                </ExplainText>
               ) : (
-                <ExplainText>Verify your phone number to login.</ExplainText>
-              )}
-              <Item>
-                <ToggleText>EMAIL</ToggleText>
-                {emailAddress ? (
-                  <Touchable onPress={() => setEditEmailModalOpen(true)}>
-                    <ToggleText>{emailAddress}</ToggleText>
-                  </Touchable>
-                ) : (
-                  <ToggleIcon onPress={() => setEditEmailModalOpen(true)}>
-                    <Ionicons
-                      size={20}
-                      name={
-                        Platform.OS === "ios"
-                          ? "ios-radio-button-off"
-                          : "md-radio-button-off"
-                      }
-                      color={"#999"}
-                    />
-                  </ToggleIcon>
-                )}
-              </Item>
-              {profile.isVerifiedEmailAddress ? (
-                <ExplainText>
-                  Your email address is already verified.
-                </ExplainText>
-              ) : (
-                <ExplainText>Verify your email address to login.</ExplainText>
-              )}
-              <Bold>SETTINGS</Bold>
-              <Item>
-                <ToggleText>DARK MODE</ToggleText>
-                <ToggleIcon
-                  disabled={toggleSettingsLoading}
-                  onPress={toggleTheme}
-                >
+                <ToggleIcon onPress={() => setEditPhoneModalOpen(true)}>
                   <Ionicons
-                    size={20}
+                    size={18}
                     name={
                       Platform.OS === "ios"
-                        ? theme
-                          ? "ios-radio-button-on"
-                          : "ios-radio-button-off"
-                        : theme
-                        ? "md-radio-button-on"
+                        ? "ios-radio-button-off"
                         : "md-radio-button-off"
                     }
                     color={"#999"}
                   />
                 </ToggleIcon>
-              </Item>
-              {isDarkMode ? (
-                <ExplainText>Set to make light background.</ExplainText>
-              ) : (
-                <ExplainText>Set to make dark background.</ExplainText>
               )}
-
-              <Item>
-                <ToggleText>HIDE TRIPS</ToggleText>
-                <ToggleIcon
-                  disabled={toggleSettingsLoading}
-                  onPress={() => onPressToggleIcon("HIDE_TRIPS")}
-                >
-                  <Ionicons
-                    size={20}
-                    name={
-                      Platform.OS === "ios"
-                        ? isHideTrips
-                          ? "ios-radio-button-on"
-                          : "ios-radio-button-off"
-                        : isHideTrips
-                        ? "md-radio-button-on"
-                        : "md-radio-button-off"
-                    }
-                    color={"#999"}
-                  />
-                </ToggleIcon>
-              </Item>
+            </Item>
+            {profile.isVerifiedPhoneNumber ? (
               <ExplainText>
-                If you set your trips hide, only you can see your trips,
-                otherwise only number of trips and your trip distance are shown.
+                Your phone number is already verified in&nbsp;
+                {countries.find(i => i.code === countryPhoneCode).name}.
               </ExplainText>
+            ) : (
+              <ExplainText>Verify your phone number to login.</ExplainText>
+            )}
+            <Item>
+              <ToggleText>EMAIL</ToggleText>
+              {emailAddress ? (
+                <Touchable onPress={() => setEditEmailModalOpen(true)}>
+                  <ToggleText>{emailAddress}</ToggleText>
+                </Touchable>
+              ) : (
+                <ToggleIcon onPress={() => setEditEmailModalOpen(true)}>
+                  <Ionicons
+                    size={18}
+                    name={
+                      Platform.OS === "ios"
+                        ? "ios-radio-button-off"
+                        : "md-radio-button-off"
+                    }
+                    color={"#999"}
+                  />
+                </ToggleIcon>
+              )}
+            </Item>
+            {profile.isVerifiedEmailAddress ? (
+              <ExplainText>Your email address is already verified.</ExplainText>
+            ) : (
+              <ExplainText>Verify your email address to login.</ExplainText>
+            )}
+            <Bold>SETTINGS</Bold>
+            <Item>
+              <ToggleText>DARK MODE</ToggleText>
+              <ToggleIcon
+                disabled={toggleSettingsLoading}
+                onPress={toggleTheme}
+              >
+                <Ionicons
+                  size={18}
+                  name={
+                    Platform.OS === "ios"
+                      ? theme
+                        ? "ios-radio-button-on"
+                        : "ios-radio-button-off"
+                      : theme
+                      ? "md-radio-button-on"
+                      : "md-radio-button-off"
+                  }
+                  color={"#999"}
+                />
+              </ToggleIcon>
+            </Item>
+            {isDarkMode ? (
+              <ExplainText>Set to make light background.</ExplainText>
+            ) : (
+              <ExplainText>Set to make dark background.</ExplainText>
+            )}
 
-              {/* <Item>
+            <Item>
+              <ToggleText>HIDE TRIPS</ToggleText>
+              <ToggleIcon
+                disabled={toggleSettingsLoading}
+                onPress={() => onPressToggleIcon("HIDE_TRIPS")}
+              >
+                <Ionicons
+                  size={18}
+                  name={
+                    Platform.OS === "ios"
+                      ? isHideTrips
+                        ? "ios-radio-button-on"
+                        : "ios-radio-button-off"
+                      : isHideTrips
+                      ? "md-radio-button-on"
+                      : "md-radio-button-off"
+                  }
+                  color={"#999"}
+                />
+              </ToggleIcon>
+            </Item>
+            <ExplainText>
+              If you set your trips hide, only you can see your trips, otherwise
+              only number of trips and your trip distance are shown.
+            </ExplainText>
+
+            {/* <Item>
               <ToggleText>HIDE COFFEES</ToggleText>
               <ToggleIcon  disabled={toggleSettingsLoading} onPress={() => onPressToggleIcon("HIDE_COFFEES")}>
                 <Ionicons
-                  size={20}
+                  size={18}
                   name={
                     Platform.OS === "ios"
                       ? isHideCoffees
@@ -1160,131 +1119,134 @@ export default ({ navigation }) => {
               request, otherwise only number of coffees request is shown.
             </ExplainText> */}
 
-              <Item>
-                <ToggleText>HIDE CITIES</ToggleText>
-                <ToggleIcon
-                  disabled={toggleSettingsLoading}
-                  onPress={() => onPressToggleIcon("HIDE_CITIES")}
-                >
-                  <Ionicons
-                    size={20}
-                    name={
-                      Platform.OS === "ios"
-                        ? isHideCities
-                          ? "ios-radio-button-on"
-                          : "ios-radio-button-off"
-                        : isHideCities
-                        ? "md-radio-button-on"
-                        : "md-radio-button-off"
-                    }
-                    color={"#999"}
-                  />
-                </ToggleIcon>
-              </Item>
-              <ExplainText>
-                If you set your cities hide, only you can see cities where
-                you've been before, otherwise only number of cities is shown.
-              </ExplainText>
+            <Item>
+              <ToggleText>HIDE CITIES</ToggleText>
+              <ToggleIcon
+                disabled={toggleSettingsLoading}
+                onPress={() => onPressToggleIcon("HIDE_CITIES")}
+              >
+                <Ionicons
+                  size={18}
+                  name={
+                    Platform.OS === "ios"
+                      ? isHideCities
+                        ? "ios-radio-button-on"
+                        : "ios-radio-button-off"
+                      : isHideCities
+                      ? "md-radio-button-on"
+                      : "md-radio-button-off"
+                  }
+                  color={"#999"}
+                />
+              </ToggleIcon>
+            </Item>
+            <ExplainText>
+              If you set your cities hide, only you can see cities where you've
+              been before, otherwise only number of cities is shown.
+            </ExplainText>
 
-              <Item>
-                <ToggleText>HIDE COUNTRIES</ToggleText>
-                <ToggleIcon onPress={() => onPressToggleIcon("HIDE_COUNTRIES")}>
-                  <Ionicons
-                    size={20}
-                    name={
-                      Platform.OS === "ios"
-                        ? isHideCountries
-                          ? "ios-radio-button-on"
-                          : "ios-radio-button-off"
-                        : isHideCities
-                        ? "md-radio-button-on"
-                        : "md-radio-button-off"
-                    }
-                    color={"#999"}
-                  />
-                </ToggleIcon>
-              </Item>
-              <ExplainText>
-                If you set your coutries hide, only you can see countries where
-                you've been before, otherwise only number of countries is shown.
-              </ExplainText>
+            <Item>
+              <ToggleText>HIDE COUNTRIES</ToggleText>
+              <ToggleIcon onPress={() => onPressToggleIcon("HIDE_COUNTRIES")}>
+                <Ionicons
+                  size={18}
+                  name={
+                    Platform.OS === "ios"
+                      ? isHideCountries
+                        ? "ios-radio-button-on"
+                        : "ios-radio-button-off"
+                      : isHideCities
+                      ? "md-radio-button-on"
+                      : "md-radio-button-off"
+                  }
+                  color={"#999"}
+                />
+              </ToggleIcon>
+            </Item>
+            <ExplainText>
+              If you set your coutries hide, only you can see countries where
+              you've been before, otherwise only number of countries is shown.
+            </ExplainText>
 
-              <Item>
-                <ToggleText>HIDE CONTINENTS</ToggleText>
-                <ToggleIcon
-                  disabled={toggleSettingsLoading}
-                  onPress={() => onPressToggleIcon("HIDE_CONTINENTS")}
-                >
-                  <Ionicons
-                    size={20}
-                    name={
-                      Platform.OS === "ios"
-                        ? isHideContinents
-                          ? "ios-radio-button-on"
-                          : "ios-radio-button-off"
-                        : isHideContinents
-                        ? "md-radio-button-on"
-                        : "md-radio-button-off"
-                    }
-                    color={"#999"}
-                  />
-                </ToggleIcon>
-              </Item>
-              <ExplainText>
-                If you set your coutries hide, only you can see countries where
-                you've been before, otherwise only number of countries is shown.
-              </ExplainText>
+            <Item>
+              <ToggleText>HIDE CONTINENTS</ToggleText>
+              <ToggleIcon
+                disabled={toggleSettingsLoading}
+                onPress={() => onPressToggleIcon("HIDE_CONTINENTS")}
+              >
+                <Ionicons
+                  size={18}
+                  name={
+                    Platform.OS === "ios"
+                      ? isHideContinents
+                        ? "ios-radio-button-on"
+                        : "ios-radio-button-off"
+                      : isHideContinents
+                      ? "md-radio-button-on"
+                      : "md-radio-button-off"
+                  }
+                  color={"#999"}
+                />
+              </ToggleIcon>
+            </Item>
+            <ExplainText>
+              If you set your coutries hide, only you can see countries where
+              you've been before, otherwise only number of countries is shown.
+            </ExplainText>
 
-              <Item>
-                <ToggleText>AUTO LOCATION REPORT</ToggleText>
-                <ToggleIcon
-                  disabled={toggleSettingsLoading}
-                  onPress={() => onPressToggleIcon("AUTO_LOCATION_REPORT")}
-                >
-                  <Ionicons
-                    size={20}
-                    name={
-                      Platform.OS === "ios"
-                        ? isAutoLocationReport
-                          ? "ios-radio-button-on"
-                          : "ios-radio-button-off"
-                        : isAutoLocationReport
-                        ? "md-radio-button-on"
-                        : "md-radio-button-off"
-                    }
-                    color={"#999"}
-                  />
-                </ToggleIcon>
-              </Item>
-              <ExplainText>
-                If you set auto location report off, the app cannot find where
-                you are. Your lacation will be shown on your profile
-              </ExplainText>
-              <Bold>ACCOUNT</Bold>
-              <Item>
-                <ToggleText>LOG OUT</ToggleText>
-                <Touchable onPress={() => onLogout()}>
-                  <Ionicons
-                    size={20}
-                    name={
-                      Platform.OS === "ios"
-                        ? logoutModal
-                          ? "ios-radio-button-on"
-                          : "ios-radio-button-off"
-                        : logoutModal
-                        ? "md-radio-button-on"
-                        : "md-radio-button-off"
-                    }
-                    color={"#999"}
-                  />
-                </Touchable>
-              </Item>
+            <Item>
+              <ToggleText>AUTO LOCATION REPORT</ToggleText>
+              <ToggleIcon
+                disabled={toggleSettingsLoading}
+                onPress={() => onPressToggleIcon("AUTO_LOCATION_REPORT")}
+              >
+                <Ionicons
+                  size={18}
+                  name={
+                    Platform.OS === "ios"
+                      ? isAutoLocationReport
+                        ? "ios-radio-button-on"
+                        : "ios-radio-button-off"
+                      : isAutoLocationReport
+                      ? "md-radio-button-on"
+                      : "md-radio-button-off"
+                  }
+                  color={"#999"}
+                />
+              </ToggleIcon>
+            </Item>
+            <ExplainText>
+              If you set auto location report off, the app cannot find where you
+              are. Your lacation will be shown on your profile
+            </ExplainText>
+            <Bold>ACCOUNT</Bold>
+            <Item>
+              <ToggleText>LOG OUT</ToggleText>
+              <Touchable onPress={() => onLogout()}>
+                <Ionicons
+                  size={18}
+                  name={
+                    Platform.OS === "ios"
+                      ? logoutModal
+                        ? "ios-radio-button-on"
+                        : "ios-radio-button-off"
+                      : logoutModal
+                      ? "md-radio-button-on"
+                      : "md-radio-button-off"
+                  }
+                  color={"#999"}
+                />
+              </Touchable>
+            </Item>
 
-              <Item>
-                <ToggleText>DELETE PROFILE</ToggleText>
-                <Touchable onPress={() => onDelete()}>
+            <Item>
+              <ToggleText>DELETE PROFILE</ToggleText>
+              <Touchable disabled={deleteeLoading} onPress={() => onDelete()}>
+                {deleteeLoading ? (
+                  <ActivityIndicator color={"white"} />
+                ) : (
                   <Ionicons
-                    size={20}
+                    size={18}
                     name={
                       Platform.OS === "ios"
                         ? deleteModal
@@ -1296,16 +1258,16 @@ export default ({ navigation }) => {
                     }
                     color={"#999"}
                   />
-                </Touchable>
-              </Item>
-              <ExplainText>
-                Once you delete an account, there is no going back. Please be
-                certain.
-              </ExplainText>
-            </ToggleContainer>
-          </View>
-        </>
-      )}
-    </ScrollView>
+                )}
+              </Touchable>
+            </Item>
+            <ExplainText>
+              Once you delete an account, there is no going back. Please be
+              certain.
+            </ExplainText>
+          </ToggleContainer>
+        </View>
+      </ScrollView>
+    </>
   );
 };

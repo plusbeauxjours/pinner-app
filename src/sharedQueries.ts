@@ -5,23 +5,56 @@ export const ME = gql`
   query Me {
     me {
       user {
+        id
         username
+        firstName
+        lastName
         profile {
           id
+          bio
           gender
-          residence {
-            countryEmoji
-            ...CountryParts
-          }
+          avatarUrl
+          appAvatarUrl
+          website
+          distance
+          countryPhoneNumber
+          countryPhoneCode
+          phoneNumber
+          emailAddress
+          isVerifiedPhoneNumber
+          isVerifiedEmailAddress
           nationality {
             countryEmoji
             ...CountryParts
           }
-          avatarUrl
-          appAvatarUrl
+          residence {
+            countryEmoji
+            ...CountryParts
+          }
+          postCount
+          tripCount
+          coffeeCount
+          cityCount
+          countryCount
+          continentCount
+          isSelf
+          isDarkMode
+          isHideTrips
+          isHideCoffees
+          isHideCities
+          isHideCountries
+          isHideContinents
+          isAutoLocationReport
           currentCity {
-            cityId
+            latitude
+            longitude
             cityName
+            cityId
+            cityPhoto
+            country {
+              countryName
+              countryCode
+            }
           }
         }
       }

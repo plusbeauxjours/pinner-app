@@ -555,52 +555,6 @@ export interface StartEmailVerificationVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: CompleteEmailVerification
-// ====================================================
-
-export interface CompleteEmailVerification_completeEmailVerification_user_profile_currentCity {
-  __typename: "CityType";
-  cityId: string | null;
-  cityName: string | null;
-}
-
-export interface CompleteEmailVerification_completeEmailVerification_user_profile {
-  __typename: "ProfileType";
-  avatarUrl: string | null;
-  appAvatarUrl: string | null;
-  currentCity: CompleteEmailVerification_completeEmailVerification_user_profile_currentCity | null;
-}
-
-export interface CompleteEmailVerification_completeEmailVerification_user {
-  __typename: "UserType";
-  /**
-   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
-   */
-  username: string;
-  profile: CompleteEmailVerification_completeEmailVerification_user_profile | null;
-}
-
-export interface CompleteEmailVerification_completeEmailVerification {
-  __typename: "CompleteEmailVerificationResponse";
-  ok: boolean | null;
-  token: string | null;
-  user: CompleteEmailVerification_completeEmailVerification_user | null;
-}
-
-export interface CompleteEmailVerification {
-  completeEmailVerification: CompleteEmailVerification_completeEmailVerification;
-}
-
-export interface CompleteEmailVerificationVariables {
-  key: string;
-  cityId: string;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
 // GraphQL mutation operation: StartPhoneVerification
 // ====================================================
 
@@ -1289,6 +1243,177 @@ export interface MarkAsReadMatchVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: CompleteEditEmailVerification
+// ====================================================
+
+export interface CompleteEditEmailVerification_completeEditEmailVerification_user_profile_residence_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
+export interface CompleteEditEmailVerification_completeEditEmailVerification_user_profile_residence {
+  __typename: "CountryType";
+  countryEmoji: string | null;
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryPhoto: string | null;
+  countryThumbnail: string | null;
+  cityCount: number | null;
+  continent: CompleteEditEmailVerification_completeEditEmailVerification_user_profile_residence_continent | null;
+}
+
+export interface CompleteEditEmailVerification_completeEditEmailVerification_user_profile_nationality_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
+export interface CompleteEditEmailVerification_completeEditEmailVerification_user_profile_nationality {
+  __typename: "CountryType";
+  countryEmoji: string | null;
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryPhoto: string | null;
+  countryThumbnail: string | null;
+  cityCount: number | null;
+  continent: CompleteEditEmailVerification_completeEditEmailVerification_user_profile_nationality_continent | null;
+}
+
+export interface CompleteEditEmailVerification_completeEditEmailVerification_user_profile_currentCity {
+  __typename: "CityType";
+  cityId: string | null;
+  cityName: string | null;
+}
+
+export interface CompleteEditEmailVerification_completeEditEmailVerification_user_profile {
+  __typename: "ProfileType";
+  id: string;
+  gender: ProfileGender | null;
+  residence: CompleteEditEmailVerification_completeEditEmailVerification_user_profile_residence | null;
+  nationality: CompleteEditEmailVerification_completeEditEmailVerification_user_profile_nationality | null;
+  avatarUrl: string | null;
+  appAvatarUrl: string | null;
+  currentCity: CompleteEditEmailVerification_completeEditEmailVerification_user_profile_currentCity | null;
+}
+
+export interface CompleteEditEmailVerification_completeEditEmailVerification_user {
+  __typename: "UserType";
+  /**
+   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+   */
+  username: string;
+  profile: CompleteEditEmailVerification_completeEditEmailVerification_user_profile | null;
+}
+
+export interface CompleteEditEmailVerification_completeEditEmailVerification {
+  __typename: "CompleteEditEmailVerificationResponse";
+  ok: boolean | null;
+  token: string | null;
+  user: CompleteEditEmailVerification_completeEditEmailVerification_user | null;
+}
+
+export interface CompleteEditEmailVerification {
+  completeEditEmailVerification: CompleteEditEmailVerification_completeEditEmailVerification;
+}
+
+export interface CompleteEditEmailVerificationVariables {
+  key: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: CompleteEmailVerification
+// ====================================================
+
+export interface CompleteEmailVerification_completeEmailVerification_user_profile_residence_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
+export interface CompleteEmailVerification_completeEmailVerification_user_profile_residence {
+  __typename: "CountryType";
+  countryEmoji: string | null;
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryPhoto: string | null;
+  countryThumbnail: string | null;
+  cityCount: number | null;
+  continent: CompleteEmailVerification_completeEmailVerification_user_profile_residence_continent | null;
+}
+
+export interface CompleteEmailVerification_completeEmailVerification_user_profile_nationality_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
+export interface CompleteEmailVerification_completeEmailVerification_user_profile_nationality {
+  __typename: "CountryType";
+  countryEmoji: string | null;
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryPhoto: string | null;
+  countryThumbnail: string | null;
+  cityCount: number | null;
+  continent: CompleteEmailVerification_completeEmailVerification_user_profile_nationality_continent | null;
+}
+
+export interface CompleteEmailVerification_completeEmailVerification_user_profile_currentCity {
+  __typename: "CityType";
+  cityId: string | null;
+  cityName: string | null;
+}
+
+export interface CompleteEmailVerification_completeEmailVerification_user_profile {
+  __typename: "ProfileType";
+  id: string;
+  gender: ProfileGender | null;
+  residence: CompleteEmailVerification_completeEmailVerification_user_profile_residence | null;
+  nationality: CompleteEmailVerification_completeEmailVerification_user_profile_nationality | null;
+  avatarUrl: string | null;
+  appAvatarUrl: string | null;
+  currentCity: CompleteEmailVerification_completeEmailVerification_user_profile_currentCity | null;
+}
+
+export interface CompleteEmailVerification_completeEmailVerification_user {
+  __typename: "UserType";
+  /**
+   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+   */
+  username: string;
+  profile: CompleteEmailVerification_completeEmailVerification_user_profile | null;
+}
+
+export interface CompleteEmailVerification_completeEmailVerification {
+  __typename: "CompleteEmailVerificationResponse";
+  ok: boolean | null;
+  token: string | null;
+  user: CompleteEmailVerification_completeEmailVerification_user | null;
+}
+
+export interface CompleteEmailVerification {
+  completeEmailVerification: CompleteEmailVerification_completeEmailVerification;
+}
+
+export interface CompleteEmailVerificationVariables {
+  key: string;
+  cityId: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: RecommendUsers
 // ====================================================
 
@@ -1336,17 +1461,10 @@ export interface RecommendUsersVariables {
 // GraphQL query operation: RecommendLocations
 // ====================================================
 
-export interface RecommendLocations_recommendLocations_cities_country_continent {
-  __typename: "ContinentType";
-  continentCode: string | null;
-  continentName: string | null;
-}
-
 export interface RecommendLocations_recommendLocations_cities_country {
   __typename: "CountryType";
   countryName: string | null;
   countryCode: string | null;
-  continent: RecommendLocations_recommendLocations_cities_country_continent | null;
 }
 
 export interface RecommendLocations_recommendLocations_cities {
@@ -1538,37 +1656,6 @@ export interface GetTripCities {
 
 export interface GetTripCitiesVariables {
   username: string;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL query operation: GetAvatarDetail
-// ====================================================
-
-export interface GetAvatarDetail_getAvatarDetail_avatar {
-  __typename: "AvatarType";
-  id: string;
-  uuid: any | null;
-  image: string | null;
-  isMain: boolean;
-  likeCount: number | null;
-  thumbnail: string | null;
-}
-
-export interface GetAvatarDetail_getAvatarDetail {
-  __typename: "AvatarDetailResponse";
-  avatar: GetAvatarDetail_getAvatarDetail_avatar | null;
-}
-
-export interface GetAvatarDetail {
-  getAvatarDetail: GetAvatarDetail_getAvatarDetail;
-}
-
-export interface GetAvatarDetailVariables {
-  avatarId: string;
 }
 
 /* tslint:disable */
@@ -1831,17 +1918,19 @@ export interface EditProfile_editProfile_user_profile_currentCity {
   __typename: "CityType";
   latitude: number | null;
   longitude: number | null;
-  cityId: string | null;
   cityName: string | null;
-  cityThumbnail: string | null;
+  cityId: string | null;
+  cityPhoto: string | null;
   country: EditProfile_editProfile_user_profile_currentCity_country;
 }
 
 export interface EditProfile_editProfile_user_profile {
   __typename: "ProfileType";
+  id: string;
   bio: string | null;
   gender: ProfileGender | null;
   avatarUrl: string | null;
+  appAvatarUrl: string | null;
   website: string | null;
   distance: number | null;
   countryPhoneNumber: string | null;
@@ -2039,50 +2128,6 @@ export interface ToggleSettingsVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: CompleteEditEmailVerification
-// ====================================================
-
-export interface CompleteEditEmailVerification_completeEditEmailVerification_user_profile_currentCity {
-  __typename: "CityType";
-  cityId: string | null;
-  cityName: string | null;
-}
-
-export interface CompleteEditEmailVerification_completeEditEmailVerification_user_profile {
-  __typename: "ProfileType";
-  avatarUrl: string | null;
-  currentCity: CompleteEditEmailVerification_completeEditEmailVerification_user_profile_currentCity | null;
-}
-
-export interface CompleteEditEmailVerification_completeEditEmailVerification_user {
-  __typename: "UserType";
-  /**
-   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
-   */
-  username: string;
-  profile: CompleteEditEmailVerification_completeEditEmailVerification_user_profile | null;
-}
-
-export interface CompleteEditEmailVerification_completeEditEmailVerification {
-  __typename: "CompleteEditEmailVerificationResponse";
-  ok: boolean | null;
-  token: string | null;
-  user: CompleteEditEmailVerification_completeEditEmailVerification_user | null;
-}
-
-export interface CompleteEditEmailVerification {
-  completeEditEmailVerification: CompleteEditEmailVerification_completeEditEmailVerification;
-}
-
-export interface CompleteEditEmailVerificationVariables {
-  key: string;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
 // GraphQL query operation: UserProfile
 // ====================================================
 
@@ -2140,6 +2185,7 @@ export interface UserProfile_userProfile_user_profile_currentCity {
 
 export interface UserProfile_userProfile_user_profile {
   __typename: "ProfileType";
+  id: string;
   bio: string | null;
   gender: ProfileGender | null;
   avatarUrl: string | null;
@@ -2463,24 +2509,6 @@ export interface GetSameTripsVariables {
 // GraphQL query operation: Me
 // ====================================================
 
-export interface Me_me_user_profile_residence_continent {
-  __typename: "ContinentType";
-  continentCode: string | null;
-  continentName: string | null;
-}
-
-export interface Me_me_user_profile_residence {
-  __typename: "CountryType";
-  countryEmoji: string | null;
-  id: string;
-  countryName: string | null;
-  countryCode: string | null;
-  countryPhoto: string | null;
-  countryThumbnail: string | null;
-  cityCount: number | null;
-  continent: Me_me_user_profile_residence_continent | null;
-}
-
 export interface Me_me_user_profile_nationality_continent {
   __typename: "ContinentType";
   continentCode: string | null;
@@ -2499,29 +2527,83 @@ export interface Me_me_user_profile_nationality {
   continent: Me_me_user_profile_nationality_continent | null;
 }
 
+export interface Me_me_user_profile_residence_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
+export interface Me_me_user_profile_residence {
+  __typename: "CountryType";
+  countryEmoji: string | null;
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryPhoto: string | null;
+  countryThumbnail: string | null;
+  cityCount: number | null;
+  continent: Me_me_user_profile_residence_continent | null;
+}
+
+export interface Me_me_user_profile_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+  countryCode: string | null;
+}
+
 export interface Me_me_user_profile_currentCity {
   __typename: "CityType";
-  cityId: string | null;
+  latitude: number | null;
+  longitude: number | null;
   cityName: string | null;
+  cityId: string | null;
+  cityPhoto: string | null;
+  country: Me_me_user_profile_currentCity_country;
 }
 
 export interface Me_me_user_profile {
   __typename: "ProfileType";
   id: string;
+  bio: string | null;
   gender: ProfileGender | null;
-  residence: Me_me_user_profile_residence | null;
-  nationality: Me_me_user_profile_nationality | null;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
+  website: string | null;
+  distance: number | null;
+  countryPhoneNumber: string | null;
+  countryPhoneCode: string | null;
+  phoneNumber: string | null;
+  emailAddress: string | null;
+  isVerifiedPhoneNumber: boolean;
+  isVerifiedEmailAddress: boolean;
+  nationality: Me_me_user_profile_nationality | null;
+  residence: Me_me_user_profile_residence | null;
+  postCount: number | null;
+  tripCount: number | null;
+  coffeeCount: number | null;
+  cityCount: number | null;
+  countryCount: number | null;
+  continentCount: number | null;
+  isSelf: boolean | null;
+  isDarkMode: boolean;
+  isHideTrips: boolean;
+  isHideCoffees: boolean;
+  isHideCities: boolean;
+  isHideCountries: boolean;
+  isHideContinents: boolean;
+  isAutoLocationReport: boolean;
   currentCity: Me_me_user_profile_currentCity | null;
 }
 
 export interface Me_me_user {
   __typename: "UserType";
+  id: string;
   /**
    * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
    */
   username: string;
+  firstName: string;
+  lastName: string;
   profile: Me_me_user_profile | null;
 }
 

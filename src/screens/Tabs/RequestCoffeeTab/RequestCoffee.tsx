@@ -298,12 +298,13 @@ export default ({ navigation }) => {
       }
     );
   };
+  console.log(me.user.username);
   const {
     data: { getCoffees: { coffees = null } = {} } = {},
     loading: coffeeLoading,
     refetch: coffeeRefetch
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
-    variables: { location: "city", cityId: location.currentCityId }
+    variables: { location: "city", cityId: "ChIJyTSQVXm0j4ARmdUQoA1BpwQ" }
   });
   const [requestCoffeeFn, { loading: requestCoffeeLoading }] = useMutation<
     RequestCoffee,

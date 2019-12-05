@@ -232,7 +232,7 @@ export default createStackNavigator({
   AvatarList: {
     screen: AvatarList,
     navigationOptions: {
-      header: props => <BackCustomHeader />
+      header: props => <UserProfileHeader />
     }
   },
   Home: {

@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { COUNTRY_FRAGMENT, COFFEE_FRAGMENT } from "../../../../fragmentQueries";
+import { COUNTRY_FRAGMENT } from "../../../../fragmentQueries";
 
 export const GET_USER = gql`
   query UserProfile($username: String!) {
@@ -10,6 +10,7 @@ export const GET_USER = gql`
         firstName
         lastName
         profile {
+          id
           bio
           gender
           avatarUrl

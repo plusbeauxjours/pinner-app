@@ -68,8 +68,7 @@ export default ({ cityId }) => {
     data: { getCoffees: { coffees = null } = {} } = {},
     loading: coffeeLoading
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
-    variables: { location: "city", cityId },
-    fetchPolicy: "network-only"
+    variables: { location: "city", cityId }
   });
   if (coffeeLoading) {
     return (

@@ -16,7 +16,6 @@ import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import { Ionicons } from "@expo/vector-icons";
 import { range } from "lodash";
 import { useMe } from "../../../../context/MeContext";
-import { useLocation } from "../../../../context/LocationContext";
 import {
   UserProfile,
   UserProfileVariables,
@@ -245,10 +244,10 @@ const Footer = styled.View`
 `;
 export default ({ navigation }) => {
   const { me, loading: meLoading } = useMe();
-  const location = useLocation();
-  const isSelf =
-    navigation.getParam("isSelf") ||
-    me.user.username === navigation.getParam("username");
+  const isSelf = navigation.getParam("isSelf")
+    ? navigation.getParam("isSelf")
+    : me.user.username === navigation.getParam("username") ||
+      !navigation.getParam("username");
   const isDarkMode = useTheme();
   const [search, setSearch] = useState<string>("");
   const [coffeeId, setCoffeeId] = useState<string>("");
@@ -264,7 +263,9 @@ export default ({ navigation }) => {
   const [avatarModalOpen, setAvatarModalOpen] = useState<boolean>(false);
   const [searchContinentCode, setSearchContinentCode] = useState<string>("");
   const [username, setUsername] = useState<string>(
-    navigation.getParam("username") || me.user.username
+    navigation.getParam("username")
+      ? navigation.getParam("username")
+      : me.user.username
   );
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [tripStartDate, setTripStartDate] = useState<moment.Moment>(null);
@@ -283,6 +284,9 @@ export default ({ navigation }) => {
     8: require(`../../../../Images/avatars/earth8.png`),
     9: require(`../../../../Images/avatars/earth9.png`)
   };
+  console.log(isSelf);
+  console.log(username);
+  console.log(me.user.username);
   const deleteTrip = id => {
     showActionSheetWithOptions(
       {
@@ -642,9 +646,12 @@ export default ({ navigation }) => {
     if (distance >= 1e11) return +(distance / 1e12).toFixed(1) + "T";
     else return null;
   };
-  useEffect(
-    () => setUsername(navigation.getParam("username") || me.user.username),
-    [navigation]
+  useEffect(() =>
+    setUsername(
+      navigation.getParam("username")
+        ? navigation.getParam("username")
+        : me.user.username
+    )
   );
   if (
     profileLoading ||
@@ -1134,8 +1141,7 @@ export default ({ navigation }) => {
                 <IconTouchable
                   onPress={() =>
                     navigation.push("EditProfile", {
-                      ...user,
-                      profileRefetch
+                      ...user
                     })
                   }
                 >
@@ -1196,15 +1202,34 @@ export default ({ navigation }) => {
                   <Bold>KM</Bold>
                 </Item>
               )}
-              {trip && (
-                <Item>
-                  <UserName>{user.profile.tripCount}</UserName>
+              {user.profile.isHideTrips ? (
+                <>
                   {user.profile.tripCount === 1 ? (
-                    <Text>TRIP</Text>
+                    <Item>
+                      <UserName>{user.profile.tripCount}</UserName>
+                      <Bold>TRIP🔒</Bold>
+                    </Item>
                   ) : (
-                    <Text>TRIPS</Text>
+                    <Item>
+                      <UserName>{user.profile.tripCount}</UserName>
+                      <Bold>TRIPS🔒</Bold>
+                    </Item>
                   )}
-                </Item>
+                </>
+              ) : (
+                <>
+                  {user.profile.tripCount === 1 ? (
+                    <Item>
+                      <UserName>{user.profile.tripCount}</UserName>
+                      <Bold>TRIP</Bold>
+                    </Item>
+                  ) : (
+                    <Item>
+                      <UserName>{user.profile.tripCount}</UserName>
+                      <Bold>TRIPS</Bold>
+                    </Item>
+                  )}
+                </>
               )}
               {/* {user.profile.coffeeCount !== 0 && (
               <>

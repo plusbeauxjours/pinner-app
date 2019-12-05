@@ -60,8 +60,13 @@ export default ({ navigation }) => {
   const { me, loading: meLoading } = useMe();
   const isDarkMode = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
-  const username = navigation.getParam("username") || me.user.username;
-  const isSelf = navigation.getParam("isSelf") || me.user.username === username;
+  const username = navigation.getParam("username")
+    ? navigation.getParam("username")
+    : me.user.username;
+  const isSelf = navigation.getParam("isSelf")
+    ? navigation.getParam("isSelf")
+    : me.user.username === navigation.getParam("username") ||
+      !navigation.getParam("username");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<any>({});
