@@ -9,8 +9,8 @@ const Container = styled.View<ITheme>`
   background-color: ${props =>
     props.bgColor ? props.bgColor : props.theme.blueColor};
   padding: 10px;
-  margin: 0px 50px;
-  width: ${constants.width / 2};
+  justify-content: center;
+  align-items: center;
   width: 250px;
   height: 40px;
   border-radius: 5px;

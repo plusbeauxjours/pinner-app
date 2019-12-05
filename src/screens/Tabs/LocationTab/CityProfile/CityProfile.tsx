@@ -574,12 +574,11 @@ export default ({ navigation }) => {
                 {usersNow.map((user: any, index: any) => (
                   <Touchable
                     key={index}
-                    onPress={() => {
-                      console.log(user.username),
-                        navigation.push("UserProfileTabs", {
-                          username: user.username
-                        });
-                    }}
+                    onPress={() =>
+                      navigation.push("UserProfileTabs", {
+                        username: user.username
+                      })
+                    }
                   >
                     <UserRow user={user} type={"user"} />
                   </Touchable>

@@ -298,13 +298,12 @@ export default ({ navigation }) => {
       }
     );
   };
-  console.log(me.user.username);
   const {
     data: { getCoffees: { coffees = null } = {} } = {},
     loading: coffeeLoading,
     refetch: coffeeRefetch
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
-    variables: { location: "city", cityId: "ChIJyTSQVXm0j4ARmdUQoA1BpwQ" }
+    variables: { location: "city", cityId: location.currentCityId }
   });
   const [requestCoffeeFn, { loading: requestCoffeeLoading }] = useMutation<
     RequestCoffee,
@@ -393,7 +392,9 @@ export default ({ navigation }) => {
     data: { recommendUsers: { users: recommendUsers = null } = {} } = {},
     loading: recommendUserLoading,
     refetch: recommendUserRefetch
-  } = useQuery<RecommendUsers, RecommendUsersVariables>(RECOMMEND_USERS);
+  } = useQuery<RecommendUsers, RecommendUsersVariables>(RECOMMEND_USERS, {
+    fetchPolicy: "no-cache"
+  });
   const {
     data: {
       recommendLocations: { cities: recommendLocations = null } = {}
