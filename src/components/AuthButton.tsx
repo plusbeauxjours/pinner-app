@@ -10,8 +10,10 @@ const Container = styled.View<ITheme>`
     props.bgColor ? props.bgColor : props.theme.blueColor};
   padding: 10px;
   margin: 0px 50px;
-  border-radius: 4px;
   width: ${constants.width / 2};
+  width: 250px;
+  height: 40px;
+  border-radius: 5px;
 `;
 
 const Text = styled.Text`

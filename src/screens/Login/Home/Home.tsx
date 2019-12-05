@@ -37,11 +37,17 @@ const Image = styled.Image`
 `;
 
 const LoginLink = styled.View`
+  border: 0.5px solid #999;
+  width: 250px;
+  height: 40px;
+  border-radius: 5px;
   margin-bottom: 10px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `;
 const LoginLinkText = styled.Text`
-  color: ${props => props.theme.blueColor};
-  margin-top: 20px;
+  color: #999;
   font-weight: 600;
 `;
 const ApproachModalContainer = styled.View`
@@ -224,17 +230,9 @@ export default ({ navigation }) => {
     }
   };
   const handlePhoneVerification = async () => {
-    console.log(
-      verificationKey,
-      phoneNumber,
-      countryPhoneNumber,
-      countryPhoneCode,
-      cityId
-    );
     const {
       data: { completePhoneVerification }
     } = await completePhoneVerificationFn();
-    console.log("completePhoneVerification", completePhoneVerification);
     setApproachModalOpen(false);
     setModalMode("phoneApproach");
     setVerificationKey("");
@@ -305,7 +303,7 @@ export default ({ navigation }) => {
                       verified phone number can be used to login.
                     </Text>
                     <Text style={{ marginTop: 15 }}>
-                      Changed your phone number?{" "}
+                      Changed your phone number?
                     </Text>
                     <Touchable onPress={() => setModalMode("emailApproach")}>
                       <Text style={{ textDecorationLine: "underline" }}>
@@ -429,11 +427,6 @@ export default ({ navigation }) => {
         />
         <Touchable
           onPress={() => {
-            // setCountryPhoneCode(location.currentCountryCode),
-            //   setCountryPhoneNumber(
-            //     countries.find(i => i.code === location.currentCountryCode)
-            //       .phone
-            //   ),
             setApproachModalOpen(true);
           }}
         >

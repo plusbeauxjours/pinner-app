@@ -18,7 +18,6 @@ import NavController from "./src/components/NavController";
 import { createUploadLink } from "apollo-upload-client";
 import { setContext } from "apollo-link-context";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
-import { MeProvider } from "./src/context/MeContext";
 
 export default function App() {
   const [client, setClient] = useState<any>(null);
@@ -84,9 +83,7 @@ export default function App() {
           <AuthProvider isLoggedIn={isLoggedIn} client={client}>
             <LocationProvider>
               <ActionSheetProvider>
-                {/* <MeProvider> */}
                 <NavController />
-                {/* </MeProvider> */}
               </ActionSheetProvider>
             </LocationProvider>
           </AuthProvider>
