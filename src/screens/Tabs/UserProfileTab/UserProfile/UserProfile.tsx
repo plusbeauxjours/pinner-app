@@ -391,7 +391,7 @@ export default ({ navigation }) => {
     loading: coffeeLoading
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
     variables: {
-      userName: username,
+      uuid,
       location: "profile"
     },
     fetchPolicy: "no-cache"

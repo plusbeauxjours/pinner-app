@@ -400,9 +400,7 @@ export default ({ navigation }) => {
             const {
               data: { deleteCoffee }
             } = await deleteCoffeeFn({
-              variables: {
-                coffeeId
-              }
+              variables: { coffeeId }
             });
             if (deleteCoffee.ok) {
               toast("Canceld");

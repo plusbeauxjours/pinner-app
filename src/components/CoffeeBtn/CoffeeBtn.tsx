@@ -93,9 +93,7 @@ const CoffeeBtn: React.FC<IProps> = ({
   const [deleteCoffeeFn, { loading: deleteCoffeeLoading }] = useMutation<
     DeleteCoffee,
     DeleteCoffeeVariables
-  >(DELETE_COFFEE, {
-    variables: { coffeeId }
-  });
+  >(DELETE_COFFEE);
 
   const toast = (message: string) => {
     Toast.show(message, {
@@ -139,11 +137,21 @@ const CoffeeBtn: React.FC<IProps> = ({
         cancelButtonIndex: 1,
         title: "Are you sure to cancel?"
       },
-      buttonIndex => {
+      async buttonIndex => {
         if (buttonIndex === 0) {
-          deleteCoffeeFn();
-          setModalOpen(false);
-          toast("canceld");
+          try {
+            const {
+              data: { deleteCoffee }
+            } = await deleteCoffeeFn({
+              variables: { coffeeId }
+            });
+            setModalOpen(false);
+            if (deleteCoffee.ok) {
+              toast("canceld");
+            }
+          } catch (e) {
+            console.log(e);
+          }
         }
       }
     );
