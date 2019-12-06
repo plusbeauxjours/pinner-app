@@ -36,7 +36,7 @@ interface IProps {
     uuid: string;
     userName: string;
     userUrl: string;
-    targetName: string;
+    targetUuid: string;
   }>;
 }
 
@@ -49,7 +49,7 @@ interface IState {
   userName: string;
   userUrl: string;
   userAvatarUrl: string;
-  targetName: string;
+  targetUuid: string;
   hasPermission: boolean;
   nowShowing: string;
   imageUrl: string;
@@ -78,7 +78,7 @@ class ChatContainer extends React.Component<IProps, IState> {
       userAvatarUrl: `${BACKEND_URL}/media/${this.props.navigation.getParam(
         "userUrl"
       )}`,
-      targetName: this.props.navigation.getParam("targetName"),
+      targetUuid: this.props.navigation.getParam("targetUuid"),
       hasPermission: false,
       nowShowing: "",
       imageUrl: "",
@@ -150,7 +150,7 @@ class ChatContainer extends React.Component<IProps, IState> {
   };
 
   public renderAvatar = () => {
-    const { targetName } = this.state;
+    const { targetUuid } = this.state;
     const randomAvatar = {
       1: require(`../../../../Images/thumbnails/earth1.png`),
       2: require(`../../../../Images/thumbnails/earth2.png`),
@@ -168,7 +168,7 @@ class ChatContainer extends React.Component<IProps, IState> {
           <TouchableOpacity
             onPress={() =>
               this.props.navigation.push("UserProfileTabs", {
-                username: targetName,
+                uuid: targetUuid,
                 isSelf: false
               })
             }
@@ -190,7 +190,7 @@ class ChatContainer extends React.Component<IProps, IState> {
           <TouchableOpacity
             onPress={() =>
               this.props.navigation.push("UserProfileTabs", {
-                username: targetName,
+                uuid: targetUuid,
                 isSelf: false
               })
             }

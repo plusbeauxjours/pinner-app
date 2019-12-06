@@ -116,10 +116,10 @@ const CoffeeDetails: React.FC<IProps> = ({
   } = useQuery<CoffeeDetail, CoffeeDetailVariables>(COFFEE_DETAIL, {
     variables: { coffeeId }
   });
-  const onPress = username => {
+  const onPress = uuid => {
     setModalOpen(false);
     navigation.push("UserProfileTabs", {
-      username
+      uuid
     });
   };
   const imageNumber = Math.round(Math.random() * 9);
@@ -157,7 +157,7 @@ const CoffeeDetails: React.FC<IProps> = ({
         {coffee && (
           <>
             <ImageView>
-              <ImageTouchable onPress={() => onPress(coffee.host.username)}>
+              <ImageTouchable onPress={() => onPress(coffee.host.profile.uuid)}>
                 {coffee.host.profile.avatarUrl ? (
                   <ProgressiveImage
                     tint={isDarkMode ? "dark" : "light"}

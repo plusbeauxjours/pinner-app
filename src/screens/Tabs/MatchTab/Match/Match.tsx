@@ -351,9 +351,9 @@ export default ({ navigation }) => {
                               uuid: me.user.profile.uuid,
                               userName: me.user.username,
                               userUrl: me.user.profile.appAvatarUrl,
-                              targetName: data.item.isHost
-                                ? data.item.guest.username
-                                : data.item.host.username
+                              targetUuid: data.item.isHost
+                                ? data.item.guest.profile.uuid
+                                : data.item.host.profile.uuid
                             });
                         }}
                       >

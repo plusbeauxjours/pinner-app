@@ -547,7 +547,7 @@ export default ({ navigation }) => {
                                 key={index}
                                 onPress={() =>
                                   navigation.push("UserProfileTabs", {
-                                    username: user.actor.profile.username,
+                                    uuid: user.actor.profile.uuid,
                                     isSelf: user.actor.profile.isSelf
                                   })
                                 }
@@ -575,7 +575,7 @@ export default ({ navigation }) => {
                     key={index}
                     onPress={() =>
                       navigation.push("UserProfileTabs", {
-                        username: user.username
+                        uuid: user.profile.uuid
                       })
                     }
                   >
