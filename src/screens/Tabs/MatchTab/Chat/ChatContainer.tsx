@@ -31,6 +31,9 @@ interface IProps {
   navigation: NavigationScreenProp<{
     chatId: string;
     userId: string;
+    receiverId: string;
+    receiverAvatar: string;
+    uuid: string;
     userName: string;
     userUrl: string;
     targetName: string;
@@ -42,6 +45,7 @@ interface IState {
   userId: string;
   receiverId: string;
   receiverAvatar: string;
+  uuid: string;
   userName: string;
   userUrl: string;
   userAvatarUrl: string;
@@ -68,6 +72,7 @@ class ChatContainer extends React.Component<IProps, IState> {
       userId: this.props.navigation.getParam("userId"),
       receiverId: this.props.navigation.getParam("receiverId"),
       receiverAvatar: this.props.navigation.getParam("receiverAvatar"),
+      uuid: this.props.navigation.getParam("uuid"),
       userName: this.props.navigation.getParam("userName"),
       userUrl: this.props.navigation.getParam("userUrl"),
       userAvatarUrl: `${BACKEND_URL}/media/${this.props.navigation.getParam(

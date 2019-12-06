@@ -35,7 +35,7 @@ const LoaderContainer = styled.View`
 `;
 
 export default ({ navigation }) => {
-  const uuid = navigation.getParam("username");
+  const uuid = navigation.getParam("uuid");
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const {
     data: { frequentVisits: { cities = null } = {} } = {},

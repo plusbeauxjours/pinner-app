@@ -946,7 +946,7 @@
             "description": null,
             "args": [
               {
-                "name": "username",
+                "name": "uuid",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
@@ -7264,7 +7264,7 @@
         "description": null,
         "fields": [
           {
-            "name": "username",
+            "name": "uuid",
             "description": null,
             "args": [],
             "type": {

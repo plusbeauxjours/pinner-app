@@ -65,7 +65,7 @@ export default ({ navigation }) => {
   const isSelf = navigation.getParam("isSelf")
     ? navigation.getParam("isSelf")
     : me.user.profile.uuid === navigation.getParam("uuid") ||
-      !navigation.getParam("username");
+      !navigation.getParam("uuid");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<any>({});

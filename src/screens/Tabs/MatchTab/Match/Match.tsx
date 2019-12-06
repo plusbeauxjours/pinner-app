@@ -348,6 +348,7 @@ export default ({ navigation }) => {
                               receiverAvatar: data.item.isHost
                                 ? data.item.guest.profile.appAvatarUrl
                                 : data.item.host.profile.appAvatarUrl,
+                              uuid: me.user.profile.uuid,
                               userName: me.user.username,
                               userUrl: me.user.profile.appAvatarUrl,
                               targetName: data.item.isHost

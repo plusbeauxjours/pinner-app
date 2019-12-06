@@ -201,7 +201,7 @@ const Search = ({ navigation }) => {
                           await setSearch("");
                           await setModalOpen(false),
                             navigation.push("UserProfileTabs", {
-                              username: user.profile.username,
+                              uuid: user.profile.uuid,
                               isSelf: user.profile.isSelf
                             });
                         }}

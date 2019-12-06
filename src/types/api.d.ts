@@ -2213,7 +2213,7 @@ export interface GetTrips {
 }
 
 export interface GetTripsVariables {
-  username: string;
+  uuid: string;
   page?: number | null;
 }
 
@@ -2675,7 +2675,7 @@ export interface DeleteCoffee_deleteCoffee {
   __typename: "DeleteCoffeeResponse";
   ok: boolean | null;
   coffeeId: string | null;
-  username: string | null;
+  uuid: string | null;
 }
 
 export interface DeleteCoffee {

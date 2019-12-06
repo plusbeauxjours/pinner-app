@@ -246,8 +246,8 @@ export default ({ navigation }) => {
   const { me, loading: meLoading } = useMe();
   const isSelf = navigation.getParam("isSelf")
     ? navigation.getParam("isSelf")
-    : me.user.username === navigation.getParam("username") ||
-      !navigation.getParam("username");
+    : me.user.profile.uuid === navigation.getParam("uuid") ||
+      !navigation.getParam("uuid");
   const isDarkMode = useTheme();
   const [search, setSearch] = useState<string>("");
   const [coffeeId, setCoffeeId] = useState<string>("");
@@ -384,7 +384,7 @@ export default ({ navigation }) => {
     loading: tripLoading,
     refetch: tripRefetch
   } = useQuery<GetTrips, GetTripsVariables>(GET_TRIPS, {
-    variables: { username }
+    variables: { uuid }
   });
   const {
     data: { getCoffees: { coffees = null } = {} } = {},
@@ -425,7 +425,7 @@ export default ({ navigation }) => {
       try {
         const data = cache.readQuery<GetTrips, GetTripsVariables>({
           query: GET_TRIPS,
-          variables: { username }
+          variables: { uuid }
         });
         if (data) {
           data.getTrips.trip = data.getTrips.trip.filter(
@@ -433,7 +433,7 @@ export default ({ navigation }) => {
           );
           cache.writeQuery({
             query: GET_TRIPS,
-            variables: { username },
+            variables: { uuid },
             data
           });
         }
