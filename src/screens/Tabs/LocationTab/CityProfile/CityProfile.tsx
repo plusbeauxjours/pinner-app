@@ -575,7 +575,7 @@ export default ({ navigation }) => {
                     key={index}
                     onPress={() =>
                       navigation.push("UserProfileTabs", {
-                        uuid: user.profile.uuid
+                        uuid: user.uuid
                       })
                     }
                   >

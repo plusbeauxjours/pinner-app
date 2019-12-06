@@ -39,7 +39,7 @@ const UserProfileHeader = ({ navigation }) => {
       return null;
     }
   } else if (
-    navigation.state.params.username === me.user.username &&
+    navigation.state.params.uuid === me.user.profile.uuid &&
     navigation.state.index === 1
   ) {
     return <PhotoLink />;

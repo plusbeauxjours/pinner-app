@@ -108,15 +108,15 @@ export default withNavigation(({ navigation }) => {
     orig_width: number,
     orig_height: number
   ) => {
-    if (orig_width > 1280 || orig_height > 1280) {
+    if (orig_width > 960 || orig_height > 960) {
       let manipResult;
-      if (orig_width / 1280 >= orig_height / 1280) {
+      if (orig_width / 960 >= orig_height / 960) {
         manipResult = await ImageManipulator.manipulateAsync(uri, [
-          { resize: { width: 1280 } }
+          { resize: { width: 960 } }
         ]);
       } else {
         manipResult = await ImageManipulator.manipulateAsync(uri, [
-          { resize: { height: 1280 } }
+          { resize: { height: 960 } }
         ]);
       }
       return manipResult.uri;
