@@ -98,6 +98,7 @@ export const GET_TRIP_CITIES = gql`
     getTripCities {
       trip {
         id
+        startDate
         city {
           hasCoffee
           cityId

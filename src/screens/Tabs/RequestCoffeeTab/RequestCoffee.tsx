@@ -427,11 +427,17 @@ export default ({ navigation }) => {
       delay: 0
     });
   };
+  const sortByDate = (a, b) => {
+    let date1 = new Date(a.startDate);
+    let date2 = new Date(b.startDate);
+    return date1 < date2 ? 1 : date2 < date1 ? -1 : 0;
+  };
+
   const onRefresh = async () => {
     try {
       setRefreshing(true);
-      // await recommendUserRefetch();
-      // await recommendLocationRefetch();
+      await recommendUserRefetch();
+      await recommendLocationRefetch();
       await tripRefetch();
     } catch (e) {
       console.log(e);
@@ -505,7 +511,6 @@ export default ({ navigation }) => {
       );
     }
   };
-
   const renderContent = section => (
     <CoffeeContainer>
       <CollapsibleAccordion cityId={section.city.cityId} />
@@ -610,8 +615,10 @@ export default ({ navigation }) => {
           }
         >
           <Container>
+            {console.log(trip)}
+            {console.log(trip.filter(r => r).sort(sortByDate))}
             <Accordion
-              sections={trip}
+              sections={trip.filter(r => r).sort(sortByDate)}
               expandMultiple={true}
               activeSections={activeSections}
               renderHeader={renderHeader}
