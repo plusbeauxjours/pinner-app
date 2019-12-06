@@ -105,14 +105,14 @@ export const GET_COFFEES = gql`
     $cityId: String
     $countryCode: String
     $continentCode: String
-    $userName: String
+    $uuid: String
     $location: String!
   ) {
     getCoffees(
       cityId: $cityId
       countryCode: $countryCode
       continentCode: $continentCode
-      userName: $userName
+      uuid: $uuid
       location: $location
     ) {
       coffees {

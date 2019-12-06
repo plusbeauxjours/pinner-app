@@ -2659,7 +2659,7 @@ export interface GetCoffeesVariables {
   cityId?: string | null;
   countryCode?: string | null;
   continentCode?: string | null;
-  userName?: string | null;
+  uuid?: string | null;
   location: string;
 }
 

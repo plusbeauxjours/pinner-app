@@ -72,7 +72,7 @@
                 "defaultValue": null
               },
               {
-                "name": "userName",
+                "name": "uuid",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
