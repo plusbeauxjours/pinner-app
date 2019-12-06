@@ -27,17 +27,16 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import { GET_USER } from "../UserProfile/UserProfileQueries";
 import { ME } from "../../../../sharedQueries";
 
-const View = styled.View`
-  flex: 1;
+const TextContainer = styled.View`
+  margin-top: 50px;
   justify-content: center;
   align-items: center;
 `;
-const Bold = styled.Text`
-  font-weight: 400;
-  font-size: 16;
+const Text = styled.Text`
   color: ${props => props.theme.color};
+  font-size: 9px;
+  margin-left: 5px;
 `;
-
 const Touchable = styled.TouchableOpacity``;
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -375,9 +374,9 @@ export default ({ navigation }) => {
             </Container>
           </>
         ) : (
-          <View>
-            <Bold>No avatars yet...</Bold>
-          </View>
+          <TextContainer>
+            <Text>No avatars yet...</Text>
+          </TextContainer>
         )}
       </ScrollView>
     );

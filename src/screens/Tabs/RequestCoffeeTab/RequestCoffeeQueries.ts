@@ -94,8 +94,8 @@ export const REQUEST_COFFEE = gql`
 `;
 
 export const GET_TRIP_CITIES = gql`
-  query GetTripCities($username: String!) {
-    getTripCities(username: $username) {
+  query GetTripCities {
+    getTripCities {
       trip {
         id
         city {

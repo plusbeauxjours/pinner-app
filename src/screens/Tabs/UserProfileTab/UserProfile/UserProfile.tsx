@@ -284,9 +284,6 @@ export default ({ navigation }) => {
     8: require(`../../../../Images/avatars/earth8.png`),
     9: require(`../../../../Images/avatars/earth9.png`)
   };
-  console.log(isSelf);
-  console.log(username);
-  console.log(me.user.username);
   const deleteTrip = id => {
     showActionSheetWithOptions(
       {

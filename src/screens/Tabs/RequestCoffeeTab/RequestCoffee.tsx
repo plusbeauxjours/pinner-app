@@ -32,8 +32,7 @@ import {
   RequestCoffeeVariables,
   DeleteCoffee,
   DeleteCoffeeVariables,
-  GetTripCities,
-  GetTripCitiesVariables
+  GetTripCities
 } from "../../../types/api";
 import Modal from "react-native-modal";
 import { useTheme } from "../../../context/ThemeContext";
@@ -134,7 +133,6 @@ export default ({ navigation }) => {
   const [residenceModalOpen, setResidenceModalOpen] = useState<boolean>(false);
   const [nationalityCode, setNationalityCode] = useState<any>("");
   const [residenceCode, setResidenceCode] = useState<any>("");
-  const userName = me.user.username;
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const { showActionSheetWithOptions } = useActionSheet();
   const requestCoffee = () => {
@@ -171,31 +169,37 @@ export default ({ navigation }) => {
       async buttonIndex => {
         if (buttonIndex === 0) {
           try {
-            requestCoffeeFn({
+            const {
+              data: { requestCoffee }
+            } = await requestCoffeeFn({
               variables: {
                 target: "everyone",
                 currentCityId: location.currentCityId
               }
             });
+            if (requestCoffee.ok) {
+              toast("Requested");
+            }
           } catch (e) {
             console.log(e);
-          } finally {
-            toast("Requested");
           }
         } else if (buttonIndex === 1) {
           if (me.user.profile.nationality) {
             try {
-              await requestCoffeeFn({
+              const {
+                data: { requestCoffee }
+              } = await requestCoffeeFn({
                 variables: {
                   target: "nationality",
                   currentCityId: location.currentCityId,
                   countryCode: me.user.profile.nationality.countryCode
                 }
               });
+              if (requestCoffee.ok) {
+                toast("Requested");
+              }
             } catch (e) {
               console.log(e);
-            } finally {
-              toast("Requested");
             }
           } else {
             setNationalityModalOpen(true);
@@ -203,17 +207,20 @@ export default ({ navigation }) => {
         } else if (buttonIndex === 2) {
           if (me.user.profile.residence) {
             try {
-              await requestCoffeeFn({
+              const {
+                data: { requestCoffee }
+              } = await requestCoffeeFn({
                 variables: {
                   target: "residence",
                   currentCityId: location.currentCityId,
                   countryCode: me.user.profile.residence.countryCode
                 }
               });
+              if (requestCoffee.ok) {
+                toast("Requested");
+              }
             } catch (e) {
               console.log(e);
-            } finally {
-              toast("Requested");
             }
           } else {
             setResidenceModalOpen(true);
@@ -221,17 +228,20 @@ export default ({ navigation }) => {
         } else if (buttonIndex === 3) {
           if (me.user.profile.gender) {
             try {
-              await requestCoffeeFn({
+              const {
+                data: { requestCoffee }
+              } = await requestCoffeeFn({
                 variables: {
                   target: "gender",
                   currentCityId: location.currentCityId,
                   countryCode: me.user.profile.gender
                 }
               });
+              if (requestCoffee.ok) {
+                toast("Requested");
+              }
             } catch (e) {
               console.log(e);
-            } finally {
-              toast("Requested");
             }
           } else {
             onOpenGenderActionSheet();
@@ -252,45 +262,54 @@ export default ({ navigation }) => {
       async buttonIndex => {
         if (buttonIndex === 0) {
           try {
-            await requestCoffeeFn({
+            const {
+              data: { requestCoffee }
+            } = await requestCoffeeFn({
               variables: {
                 target: "gender",
                 currentCityId: location.currentCityId,
                 gender: "MALE"
               }
             });
+            if (requestCoffee.ok) {
+              toast("Requested");
+            }
           } catch (e) {
             console.log(e);
-          } finally {
-            toast("Requested");
           }
         } else if (buttonIndex === 1) {
           try {
-            await requestCoffeeFn({
+            const {
+              data: { requestCoffee }
+            } = await requestCoffeeFn({
               variables: {
                 target: "gender",
                 currentCityId: location.currentCityId,
                 gender: "FEMALE"
               }
             });
+            if (requestCoffee.ok) {
+              toast("Requested");
+            }
           } catch (e) {
             console.log(e);
-          } finally {
-            toast("Requested");
           }
         } else if (buttonIndex === 2) {
           try {
-            await requestCoffeeFn({
+            const {
+              data: { requestCoffee }
+            } = await requestCoffeeFn({
               variables: {
                 target: "gender",
                 currentCityId: location.currentCityId,
                 gender: "OTHER"
               }
             });
+            if (requestCoffee.ok) {
+              toast("Requested");
+            }
           } catch (e) {
             console.log(e);
-          } finally {
-            toast("Requested");
           }
         } else {
           null;
@@ -298,13 +317,14 @@ export default ({ navigation }) => {
       }
     );
   };
-  const {
-    data: { getCoffees: { coffees = null } = {} } = {},
-    loading: coffeeLoading,
-    refetch: coffeeRefetch
-  } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
-    variables: { location: "city", cityId: location.currentCityId }
-  });
+  // const {
+  //   data: { getCoffees: { coffees = null } = {} } = {},
+  //   loading: coffeeLoading,
+  //   refetch: coffeeRefetch
+  // } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
+  //   variables: { location: "city", cityId: location.currentCityId },
+  //   fetchPolicy: "no-cache"
+  // });
   const [requestCoffeeFn, { loading: requestCoffeeLoading }] = useMutation<
     RequestCoffee,
     RequestCoffeeVariables
@@ -335,59 +355,15 @@ export default ({ navigation }) => {
       } catch (e) {
         console.log(e);
       }
-      try {
-        const profileData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
-          query: GET_COFFEES,
-          variables: {
-            userName,
-            location: "profile"
-          }
-        });
-        if (profileData) {
-          profileData.getCoffees.coffees.push(requestCoffee.coffee);
-          cache.writeQuery({
-            query: GET_COFFEES,
-            variables: {
-              userName,
-              location: "profile"
-            },
-            data: profileData
-          });
-        }
-      } catch (e) {
-        console.log(e);
-      }
-      try {
-        const feedData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
-          query: GET_COFFEES,
-          variables: {
-            cityId: location.currentCityId,
-            location: "city"
-          }
-        });
-        if (feedData) {
-          feedData.getCoffees.coffees.unshift(requestCoffee.coffee);
-          cache.writeQuery({
-            query: GET_COFFEES,
-            variables: {
-              cityId: location.currentCityId,
-              location: "city"
-            },
-            data: feedData
-          });
-        }
-      } catch (e) {
-        console.log(e);
-      }
     }
   });
+  console.log(me.user.username);
   const {
     data: { getTripCities: { trip = null } = {} } = {},
     loading: tripLoading,
     refetch: tripRefetch
-  } = useQuery<GetTripCities, GetTripCitiesVariables>(GET_TRIP_CITIES, {
-    variables: { username: me.user.username }
-  });
+  } = useQuery<GetTripCities>(GET_TRIP_CITIES);
+
   const {
     data: { recommendUsers: { users: recommendUsers = null } = {} } = {},
     loading: recommendUserLoading,
@@ -395,6 +371,7 @@ export default ({ navigation }) => {
   } = useQuery<RecommendUsers, RecommendUsersVariables>(RECOMMEND_USERS, {
     fetchPolicy: "no-cache"
   });
+
   const {
     data: {
       recommendLocations: { cities: recommendLocations = null } = {}
@@ -405,61 +382,13 @@ export default ({ navigation }) => {
     RECOMMEND_LOCATIONS,
     { fetchPolicy: "no-cache" }
   );
+
   const [deleteCoffeeFn, { loading: deleteCoffeeLoading }] = useMutation<
     DeleteCoffee,
     DeleteCoffeeVariables
-  >(DELETE_COFFEE, {
-    update(cache, { data: { deleteCoffee } }) {
-      try {
-        const profileData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
-          query: GET_COFFEES,
-          variables: {
-            userName,
-            location: "profile"
-          }
-        });
-        if (profileData) {
-          profileData.getCoffees.coffees = profileData.getCoffees.coffees.filter(
-            i => i.uuid !== deleteCoffee.coffeeId
-          );
-          cache.writeQuery({
-            query: GET_COFFEES,
-            variables: {
-              userName,
-              location: "profile"
-            },
-            data: profileData
-          });
-        }
-      } catch (e) {
-        console.log(e);
-      }
-      try {
-        const feedData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
-          query: GET_COFFEES,
-          variables: {
-            cityId: location.currentCityId,
-            location: "city"
-          }
-        });
-        if (feedData) {
-          feedData.getCoffees.coffees = feedData.getCoffees.coffees.filter(
-            i => i.uuid !== deleteCoffee.coffeeId
-          );
-          cache.writeQuery({
-            query: GET_COFFEES,
-            variables: {
-              cityId: location.currentCityId,
-              location: "city"
-            },
-            data: feedData
-          });
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  });
+  >(DELETE_COFFEE);
+  console.log(trip, recommendUsers, recommendLocations);
+
   const cancelCoffee = coffeeId => {
     showActionSheetWithOptions(
       {
@@ -468,15 +397,19 @@ export default ({ navigation }) => {
         cancelButtonIndex: 1,
         title: "Are you sure to cancel?"
       },
-      buttonIndex => {
+      async buttonIndex => {
         if (buttonIndex === 0) {
           try {
-            deleteCoffeeFn({
+            const {
+              data: { deleteCoffee }
+            } = await deleteCoffeeFn({
               variables: {
                 coffeeId
               }
             });
-            toast("Canceld");
+            if (deleteCoffee.ok) {
+              toast("Canceld");
+            }
           } catch (e) {
             console.log(e);
           }
@@ -497,9 +430,8 @@ export default ({ navigation }) => {
   const onRefresh = async () => {
     try {
       setRefreshing(true);
-      await coffeeRefetch();
-      await recommendUserRefetch();
-      await recommendLocationRefetch();
+      // await recommendUserRefetch();
+      // await recommendLocationRefetch();
       await tripRefetch();
     } catch (e) {
       console.log(e);
@@ -518,34 +450,40 @@ export default ({ navigation }) => {
   };
   const onSelectNationality = async (country: any) => {
     try {
-      await requestCoffeeFn({
+      const {
+        data: { requestCoffee }
+      } = await requestCoffeeFn({
         variables: {
           target: "nationality",
           currentCityId: location.currentCityId,
           countryCode: country.cca2
         }
       });
+      if (requestCoffee.ok) {
+        toast("Requested");
+      }
       setNationalityModalOpen(false);
     } catch (e) {
       console.log(e);
-    } finally {
-      toast("Requested");
     }
   };
   const onSelectrRsidence = async (country: any) => {
     try {
-      await requestCoffeeFn({
+      const {
+        data: { requestCoffee }
+      } = await requestCoffeeFn({
         variables: {
           target: "residence",
           currentCityId: location.currentCityId,
           countryCode: country.cca2
         }
       });
+      if (requestCoffee.ok) {
+        toast("Requested");
+      }
       setResidenceModalOpen(false);
     } catch (e) {
       console.log(e);
-    } finally {
-      toast("Requested");
     }
   };
   const renderHeader = (section, _, isActive) => {
@@ -579,7 +517,6 @@ export default ({ navigation }) => {
   if (
     recommendUserLoading ||
     recommendLocationLoading ||
-    coffeeLoading ||
     meLoading ||
     tripLoading
   ) {
@@ -779,14 +716,19 @@ export default ({ navigation }) => {
           </Container>
         </ScrollView>
         <Footer>
+          {/* {console.log(
+            coffees,
+            coffees.length !== 0,
+            coffees.find(i => i.host.username === me.user.username)
+          )}
           {coffees &&
           coffees.length !== 0 &&
-          coffees.find(i => i.host.username === userName) ? (
+          coffees.find(i => i.host.username === me.user.username) ? (
             <CoffeeSubmitBtn
               disabled={deleteCoffeeLoading}
               onPress={() =>
                 cancelCoffee(
-                  coffees.find(i => i.host.username === userName).uuid
+                  coffees.find(i => i.host.username === me.user.username).uuid
                 )
               }
             >
@@ -794,16 +736,16 @@ export default ({ navigation }) => {
                 <CoffeeText>CANCEL COFFEE</CoffeeText>
               </CoffeeSubmitContainer>
             </CoffeeSubmitBtn>
-          ) : (
-            <CoffeeSubmitBtn
-              disabled={requestCoffeeLoading}
-              onPress={() => requestCoffee()}
-            >
-              <CoffeeSubmitContainer>
-                <CoffeeText>REQUEST COFFEE</CoffeeText>
-              </CoffeeSubmitContainer>
-            </CoffeeSubmitBtn>
-          )}
+          ) : ( */}
+          <CoffeeSubmitBtn
+            disabled={requestCoffeeLoading}
+            onPress={() => requestCoffee()}
+          >
+            <CoffeeSubmitContainer>
+              <CoffeeText>REQUEST COFFEE</CoffeeText>
+            </CoffeeSubmitContainer>
+          </CoffeeSubmitBtn>
+          {/* )} */}
         </Footer>
       </>
     );

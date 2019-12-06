@@ -116,6 +116,7 @@ const CoffeeDetails: React.FC<IProps> = ({
   } = useQuery<CoffeeDetail, CoffeeDetailVariables>(COFFEE_DETAIL, {
     variables: { coffeeId }
   });
+  console.log(coffee);
   const onPress = username => {
     setModalOpen(false);
     navigation.push("UserProfileTabs", {

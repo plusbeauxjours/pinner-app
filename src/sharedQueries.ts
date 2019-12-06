@@ -122,8 +122,9 @@ export const GET_COFFEES = gql`
           cityName
           cityThumbnail
           country {
-            countryCode
             countryName
+            countryCode
+            countryEmoji
           }
         }
         host {
@@ -133,6 +134,15 @@ export const GET_COFFEES = gql`
             avatarUrl
             appAvatarUrl
             isSelf
+            gender
+            nationality {
+              countryEmoji
+              ...CountryParts
+            }
+            residence {
+              countryEmoji
+              ...CountryParts
+            }
             currentCity {
               cityName
               country {
@@ -149,6 +159,7 @@ export const GET_COFFEES = gql`
       }
     }
   }
+  ${COUNTRY_FRAGMENT}
 `;
 
 export const DELETE_COFFEE = gql`

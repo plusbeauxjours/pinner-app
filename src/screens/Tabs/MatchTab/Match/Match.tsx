@@ -17,7 +17,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import Toast from "react-native-root-toast";
 import { UNMATCH } from "../../../../components/CoffeeBtn/CoffeeBtnQueries";
 import { chat_leave } from "../../../../../Fire";
-import { GET_COFFEES, ME } from "../../../../sharedQueries";
+import { ME, GET_COFFEES } from "../../../../sharedQueries";
 import { useLogIn } from "../../../../context/AuthContext";
 import { useLocation } from "../../../../context/LocationContext";
 import {
@@ -36,6 +36,11 @@ import {
   GetCoffeesVariables
 } from "../../../../types/api";
 
+const TextContainer = styled.View`
+  margin-top: 50px;
+  justify-content: center;
+  align-items: center;
+`;
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
   padding: 0 10px 0 10px;
@@ -178,9 +183,7 @@ export default ({ navigation }) => {
     data: { getMatches: { matches = null } = {} } = {},
     loading: matchLoading,
     refetch: matchRefetch
-  } = useQuery<GetMatches, GetMatchesVariables>(GET_MATCHES, {
-    fetchPolicy: "network-only"
-  });
+  } = useQuery<GetMatches, GetMatchesVariables>(GET_MATCHES);
 
   const [unMatchFn, { loading: unMatchLoading }] = useMutation<
     UnMatch,
@@ -387,9 +390,12 @@ export default ({ navigation }) => {
               </UserContainer>
             </Item>
           ) : (
-            <Text>
-              You don't have any matches. Please swipe to right to find someone.
-            </Text>
+            <TextContainer>
+              <Text>
+                You don't have any matches. Please swipe to right to find
+                someone.
+              </Text>
+            </TextContainer>
           )}
         </Container>
       </ScrollView>

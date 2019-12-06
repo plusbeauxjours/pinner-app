@@ -70,6 +70,7 @@ export default ({ cityId }) => {
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
     variables: { location: "city", cityId }
   });
+  console.log("coffees in Accordion", cityId, coffees);
   if (coffeeLoading) {
     return (
       <LoaderContainer>
@@ -98,6 +99,7 @@ export default ({ cityId }) => {
           backdropTransitionInTiming={200}
           backdropTransitionOutTiming={200}
         >
+          {console.log(coffeeId)}
           <CoffeeDetail
             coffeeId={coffeeId}
             setModalOpen={setModalOpen}

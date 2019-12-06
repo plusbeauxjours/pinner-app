@@ -1654,10 +1654,6 @@ export interface GetTripCities {
   getTripCities: GetTripCities_getTripCities;
 }
 
-export interface GetTripCitiesVariables {
-  username: string;
-}
-
 /* tslint:disable */
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
@@ -2674,8 +2670,9 @@ export interface ReportLocationVariables {
 
 export interface GetCoffees_getCoffees_coffees_city_country {
   __typename: "CountryType";
-  countryCode: string | null;
   countryName: string | null;
+  countryCode: string | null;
+  countryEmoji: string | null;
 }
 
 export interface GetCoffees_getCoffees_coffees_city {
@@ -2684,6 +2681,42 @@ export interface GetCoffees_getCoffees_coffees_city {
   cityName: string | null;
   cityThumbnail: string | null;
   country: GetCoffees_getCoffees_coffees_city_country;
+}
+
+export interface GetCoffees_getCoffees_coffees_host_profile_nationality_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
+export interface GetCoffees_getCoffees_coffees_host_profile_nationality {
+  __typename: "CountryType";
+  countryEmoji: string | null;
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryPhoto: string | null;
+  countryThumbnail: string | null;
+  cityCount: number | null;
+  continent: GetCoffees_getCoffees_coffees_host_profile_nationality_continent | null;
+}
+
+export interface GetCoffees_getCoffees_coffees_host_profile_residence_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
+export interface GetCoffees_getCoffees_coffees_host_profile_residence {
+  __typename: "CountryType";
+  countryEmoji: string | null;
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryPhoto: string | null;
+  countryThumbnail: string | null;
+  cityCount: number | null;
+  continent: GetCoffees_getCoffees_coffees_host_profile_residence_continent | null;
 }
 
 export interface GetCoffees_getCoffees_coffees_host_profile_currentCity_country {
@@ -2702,6 +2735,9 @@ export interface GetCoffees_getCoffees_coffees_host_profile {
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
+  gender: ProfileGender | null;
+  nationality: GetCoffees_getCoffees_coffees_host_profile_nationality | null;
+  residence: GetCoffees_getCoffees_coffees_host_profile_residence | null;
   currentCity: GetCoffees_getCoffees_coffees_host_profile_currentCity | null;
 }
 
