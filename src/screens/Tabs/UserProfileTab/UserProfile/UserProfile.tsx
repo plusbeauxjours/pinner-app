@@ -345,7 +345,7 @@ export default ({ navigation }) => {
       buttonIndex => {
         if (buttonIndex === 0) {
           slackReportUsersFn({
-            variables: { targetUsername: username, payload }
+            variables: { targetUuid: uuid, payload }
           });
           toast("Reported");
         }
@@ -367,7 +367,7 @@ export default ({ navigation }) => {
     loading: profileLoading,
     refetch: profileRefetch
   } = useQuery<UserProfile, UserProfileVariables>(GET_USER, {
-    variables: { username }
+    variables: { uuid }
   });
   const {
     data: { getSameTrips: { cities = null } = {} } = {},

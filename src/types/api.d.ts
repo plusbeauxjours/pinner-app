@@ -2384,7 +2384,7 @@ export interface SlackReportUsers {
 }
 
 export interface SlackReportUsersVariables {
-  targetUsername: string;
+  targetUuid: string;
   payload: string;
 }
 

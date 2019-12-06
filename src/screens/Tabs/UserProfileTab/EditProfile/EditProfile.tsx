@@ -541,11 +541,13 @@ export default ({ navigation }) => {
       const {
         data: { editProfile }
       } = await editProfileFn();
-      if (editProfile) {
+      if (editProfile.ok) {
         logIn(editProfile);
         setUsername(newUsername);
         setIsChanged(false);
         toast("Profile edited");
+      }else{
+        toast("Username is already taken");
       }
     }
   };
