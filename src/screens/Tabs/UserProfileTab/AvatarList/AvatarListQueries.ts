@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 export const GET_AVATARS = gql`
-  query GetAvatars($userName: String!) {
-    getAvatars(userName: $userName) {
+  query GetAvatars($uuid: String!) {
+    getAvatars(uuid: $uuid) {
       avatars {
         id
         uuid

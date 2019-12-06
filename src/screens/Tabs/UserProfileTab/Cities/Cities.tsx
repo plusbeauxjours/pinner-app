@@ -35,14 +35,14 @@ const LoaderContainer = styled.View`
 `;
 
 export default ({ navigation }) => {
-  const [username, setUsername] = useState(navigation.getParam("username"));
+  const uuid = navigation.getParam("username");
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const {
     data: { frequentVisits: { cities = null } = {} } = {},
     loading,
     refetch
   } = useQuery<FrequentVisits, FrequentVisitsVariables>(FREQUENT_VISITS, {
-    variables: { userName: username },
+    variables: { uuid },
     fetchPolicy: "network-only"
   });
   const onRefresh = async () => {

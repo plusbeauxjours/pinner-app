@@ -1604,7 +1604,7 @@ export interface GetAvatars {
 }
 
 export interface GetAvatarsVariables {
-  userName: string;
+  uuid: string;
 }
 
 /* tslint:disable */
@@ -1704,7 +1704,7 @@ export interface FrequentVisits {
 }
 
 export interface FrequentVisitsVariables {
-  userName: string;
+  uuid: string;
   page?: number | null;
 }
 
@@ -1737,7 +1737,7 @@ export interface TopContinents {
 }
 
 export interface TopContinentsVariables {
-  userName: string;
+  uuid: string;
   page?: number | null;
 }
 
@@ -1778,7 +1778,7 @@ export interface TopCountries {
 }
 
 export interface TopCountriesVariables {
-  userName: string;
+  uuid: string;
   page?: number | null;
 }
 
@@ -2160,7 +2160,7 @@ export interface UserProfile {
 }
 
 export interface UserProfileVariables {
-  username: string;
+  uuid: string;
 }
 
 /* tslint:disable */
@@ -2419,7 +2419,7 @@ export interface GetSameTrips {
 }
 
 export interface GetSameTripsVariables {
-  username: string;
+  uuid: string;
 }
 
 /* tslint:disable */

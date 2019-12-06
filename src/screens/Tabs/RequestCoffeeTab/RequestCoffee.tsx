@@ -462,7 +462,6 @@ export default ({ navigation }) => {
           countryCode: country.cca2
         }
       });
-      console.log(requestCoffee);
       if (requestCoffee.ok) {
         toast("Requested");
       }

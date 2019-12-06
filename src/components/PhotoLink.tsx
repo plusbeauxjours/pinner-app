@@ -41,7 +41,7 @@ export default withNavigation(({ navigation }) => {
       try {
         const data = cache.readQuery<GetAvatars, GetAvatarsVariables>({
           query: GET_AVATARS,
-          variables: { userName: me.user.username }
+          variables: { uuid: me.user.profile.uuid }
         });
         if (data) {
           data.getAvatars.avatars.unshift(uploadAvatar.avatar);
@@ -53,7 +53,7 @@ export default withNavigation(({ navigation }) => {
           ).isMain = true;
           cache.writeQuery({
             query: GET_AVATARS,
-            variables: { userName: me.user.username },
+            variables: { uuid: me.user.profile.uuid },
             data
           });
         }
@@ -63,14 +63,14 @@ export default withNavigation(({ navigation }) => {
       try {
         const data = cache.readQuery<UserProfile, UserProfileVariables>({
           query: GET_USER,
-          variables: { username: me.user.username }
+          variables: { uuid: me.user.profile.uuid }
         });
         if (data) {
           data.userProfile.user.profile.avatarUrl =
             uploadAvatar.avatar.thumbnail;
           cache.writeQuery({
             query: GET_USER,
-            variables: { username: me.user.username },
+            variables: { uuid: me.user.profile.uuid },
             data
           });
         }

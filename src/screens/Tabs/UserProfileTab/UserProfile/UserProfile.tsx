@@ -262,10 +262,10 @@ export default ({ navigation }) => {
   const [searchCountryName, setSearchCountryName] = useState<string>("");
   const [avatarModalOpen, setAvatarModalOpen] = useState<boolean>(false);
   const [searchContinentCode, setSearchContinentCode] = useState<string>("");
-  const [username, setUsername] = useState<string>(
-    navigation.getParam("username")
-      ? navigation.getParam("username")
-      : me.user.username
+  const [uuid, setUuid] = useState<string>(
+    navigation.getParam("uuid")
+      ? navigation.getParam("uuid")
+      : me.user.profile.uuid
   );
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [tripStartDate, setTripStartDate] = useState<moment.Moment>(null);
@@ -316,7 +316,7 @@ export default ({ navigation }) => {
           "Cancel"
         ],
         cancelButtonIndex: 4,
-        title: `Choose a reason for reporting this account. We won't tell ${username} who reported them.`,
+        title: `Choose a reason for reporting this account. We won't tell ${user.username} who reported them.`,
         showSeparators: true
       },
       async buttonIndex => {
@@ -340,7 +340,7 @@ export default ({ navigation }) => {
         options: ["Yes", "No"],
         destructiveButtonIndex: 0,
         cancelButtonIndex: 1,
-        title: `Are you sure to report ${username}?`
+        title: `Are you sure to report ${user.username}?`
       },
       buttonIndex => {
         if (buttonIndex === 0) {
@@ -375,9 +375,9 @@ export default ({ navigation }) => {
     refetch: getSameTripsRefetch
   } = useQuery<GetSameTrips, GetSameTripsVariables>(GET_SAME_TRIPS, {
     variables: {
-      username
+      uuid
     },
-    skip: !navigation.getParam("username")
+    skip: !navigation.getParam("uuid")
   });
   const {
     data: { getTrips: { trip = null } = {} } = {},
@@ -643,10 +643,10 @@ export default ({ navigation }) => {
     else return null;
   };
   useEffect(() =>
-    setUsername(
-      navigation.getParam("username")
-        ? navigation.getParam("username")
-        : me.user.username
+    setUuid(
+      navigation.getParam("uuid")
+        ? navigation.getParam("uuid")
+        : me.user.profile.uuid
     )
   );
   if (
@@ -1281,7 +1281,7 @@ export default ({ navigation }) => {
               ) : (
                 <>
                   <Touchable
-                    onPress={() => navigation.push("Cities", { username })}
+                    onPress={() => navigation.push("Cities", { uuid })}
                   >
                     {user.profile.cityCount === 1 ? (
                       <Item>
@@ -1314,7 +1314,7 @@ export default ({ navigation }) => {
               ) : (
                 <>
                   <Touchable
-                    onPress={() => navigation.push("Countries", { username })}
+                    onPress={() => navigation.push("Countries", { uuid })}
                   >
                     {user.profile.countryCount === 1 ? (
                       <Item>
@@ -1347,7 +1347,7 @@ export default ({ navigation }) => {
               ) : (
                 <>
                   <Touchable
-                    onPress={() => navigation.push("Continents", { username })}
+                    onPress={() => navigation.push("Continents", { uuid })}
                   >
                     {user.profile.continentCount === 1 ? (
                       <Item>

@@ -34,16 +34,15 @@ const LoaderContainer = styled.View`
 `;
 
 export default ({ navigation }) => {
-  const [username, setUsername] = useState<string>(
-    navigation.getParam("username")
-  );
+  const uuid = navigation.getParam("username");
+
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const {
     data: { topContinents: { continents = null } = {} } = {},
     loading,
     refetch
   } = useQuery<TopContinents, TopContinentsVariables>(TOP_CONTINENTS, {
-    variables: { userName: username }
+    variables: { uuid }
   });
   const onRefresh = async () => {
     try {

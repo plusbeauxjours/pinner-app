@@ -2,8 +2,8 @@ import gql from "graphql-tag";
 import { CONTINENT_FRAGMENT } from "../../../../fragmentQueries";
 
 export const TOP_CONTINENTS = gql`
-  query TopContinents($userName: String!, $page: Int) {
-    topContinents(userName: $userName, page: $page) {
+  query TopContinents($uuid: String!, $page: Int) {
+    topContinents(uuid: $uuid, page: $page) {
       continents {
         count
         diff

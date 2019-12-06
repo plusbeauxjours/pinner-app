@@ -2,8 +2,8 @@ import gql from "graphql-tag";
 import { COUNTRY_FRAGMENT } from "../../../../fragmentQueries";
 
 export const GET_USER = gql`
-  query UserProfile($username: String!) {
-    userProfile(username: $username) {
+  query UserProfile($uuid: String!) {
+    userProfile(uuid: $uuid) {
       user {
         id
         username
@@ -187,8 +187,8 @@ export const SLACK_REPORT_USERS = gql`
 `;
 
 export const GET_SAME_TRIPS = gql`
-  query GetSameTrips($username: String!) {
-    getSameTrips(username: $username) {
+  query GetSameTrips($uuid: String!) {
+    getSameTrips(uuid: $uuid) {
       count
       cities {
         id

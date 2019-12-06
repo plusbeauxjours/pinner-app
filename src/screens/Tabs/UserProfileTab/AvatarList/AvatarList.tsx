@@ -59,12 +59,12 @@ export default ({ navigation }) => {
   const { me, loading: meLoading } = useMe();
   const isDarkMode = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
-  const username = navigation.getParam("username")
-    ? navigation.getParam("username")
-    : me.user.username;
+  const uuid = navigation.getParam("uuid")
+    ? navigation.getParam("uuid")
+    : me.user.uuid;
   const isSelf = navigation.getParam("isSelf")
     ? navigation.getParam("isSelf")
-    : me.user.username === navigation.getParam("username") ||
+    : me.user.profile.uuid === navigation.getParam("uuid") ||
       !navigation.getParam("username");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -74,7 +74,7 @@ export default ({ navigation }) => {
     loading: avatarLoading,
     refetch: avatarRefetch
   } = useQuery<GetAvatars, GetAvatarsVariables>(GET_AVATARS, {
-    variables: { userName: username }
+    variables: { uuid }
   });
   const [deleteAvatarFn, { loading: deleteAvatarLoading }] = useMutation<
     DeleteAvatar,
@@ -84,7 +84,7 @@ export default ({ navigation }) => {
       try {
         const data = cache.readQuery<GetAvatars, GetAvatarsVariables>({
           query: GET_AVATARS,
-          variables: { userName: username }
+          variables: { uuid }
         });
         if (data) {
           data.getAvatars.avatars = data.getAvatars.avatars.filter(
@@ -92,7 +92,7 @@ export default ({ navigation }) => {
           );
           cache.writeQuery({
             query: GET_AVATARS,
-            variables: { userName: username },
+            variables: { uuid },
             data
           });
         }
@@ -109,13 +109,13 @@ export default ({ navigation }) => {
       try {
         const data = cache.readQuery<UserProfile, UserProfileVariables>({
           query: GET_USER,
-          variables: { username }
+          variables: { uuid }
         });
         if (data) {
           data.userProfile.user.profile.avatarUrl = markAsMain.avatar.thumbnail;
           cache.writeQuery({
             query: GET_USER,
-            variables: { username },
+            variables: { uuid },
             data
           });
         }
@@ -139,7 +139,7 @@ export default ({ navigation }) => {
       try {
         const data = cache.readQuery<GetAvatars, GetAvatarsVariables>({
           query: GET_AVATARS,
-          variables: { userName: username }
+          variables: { uuid }
         });
         if (data) {
           data.getAvatars.avatars.find(
@@ -150,7 +150,7 @@ export default ({ navigation }) => {
           ).isMain = true;
           cache.writeQuery({
             query: GET_AVATARS,
-            variables: { userName: username },
+            variables: { uuid },
             data
           });
         }

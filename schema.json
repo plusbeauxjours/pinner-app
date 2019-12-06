@@ -1014,7 +1014,7 @@
             "description": null,
             "args": [
               {
-                "name": "username",
+                "name": "uuid",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
@@ -1145,7 +1145,7 @@
                 "defaultValue": null
               },
               {
-                "name": "userName",
+                "name": "uuid",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
@@ -1186,7 +1186,7 @@
                 "defaultValue": null
               },
               {
-                "name": "userName",
+                "name": "uuid",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
@@ -1227,7 +1227,7 @@
                 "defaultValue": null
               },
               {
-                "name": "userName",
+                "name": "uuid",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
@@ -1258,7 +1258,7 @@
             "description": null,
             "args": [
               {
-                "name": "userName",
+                "name": "uuid",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
@@ -1320,7 +1320,7 @@
             "description": null,
             "args": [
               {
-                "name": "username",
+                "name": "uuid",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
