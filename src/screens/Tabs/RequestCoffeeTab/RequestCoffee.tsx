@@ -357,7 +357,6 @@ export default ({ navigation }) => {
       }
     }
   });
-  console.log(me.user.username);
   const {
     data: { getTripCities: { trip = null } = {} } = {},
     loading: tripLoading,
@@ -387,7 +386,6 @@ export default ({ navigation }) => {
     DeleteCoffee,
     DeleteCoffeeVariables
   >(DELETE_COFFEE);
-  console.log(trip, recommendUsers, recommendLocations);
 
   const cancelCoffee = coffeeId => {
     showActionSheetWithOptions(
@@ -615,10 +613,18 @@ export default ({ navigation }) => {
           }
         >
           <Container>
-            {console.log(trip)}
-            {console.log(trip.filter(r => r).sort(sortByDate))}
+            {console.log(
+              trip
+                .filter(r => r.city.hasCoffee)
+                .filter(r => r)
+                .sort(sortByDate)
+            )}
+            {console.log(activeSections)}
             <Accordion
-              sections={trip.filter(r => r).sort(sortByDate)}
+              sections={trip
+                .filter(r => r.city.hasCoffee)
+                .filter(r => r)
+                .sort(sortByDate)}
               expandMultiple={true}
               activeSections={activeSections}
               renderHeader={renderHeader}

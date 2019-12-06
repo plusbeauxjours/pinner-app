@@ -1642,6 +1642,7 @@ export interface GetTripCities_getTripCities_trip_city {
 export interface GetTripCities_getTripCities_trip {
   __typename: "MoveNotificationType";
   id: string;
+  startDate: any | null;
   city: GetTripCities_getTripCities_trip_city | null;
 }
 
