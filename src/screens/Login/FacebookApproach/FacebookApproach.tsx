@@ -7,7 +7,6 @@ import { FacebookConnect, FacebookConnectVariables } from "../../../types/api";
 import { FACEBOOK_CONNECT } from "./FacebookApproachQueries";
 import { useLogIn } from "../../../context/AuthContext";
 import Toast from "react-native-root-toast";
-import { ME } from "../../../sharedQueries";
 
 const FBContainer = styled.View``;
 

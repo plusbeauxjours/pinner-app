@@ -23,6 +23,7 @@ export const COFFEE_DETAIL = gql`
           id
           username
           profile {
+            uuid
             nationality {
               countryEmoji
               ...CountryParts

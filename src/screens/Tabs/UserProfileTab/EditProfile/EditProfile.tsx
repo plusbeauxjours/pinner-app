@@ -538,22 +538,13 @@ export default ({ navigation }) => {
     if (!newUsername || newUsername === "") {
       toast("Username could not be empty");
     } else {
-      console.log("submit me.user.username", me.user.username);
-      console.log("submit username", username);
-      console.log("submit newUsername", newUsername);
-      console.log("1");
       const {
         data: { editProfile }
       } = await editProfileFn();
       if (editProfile) {
-        console.log("2");
-        console.log("editProfile", editProfile);
         logIn(editProfile);
-        console.log("3");
         setUsername(newUsername);
-        console.log("4");
         setIsChanged(false);
-        console.log("5");
         toast("Profile edited");
       }
     }

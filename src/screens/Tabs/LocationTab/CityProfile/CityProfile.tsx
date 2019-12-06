@@ -218,18 +218,17 @@ export default ({ navigation }) => {
   );
   const {
     data: { getCoffees: { coffees = null } = {} } = {},
-    loading: coffeeLoading,
-    refetch: coffeeRefetch
+    loading: coffeeLoading
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
-    variables: { location: "city", cityId }
+    variables: { location: "city", cityId },
+    fetchPolicy: "no-cache"
   });
   const onRefresh = async () => {
     try {
       setRefreshing(true);
       await profileRefetch();
-      await samenameCitiesRefetch();
       await nearCitiesRefetch();
-      await coffeeRefetch();
+      await samenameCitiesRefetch();
     } catch (e) {
       console.log(e);
     } finally {

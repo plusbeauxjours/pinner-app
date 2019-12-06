@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 export const PROFILE_FRAGMENT = gql`
   fragment ProfileParts on ProfileType {
     id
+    uuid
     username
     avatarUrl
     appAvatarUrl
@@ -82,6 +83,7 @@ export const COFFEE_FRAGMENT = gql`
       id
       username
       profile {
+        uuid
         avatarUrl
         appAvatarUrl
         isSelf
@@ -127,6 +129,7 @@ export const MATCH_FRAGMENT = gql`
       username
       profile {
         id
+        uuid
         avatarUrl
         appAvatarUrl
         isSelf
@@ -142,6 +145,7 @@ export const MATCH_FRAGMENT = gql`
       username
       profile {
         id
+        uuid
         avatarUrl
         appAvatarUrl
         isSelf

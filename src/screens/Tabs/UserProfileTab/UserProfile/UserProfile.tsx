@@ -388,13 +388,13 @@ export default ({ navigation }) => {
   });
   const {
     data: { getCoffees: { coffees = null } = {} } = {},
-    loading: coffeeLoading,
-    refetch: coffeeRefetch
+    loading: coffeeLoading
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
     variables: {
       userName: username,
       location: "profile"
-    }
+    },
+    fetchPolicy: "no-cache"
   });
   const [addTripFn, { loading: addTripLoading }] = useMutation<
     AddTrip,
@@ -488,7 +488,6 @@ export default ({ navigation }) => {
       setRefreshing(true);
       await profileRefetch();
       await tripRefetch();
-      await coffeeRefetch();
       await getSameTripsRefetch();
     } catch (e) {
       console.log(e);
@@ -1417,7 +1416,7 @@ export default ({ navigation }) => {
                 coffees &&
                 coffees.map(coffee => (
                   <Touchable
-                    key={coffee.id}
+                    key={coffee.uuid}
                     onPress={() => onPress(coffee.uuid)}
                   >
                     <Item>

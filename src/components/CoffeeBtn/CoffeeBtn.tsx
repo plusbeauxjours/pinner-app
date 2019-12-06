@@ -7,8 +7,6 @@ import {
   UnMatchVariables,
   DeleteCoffee,
   DeleteCoffeeVariables,
-  GetCoffees,
-  GetCoffeesVariables,
   GetMatches,
   GetMatchesVariables
 } from "../../types/api";
@@ -17,7 +15,7 @@ import styled from "styled-components";
 import { ActivityIndicator } from "react-native";
 import Toast from "react-native-root-toast";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import { DELETE_COFFEE, GET_COFFEES } from "../../sharedQueries";
+import { DELETE_COFFEE } from "../../sharedQueries";
 import { chat_leave } from "../../../Fire";
 import { useMe } from "../../context/MeContext";
 import { GET_MATCHES } from "../../screens/Tabs/MatchTab/Match/MatchQueries";
@@ -83,30 +81,6 @@ const CoffeeBtn: React.FC<IProps> = ({
       } catch (e) {
         console.log(e);
       }
-      try {
-        const cityData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
-          query: GET_COFFEES,
-          variables: {
-            cityId: match.cityId,
-            location: "city"
-          }
-        });
-        if (cityData) {
-          cityData.getCoffees.coffees = cityData.getCoffees.coffees.filter(
-            i => i.uuid !== match.coffeeId
-          );
-          cache.writeQuery({
-            query: GET_COFFEES,
-            variables: {
-              cityId: match.cityId,
-              location: "city"
-            },
-            data: cityData
-          });
-        }
-      } catch (e) {
-        console.log(e);
-      }
     }
   });
   const [unMatchFn, { loading: unMatchLoading }] = useMutation<
@@ -120,57 +94,7 @@ const CoffeeBtn: React.FC<IProps> = ({
     DeleteCoffee,
     DeleteCoffeeVariables
   >(DELETE_COFFEE, {
-    variables: { coffeeId },
-    update(cache, { data: { deleteCoffee } }) {
-      try {
-        const profileData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
-          query: GET_COFFEES,
-          variables: {
-            userName,
-            location: "profile"
-          }
-        });
-        if (profileData) {
-          profileData.getCoffees.coffees = profileData.getCoffees.coffees.filter(
-            i => i.uuid !== deleteCoffee.coffeeId
-          );
-          cache.writeQuery({
-            query: GET_COFFEES,
-            variables: {
-              userName,
-              location: "profile"
-            },
-            data: profileData
-          });
-        }
-      } catch (e) {
-        console.log(e);
-      }
-      try {
-        const feedData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
-          query: GET_COFFEES,
-          variables: {
-            cityId,
-            location: "city"
-          }
-        });
-        if (feedData) {
-          feedData.getCoffees.coffees = feedData.getCoffees.coffees.filter(
-            i => i.uuid !== deleteCoffee.coffeeId
-          );
-          cache.writeQuery({
-            query: GET_COFFEES,
-            variables: {
-              cityId,
-              location: "city"
-            },
-            data: feedData
-          });
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    }
+    variables: { coffeeId }
   });
 
   const toast = (message: string) => {

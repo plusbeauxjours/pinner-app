@@ -48,23 +48,11 @@ export const REQUEST_COFFEE = gql`
       coffee {
         id
         uuid
-        city {
-          cityId
-          cityName
-          cityThumbnail
-          country {
-            countryName
-            countryCode
-            countryEmoji
-          }
-        }
         host {
           id
           username
           profile {
-            avatarUrl
-            appAvatarUrl
-            isSelf
+            uuid
             gender
             nationality {
               countryEmoji
@@ -74,19 +62,8 @@ export const REQUEST_COFFEE = gql`
               countryEmoji
               ...CountryParts
             }
-            currentCity {
-              cityName
-              country {
-                countryName
-              }
-            }
           }
         }
-        status
-        naturalTime
-        target
-        createdAt
-        matchCount
       }
     }
   }

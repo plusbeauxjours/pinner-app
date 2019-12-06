@@ -11,6 +11,7 @@ export const GET_USER = gql`
         lastName
         profile {
           id
+          uuid
           bio
           gender
           avatarUrl

@@ -32,6 +32,7 @@ export const COMPLETE_EDIT_EMAIL_VERIFICATION = gql`
         username
         profile {
           id
+          uuid
           gender
           residence {
             countryEmoji
@@ -62,6 +63,7 @@ export const COMPLETE_EMAIL_SIGN_IN = gql`
         username
         profile {
           id
+          uuid
           gender
           residence {
             countryEmoji

@@ -317,14 +317,13 @@ export default ({ navigation }) => {
       }
     );
   };
-  // const {
-  //   data: { getCoffees: { coffees = null } = {} } = {},
-  //   loading: coffeeLoading,
-  //   refetch: coffeeRefetch
-  // } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
-  //   variables: { location: "city", cityId: location.currentCityId },
-  //   fetchPolicy: "no-cache"
-  // });
+  const {
+    data: { getCoffees: { coffees = null } = {} } = {},
+    loading: coffeeLoading
+  } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
+    variables: { location: "city", cityId: location.currentCityId },
+    fetchPolicy: "no-cache"
+  });
   const [requestCoffeeFn, { loading: requestCoffeeLoading }] = useMutation<
     RequestCoffee,
     RequestCoffeeVariables
@@ -463,6 +462,7 @@ export default ({ navigation }) => {
           countryCode: country.cca2
         }
       });
+      console.log(requestCoffee);
       if (requestCoffee.ok) {
         toast("Requested");
       }
@@ -613,13 +613,6 @@ export default ({ navigation }) => {
           }
         >
           <Container>
-            {console.log(
-              trip
-                .filter(r => r.city.hasCoffee)
-                .filter(r => r)
-                .sort(sortByDate)
-            )}
-            {console.log(activeSections)}
             <Accordion
               sections={trip
                 .filter(r => r.city.hasCoffee)
@@ -729,9 +722,9 @@ export default ({ navigation }) => {
           </Container>
         </ScrollView>
         <Footer>
-          {/* {console.log(
+          {console.log(
             coffees,
-            coffees.length !== 0,
+            coffees.length,
             coffees.find(i => i.host.username === me.user.username)
           )}
           {coffees &&
@@ -749,16 +742,16 @@ export default ({ navigation }) => {
                 <CoffeeText>CANCEL COFFEE</CoffeeText>
               </CoffeeSubmitContainer>
             </CoffeeSubmitBtn>
-          ) : ( */}
-          <CoffeeSubmitBtn
-            disabled={requestCoffeeLoading}
-            onPress={() => requestCoffee()}
-          >
-            <CoffeeSubmitContainer>
-              <CoffeeText>REQUEST COFFEE</CoffeeText>
-            </CoffeeSubmitContainer>
-          </CoffeeSubmitBtn>
-          {/* )} */}
+          ) : (
+            <CoffeeSubmitBtn
+              disabled={requestCoffeeLoading}
+              onPress={() => requestCoffee()}
+            >
+              <CoffeeSubmitContainer>
+                <CoffeeText>REQUEST COFFEE</CoffeeText>
+              </CoffeeSubmitContainer>
+            </CoffeeSubmitBtn>
+          )}
         </Footer>
       </>
     );

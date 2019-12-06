@@ -11,6 +11,7 @@ export const ME = gql`
         lastName
         profile {
           id
+          uuid
           bio
           gender
           avatarUrl
@@ -118,31 +119,18 @@ export const GET_COFFEES = gql`
         id
         uuid
         city {
-          cityId
           cityName
-          cityThumbnail
           country {
             countryName
-            countryCode
-            countryEmoji
           }
         }
         host {
           id
           username
           profile {
-            avatarUrl
+            uuid
             appAvatarUrl
             isSelf
-            gender
-            nationality {
-              countryEmoji
-              ...CountryParts
-            }
-            residence {
-              countryEmoji
-              ...CountryParts
-            }
             currentCity {
               cityName
               country {
@@ -155,11 +143,9 @@ export const GET_COFFEES = gql`
         naturalTime
         target
         createdAt
-        matchCount
       }
     }
   }
-  ${COUNTRY_FRAGMENT}
 `;
 
 export const DELETE_COFFEE = gql`

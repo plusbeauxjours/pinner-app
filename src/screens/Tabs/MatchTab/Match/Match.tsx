@@ -17,7 +17,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import Toast from "react-native-root-toast";
 import { UNMATCH } from "../../../../components/CoffeeBtn/CoffeeBtnQueries";
 import { chat_leave } from "../../../../../Fire";
-import { ME, GET_COFFEES } from "../../../../sharedQueries";
+import { ME } from "../../../../sharedQueries";
 import { useLogIn } from "../../../../context/AuthContext";
 import { useLocation } from "../../../../context/LocationContext";
 import {
@@ -31,9 +31,7 @@ import {
   UnMatch,
   UnMatchVariables,
   CompleteEditEmailVerification,
-  CompleteEditEmailVerificationVariables,
-  GetCoffees,
-  GetCoffeesVariables
+  CompleteEditEmailVerificationVariables
 } from "../../../../types/api";
 
 const TextContainer = styled.View`
@@ -206,24 +204,6 @@ export default ({ navigation }) => {
       } catch (e) {
         console.log(e);
       }
-      try {
-        const cityData = cache.readQuery<GetCoffees, GetCoffeesVariables>({
-          query: GET_COFFEES,
-          variables: { cityId: unMatch.cityId, location: "city" }
-        });
-        if (unMatch.coffee.status !== "expired" && unMatch.coffee) {
-          if (cityData) {
-            cityData.getCoffees.coffees.push(unMatch.coffee);
-            cache.writeQuery({
-              query: GET_COFFEES,
-              variables: { cityId: unMatch.cityId, location: "city" },
-              data: cityData
-            });
-          }
-        }
-      } catch (e) {
-        console.log(e);
-      }
     }
   });
   const onRefresh = async () => {
@@ -258,12 +238,17 @@ export default ({ navigation }) => {
       async buttonIndex => {
         if (buttonIndex === 0) {
           try {
-            await unMatchFn({ variables: { matchId: parseInt(matchId, 10) } });
-            chat_leave(matchId, me.user.profile.id, me.user.username);
+            const {
+              data: { unMatch }
+            } = await unMatchFn({
+              variables: { matchId: parseInt(matchId, 10) }
+            });
+            if (unMatch.ok) {
+              chat_leave(matchId, me.user.profile.id, me.user.username);
+              toast("unmatched");
+            }
           } catch (e) {
             console.log(e);
-          } finally {
-            toast("unmatched");
           }
         }
       }

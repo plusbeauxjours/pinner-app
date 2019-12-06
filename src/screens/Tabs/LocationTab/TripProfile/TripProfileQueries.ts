@@ -31,6 +31,7 @@ export const TRIP_PROFILE = gql`
         actor {
           profile {
             id
+            uuid
             username
             avatarUrl
             isSelf
@@ -53,6 +54,7 @@ export const TRIP_PROFILE = gql`
           id
           username
           profile {
+            uuid
             avatarUrl
           }
         }

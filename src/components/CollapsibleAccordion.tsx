@@ -7,7 +7,7 @@ import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import Loader from "./Loader";
 import { GetCoffees, GetCoffeesVariables } from "../types/api";
 import { GET_COFFEES } from "../sharedQueries";
-import constants, { BACKEND_URL } from "../../constants";
+import { BACKEND_URL } from "../../constants";
 import CoffeeDetail from "../screens/CoffeeDetail";
 import { useTheme } from "../context/ThemeContext";
 
@@ -45,18 +45,18 @@ const Location = styled.Text`
   font-size: 12px;
   color: ${props => props.theme.color};
 `;
-const randomAvatar = {
-  1: require(`../Images/thumbnails/earth1.png`),
-  2: require(`../Images/thumbnails/earth2.png`),
-  3: require(`../Images/thumbnails/earth3.png`),
-  4: require(`../Images/thumbnails/earth4.png`),
-  5: require(`../Images/thumbnails/earth5.png`),
-  6: require(`../Images/thumbnails/earth6.png`),
-  7: require(`../Images/thumbnails/earth7.png`),
-  8: require(`../Images/thumbnails/earth8.png`),
-  9: require(`../Images/thumbnails/earth9.png`)
-};
 export default ({ cityId }) => {
+  const randomAvatar = {
+    1: require(`../Images/thumbnails/earth1.png`),
+    2: require(`../Images/thumbnails/earth2.png`),
+    3: require(`../Images/thumbnails/earth3.png`),
+    4: require(`../Images/thumbnails/earth4.png`),
+    5: require(`../Images/thumbnails/earth5.png`),
+    6: require(`../Images/thumbnails/earth6.png`),
+    7: require(`../Images/thumbnails/earth7.png`),
+    8: require(`../Images/thumbnails/earth8.png`),
+    9: require(`../Images/thumbnails/earth9.png`)
+  };
   const isDarkMode = useTheme();
   const [coffeeId, setCoffeeId] = useState<string>("");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -71,7 +71,6 @@ export default ({ cityId }) => {
     variables: { location: "city", cityId },
     fetchPolicy: "no-cache"
   });
-  // console.log("coffees in Accordion", cityId, coffees);
   if (coffeeLoading) {
     return (
       <LoaderContainer>

@@ -29,6 +29,7 @@ export const EDIT_PROFILE = gql`
         lastName
         profile {
           id
+          uuid
           bio
           gender
           avatarUrl
@@ -141,6 +142,7 @@ export const TOGGLE_SETTINGS = gql`
         id
         username
         profile {
+          uuid
           isSelf
           isDarkMode
           isHideTrips
