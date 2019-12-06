@@ -28,7 +28,7 @@ import { GET_USER } from "../UserProfile/UserProfileQueries";
 import { ME } from "../../../../sharedQueries";
 
 const TextContainer = styled.View`
-  margin-top: 50px;
+  margin-top: 15px;
   justify-content: center;
   align-items: center;
 `;
@@ -61,7 +61,7 @@ export default ({ navigation }) => {
   const { showActionSheetWithOptions } = useActionSheet();
   const uuid = navigation.getParam("uuid")
     ? navigation.getParam("uuid")
-    : me.user.uuid;
+    : me.user.profile.uuid;
   const isSelf = navigation.getParam("isSelf")
     ? navigation.getParam("isSelf")
     : me.user.profile.uuid === navigation.getParam("uuid") ||

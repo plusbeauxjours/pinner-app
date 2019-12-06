@@ -120,7 +120,7 @@ const CoffeeSubmitBtn = styled.TouchableOpacity`
   padding: 0 5px 5px 5px;
 `;
 const EmptyView = styled.View`
-  height: 10px;
+  height: 30px;
 `;
 export default ({ navigation }) => {
   const { me, loading: meLoading } = useMe();
@@ -129,7 +129,7 @@ export default ({ navigation }) => {
   const [nationalityModalOpen, setNationalityModalOpen] = useState<boolean>(
     false
   );
-  const [activeSections, setActiveSections] = useState<any>([0]);
+  const [activeSections, setActiveSections] = useState<any>([0, 1, 2, 3, 4]);
   const [residenceModalOpen, setResidenceModalOpen] = useState<boolean>(false);
   const [nationalityCode, setNationalityCode] = useState<any>("");
   const [residenceCode, setResidenceCode] = useState<any>("");

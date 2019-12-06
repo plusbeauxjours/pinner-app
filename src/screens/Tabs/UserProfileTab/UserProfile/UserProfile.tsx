@@ -111,7 +111,7 @@ const Touchable = styled.TouchableOpacity`
 `;
 const IconTouchable = styled(Touchable)`
   margin-left: 5px;
-  margin-top: 5px;
+  margin-top: 8px;
 `;
 const ImageTouchable = styled(Touchable)`
   margin-bottom: 15px;

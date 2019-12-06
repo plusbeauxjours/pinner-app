@@ -146,8 +146,17 @@ export default withNavigation(({ navigation }) => {
             type: type.toLowerCase(),
             name
           });
-          uploadAvatarFn({ variables: { file } });
-          navigation.pop();
+          try {
+            const {
+              data: { uploadAvatar }
+            } = await uploadAvatarFn({ variables: { file } });
+            if (uploadAvatar.ok) {
+              toast("Uploaded");
+              navigation.pop();
+            }
+          } catch (e) {
+            console.log(e);
+          }
         }
       } catch (e) {
         console.log(e);

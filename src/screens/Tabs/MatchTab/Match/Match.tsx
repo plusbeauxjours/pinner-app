@@ -35,7 +35,7 @@ import {
 } from "../../../../types/api";
 
 const TextContainer = styled.View`
-  margin-top: 50px;
+  margin-top: 15px;
   justify-content: center;
   align-items: center;
 `;

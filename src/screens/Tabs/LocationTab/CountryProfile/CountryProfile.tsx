@@ -82,14 +82,15 @@ const LoaderContainer = styled.View`
 const IconTouchable = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
-  margin-right: 10px;
+  margin-top: 5px;
+  margin-left: 10px;
 `;
 const LocationNameContainer = styled.View`
   width: ${constants.width - 40};
   margin-left: 5px;
   align-self: flex-start;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
 `;
 const NoPhotoContainer = styled.View`

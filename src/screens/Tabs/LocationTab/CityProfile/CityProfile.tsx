@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RefreshControl, Image, Platform } from "react-native";
+import { RefreshControl, Platform } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -39,7 +39,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import CoffeeDetail from "../../../CoffeeDetail";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
-import LocationCenterHeader from "../../../../components/Header/LocationCenterHeader";
 
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -94,14 +93,15 @@ const InfoRow = styled.View`
 const IconTouchable = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
-  margin-right: 10px;
+  margin-top: 5px;
+  margin-left: 10px;
 `;
 const LocationNameContainer = styled.View`
   width: ${constants.width - 40};
   margin-left: 5px;
   align-self: flex-start;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
 `;
 const LocationInfoContainer = styled.View`
@@ -343,7 +343,6 @@ export default ({ navigation }) => {
                   </Touchable>
                 )}
                 <LocationNameContainer>
-                  <LocationCenterHeader />
                   <Bold>{city.cityName}</Bold>
                   <IconTouchable onPress={() => selectReportLocation()}>
                     <Ionicons
