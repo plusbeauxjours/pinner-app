@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
-import {
-  RefreshControl,
-  Platform,
-  TouchableOpacity,
-  SectionList
-} from "react-native";
+import { RefreshControl, Platform, TouchableOpacity } from "react-native";
 import Swiper from "react-native-swiper";
 import Toast from "react-native-root-toast";
 import { SimpleLineIcons } from "@expo/vector-icons";
@@ -19,11 +14,9 @@ import {
   REQUEST_COFFEE
 } from "./RequestCoffeeQueries";
 import { useLocation } from "../../../context/LocationContext";
-import { GET_COFFEES, ME, DELETE_COFFEE } from "../../../sharedQueries";
+import { ME, DELETE_COFFEE } from "../../../sharedQueries";
 import {
   Me,
-  GetCoffees,
-  GetCoffeesVariables,
   RecommendUsers,
   RecommendUsersVariables,
   RecommendLocations,
@@ -48,11 +41,8 @@ const AccordionTitleContainer = styled.View`
   flex-direction: row;
   height: 20px;
   align-items: center;
-  /* opacity: 0.1; */
   width: ${constants.width - 40};
   margin: 0 5px 0 5px;
-  /* border-top-width: 0.5px;
-  border-top-color: ${props => props.theme.shadowColor}; */
 `;
 const AccordionIcon = styled.View`
   width: 20;
@@ -70,10 +60,7 @@ const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
   padding: 0 15px 0 15px;
 `;
-const CoffeeContainer = styled.View`
-  /* border-bottom-width: 0.5px;
-  border-bottom-color: ${props => props.theme.shadowColor}; */
-`;
+const CoffeeContainer = styled.View``;
 const UserContainer = styled.View``;
 const UserColumn = styled.View``;
 const Item = styled.View`
@@ -317,32 +304,61 @@ export default ({ navigation }) => {
       }
     );
   };
+
+  ///////// Query /////////
   const {
-    data: { getCoffees: { coffees = null } = {} } = {},
-    loading: coffeeLoading
-  } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
-    variables: { location: "city", cityId: location.currentCityId },
+    data: { getTripCities: { trip = null } = {} } = {},
+    loading: tripLoading,
+    refetch: tripRefetch
+  } = useQuery<GetTripCities>(GET_TRIP_CITIES);
+  const {
+    data: { recommendUsers: { users: recommendUsers = null } = {} } = {},
+    loading: recommendUserLoading,
+    refetch: recommendUserRefetch
+  } = useQuery<RecommendUsers, RecommendUsersVariables>(RECOMMEND_USERS, {
     fetchPolicy: "no-cache"
   });
+  const {
+    data: {
+      recommendLocations: { cities: recommendLocations = null } = {}
+    } = {},
+    loading: recommendLocationLoading,
+    refetch: recommendLocationRefetch
+  } = useQuery<RecommendLocations, RecommendLocationsVariables>(
+    RECOMMEND_LOCATIONS,
+    { fetchPolicy: "no-cache" }
+  );
+  ////////////////////////////
+  ///////// Mutation /////////
   const [requestCoffeeFn, { loading: requestCoffeeLoading }] = useMutation<
     RequestCoffee,
     RequestCoffeeVariables
   >(REQUEST_COFFEE, {
+    refetchQueries: [{ query: GET_TRIP_CITIES }],
     update(cache, { data: { requestCoffee } }) {
       try {
         const meData = cache.readQuery<Me>({
           query: ME
         });
         if (meData) {
-          if (!meData.me.user.profile.nationality) {
+          if (
+            !meData.me.user.profile.nationality &&
+            requestCoffee.coffee.host.profile.nationality
+          ) {
             meData.me.user.profile.nationality =
               requestCoffee.coffee.host.profile.nationality;
           }
-          if (!meData.me.user.profile.residence) {
+          if (
+            !meData.me.user.profile.residence &&
+            requestCoffee.coffee.host.profile.residence
+          ) {
             meData.me.user.profile.residence =
               requestCoffee.coffee.host.profile.residence;
           }
-          if (!meData.me.user.profile.gender) {
+          if (
+            !meData.me.user.profile.gender &&
+            requestCoffee.coffee.host.profile.gender
+          ) {
             meData.me.user.profile.gender =
               requestCoffee.coffee.host.profile.gender;
           }
@@ -356,36 +372,12 @@ export default ({ navigation }) => {
       }
     }
   });
-  const {
-    data: { getTripCities: { trip = null } = {} } = {},
-    loading: tripLoading,
-    refetch: tripRefetch
-  } = useQuery<GetTripCities>(GET_TRIP_CITIES);
-
-  const {
-    data: { recommendUsers: { users: recommendUsers = null } = {} } = {},
-    loading: recommendUserLoading,
-    refetch: recommendUserRefetch
-  } = useQuery<RecommendUsers, RecommendUsersVariables>(RECOMMEND_USERS, {
-    fetchPolicy: "no-cache"
-  });
-
-  const {
-    data: {
-      recommendLocations: { cities: recommendLocations = null } = {}
-    } = {},
-    loading: recommendLocationLoading,
-    refetch: recommendLocationRefetch
-  } = useQuery<RecommendLocations, RecommendLocationsVariables>(
-    RECOMMEND_LOCATIONS,
-    { fetchPolicy: "no-cache" }
-  );
+  ////////////////////////////
 
   const [deleteCoffeeFn, { loading: deleteCoffeeLoading }] = useMutation<
     DeleteCoffee,
     DeleteCoffeeVariables
-  >(DELETE_COFFEE);
-
+  >(DELETE_COFFEE, { refetchQueries: [{ query: GET_TRIP_CITIES }] });
   const cancelCoffee = coffeeId => {
     showActionSheetWithOptions(
       {
@@ -719,21 +711,10 @@ export default ({ navigation }) => {
           </Container>
         </ScrollView>
         <Footer>
-          {console.log(
-            coffees,
-            coffees.length,
-            coffees.find(i => i.host.username === me.user.username)
-          )}
-          {coffees &&
-          coffees.length !== 0 &&
-          coffees.find(i => i.host.username === me.user.username) ? (
+          {coffees && count !== 0 ? (
             <CoffeeSubmitBtn
               disabled={deleteCoffeeLoading}
-              onPress={() =>
-                cancelCoffee(
-                  coffees.find(i => i.host.username === me.user.username).uuid
-                )
-              }
+              onPress={() => cancelCoffee(coffees[0].uuid)}
             >
               <CoffeeSubmitContainer>
                 <CoffeeText>CANCEL COFFEE</CoffeeText>

@@ -1461,24 +1461,6 @@ export interface RecommendLocationsVariables {
 // GraphQL mutation operation: RequestCoffee
 // ====================================================
 
-export interface RequestCoffee_requestCoffee_coffee_host_profile_nationality_continent {
-  __typename: "ContinentType";
-  continentCode: string | null;
-  continentName: string | null;
-}
-
-export interface RequestCoffee_requestCoffee_coffee_host_profile_nationality {
-  __typename: "CountryType";
-  countryEmoji: string | null;
-  id: string;
-  countryName: string | null;
-  countryCode: string | null;
-  countryPhoto: string | null;
-  countryThumbnail: string | null;
-  cityCount: number | null;
-  continent: RequestCoffee_requestCoffee_coffee_host_profile_nationality_continent | null;
-}
-
 export interface RequestCoffee_requestCoffee_coffee_host_profile_residence_continent {
   __typename: "ContinentType";
   continentCode: string | null;
@@ -1487,7 +1469,6 @@ export interface RequestCoffee_requestCoffee_coffee_host_profile_residence_conti
 
 export interface RequestCoffee_requestCoffee_coffee_host_profile_residence {
   __typename: "CountryType";
-  countryEmoji: string | null;
   id: string;
   countryName: string | null;
   countryCode: string | null;
@@ -1495,30 +1476,42 @@ export interface RequestCoffee_requestCoffee_coffee_host_profile_residence {
   countryThumbnail: string | null;
   cityCount: number | null;
   continent: RequestCoffee_requestCoffee_coffee_host_profile_residence_continent | null;
+  countryEmoji: string | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host_profile_nationality_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host_profile_nationality {
+  __typename: "CountryType";
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryPhoto: string | null;
+  countryThumbnail: string | null;
+  cityCount: number | null;
+  continent: RequestCoffee_requestCoffee_coffee_host_profile_nationality_continent | null;
+  countryEmoji: string | null;
 }
 
 export interface RequestCoffee_requestCoffee_coffee_host_profile {
   __typename: "ProfileType";
-  uuid: any | null;
   gender: ProfileGender | null;
-  nationality: RequestCoffee_requestCoffee_coffee_host_profile_nationality | null;
   residence: RequestCoffee_requestCoffee_coffee_host_profile_residence | null;
+  nationality: RequestCoffee_requestCoffee_coffee_host_profile_nationality | null;
 }
 
 export interface RequestCoffee_requestCoffee_coffee_host {
   __typename: "UserType";
-  id: string;
-  /**
-   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
-   */
-  username: string;
   profile: RequestCoffee_requestCoffee_coffee_host_profile | null;
 }
 
 export interface RequestCoffee_requestCoffee_coffee {
   __typename: "CoffeeType";
   id: string;
-  uuid: any | null;
   host: RequestCoffee_requestCoffee_coffee_host;
 }
 
@@ -2648,6 +2641,7 @@ export interface GetCoffees_getCoffees_coffees {
 
 export interface GetCoffees_getCoffees {
   __typename: "GetCoffeesResponse";
+  count: number | null;
   coffees: (GetCoffees_getCoffees_coffees | null)[] | null;
 }
 

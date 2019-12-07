@@ -125,6 +125,10 @@ const UserName = styled.Text`
 const ScrollView = styled.ScrollView`
   background-color: ${props => props.theme.bgColor};
 `;
+const SearchLoaderContainer = styled.View`
+  flex: 1;
+  margin-top: 50;
+`;
 const LoaderContainer = styled.View`
   flex: 1;
   background-color: ${props => props.theme.bgColor};
@@ -261,7 +265,6 @@ export default ({ navigation }) => {
   const [searchCountryCode, setSearchCountryCode] = useState<string>("");
   const [searchCountryName, setSearchCountryName] = useState<string>("");
   const [avatarModalOpen, setAvatarModalOpen] = useState<boolean>(false);
-  const [searchContinentCode, setSearchContinentCode] = useState<string>("");
   const [uuid, setUuid] = useState<string>(
     navigation.getParam("uuid")
       ? navigation.getParam("uuid")
@@ -465,7 +468,6 @@ export default ({ navigation }) => {
       setIsCalendarMode(true);
       setSearchCityId(result.data.createCity.cityId);
       setSearchCountryCode(result.data.createCity.countryCode);
-      setSearchContinentCode(result.data.createCity.continentCode);
       setSearchCityName(cityName);
       setSearchCountryName(countryName);
     } catch (e) {
@@ -540,7 +542,6 @@ export default ({ navigation }) => {
     setSearchCityName(trip.city.cityName);
     setSearchCountryCode(trip.city.country.countryCode);
     setSearchCountryName(trip.city.country.countryName);
-    setSearchContinentCode(trip.city.country.continent.continentCode);
     if (tripStartDate && tripEndDate) {
       const daysInBetween = moment(tripEndDate).diff(tripStartDate, "day");
       const daysInBetweenMarked = range(daysInBetween).reduce((acc, cur) => {
@@ -823,13 +824,15 @@ export default ({ navigation }) => {
               >
                 <ScrollView
                   style={{
-                    marginTop: 237,
+                    marginTop: 249,
                     marginBottom: 25,
                     backgroundColor: "transparent"
                   }}
                 >
                   {createCityLoading || isLoading ? (
-                    <Loader />
+                    <SearchLoaderContainer>
+                      <Loader />
+                    </SearchLoaderContainer>
                   ) : (
                     <KeyboardAvoidingView enabled behavior="padding">
                       {search !== "" &&

@@ -47,20 +47,16 @@ export const REQUEST_COFFEE = gql`
       ok
       coffee {
         id
-        uuid
         host {
-          id
-          username
           profile {
-            uuid
             gender
-            nationality {
-              countryEmoji
-              ...CountryParts
-            }
             residence {
-              countryEmoji
               ...CountryParts
+              countryEmoji
+            }
+            nationality {
+              ...CountryParts
+              countryEmoji
             }
           }
         }

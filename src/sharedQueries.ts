@@ -115,6 +115,7 @@ export const GET_COFFEES = gql`
       uuid: $uuid
       location: $location
     ) {
+      count
       coffees {
         id
         uuid

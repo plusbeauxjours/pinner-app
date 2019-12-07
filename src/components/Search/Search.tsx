@@ -72,6 +72,7 @@ const Header = styled.View`
 const LoaderContainer = styled.View`
   flex: 1;
   margin-top: 50;
+  right: 15px;
 `;
 const ImageContainer = styled.View`
   justify-content: center;
@@ -150,7 +151,7 @@ const Search = ({ navigation }) => {
         <TextInput
           style={{
             alignSelf: "center",
-            width: constants.width - 30,
+            width: constants.width - 40,
             top: 200,
             backgroundColor: "transparent",
             textAlign: "center",
