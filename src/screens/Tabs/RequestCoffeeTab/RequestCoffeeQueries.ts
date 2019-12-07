@@ -69,6 +69,7 @@ export const REQUEST_COFFEE = gql`
 export const GET_TRIP_CITIES = gql`
   query GetTripCities {
     getTripCities {
+      coffeeId
       trip {
         id
         startDate

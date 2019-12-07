@@ -985,24 +985,13 @@
           {
             "name": "getTripCities",
             "description": null,
-            "args": [
-              {
-                "name": "page",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null
-              }
-            ],
+            "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "TripResponse",
+                "name": "TripCitiesResponse",
                 "ofType": null
               }
             },
@@ -5542,17 +5531,32 @@
         "description": null,
         "fields": [
           {
-            "name": "count",
+            "name": "trip",
             "description": null,
             "args": [],
             "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "MoveNotificationType",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
-          },
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TripCitiesResponse",
+        "description": null,
+        "fields": [
           {
             "name": "trip",
             "description": null,
@@ -5565,6 +5569,18 @@
                 "name": "MoveNotificationType",
                 "ofType": null
               }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "coffeeId",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null

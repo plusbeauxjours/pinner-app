@@ -114,7 +114,8 @@ const CoffeeDetails: React.FC<IProps> = ({
     data: { coffeeDetail: { coffee = null } = {} } = {},
     loading: coffeeDetailLoading
   } = useQuery<CoffeeDetail, CoffeeDetailVariables>(COFFEE_DETAIL, {
-    variables: { coffeeId }
+    variables: { coffeeId },
+    fetchPolicy: "no-cache"
   });
   const onPress = uuid => {
     setModalOpen(false);

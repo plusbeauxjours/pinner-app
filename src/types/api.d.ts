@@ -1561,7 +1561,8 @@ export interface GetTripCities_getTripCities_trip {
 }
 
 export interface GetTripCities_getTripCities {
-  __typename: "TripResponse";
+  __typename: "TripCitiesResponse";
+  coffeeId: string | null;
   trip: (GetTripCities_getTripCities_trip | null)[] | null;
 }
 

@@ -307,7 +307,7 @@ export default ({ navigation }) => {
 
   ///////// Query /////////
   const {
-    data: { getTripCities: { trip = null } = {} } = {},
+    data: { getTripCities: { coffeeId = null, trip = null } = {} } = {},
     loading: tripLoading,
     refetch: tripRefetch
   } = useQuery<GetTripCities>(GET_TRIP_CITIES);
@@ -372,12 +372,11 @@ export default ({ navigation }) => {
       }
     }
   });
-  ////////////////////////////
-
   const [deleteCoffeeFn, { loading: deleteCoffeeLoading }] = useMutation<
     DeleteCoffee,
     DeleteCoffeeVariables
   >(DELETE_COFFEE, { refetchQueries: [{ query: GET_TRIP_CITIES }] });
+  ////////////////////////////
   const cancelCoffee = coffeeId => {
     showActionSheetWithOptions(
       {
@@ -404,6 +403,7 @@ export default ({ navigation }) => {
       }
     );
   };
+
   const toast = (message: string) => {
     Toast.show(message, {
       duration: Toast.durations.LONG,
@@ -602,19 +602,20 @@ export default ({ navigation }) => {
           }
         >
           <Container>
-            <Accordion
-              sections={trip
-                .filter(r => r.city.hasCoffee)
-                .filter(r => r)
-                .sort(sortByDate)}
-              expandMultiple={true}
-              activeSections={activeSections}
-              renderHeader={renderHeader}
-              renderContent={renderContent}
-              onChange={onChange}
-              touchableComponent={TouchableOpacity}
-            />
-            <EmptyView />
+            {trip.filter(r => r.city.hasCoffee) && (
+              <>
+                <Accordion
+                  sections={trip.filter(r => r.city.hasCoffee).sort(sortByDate)}
+                  expandMultiple={true}
+                  activeSections={activeSections}
+                  renderHeader={renderHeader}
+                  renderContent={renderContent}
+                  onChange={onChange}
+                  touchableComponent={TouchableOpacity}
+                />
+                <EmptyView />
+              </>
+            )}
             {recommendUsers && recommendUsers.length !== 0 && (
               <Item>
                 <Title>RECOMMEND USERS</Title>
@@ -711,10 +712,10 @@ export default ({ navigation }) => {
           </Container>
         </ScrollView>
         <Footer>
-          {coffees && count !== 0 ? (
+          {coffeeId ? (
             <CoffeeSubmitBtn
               disabled={deleteCoffeeLoading}
-              onPress={() => cancelCoffee(coffees[0].uuid)}
+              onPress={() => cancelCoffee(coffeeId)}
             >
               <CoffeeSubmitContainer>
                 <CoffeeText>CANCEL COFFEE</CoffeeText>
