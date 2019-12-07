@@ -106,9 +106,13 @@ const CoffeeSubmitBtn = styled.TouchableOpacity`
   justify-content: center;
   padding: 0 5px 5px 5px;
 `;
-const EmptyView = styled.View`
-  height: 30px;
+const EmptyContainer = styled.View`
+  margin-bottom: 30px;
 `;
+const SmallEmptyContainer = styled.View`
+  margin-bottom: 15px;
+`;
+
 export default ({ navigation }) => {
   const { me, loading: meLoading } = useMe();
   const location = useLocation();
@@ -602,7 +606,7 @@ export default ({ navigation }) => {
           }
         >
           <Container>
-            {trip.filter(r => r.city.hasCoffee) && (
+            {trip.filter(r => r.city.hasCoffee).length !== 0 ? (
               <>
                 <Accordion
                   sections={trip.filter(r => r.city.hasCoffee).sort(sortByDate)}
@@ -613,8 +617,10 @@ export default ({ navigation }) => {
                   onChange={onChange}
                   touchableComponent={TouchableOpacity}
                 />
-                <EmptyView />
+                <EmptyContainer />
               </>
+            ) : (
+              <SmallEmptyContainer />
             )}
             {recommendUsers && recommendUsers.length !== 0 && (
               <Item>

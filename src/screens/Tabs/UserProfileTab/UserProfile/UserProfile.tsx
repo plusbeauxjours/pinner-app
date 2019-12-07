@@ -1108,7 +1108,10 @@ export default ({ navigation }) => {
           }
         >
           <Header>
-            <ImageTouchable onPress={() => setAvatarModalOpen(true)}>
+            <ImageTouchable
+              disabled={!user.profile.avatarUrl}
+              onPress={() => setAvatarModalOpen(true)}
+            >
               {user.profile.avatarUrl ? (
                 <ProgressiveImage
                   tint={isDarkMode ? "dark" : "light"}
