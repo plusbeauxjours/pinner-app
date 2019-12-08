@@ -118,6 +118,7 @@ export const chat_send = (chat_id: string, message: ChatMessage) => {
   if (message.text) {
     updates[`/chats/${chat_id}/lastMessage/`] = `${message.text}`;
     updates[`/chats/${chat_id}/lastSender/`] = `${message.user._id}`;
+    updates[`/chats/${chat_id}/createdAt/`] = `${message.createdAt}`;
     updates[`/chats/${chat_id}/status/`] = `${message.status}`;
   } else if (message.image) {
     updates[`/chats/${chat_id}/lastMessage/`] = "Photo";

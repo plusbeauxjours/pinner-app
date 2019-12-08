@@ -168,7 +168,7 @@ const UserRow: React.FC<IProps> = ({
     get_last_chat_messages(match.id).then(message => {
       setLastMessage(message);
     });
-    get_last_chat_status(match.id, me.user.profile.id).then(status => {
+    get_last_chat_status(match.id, me.user.profile.uuid).then(status => {
       if (status === true) {
         setHasUnreadMessage(false);
       } else if (status === false) {
@@ -184,12 +184,12 @@ const UserRow: React.FC<IProps> = ({
         if (child.val()) {
           setLastMessage(child.val()["lastMessage"]);
           if (
-            child.val()["lastSender"] !== me.user.profile.id &&
+            child.val()["lastSender"] !== me.user.profile.uuid &&
             child.val()["status"] === true
           ) {
             setHasUnreadMessage(false);
           } else if (
-            child.val()["lastSender"] !== me.user.profile.id &&
+            child.val()["lastSender"] !== me.user.profile.uuid &&
             child.val()["status"] === false
           ) {
             setHasUnreadMessage(true);

@@ -16,7 +16,7 @@ import { SwipeListView } from "react-native-swipe-list-view";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import Toast from "react-native-root-toast";
 import { UNMATCH } from "../../../../components/CoffeeBtn/CoffeeBtnQueries";
-import { chat_leave } from "../../../../../Fire";
+import { chat_leave, fb_db } from "../../../../../Fire";
 import { ME } from "../../../../sharedQueries";
 import { useLogIn } from "../../../../context/AuthContext";
 import { useLocation } from "../../../../context/LocationContext";
@@ -244,7 +244,7 @@ export default ({ navigation }) => {
               variables: { matchId: parseInt(matchId, 10) }
             });
             if (unMatch.ok) {
-              chat_leave(matchId, me.user.profile.id, me.user.username);
+              chat_leave(matchId, me.user.profile.uuid, me.user.username);
               toast("unmatched");
             }
           } catch (e) {
@@ -301,7 +301,6 @@ export default ({ navigation }) => {
       return;
     }
   };
-
   useEffect(() => {
     Linking.addEventListener("url", handleOpenURL);
   }, []);
@@ -341,10 +340,10 @@ export default ({ navigation }) => {
                           }),
                             navigation.navigate("Chat", {
                               chatId: data.item.id,
-                              userId: me.user.profile.id,
+                              userId: me.user.profile.uuid,
                               receiverId: data.item.isHost
-                                ? data.item.guest.profile.id
-                                : data.item.host.profile.id,
+                                ? data.item.guest.profile.uuid
+                                : data.item.host.profile.uuid,
                               receiverAvatar: data.item.isHost
                                 ? data.item.guest.profile.appAvatarUrl
                                 : data.item.host.profile.appAvatarUrl,
