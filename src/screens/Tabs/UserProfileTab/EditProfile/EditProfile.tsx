@@ -241,13 +241,13 @@ export default ({ navigation }) => {
       try {
         const data = cache.readQuery<UserProfile, UserProfileVariables>({
           query: GET_USER,
-          variables: { username: newUsername }
+          variables: { uuid: me.user.profile.uuid }
         });
         if (data) {
           data.userProfile.user = editProfile.user;
           cache.writeQuery({
             query: GET_USER,
-            variables: { username: newUsername },
+            variables: { uuid: me.user.profile.uuid },
             data
           });
         }

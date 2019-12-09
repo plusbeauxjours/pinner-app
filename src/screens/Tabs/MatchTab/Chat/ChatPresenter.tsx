@@ -8,8 +8,7 @@ import {
 } from "react-native-gifted-chat";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
-import { useActionSheet } from "@expo/react-native-action-sheet";
-import { Platform, Modal, SafeAreaView, View } from "react-native";
+import { Platform, Modal, SafeAreaView } from "react-native";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import Loader from "../../../../components/Loader";
 import constants from "../../../../../constants";
@@ -17,12 +16,11 @@ import { useTheme } from "../../../../context/ThemeContext";
 import { darkMode, lightMode } from "../../../../styles/mapStyles";
 import { useLocation } from "../../../../context/LocationContext";
 
+const View = styled.View``;
 const ChatContainer = styled.View`
   flex: 1;
-  /* height: ${constants.height}; */
   background-color: ${props => props.theme.bgColor};
 `;
-
 const MarkerContainer = styled.View`
   position: absolute;
   top: 0;
@@ -33,29 +31,28 @@ const MarkerContainer = styled.View`
   justify-content: center;
   background-color: transparent;
 `;
-
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
   justify-content: center;
   align-items: center;
   flex: 1;
 `;
-
 const Text = styled.Text`
-  color: ${props => props.theme.color};
-  font-size: 20px;
+  color: white;
+  font-size: 16px;
   font-weight: 500;
-`;
-const MapBtnContainer = styled.View`
-  background-color: ${props => props.theme.bgColor};
+  opacity: 1;
 `;
 const MapBtn = styled.TouchableOpacity`
-  flex-direction: row;
-  width: ${constants.width};
-  height: 50px;
-  background-color: ${props => props.theme.bgColor};
   justify-content: center;
   align-items: center;
+  flex: 1;
+  height: 40px;
+  margin: 5px;
+  border: 0.5px solid #999;
+  border-radius: 5px;
+  opacity: 0.85;
+  background-color: #96abbf;
 `;
 
 interface IProps {
@@ -70,7 +67,6 @@ interface IProps {
   closeMapModal: () => void;
   messageFooter: (timeProps: any) => void;
   renderAvatar: any;
-  onPressActionButton: () => void;
 }
 
 const ChatPresenter: React.FunctionComponent<IProps> = ({
@@ -84,8 +80,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   renderActions,
   closeMapModal,
   messageFooter,
-  renderAvatar,
-  onPressActionButton
+  renderAvatar
 }) => {
   let mapRef: MapView | null;
   const isDarkMode = useTheme();
@@ -120,26 +115,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   };
   const handleGeoError = () => {
     console.log("No location");
-  };
-  const { showActionSheetWithOptions } = useActionSheet();
-  const onPress = (latitude: string, longitude: string) => {
-    showActionSheetWithOptions(
-      {
-        options: ["Send this location", "Back to chatroom", "Cancel"],
-        cancelButtonIndex: 2
-      },
-      buttonIndex => {
-        if (buttonIndex === 0) {
-          try {
-            onSendLocation(latitude, longitude);
-          } catch (e) {
-            console.log(e);
-          }
-        } else if (buttonIndex === 1) {
-          closeMapModal();
-        }
-      }
-    );
   };
   const renderComposer = props => <Composer {...props} />;
   const renderSend = props => (
@@ -194,11 +169,11 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
             provider={PROVIDER_GOOGLE}
             style={{
               borderRadius: 5,
-              height: constants.height - 50
+              height: constants.height
             }}
             initialRegion={region}
             showsUserLocation={true}
-            showsMyLocationButton={true}
+            showsMyLocationButton={false}
             onMapReady={onMapReady}
             loadingEnabled={true}
             rotateEnabled={false}
@@ -206,22 +181,38 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
             customMapStyle={
               isDarkMode && isDarkMode === true ? darkMode : lightMode
             }
+          />
+          <MarkerContainer pointerEvents="none">
+            <Ionicons
+              name={Platform.OS === "ios" ? "ios-pin" : "md-pin"}
+              size={40}
+              color={"#3897f0"}
+              pointerEvents="none"
+              containerStyle={{ marginBottom: 30 }}
+            />
+          </MarkerContainer>
+          <View
+            style={{
+              bottom: 20,
+              position: "absolute",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              width: constants.width,
+              paddingRight: 10,
+              paddingLeft: 10,
+              marginBottom: 0
+            }}
           >
-            <MarkerContainer pointerEvents="none">
-              <Ionicons
-                name={Platform.OS === "ios" ? "ios-pin" : "md-pin"}
-                size={40}
-                color={"#3897f0"}
-                pointerEvents="none"
-                containerStyle={{ marginBottom: 30 }}
-              />
-            </MarkerContainer>
-          </MapView>
-          <MapBtnContainer>
-            <MapBtn onPress={() => onPress(region.latitude, region.longitude)}>
-              <Text>Options</Text>
+            <MapBtn onPress={() => closeMapModal()}>
+              <Text>Back to chatroom</Text>
             </MapBtn>
-          </MapBtnContainer>
+            <MapBtn
+              onPress={() => onSendLocation(region.latitude, region.longitude)}
+            >
+              <Text>Send this location</Text>
+            </MapBtn>
+          </View>
         </Modal>
         <ChatContainer>
           {Platform.OS === "android" ? (
@@ -244,7 +235,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                 placeholderTextColor={"#96abbf"}
                 renderInputToolbar={renderInputToolbar}
                 renderSend={renderSend}
-                onPressActionButton={onPressActionButton}
                 // keyboardShouldPersistTaps={"handled"}
                 minInputToolbarHeight={45}
               />
@@ -270,7 +260,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                 placeholderTextColor={"#96abbf"}
                 renderInputToolbar={renderInputToolbar}
                 renderSend={renderSend}
-                onPressActionButton={onPressActionButton}
                 // keyboardShouldPersistTaps={"handled"}
                 minInputToolbarHeight={45}
               />

@@ -214,6 +214,7 @@ class ChatContainer extends React.Component<IProps, IState> {
         alignItems: "center",
         justifyContent: "center"
       }}
+      onPress={() => this.setState({ mapModalOpen: true })}
     >
       <Ionicons
         name={Platform.OS === "ios" ? "ios-add" : "md-add"}
@@ -222,10 +223,6 @@ class ChatContainer extends React.Component<IProps, IState> {
       />
     </TouchableOpacity>
   );
-
-  public onPressActionButton = () => {
-    this.setState({ mapModalOpen: true });
-  };
 
   public closeMapModal = () => {
     this.setState({ mapModalOpen: false });
@@ -406,7 +403,6 @@ class ChatContainer extends React.Component<IProps, IState> {
         closeMapModal={this.closeMapModal}
         messageFooter={this.messageFooter}
         renderAvatar={this.renderAvatar}
-        onPressActionButton={this.onPressActionButton}
       />
     );
   }

@@ -5,12 +5,18 @@ import { darkMode, lightMode } from "../../../../styles/mapStyles";
 import { useTheme } from "../../../../context/ThemeContext";
 import styled from "styled-components";
 
-const Touchable = styled.TouchableOpacity``;
+const Touchable = styled.TouchableOpacity`
+  overflow: hidden;
+  border-radius: 13px;
+`;
 
-export default ({ currentMessage }) => {
-  const isDarkMode = useTheme();
-  const onMapPress = () => {
-    const { latitude, longitude } = currentMessage.location;
+interface IProps {
+  currentMessage: any;
+}
+
+export default class CustomViewContainer extends React.Component<IProps> {
+  onMapPress = () => {
+    const { latitude, longitude } = this.props.currentMessage.location;
     const url = Platform.select({
       ios: `http://maps.apple.com/?ll=${latitude},${longitude}&q=*`,
       android: `http://maps.google.com/?q=${latitude},${longitude}`
@@ -27,8 +33,24 @@ export default ({ currentMessage }) => {
         console.log(e);
       });
   };
-  if (currentMessage.location) {
-    return (
+
+  render() {
+    const { currentMessage } = this.props;
+    if (currentMessage.location) {
+      return (
+        <CustomViewPresenter
+          currentMessage={currentMessage}
+          onMapPress={this.onMapPress}
+        />
+      );
+    }
+    return null;
+  }
+}
+const CustomViewPresenter = ({ currentMessage, onMapPress }) => {
+  const isDarkMode = useTheme();
+  return (
+    <Touchable onPress={onMapPress} activeOpacity={0.8}>
       <MapView
         provider={PROVIDER_GOOGLE}
         region={{
@@ -40,8 +62,7 @@ export default ({ currentMessage }) => {
         style={{
           width: 200,
           height: 100,
-          borderRadius: 13,
-          margin: 3
+          borderRadius: 13
         }}
         onPress={onMapPress}
         scrollEnabled={false}
@@ -52,7 +73,6 @@ export default ({ currentMessage }) => {
       >
         <Marker coordinate={currentMessage.location} />
       </MapView>
-    );
-  }
-  return null;
+    </Touchable>
+  );
 };
