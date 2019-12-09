@@ -47,7 +47,7 @@ const Touchable = styled.TouchableOpacity`
 
 const TouchableIcon = styled.TouchableOpacity`
   margin-right: 10px;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 `;
 
 const HeaderUserContainer = styled.View`
@@ -201,7 +201,7 @@ const Search = ({ navigation }) => {
                         onPress={async () => {
                           await setSearch("");
                           await setModalOpen(false),
-                            navigation.push("UserProfileTabs", {
+                            navigation.push("UserProfile", {
                               uuid: user.profile.uuid,
                               isSelf: user.profile.isSelf
                             });

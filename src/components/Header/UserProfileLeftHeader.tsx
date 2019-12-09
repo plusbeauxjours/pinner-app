@@ -3,8 +3,6 @@ import styled from "styled-components";
 import { withNavigation } from "react-navigation";
 import { AntDesign } from "@expo/vector-icons";
 import { useTheme } from "../../context/ThemeContext";
-import { useMe } from "../../context/MeContext";
-import PhotoLink from "../PhotoLink";
 
 const Text = styled.Text`
   font-weight: 500;
@@ -23,26 +21,15 @@ const IconContainer = styled.TouchableOpacity`
   width: 50px;
 `;
 
-const UserProfileHeader = ({ navigation }) => {
-  const { me } = useMe();
+export default withNavigation(({ navigation }) => {
   const isDarkMode = useTheme();
+  console.log(navigation);
   if (!navigation.state.params) {
-    if (navigation.state.index === 0) {
-      return (
-        <View>
-          <Text>USER PROFILE</Text>
-        </View>
-      );
-    } else if (navigation.state.index === 1) {
-      return <PhotoLink />;
-    } else {
-      return null;
-    }
-  } else if (
-    navigation.state.params.uuid === me.user.profile.uuid &&
-    navigation.state.index === 1
-  ) {
-    return <PhotoLink />;
+    return (
+      <View>
+        <Text>USER PROFILE</Text>
+      </View>
+    );
   } else {
     return (
       <IconContainer onPress={() => navigation.goBack(null)}>
@@ -54,6 +41,4 @@ const UserProfileHeader = ({ navigation }) => {
       </IconContainer>
     );
   }
-};
-
-export default withNavigation(UserProfileHeader);
+});

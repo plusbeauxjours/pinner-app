@@ -491,9 +491,9 @@ export default ({ navigation }) => {
     }
   };
   const onAddTripPress = async () => {
-    setAddTripModalOpen(false);
     setSearch("");
     setIsCalendarMode(false);
+    setAddTripModalOpen(false);
     try {
       const {
         data: { addTrip }
@@ -509,9 +509,9 @@ export default ({ navigation }) => {
     }
   };
   const onEditTripPress = async () => {
-    setEditTripModalOpen(false);
     setSearch("");
     setIsCalendarMode(false);
+    setEditTripModalOpen(false);
     try {
       const {
         data: { editTrip }
@@ -709,15 +709,15 @@ export default ({ navigation }) => {
             isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
           }
           onBackdropPress={() => {
-            setAddTripModalOpen(false), setSearch(""), setIsCalendarMode(false);
+            setSearch(""), setIsCalendarMode(false),setAddTripModalOpen(false)
           }}
           onBackButtonPress={() => {
-            Platform.OS !== "ios" && setAddTripModalOpen(false),
-              setSearch(""),
-              setIsCalendarMode(false);
+            setSearch(""),
+            setIsCalendarMode(false),
+            Platform.OS !== "ios" && setAddTripModalOpen(false)
           }}
           onModalHide={() => {
-            setAddTripModalOpen(false), setSearch(""), setIsCalendarMode(false);
+             setSearch(""), setIsCalendarMode(false),setAddTripModalOpen(false)
           }}
           propagateSwipe={true}
           scrollHorizontal={true}
@@ -797,9 +797,9 @@ export default ({ navigation }) => {
               >
                 <TripSubmitBtn
                   onPress={() => {
-                    setAddTripModalOpen(false),
-                      setSearch(""),
-                      setIsCalendarMode(false);
+                    setSearch(""),
+                    setIsCalendarMode(false),
+                    setAddTripModalOpen(false)
                   }}
                 >
                   <TripText>CANCEL</TripText>
@@ -852,7 +852,7 @@ export default ({ navigation }) => {
                       <Loader />
                     </SearchLoaderContainer>
                   ) : (
-                    <KeyboardAvoidingView enabled behavior="padding">
+                    <>
                       {search !== "" &&
                         results.predictions &&
                         results.predictions.length !== 0 && (
@@ -901,7 +901,7 @@ export default ({ navigation }) => {
                             ))}
                           </>
                         )}
-                    </KeyboardAvoidingView>
+                    </>
                   )}
                 </ScrollView>
               </Touchable>
@@ -915,19 +915,19 @@ export default ({ navigation }) => {
             isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
           }
           onBackdropPress={() => {
-            setEditTripModalOpen(false),
-              setSearch(""),
-              setIsCalendarMode(false);
+            setSearch(""),
+            setIsCalendarMode(false),
+            setEditTripModalOpen(false)
           }}
           onBackButtonPress={() => {
-            Platform.OS !== "ios" && setEditTripModalOpen(false),
-              setSearch(""),
-              setIsCalendarMode(false);
+            setSearch(""),
+            setIsCalendarMode(false),
+            Platform.OS !== "ios" && setEditTripModalOpen(false)
           }}
           onModalHide={() => {
-            setEditTripModalOpen(false),
-              setSearch(""),
-              setIsCalendarMode(false);
+            setSearch(""),
+            setIsCalendarMode(false),
+            setEditTripModalOpen(false)
           }}
           propagateSwipe={true}
           scrollHorizontal={true}
@@ -1008,9 +1008,9 @@ export default ({ navigation }) => {
               >
                 <TripSubmitBtn
                   onPress={() => {
-                    setEditTripModalOpen(false),
-                      setSearch(""),
-                      setIsCalendarMode(false);
+                    setSearch(""),
+                    setIsCalendarMode(false),
+                    setEditTripModalOpen(false)
                   }}
                 >
                   <TripText>CANCEL</TripText>
@@ -1246,6 +1246,39 @@ export default ({ navigation }) => {
                   <UserName>{formatDistance(user.profile.distance)}</UserName>
                   <Bold>KM</Bold>
                 </Item>
+              )}
+              {user.profile.isHideTrips ? (
+                <>
+                  {user.profile.tripCount === 1 ? (
+                    <Item>
+                      <UserName>{user.profile.tripCount}</UserName>
+                      <Bold>PHOTO🔒</Bold>
+                    </Item>
+                  ) : (
+                    <Item>
+                      <UserName>{user.profile.tripCount}</UserName>
+                      <Bold>PHOTOS🔒</Bold>
+                    </Item>
+                  )}
+                </>
+              ) : (
+                <>
+                  <Touchable
+                    onPress={() => navigation.push("AvatarList", { uuid })}
+                  >
+                    {user.profile.tripCount === 1 ? (
+                      <Item>
+                        <UserName>{user.profile.tripCount}</UserName>
+                        <Bold>PHOTO</Bold>
+                      </Item>
+                    ) : (
+                      <Item>
+                        <UserName>{user.profile.tripCount}</UserName>
+                        <Bold>PHOTOS</Bold>
+                      </Item>
+                    )}
+                  </Touchable>
+                </>
               )}
               {user.profile.isHideTrips ? (
                 <>

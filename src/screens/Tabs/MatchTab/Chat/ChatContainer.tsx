@@ -163,7 +163,7 @@ class ChatContainer extends React.Component<IProps, IState> {
         {this.state.receiverAvatar ? (
           <TouchableOpacity
             onPress={() =>
-              this.props.navigation.push("UserProfileTabs", {
+              this.props.navigation.push("UserProfile", {
                 uuid: targetUuid,
                 isSelf: false
               })
@@ -185,7 +185,7 @@ class ChatContainer extends React.Component<IProps, IState> {
         ) : (
           <TouchableOpacity
             onPress={() =>
-              this.props.navigation.push("UserProfileTabs", {
+              this.props.navigation.push("UserProfile", {
                 uuid: targetUuid,
                 isSelf: false
               })

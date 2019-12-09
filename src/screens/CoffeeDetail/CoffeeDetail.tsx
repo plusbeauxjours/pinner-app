@@ -114,7 +114,7 @@ const CoffeeDetails: React.FC<IProps> = ({
   });
   const onPress = uuid => {
     setModalOpen(false);
-    navigation.push("UserProfileTabs", {
+    navigation.push("UserProfile", {
       uuid
     });
   };

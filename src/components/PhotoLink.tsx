@@ -25,8 +25,7 @@ import { GET_AVATARS } from "../screens/Tabs/UserProfileTab/AvatarList/AvatarLis
 import { GET_USER } from "../screens/Tabs/UserProfileTab/UserProfile/UserProfileQueries";
 
 const Touchable = styled.TouchableOpacity`
-  margin-bottom: 7px;
-  margin-left: 15px;
+  margin-bottom: 5px;
   width: 50px;
 `;
 

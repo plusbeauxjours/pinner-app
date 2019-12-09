@@ -659,7 +659,7 @@ export default ({ navigation }) => {
                               <Touchable
                                 key={index}
                                 onPress={() =>
-                                  navigation.push("UserProfileTabs", {
+                                  navigation.push("UserProfile", {
                                     uuid: user.uuid,
                                     isSelf: user.isSelf
                                   })

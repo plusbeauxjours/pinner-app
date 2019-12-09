@@ -18,45 +18,13 @@ import AvatarList from "../screens/Tabs/UserProfileTab/AvatarList";
 import Search from "../components/Search/index";
 import MatchHeader from "../components/Header/MatchHeader";
 import LocationLeftHeader from "../components/Header/LocationLeftHeader";
-import UserProfileHeader from "../components/Header/UserProfileHeader";
 import BackArrow from "../components/Header/BackArrow";
 import LocationCenterHeader from "../components/Header/LocationCenterHeader";
 import { Header } from "native-base";
 import { useTheme } from "../context/ThemeContext";
 import constants from "../../constants";
-
-const UserProfileTabs = createMaterialTopTabNavigator(
-  {
-    UserProfile: {
-      screen: UserProfile,
-      navigationOptions: {
-        header: null,
-        mode: "modal"
-      }
-    },
-    AvatarList: {
-      screen: AvatarList,
-      navigationOptions: {
-        header: null,
-        mode: "modal"
-      }
-    }
-  },
-  {
-    animationEnabled: true,
-    swipeEnabled: true,
-    tabBarPosition: "bottom",
-    tabBarOptions: {
-      style: {
-        display: "none"
-      },
-      activeTintColor: "#000",
-      upperCaseLabel: false,
-      showLabel: false,
-      showIcon: false
-    }
-  }
-);
+import UserProfileLeftHeader from "../components/Header/UserProfileLeftHeader";
+import UserProfileCenterHeader from "../components/Header/UserProfileCenterHeader";
 
 const CountryProfileTabs = createMaterialTopTabNavigator(
   {
@@ -178,7 +146,8 @@ const UserProfileCustomHeader = () => {
         width: constants.width
       }}
     >
-      <UserProfileHeader />
+      <UserProfileLeftHeader />
+      <UserProfileCenterHeader />
       <Search />
     </Header>
   );
@@ -208,10 +177,16 @@ export default createStackNavigator({
       header: <MatchCustomHeader />
     }
   },
-  UserProfileTabs: {
-    screen: UserProfileTabs,
+  UserProfile: {
+    screen: UserProfile,
     navigationOptions: {
       header: props => <UserProfileCustomHeader />
+    }
+  },
+  AvatarList: {
+    screen: AvatarList,
+    navigationOptions: {
+      header: props => <BackCustomHeader />
     }
   },
   CityProfileTabs: {
@@ -252,12 +227,6 @@ export default createStackNavigator({
   },
   Continents: {
     screen: Continents,
-    navigationOptions: {
-      header: props => <BackCustomHeader />
-    }
-  },
-  AvatarList: {
-    screen: AvatarList,
     navigationOptions: {
       header: props => <BackCustomHeader />
     }

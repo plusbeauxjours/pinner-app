@@ -184,7 +184,7 @@ export default ({ navigation }) => {
   const onPress = () => {
     showActionSheetWithOptions(
       {
-        options: ["Change Main Avatar", "Delete Photo", "Cancel"],
+        options: ["Change main photo", "Delete photo", "Cancel"],
         cancelButtonIndex: 2,
         showSeparators: true
       },
@@ -192,7 +192,7 @@ export default ({ navigation }) => {
         if (buttonIndex === 0 && !deleteAvatarLoading && !markAsMainLoading) {
           markAsMainFn({ variables: { uuid: avatar.uuid } });
           setModalOpen(false);
-          toast("Main avatar changed");
+          toast("Main photo changed");
         } else if (buttonIndex === 1) {
           onConfirmPress();
         } else {
@@ -375,7 +375,7 @@ export default ({ navigation }) => {
           </>
         ) : (
           <TextContainer>
-            <Text>No avatars yet...</Text>
+            <Text>No photo yet...</Text>
           </TextContainer>
         )}
       </ScrollView>

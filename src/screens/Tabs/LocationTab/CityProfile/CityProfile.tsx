@@ -581,7 +581,7 @@ export default ({ navigation }) => {
                               <Touchable
                                 key={index}
                                 onPress={() =>
-                                  navigation.push("UserProfileTabs", {
+                                  navigation.push("UserProfile", {
                                     uuid: user.actor.profile.uuid,
                                     isSelf: user.actor.profile.isSelf
                                   })
@@ -609,8 +609,9 @@ export default ({ navigation }) => {
                   <Touchable
                     key={index}
                     onPress={() =>
-                      navigation.push("UserProfileTabs", {
-                        uuid: user.uuid
+                      navigation.push("UserProfile", {
+                        uuid: user.uuid,
+                        isSelf: user.isSelf
                       })
                     }
                   >
