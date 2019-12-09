@@ -24,7 +24,7 @@ import { useMe } from "../context/MeContext";
 import { GET_AVATARS } from "../screens/Tabs/UserProfileTab/AvatarList/AvatarListQueries";
 import { GET_USER } from "../screens/Tabs/UserProfileTab/UserProfile/UserProfileQueries";
 
-const Container = styled.TouchableOpacity`
+const Touchable = styled.TouchableOpacity`
   margin-bottom: 7px;
   margin-left: 15px;
   width: 50px;
@@ -108,6 +108,7 @@ export default withNavigation(({ navigation }) => {
     orig_width: number,
     orig_height: number
   ) => {
+    console.log(uri, orig_width, orig_height);
     if (orig_width > 960 || orig_height > 960) {
       let manipResult;
       if (orig_width / 960 >= orig_height / 960) {
@@ -129,6 +130,7 @@ export default withNavigation(({ navigation }) => {
     if (status === "granted") {
       try {
         let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
           allowsEditing: true,
           aspect: [1, 1],
           quality: 1
@@ -139,11 +141,35 @@ export default withNavigation(({ navigation }) => {
             result.width,
             result.height
           );
+          let type: string = result.type;
+          if (!type.includes("image/")) {
+            const ext = result.uri.slice(result.uri.lastIndexOf(".") + 1);
+            switch (ext) {
+              case "gif":
+                type = "image/gif";
+                break;
+              case "png":
+                type = "image/png";
+                break;
+              case "jpeg":
+              case "jpg":
+                type = "image/jpeg";
+                break;
+              case "bmp":
+                type = "image/bmp";
+                break;
+              case "webp":
+                type = "image/webp";
+                break;
+              default:
+                type = "image/jpeg";
+                break;
+            }
+          }
           const name = uuid();
-          const [, type] = resized_uri.split(".");
           const file = new ReactNativeFile({
             uri: resized_uri,
-            type: type.toLowerCase(),
+            type,
             name
           });
           console.log(file);
@@ -151,6 +177,7 @@ export default withNavigation(({ navigation }) => {
             const {
               data: { uploadAvatar }
             } = await uploadAvatarFn({ variables: { file } });
+            console.log(uploadAvatar);
             if (uploadAvatar.ok) {
               toast("Uploaded");
               navigation.pop();
@@ -167,12 +194,12 @@ export default withNavigation(({ navigation }) => {
     }
   };
   return (
-    <Container onPress={() => pickFromGallery()}>
+    <Touchable onPress={() => pickFromGallery()} disabled={uploadAvatarLoading}>
       <AntDesign
         name={"appstore-o"}
         size={22}
         color={isDarkMode ? "#EFEFEF" : "#161616"}
       />
-    </Container>
+    </Touchable>
   );
 });

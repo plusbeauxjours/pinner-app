@@ -41,9 +41,7 @@ const ImageView = styled.View`
   margin-bottom: 15;
   position: absolute;
   top: -75;
-  border-width: 0.5;
   border-radius: 75;
-  border: 0.5px solid #999;
 `;
 const Text = styled.Text`
   color: ${props => props.theme.color};
@@ -67,9 +65,6 @@ const Item = styled.View`
   align-items: center;
   width: ${constants.width / 4 - 2.5};
   height: ${constants.width / 5};
-`;
-const DisptanceItem = styled(Item)`
-  width: ${constants.width / 2};
 `;
 const GreyText = styled.Text`
   color: #999;
