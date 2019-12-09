@@ -218,7 +218,7 @@ class ChatContainer extends React.Component<IProps, IState> {
     >
       <Ionicons
         name={Platform.OS === "ios" ? "ios-add" : "md-add"}
-        color={"#3897f0"}
+        color={"#999"}
         size={33}
       />
     </TouchableOpacity>

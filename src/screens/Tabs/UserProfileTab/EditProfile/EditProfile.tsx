@@ -95,6 +95,7 @@ const Item = styled.View`
   margin-top: 15px;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 `;
 const EmptyView = styled.View`
   justify-content: center;
@@ -546,7 +547,7 @@ export default ({ navigation }) => {
         setUsername(newUsername);
         setIsChanged(false);
         toast("Profile edited");
-      }else{
+      } else {
         toast("Username is already taken");
       }
     }
@@ -886,7 +887,7 @@ export default ({ navigation }) => {
                   backgroundColor: "transparent",
                   borderBottomWidth: 1,
                   borderBottomColor: "#999",
-                  color: "#999"
+                  color: "#999",
                 }}
                 value={firstName}
                 returnKeyType="done"

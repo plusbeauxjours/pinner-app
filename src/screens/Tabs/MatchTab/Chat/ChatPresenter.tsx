@@ -128,7 +128,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
           justifyContent: "center"
         }}
       >
-        <FontAwesome name="send" size={20} color="#3897f0" />
+        <FontAwesome name="send" size={22} color="#999" />
       </View>
     </Send>
   );
@@ -232,7 +232,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                 scrollToBottom
                 alwaysShowSend
                 submitOnReturn
-                placeholderTextColor={"#96abbf"}
+                placeholderTextColor={"#999"}
                 renderInputToolbar={renderInputToolbar}
                 renderSend={renderSend}
                 // keyboardShouldPersistTaps={"handled"}
@@ -257,7 +257,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                 scrollToBottom
                 alwaysShowSend
                 submitOnReturn
-                placeholderTextColor={"#96abbf"}
+                placeholderTextColor={"#999"}
                 renderInputToolbar={renderInputToolbar}
                 renderSend={renderSend}
                 // keyboardShouldPersistTaps={"handled"}
