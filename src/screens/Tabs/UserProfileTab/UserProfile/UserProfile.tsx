@@ -63,6 +63,7 @@ import CoffeeDetail from "../../../CoffeeDetail/index";
 import { GET_COFFEES } from "../../../../sharedQueries";
 import ImageViewer from "react-native-image-zoom-viewer";
 
+const View = styled.View``;
 const Header = styled.View`
   height: 270;
   flex-direction: column;
@@ -185,9 +186,7 @@ const AddTripContainer = styled.View`
   border: 0.5px solid #999;
   border-radius: 5px;
 `;
-const CalendarContainer = styled.View`
-  height: ${constants.height - 120};
-`;
+
 const TripSubmitBtn = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
@@ -197,13 +196,7 @@ const TripSubmitBtn = styled.TouchableOpacity`
   border: 0.5px solid #999;
   border-radius: 5px;
 `;
-const TripBtnContainer = styled.View`
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: ${constants.width};
-  padding: 0 10px 0 10px;
-`;
+
 const CityBold = styled.Text`
   font-weight: 500;
   color: ${props => props.theme.color};
@@ -738,12 +731,15 @@ export default ({ navigation }) => {
         >
           {isCalendarMode ? (
             <>
-              <CalendarContainer>
+              <View
+                style={
+                  Platform.OS === "ios"
+                    ? { height: constants.height - 120 }
+                    : { height: constants.height - 150 }
+                }
+              >
                 <CalendarList
-                  style={{
-                    height: "auto",
-                    width: "100%"
-                  }}
+                  style={{ height: "auto", width: "100%" }}
                   pastScrollRange={24}
                   futureScrollRange={24}
                   pagingEnabled={true}
@@ -762,7 +758,7 @@ export default ({ navigation }) => {
                     selectedDayBackgroundColor: "#00adf5"
                   }}
                 />
-              </CalendarContainer>
+              </View>
               <Touchable onPress={() => setIsCalendarMode(false)}>
                 <CalendarCityContainer>
                   <SearchCityPhoto cityId={searchCityId} />
@@ -776,7 +772,29 @@ export default ({ navigation }) => {
                   </SearchHeaderUserContainer>
                 </CalendarCityContainer>
               </Touchable>
-              <TripBtnContainer>
+              <View
+                style={
+                  Platform.OS === "ios"
+                    ? {
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: constants.width,
+                        paddingRight: 10,
+                        paddingLeft: 10,
+                        marginBottom: 0
+                      }
+                    : {
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: constants.width,
+                        paddingRight: 10,
+                        paddingLeft: 10,
+                        marginBottom: 30
+                      }
+                }
+              >
                 <TripSubmitBtn
                   onPress={() => {
                     setAddTripModalOpen(false),
@@ -792,7 +810,7 @@ export default ({ navigation }) => {
                 >
                   <TripText>ADD TRIP</TripText>
                 </TripSubmitBtn>
-              </TripBtnContainer>
+              </View>
             </>
           ) : (
             <>
@@ -923,12 +941,15 @@ export default ({ navigation }) => {
         >
           {isCalendarMode ? (
             <>
-              <CalendarContainer>
+              <View
+                style={
+                  Platform.OS === "ios"
+                    ? { height: constants.height - 120 }
+                    : { height: constants.height - 150 }
+                }
+              >
                 <CalendarList
-                  style={{
-                    height: "auto",
-                    width: "100%"
-                  }}
+                  style={{ height: "auto", width: "100%" }}
                   current={tripStartDate && tripStartDate}
                   pastScrollRange={24}
                   futureScrollRange={24}
@@ -948,7 +969,7 @@ export default ({ navigation }) => {
                     selectedDayBackgroundColor: "#00adf5"
                   }}
                 />
-              </CalendarContainer>
+              </View>
               <Touchable onPress={() => setIsCalendarMode(false)}>
                 <CalendarCityContainer>
                   <SearchCityPhoto cityId={searchCityId} />
@@ -962,7 +983,29 @@ export default ({ navigation }) => {
                   </SearchHeaderUserContainer>
                 </CalendarCityContainer>
               </Touchable>
-              <TripBtnContainer>
+              <View
+                style={
+                  Platform.OS === "ios"
+                    ? {
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: constants.width,
+                        paddingRight: 10,
+                        paddingLeft: 10,
+                        marginBottom: 0
+                      }
+                    : {
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: constants.width,
+                        paddingRight: 10,
+                        paddingLeft: 10,
+                        marginBottom: 30
+                      }
+                }
+              >
                 <TripSubmitBtn
                   onPress={() => {
                     setEditTripModalOpen(false),
@@ -978,7 +1021,7 @@ export default ({ navigation }) => {
                 >
                   <TripText>EDIT TRIP</TripText>
                 </TripSubmitBtn>
-              </TripBtnContainer>
+              </View>
             </>
           ) : (
             <>
