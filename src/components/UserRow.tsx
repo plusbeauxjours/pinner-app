@@ -203,42 +203,44 @@ const UserRow: React.FC<IProps> = ({
     case "user":
       return (
         <Container>
-          <Touchable>
-            <ImageContainer>
-              {user.appAvatarUrl ? (
-                <ProgressiveImage
-                  tint={isDarkMode ? "dark" : "light"}
-                  style={{
-                    height: 36,
-                    width: 36,
-                    borderRadius: 18
-                  }}
-                  preview={{
-                    uri: `${BACKEND_URL}/media/${user.appAvatarUrl}`
-                  }}
-                  uri={`${BACKEND_URL}/media/${user.appAvatarUrl}`}
-                />
-              ) : (
-                <Image
-                  style={{
-                    height: 36,
-                    width: 36,
-                    borderRadius: 18
-                  }}
-                  source={randomAvatar[Math.round(Math.random() * 9)]}
-                />
-              )}
-            </ImageContainer>
-          </Touchable>
-          <Touchable>
-            <HeaderUserContainer>
-              <Bold>{user.username}</Bold>
-              <Location>
-                {user.currentCity && user.currentCity.cityName},{" "}
-                {user.currentCity && user.currentCity.country.countryName}
-              </Location>
-            </HeaderUserContainer>
-          </Touchable>
+          <Header>
+            <Touchable>
+              <ImageContainer>
+                {user.appAvatarUrl ? (
+                  <ProgressiveImage
+                    tint={isDarkMode ? "dark" : "light"}
+                    style={{
+                      height: 36,
+                      width: 36,
+                      borderRadius: 18
+                    }}
+                    preview={{
+                      uri: `${BACKEND_URL}/media/${user.appAvatarUrl}`
+                    }}
+                    uri={`${BACKEND_URL}/media/${user.appAvatarUrl}`}
+                  />
+                ) : (
+                  <Image
+                    style={{
+                      height: 36,
+                      width: 36,
+                      borderRadius: 18
+                    }}
+                    source={randomAvatar[Math.round(Math.random() * 9)]}
+                  />
+                )}
+              </ImageContainer>
+            </Touchable>
+            <Touchable>
+              <HeaderUserContainer>
+                <Bold>{user.username}</Bold>
+                <Location>
+                  {user.currentCity && user.currentCity.cityName},{" "}
+                  {user.currentCity && user.currentCity.country.countryName}
+                </Location>
+              </HeaderUserContainer>
+            </Touchable>
+          </Header>
         </Container>
       );
     case "userBefore":
@@ -643,75 +645,79 @@ const UserRow: React.FC<IProps> = ({
     case "coffee":
       return (
         <Container>
-          <Touchable>
-            <ImageContainer>
-              {coffee.host.profile.appAvatarUrl ? (
-                <ProgressiveImage
-                  tint={isDarkMode ? "dark" : "light"}
-                  style={{
-                    height: 36,
-                    width: 36,
-                    borderRadius: 18
-                  }}
-                  preview={{
-                    uri: `${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`
-                  }}
-                  uri={`${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`}
-                />
-              ) : (
-                <Image
-                  style={{
-                    height: 36,
-                    width: 36,
-                    borderRadius: 18
-                  }}
-                  source={randomAvatar[Math.round(Math.random() * 9)]}
-                />
-              )}
-            </ImageContainer>
-          </Touchable>
-          <Touchable>
-            <HeaderUserContainer>
-              <Bold>{coffee.host.username}</Bold>
-              <Location>
-                {coffee.city.cityName}, {coffee.city.country.countryName}
-              </Location>
-            </HeaderUserContainer>
-          </Touchable>
+          <Header>
+            <Touchable>
+              <ImageContainer>
+                {coffee.host.profile.appAvatarUrl ? (
+                  <ProgressiveImage
+                    tint={isDarkMode ? "dark" : "light"}
+                    style={{
+                      height: 36,
+                      width: 36,
+                      borderRadius: 18
+                    }}
+                    preview={{
+                      uri: `${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`
+                    }}
+                    uri={`${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`}
+                  />
+                ) : (
+                  <Image
+                    style={{
+                      height: 36,
+                      width: 36,
+                      borderRadius: 18
+                    }}
+                    source={randomAvatar[Math.round(Math.random() * 9)]}
+                  />
+                )}
+              </ImageContainer>
+            </Touchable>
+            <Touchable>
+              <HeaderUserContainer>
+                <Bold>{coffee.host.username}</Bold>
+                <Location>
+                  {coffee.city.cityName}, {coffee.city.country.countryName}
+                </Location>
+              </HeaderUserContainer>
+            </Touchable>
+          </Header>
         </Container>
       );
     case "userProfileCoffee":
       return (
         <Container>
-          <Touchable>
-            {coffee.city.cityThumbnail ? (
-              <ProgressiveImage
-                tint={isDarkMode ? "dark" : "light"}
-                style={{ height: 40, width: 40, borderRadius: 5 }}
-                preview={
-                  coffee.city.cityThumbnail && {
-                    uri: coffee.city.cityThumbnail
+          <Header>
+            <Touchable>
+              {coffee.city.cityThumbnail ? (
+                <ProgressiveImage
+                  tint={isDarkMode ? "dark" : "light"}
+                  style={{ height: 40, width: 40, borderRadius: 5 }}
+                  preview={
+                    coffee.city.cityThumbnail && {
+                      uri: coffee.city.cityThumbnail
+                    }
                   }
-                }
-                uri={coffee.city.cityThumbnail && coffee.city.cityThumbnail}
-              />
-            ) : (
-              <View>
-                <SmallText>NO PHOTO</SmallText>
-              </View>
-            )}
-          </Touchable>
-          <Touchable>
-            <HeaderUserContainer>
-              <Bold>
-                {coffee.city.cityName}
-                <SmallText>
-                  &nbsp; | {coffee.target} | {coffee.naturalTime}
-                </SmallText>
-              </Bold>
-              <Location>{coffee.city.country.countryName}</Location>
-            </HeaderUserContainer>
-          </Touchable>
+                  uri={coffee.city.cityThumbnail && coffee.city.cityThumbnail}
+                />
+              ) : (
+                <View>
+                  <SmallText>NO PHOTO</SmallText>
+                </View>
+              )}
+            </Touchable>
+            <Touchable>
+              <HeaderUserContainer>
+                <Bold>
+                  {coffee.city.cityName}
+                  <SmallText>
+                    &nbsp; | {coffee.target} | {coffee.naturalTime}
+                  </SmallText>
+                </Bold>
+                <Location>{coffee.city.country.countryName}</Location>
+              </HeaderUserContainer>
+            </Touchable>
+          </Header>
         </Container>
       );
     case "match":
@@ -719,102 +725,106 @@ const UserRow: React.FC<IProps> = ({
         <>
           {match.isHost ? (
             <Container>
-              <ImageContainer>
-                {match.guest.profile.appAvatarUrl ? (
-                  <ProgressiveImage
-                    tint={isDarkMode ? "dark" : "light"}
-                    style={{
-                      height: 36,
-                      width: 36,
-                      borderRadius: 18
-                    }}
-                    preview={{
-                      uri: `${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`
-                    }}
-                    uri={`${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`}
-                  />
-                ) : (
-                  <Image
-                    style={{
-                      height: 36,
-                      width: 36,
-                      borderRadius: 18
-                    }}
-                    source={randomAvatar[Math.round(Math.random() * 9)]}
-                  />
-                )}
-                {(!match.isReadByHost || hasUnreadMessage) && (
-                  <IconContainer>
-                    <FontAwesome name={"circle"} color={"red"} size={7} />
-                  </IconContainer>
-                )}
-              </ImageContainer>
-              <MatchHeaderUserContainer>
-                <FirstLine>
-                  <Bold>{match.guest.username}</Bold>
-                  <GreyLocation>
-                    Matched in {match.city.cityName}
-                    {match.city.country.countryEmoji}
-                  </GreyLocation>
-                </FirstLine>
-                <SecondLine>
-                  <LastMessageText>
-                    {lastMessage && lastMessage.length > 40
-                      ? lastMessage.substring(0, 40) + "..."
-                      : lastMessage}
-                  </LastMessageText>
-                </SecondLine>
-              </MatchHeaderUserContainer>
+              <Header>
+                <ImageContainer>
+                  {match.guest.profile.appAvatarUrl ? (
+                    <ProgressiveImage
+                      tint={isDarkMode ? "dark" : "light"}
+                      style={{
+                        height: 36,
+                        width: 36,
+                        borderRadius: 18
+                      }}
+                      preview={{
+                        uri: `${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`
+                      }}
+                      uri={`${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`}
+                    />
+                  ) : (
+                    <Image
+                      style={{
+                        height: 36,
+                        width: 36,
+                        borderRadius: 18
+                      }}
+                      source={randomAvatar[Math.round(Math.random() * 9)]}
+                    />
+                  )}
+                  {(!match.isReadByHost || hasUnreadMessage) && (
+                    <IconContainer>
+                      <FontAwesome name={"circle"} color={"red"} size={7} />
+                    </IconContainer>
+                  )}
+                </ImageContainer>
+                <MatchHeaderUserContainer>
+                  <FirstLine>
+                    <Bold>{match.guest.username}</Bold>
+                    <GreyLocation>
+                      Matched in {match.city.cityName}
+                      {match.city.country.countryEmoji}
+                    </GreyLocation>
+                  </FirstLine>
+                  <SecondLine>
+                    <LastMessageText>
+                      {lastMessage && lastMessage.length > 40
+                        ? lastMessage.substring(0, 40) + "..."
+                        : lastMessage}
+                    </LastMessageText>
+                  </SecondLine>
+                </MatchHeaderUserContainer>
+              </Header>
             </Container>
           ) : (
             <Container>
-              <ImageContainer>
-                {match.host.profile.appAvatarUrl ? (
-                  <ProgressiveImage
-                    tint={isDarkMode ? "dark" : "light"}
-                    style={{
-                      height: 36,
-                      width: 36,
-                      borderRadius: 18
-                    }}
-                    preview={{
-                      uri: `${BACKEND_URL}/media/${match.host.profile.appAvatarUrl}`
-                    }}
-                    uri={`${BACKEND_URL}/media/${match.host.profile.appAvatarUrl}`}
-                  />
-                ) : (
-                  <Image
-                    style={{
-                      height: 36,
-                      width: 36,
-                      borderRadius: 18
-                    }}
-                    source={randomAvatar[Math.round(Math.random() * 9)]}
-                  />
-                )}
+              <Header>
+                <ImageContainer>
+                  {match.host.profile.appAvatarUrl ? (
+                    <ProgressiveImage
+                      tint={isDarkMode ? "dark" : "light"}
+                      style={{
+                        height: 36,
+                        width: 36,
+                        borderRadius: 18
+                      }}
+                      preview={{
+                        uri: `${BACKEND_URL}/media/${match.host.profile.appAvatarUrl}`
+                      }}
+                      uri={`${BACKEND_URL}/media/${match.host.profile.appAvatarUrl}`}
+                    />
+                  ) : (
+                    <Image
+                      style={{
+                        height: 36,
+                        width: 36,
+                        borderRadius: 18
+                      }}
+                      source={randomAvatar[Math.round(Math.random() * 9)]}
+                    />
+                  )}
 
-                {(!match.isReadByGuest || hasUnreadMessage) && (
-                  <IconContainer>
-                    <FontAwesome name={"circle"} color={"red"} size={7} />
-                  </IconContainer>
-                )}
-              </ImageContainer>
-              <MatchHeaderUserContainer>
-                <FirstLine>
-                  <Bold>{match.host.username}</Bold>
-                  <GreyLocation>
-                    Matched in {match.city.cityName}
-                    {match.city.country.countryEmoji}
-                  </GreyLocation>
-                </FirstLine>
-                <SecondLine>
-                  <LastMessageText>
-                    {lastMessage && lastMessage.length > 40
-                      ? lastMessage.substring(0, 40) + "..."
-                      : lastMessage}
-                  </LastMessageText>
-                </SecondLine>
-              </MatchHeaderUserContainer>
+                  {(!match.isReadByGuest || hasUnreadMessage) && (
+                    <IconContainer>
+                      <FontAwesome name={"circle"} color={"red"} size={7} />
+                    </IconContainer>
+                  )}
+                </ImageContainer>
+                <MatchHeaderUserContainer>
+                  <FirstLine>
+                    <Bold>{match.host.username}</Bold>
+                    <GreyLocation>
+                      Matched in {match.city.cityName}
+                      {match.city.country.countryEmoji}
+                    </GreyLocation>
+                  </FirstLine>
+                  <SecondLine>
+                    <LastMessageText>
+                      {lastMessage && lastMessage.length > 40
+                        ? lastMessage.substring(0, 40) + "..."
+                        : lastMessage}
+                    </LastMessageText>
+                  </SecondLine>
+                </MatchHeaderUserContainer>
+              </Header>
             </Container>
           )}
         </>
