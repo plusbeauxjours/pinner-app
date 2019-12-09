@@ -27,7 +27,7 @@ import { useTheme } from "../../context/ThemeContext";
 
 const Text = styled.Text`
   color: ${props => props.theme.color};
-  font-size: 9px;
+  font-size: 8px;
   margin-left: 5px;
 `;
 const Container = styled.View`

@@ -60,7 +60,7 @@ const Text = styled.Text`
 `;
 const Bigtext = styled(Text)`
   font-weight: 300;
-  font-size: 30;
+  font-size: 30px;
 `;
 const ButtonContainer = styled.View`
   justify-content: center;
@@ -80,7 +80,7 @@ const SubmitButtonContainer = styled.View`
   border-radius: 5px;
 `;
 const SubmitButtonText = styled.Text`
-  font-size: 16;
+  font-size: 16px;
   font-weight: 500;
   color: ${props => props.theme.color};
 `;

@@ -160,7 +160,7 @@ const TouchableBackRow = styled.View`
 const SmallText = styled.Text`
   color: #999;
   text-align: center;
-  font-size: 9px;
+  font-size: 8px;
 `;
 const RowBack = styled.View`
   align-items: center;
@@ -202,7 +202,7 @@ const CityBold = styled.Text`
   color: ${props => props.theme.color};
 `;
 const TripText = styled.Text`
-  font-size: 16;
+  font-size: 16px;
   font-weight: 500;
   color: ${props => props.theme.color};
 `;

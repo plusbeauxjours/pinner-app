@@ -6,7 +6,7 @@ import { GetCityPhoto, GetCityPhotoVariables } from "../types/api";
 import styled from "styled-components";
 
 const SmallText = styled.Text`
-  font-size: 9px;
+  font-size: 8px;
   color: #999;
   text-align: center;
 `;

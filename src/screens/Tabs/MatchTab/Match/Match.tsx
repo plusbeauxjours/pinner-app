@@ -43,12 +43,10 @@ const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
   padding: 0 10px 0 10px;
 `;
-const Touchable = styled.TouchableOpacity`
-  border: 1px solid red;
-`;
+const Touchable = styled.TouchableOpacity``;
 const Text = styled.Text`
   color: ${props => props.theme.color};
-  font-size: 9px;
+  font-size: 8px;
   margin-left: 5px;
 `;
 const UserContainer = styled.View`
@@ -82,7 +80,7 @@ const BackLeftBtn = styled.TouchableOpacity`
 const SmallText = styled.Text`
   color: #999;
   text-align: center;
-  font-size: 9px;
+  font-size: 8px;
 `;
 const IconContainer = styled.View`
   width: 40px;

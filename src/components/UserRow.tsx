@@ -31,7 +31,6 @@ const HeaderUserContainer = styled.View`
 `;
 const MatchHeaderUserContainer = styled.View`
   height: 45px;
-  width: ${constants.width - 81};
   flex-direction: column;
   margin-left: 10px;
   justify-content: center;
@@ -49,7 +48,7 @@ const Header = styled.View`
   flex-direction: row;
 `;
 const SmallText = styled.Text`
-  font-size: 9px;
+  font-size: 8px;
   color: #999;
   text-align: center;
 `;
@@ -93,23 +92,25 @@ const ImageContainer = styled.View`
   width: 40px;
 `;
 const GreyLocation = styled(Location)`
+  font-size: 8px;
+  height: 9px;
   opacity: 0.6;
 `;
 
-const FirstLine = styled.View`
+const Line = styled.View`
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  height: 20px;
+  height: 18px;
 `;
-const SecondLine = styled.View`
+
+const CenterLine = styled.View`
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  height: 20px;
+  height: 9px;
 `;
 const LastMessageText = styled(Text)`
-  font-size: 16px;
   color: ${props => props.theme.greyColor};
 `;
 const View = styled.View`
@@ -757,20 +758,22 @@ const UserRow: React.FC<IProps> = ({
                   )}
                 </ImageContainer>
                 <MatchHeaderUserContainer>
-                  <FirstLine>
+                  <Line>
                     <Bold>{match.guest.username}</Bold>
+                  </Line>
+                  <CenterLine>
                     <GreyLocation>
                       Matched in {match.city.cityName}
                       {match.city.country.countryEmoji}
                     </GreyLocation>
-                  </FirstLine>
-                  <SecondLine>
+                  </CenterLine>
+                  <Line>
                     <LastMessageText>
                       {lastMessage && lastMessage.length > 40
                         ? lastMessage.substring(0, 40) + "..."
                         : lastMessage}
                     </LastMessageText>
-                  </SecondLine>
+                  </Line>
                 </MatchHeaderUserContainer>
               </Header>
             </Container>
@@ -809,20 +812,22 @@ const UserRow: React.FC<IProps> = ({
                   )}
                 </ImageContainer>
                 <MatchHeaderUserContainer>
-                  <FirstLine>
+                  <Line>
                     <Bold>{match.host.username}</Bold>
+                  </Line>
+                  <CenterLine>
                     <GreyLocation>
                       Matched in {match.city.cityName}
                       {match.city.country.countryEmoji}
                     </GreyLocation>
-                  </FirstLine>
-                  <SecondLine>
+                  </CenterLine>
+                  <Line>
                     <LastMessageText>
                       {lastMessage && lastMessage.length > 40
                         ? lastMessage.substring(0, 40) + "..."
                         : lastMessage}
                     </LastMessageText>
-                  </SecondLine>
+                  </Line>
                 </MatchHeaderUserContainer>
               </Header>
             </Container>

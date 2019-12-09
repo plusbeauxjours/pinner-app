@@ -52,7 +52,7 @@ const AccordionIcon = styled.View`
   right: 0;
 `;
 const AccordionTitle = styled.Text`
-  font-size: 9px;
+  font-size: 8px;
   color: ${props => props.theme.color};
 `;
 const Container = styled.View`
@@ -85,7 +85,7 @@ const LoaderContainer = styled.View`
   align-items: center;
 `;
 const CoffeeText = styled.Text`
-  font-size: 16;
+  font-size: 16px;
   font-weight: 500;
   color: ${props => props.theme.color};
 `;
@@ -627,7 +627,16 @@ export default ({ navigation }) => {
                 <Title>RECOMMEND USERS</Title>
                 <UserContainer>
                   <Swiper
-                    style={{ height: recommendUsers.length < 3 ? 90 : 135 }}
+                    style={
+                      Platform.OS === "ios"
+                        ? {
+                            height: recommendUsers.length < 3 ? 90 : 135
+                          }
+                        : {
+                            width: constants.width,
+                            height: recommendUsers.length < 3 ? 90 : 135
+                          }
+                    }
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
                     dotColor={isDarkMode ? "#424242" : "#DADADA"}
@@ -672,7 +681,16 @@ export default ({ navigation }) => {
                 <Title>RECOMMEND LOCATIONS</Title>
                 <UserContainer>
                   <Swiper
-                    style={{ height: recommendLocations.length < 3 ? 90 : 135 }}
+                    style={
+                      Platform.OS === "ios"
+                        ? {
+                            height: recommendLocations.length < 3 ? 90 : 135
+                          }
+                        : {
+                            width: constants.width,
+                            height: recommendLocations.length < 3 ? 90 : 135
+                          }
+                    }
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
                     dotColor={isDarkMode ? "#424242" : "#DADADA"}

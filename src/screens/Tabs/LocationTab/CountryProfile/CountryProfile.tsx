@@ -36,11 +36,11 @@ const Text = styled.Text`
 `;
 const Bold = styled.Text`
   font-weight: 500;
-  font-size: 34;
+  font-size: 34px;
   color: ${props => props.theme.color};
 `;
 const Flag = styled.Text`
-  font-size: 24;
+  font-size: 24px;
   color: ${props => props.theme.color};
 `;
 const View = styled.View`

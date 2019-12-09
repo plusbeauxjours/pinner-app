@@ -6,8 +6,6 @@ import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useTheme } from "../../../../context/ThemeContext";
 import { darkMode, lightMode } from "../../../../styles/mapStyles";
 import { Platform } from "react-native";
-import { get_new_key, chat_send } from "../../../../../Fire";
-import { GiftedChat } from "react-native-gifted-chat";
 
 const MarkerContainer = styled.View`
   position: absolute;
@@ -30,7 +28,7 @@ const Touchable = styled.TouchableOpacity`
   background-color: #3897f0;
 `;
 const Text = styled.Text`
-  font-size: 16;
+  font-size: 16px;
   font-weight: 600;
   color: white;
 `;

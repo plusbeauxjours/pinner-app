@@ -15,7 +15,7 @@ const View = styled.View`
 `;
 const Bold = styled.Text`
   font-weight: 500;
-  font-size: 20;
+  font-size: 20px;
   color: ${props => props.theme.color};
 `;
 

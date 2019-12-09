@@ -50,7 +50,7 @@ const Text = styled.Text`
 `;
 const Bold = styled.Text`
   font-weight: 500;
-  font-size: 34;
+  font-size: 34px;
   color: ${props => props.theme.color};
 `;
 
@@ -382,7 +382,16 @@ export default ({ navigation }) => {
                 <Title>NEAR CITIES</Title>
                 <UserContainer>
                   <Swiper
-                    style={{ height: nearCities.length < 3 ? 90 : 135 }}
+                    style={
+                      Platform.OS === "ios"
+                        ? {
+                            height: nearCities.length < 3 ? 90 : 135
+                          }
+                        : {
+                            width: constants.width,
+                            height: nearCities.length < 3 ? 90 : 135
+                          }
+                    }
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
                     dotColor={isDarkMode ? "#424242" : "#DADADA"}
@@ -430,7 +439,16 @@ export default ({ navigation }) => {
                 <Title>SAMENAME CITIES</Title>
                 <UserContainer>
                   <Swiper
-                    style={{ height: samenameCities.length < 3 ? 90 : 135 }}
+                    style={
+                      Platform.OS === "ios"
+                        ? {
+                            height: samenameCities.length < 3 ? 90 : 135
+                          }
+                        : {
+                            width: constants.width,
+                            height: samenameCities.length < 3 ? 90 : 135
+                          }
+                    }
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
                     dotColor={isDarkMode ? "#424242" : "#DADADA"}
@@ -478,7 +496,16 @@ export default ({ navigation }) => {
                 <Title>NEED SOME COFFEE NOW</Title>
                 <UserContainer>
                   <Swiper
-                    style={{ height: coffees.length < 3 ? 90 : 135 }}
+                    style={
+                      Platform.OS === "ios"
+                        ? {
+                            height: coffees.length < 3 ? 90 : 135
+                          }
+                        : {
+                            width: constants.width,
+                            height: coffees.length < 3 ? 90 : 135
+                          }
+                    }
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
                     dotColor={isDarkMode ? "#424242" : "#DADADA"}
@@ -522,7 +549,16 @@ export default ({ navigation }) => {
                 <Title>USERS BEFORE</Title>
                 <UserContainer>
                   <Swiper
-                    style={{ height: usersBefore.length < 3 ? 90 : 135 }}
+                    style={
+                      Platform.OS === "ios"
+                        ? {
+                            height: usersBefore.length < 3 ? 90 : 135
+                          }
+                        : {
+                            width: constants.width,
+                            height: usersBefore.length < 3 ? 90 : 135
+                          }
+                    }
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
                     dotColor={isDarkMode ? "#424242" : "#DADADA"}
