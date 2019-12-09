@@ -43,7 +43,9 @@ const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
   padding: 0 10px 0 10px;
 `;
-const Touchable = styled.TouchableOpacity``;
+const Touchable = styled.TouchableOpacity`
+  border: 1px solid red;
+`;
 const Text = styled.Text`
   color: ${props => props.theme.color};
   font-size: 9px;
