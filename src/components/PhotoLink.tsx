@@ -130,9 +130,9 @@ export default withNavigation(({ navigation }) => {
       try {
         let result = await ImagePicker.launchImageLibraryAsync({
           allowsEditing: true,
+          aspect: [1, 1],
           quality: 1
         });
-
         if (result.cancelled !== true) {
           const resized_uri = await image_resize(
             result.uri,
@@ -146,6 +146,7 @@ export default withNavigation(({ navigation }) => {
             type: type.toLowerCase(),
             name
           });
+          console.log(file);
           try {
             const {
               data: { uploadAvatar }

@@ -16,7 +16,7 @@ import { SwipeListView } from "react-native-swipe-list-view";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import Toast from "react-native-root-toast";
 import { UNMATCH } from "../../../../components/CoffeeBtn/CoffeeBtnQueries";
-import { chat_leave, fb_db } from "../../../../../Fire";
+import { chat_leave } from "../../../../../Fire";
 import { ME } from "../../../../sharedQueries";
 import { useLogIn } from "../../../../context/AuthContext";
 import { useLocation } from "../../../../context/LocationContext";

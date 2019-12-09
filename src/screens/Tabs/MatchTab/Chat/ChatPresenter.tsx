@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { GiftedChat } from "react-native-gifted-chat";
+import {
+  GiftedChat,
+  InputToolbar,
+  Send,
+  Composer
+} from "react-native-gifted-chat";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import { Platform, KeyboardAvoidingView, Modal } from "react-native";
+import { Platform, Modal, SafeAreaView, View } from "react-native";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import Loader from "../../../../components/Loader";
 import constants from "../../../../../constants";
@@ -14,7 +19,7 @@ import { useLocation } from "../../../../context/LocationContext";
 
 const ChatContainer = styled.View`
   flex: 1;
-  height: ${constants.height};
+  /* height: ${constants.height}; */
   background-color: ${props => props.theme.bgColor};
 `;
 
@@ -65,6 +70,7 @@ interface IProps {
   closeMapModal: () => void;
   messageFooter: (timeProps: any) => void;
   renderAvatar: any;
+  onPressActionButton: () => void;
 }
 
 const ChatPresenter: React.FunctionComponent<IProps> = ({
@@ -78,7 +84,8 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   renderActions,
   closeMapModal,
   messageFooter,
-  renderAvatar
+  renderAvatar,
+  onPressActionButton
 }) => {
   let mapRef: MapView | null;
   const isDarkMode = useTheme();
@@ -134,6 +141,39 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
       }
     );
   };
+  const renderComposer = props => <Composer {...props} />;
+  const renderSend = props => (
+    <Send {...props}>
+      <View
+        style={{
+          backgroundColor: "transparent",
+          height: 45,
+          width: 45,
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+      >
+        <FontAwesome name="send" size={20} color="#3897f0" />
+      </View>
+    </Send>
+  );
+  const renderInputToolbar = props => {
+    return (
+      <InputToolbar
+        textInputStyle={{
+          color: isDarkMode ? "white" : "black"
+        }}
+        containerStyle={{
+          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
+          height: 45
+        }}
+        {...props}
+      >
+        {renderSend(props)}
+        {renderComposer(props)}
+      </InputToolbar>
+    );
+  };
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(handleGeoSuccess, handleGeoError);
   }, []);
@@ -185,7 +225,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
         </Modal>
         <ChatContainer>
           {Platform.OS === "android" ? (
-            <KeyboardAvoidingView behavior="padding" enabled>
+            <SafeAreaView style={{ flex: 1 }}>
               <GiftedChat
                 messages={messages}
                 onSend={messages => onSend(messages)}
@@ -197,22 +237,44 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                 //@ts-ignore
                 renderTime={messageFooter}
                 renderAvatar={renderAvatar}
+                isAnimated
+                scrollToBottom
+                alwaysShowSend
+                submitOnReturn
+                placeholderTextColor={"#96abbf"}
+                renderInputToolbar={renderInputToolbar}
+                renderSend={renderSend}
+                onPressActionButton={onPressActionButton}
+                // keyboardShouldPersistTaps={"handled"}
+                minInputToolbarHeight={45}
               />
               <KeyboardSpacer />
-            </KeyboardAvoidingView>
+            </SafeAreaView>
           ) : (
-            <GiftedChat
-              messages={messages}
-              onSend={messages => onSend(messages)}
-              user={{
-                _id: userId
-              }}
-              renderCustomView={renderCustomView}
-              renderActions={renderActions}
-              //@ts-ignore
-              renderTime={messageFooter}
-              renderAvatar={renderAvatar}
-            />
+            <SafeAreaView style={{ flex: 1 }}>
+              <GiftedChat
+                messages={messages}
+                onSend={messages => onSend(messages)}
+                user={{
+                  _id: userId
+                }}
+                renderCustomView={renderCustomView}
+                renderActions={renderActions}
+                //@ts-ignore
+                renderTime={messageFooter}
+                renderAvatar={renderAvatar}
+                isAnimated
+                scrollToBottom
+                alwaysShowSend
+                submitOnReturn
+                placeholderTextColor={"#96abbf"}
+                renderInputToolbar={renderInputToolbar}
+                renderSend={renderSend}
+                onPressActionButton={onPressActionButton}
+                // keyboardShouldPersistTaps={"handled"}
+                minInputToolbarHeight={45}
+              />
+            </SafeAreaView>
           )}
         </ChatContainer>
       </>

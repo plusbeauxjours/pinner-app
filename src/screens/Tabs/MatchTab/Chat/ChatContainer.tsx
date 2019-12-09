@@ -1,5 +1,5 @@
 import React from "react";
-import { GiftedChat, Actions } from "react-native-gifted-chat";
+import { GiftedChat } from "react-native-gifted-chat";
 import { withNavigation, NavigationScreenProp } from "react-navigation";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import firebase from "firebase";
@@ -141,10 +141,6 @@ class ChatContainer extends React.Component<IProps, IState> {
     chat_send(this.state.chatId, messageLocation).catch(e => console.log(e));
   };
 
-  public renderActionsIcon = () => (
-    <Ionicons name={Platform.OS === "ios" ? "ios-add" : "md-add"} size={26} />
-  );
-
   public renderCustomView = props => {
     return <CustomView {...props} />;
   };
@@ -209,16 +205,26 @@ class ChatContainer extends React.Component<IProps, IState> {
     );
   };
 
-  public renderActions = props => {
-    const options = {
-      "Send Location": () => {
-        this.setState({ mapModalOpen: true });
-      },
-      Cancel: () => {}
-    };
-    return (
-      <Actions {...props} icon={this.renderActionsIcon} options={options} />
-    );
+  public renderActions = () => (
+    <TouchableOpacity
+      style={{
+        backgroundColor: "transparent",
+        height: 45,
+        width: 45,
+        alignItems: "center",
+        justifyContent: "center"
+      }}
+    >
+      <Ionicons
+        name={Platform.OS === "ios" ? "ios-add" : "md-add"}
+        color={"#3897f0"}
+        size={33}
+      />
+    </TouchableOpacity>
+  );
+
+  public onPressActionButton = () => {
+    this.setState({ mapModalOpen: true });
   };
 
   public closeMapModal = () => {
@@ -400,6 +406,7 @@ class ChatContainer extends React.Component<IProps, IState> {
         closeMapModal={this.closeMapModal}
         messageFooter={this.messageFooter}
         renderAvatar={this.renderAvatar}
+        onPressActionButton={this.onPressActionButton}
       />
     );
   }

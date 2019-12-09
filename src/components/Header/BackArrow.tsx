@@ -5,7 +5,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { useTheme } from "../../context/ThemeContext";
 
 const IconContainer = styled.TouchableOpacity`
-  margin-bottom: 5px;
+  margin-bottom: 3px;
   margin-left: 10px;
   width: 50px;
 `;
@@ -15,7 +15,7 @@ const BackArrow = ({ navigation }) => {
   return (
     <IconContainer onPress={() => navigation.goBack(null)}>
       <AntDesign
-        size={25}
+        size={24}
         color={isDarkMode ? "#EFEFEF" : "#161616"}
         name={"left"}
       />

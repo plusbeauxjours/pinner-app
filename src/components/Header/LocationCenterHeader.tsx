@@ -13,7 +13,7 @@ const View = styled.View`
   right: 0px;
   left: 0px;
   margin-left: ${constants.width / 2 - 50};
-  bottom: 10px;
+  bottom: 6px;
 `;
 
 const LocationCenterHeader = ({ navigation }) => {
