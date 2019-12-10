@@ -709,15 +709,15 @@ export default ({ navigation }) => {
             isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
           }
           onBackdropPress={() => {
-            setSearch(""), setIsCalendarMode(false),setAddTripModalOpen(false)
+            setSearch(""), setIsCalendarMode(false), setAddTripModalOpen(false);
           }}
           onBackButtonPress={() => {
             setSearch(""),
-            setIsCalendarMode(false),
-            Platform.OS !== "ios" && setAddTripModalOpen(false)
+              setIsCalendarMode(false),
+              Platform.OS !== "ios" && setAddTripModalOpen(false);
           }}
           onModalHide={() => {
-             setSearch(""), setIsCalendarMode(false),setAddTripModalOpen(false)
+            setSearch(""), setIsCalendarMode(false), setAddTripModalOpen(false);
           }}
           propagateSwipe={true}
           scrollHorizontal={true}
@@ -798,8 +798,8 @@ export default ({ navigation }) => {
                 <TripSubmitBtn
                   onPress={() => {
                     setSearch(""),
-                    setIsCalendarMode(false),
-                    setAddTripModalOpen(false)
+                      setIsCalendarMode(false),
+                      setAddTripModalOpen(false);
                   }}
                 >
                   <TripText>CANCEL</TripText>
@@ -916,18 +916,18 @@ export default ({ navigation }) => {
           }
           onBackdropPress={() => {
             setSearch(""),
-            setIsCalendarMode(false),
-            setEditTripModalOpen(false)
+              setIsCalendarMode(false),
+              setEditTripModalOpen(false);
           }}
           onBackButtonPress={() => {
             setSearch(""),
-            setIsCalendarMode(false),
-            Platform.OS !== "ios" && setEditTripModalOpen(false)
+              setIsCalendarMode(false),
+              Platform.OS !== "ios" && setEditTripModalOpen(false);
           }}
           onModalHide={() => {
             setSearch(""),
-            setIsCalendarMode(false),
-            setEditTripModalOpen(false)
+              setIsCalendarMode(false),
+              setEditTripModalOpen(false);
           }}
           propagateSwipe={true}
           scrollHorizontal={true}
@@ -1009,8 +1009,8 @@ export default ({ navigation }) => {
                 <TripSubmitBtn
                   onPress={() => {
                     setSearch(""),
-                    setIsCalendarMode(false),
-                    setEditTripModalOpen(false)
+                      setIsCalendarMode(false),
+                      setEditTripModalOpen(false);
                   }}
                 >
                   <TripText>CANCEL</TripText>
@@ -1248,19 +1248,37 @@ export default ({ navigation }) => {
                 </Item>
               )}
               {user.profile.isHidePhotos ? (
-                <>
-                  {user.profile.photoCount === 1 ? (
-                    <Item>
-                      <UserName>{user.profile.photoCount}</UserName>
-                      <Bold>PHOTO🔒</Bold>
-                    </Item>
-                  ) : (
-                    <Item>
-                      <UserName>{user.profile.photoCount}</UserName>
-                      <Bold>PHOTOS🔒</Bold>
-                    </Item>
-                  )}
-                </>
+                user.profile.isSelf ? (
+                  <Touchable
+                    onPress={() => navigation.push("AvatarList", { uuid })}
+                  >
+                    {user.profile.photoCount === 1 ? (
+                      <Item>
+                        <UserName>{user.profile.photoCount}</UserName>
+                        <Bold>PHOTO🔒</Bold>
+                      </Item>
+                    ) : (
+                      <Item>
+                        <UserName>{user.profile.photoCount}</UserName>
+                        <Bold>PHOTOS🔒</Bold>
+                      </Item>
+                    )}
+                  </Touchable>
+                ) : (
+                  <>
+                    {user.profile.photoCount === 1 ? (
+                      <Item>
+                        <UserName>{user.profile.photoCount}</UserName>
+                        <Bold>PHOTO🔒</Bold>
+                      </Item>
+                    ) : (
+                      <Item>
+                        <UserName>{user.profile.photoCount}</UserName>
+                        <Bold>PHOTOS🔒</Bold>
+                      </Item>
+                    )}
+                  </>
+                )
               ) : (
                 <>
                   <Touchable
