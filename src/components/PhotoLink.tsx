@@ -107,7 +107,6 @@ export default withNavigation(({ navigation }) => {
     orig_width: number,
     orig_height: number
   ) => {
-    console.log(uri, orig_width, orig_height);
     if (orig_width > 960 || orig_height > 960) {
       let manipResult;
       if (orig_width / 960 >= orig_height / 960) {
@@ -171,12 +170,10 @@ export default withNavigation(({ navigation }) => {
             type,
             name
           });
-          console.log(file);
           try {
             const {
               data: { uploadAvatar }
             } = await uploadAvatarFn({ variables: { file } });
-            console.log(uploadAvatar);
             if (uploadAvatar.ok) {
               toast("Uploaded");
               navigation.pop();

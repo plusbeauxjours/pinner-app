@@ -5,7 +5,6 @@ import PhotoLink from "../PhotoLink";
 
 export default withNavigation(({ navigation }) => {
   const { me } = useMe();
-  console.log(navigation);
   if (
     navigation.state.params &&
     navigation.state.params.uuid === me.user.profile.uuid &&

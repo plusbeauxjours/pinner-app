@@ -1854,6 +1854,7 @@ export interface EditProfile_editProfile_user_profile {
   isVerifiedEmailAddress: boolean;
   nationality: EditProfile_editProfile_user_profile_nationality | null;
   residence: EditProfile_editProfile_user_profile_residence | null;
+  photoCount: number | null;
   postCount: number | null;
   tripCount: number | null;
   coffeeCount: number | null;
@@ -1862,6 +1863,7 @@ export interface EditProfile_editProfile_user_profile {
   continentCount: number | null;
   isSelf: boolean | null;
   isDarkMode: boolean;
+  isHidePhotos: boolean;
   isHideTrips: boolean;
   isHideCoffees: boolean;
   isHideCities: boolean;
@@ -2005,6 +2007,7 @@ export interface ToggleSettings_toggleSettings_user_profile {
   uuid: any | null;
   isSelf: boolean | null;
   isDarkMode: boolean;
+  isHidePhotos: boolean;
   isHideTrips: boolean;
   isHideCoffees: boolean;
   isHideCities: boolean;
@@ -2115,6 +2118,7 @@ export interface UserProfile_userProfile_user_profile {
   isVerifiedEmailAddress: boolean;
   nationality: UserProfile_userProfile_user_profile_nationality | null;
   residence: UserProfile_userProfile_user_profile_residence | null;
+  photoCount: number | null;
   postCount: number | null;
   tripCount: number | null;
   coffeeCount: number | null;
@@ -2123,6 +2127,7 @@ export interface UserProfile_userProfile_user_profile {
   continentCount: number | null;
   isSelf: boolean | null;
   isDarkMode: boolean;
+  isHidePhotos: boolean;
   isHideTrips: boolean;
   isHideCoffees: boolean;
   isHideCities: boolean;
@@ -2494,6 +2499,7 @@ export interface Me_me_user_profile {
   isVerifiedEmailAddress: boolean;
   nationality: Me_me_user_profile_nationality | null;
   residence: Me_me_user_profile_residence | null;
+  photoCount: number | null;
   postCount: number | null;
   tripCount: number | null;
   coffeeCount: number | null;
@@ -2502,6 +2508,7 @@ export interface Me_me_user_profile {
   continentCount: number | null;
   isSelf: boolean | null;
   isDarkMode: boolean;
+  isHidePhotos: boolean;
   isHideTrips: boolean;
   isHideCoffees: boolean;
   isHideCities: boolean;

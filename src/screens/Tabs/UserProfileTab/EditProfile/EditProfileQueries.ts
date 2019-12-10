@@ -50,6 +50,7 @@ export const EDIT_PROFILE = gql`
             countryEmoji
             ...CountryParts
           }
+          photoCount
           postCount
           tripCount
           coffeeCount
@@ -58,6 +59,7 @@ export const EDIT_PROFILE = gql`
           continentCount
           isSelf
           isDarkMode
+          isHidePhotos
           isHideTrips
           isHideCoffees
           isHideCities
@@ -145,6 +147,7 @@ export const TOGGLE_SETTINGS = gql`
           uuid
           isSelf
           isDarkMode
+          isHidePhotos
           isHideTrips
           isHideCoffees
           isHideCities

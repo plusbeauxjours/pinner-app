@@ -32,6 +32,7 @@ export const ME = gql`
             countryEmoji
             ...CountryParts
           }
+          photoCount
           postCount
           tripCount
           coffeeCount
@@ -40,6 +41,7 @@ export const ME = gql`
           continentCount
           isSelf
           isDarkMode
+          isHidePhotos
           isHideTrips
           isHideCoffees
           isHideCities

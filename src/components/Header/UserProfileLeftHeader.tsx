@@ -23,7 +23,6 @@ const IconContainer = styled.TouchableOpacity`
 
 export default withNavigation(({ navigation }) => {
   const isDarkMode = useTheme();
-  console.log(navigation);
   if (!navigation.state.params) {
     return (
       <View>

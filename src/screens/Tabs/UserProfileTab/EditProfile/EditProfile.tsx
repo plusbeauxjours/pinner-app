@@ -151,7 +151,6 @@ export default ({ navigation }) => {
   const { theme, toggleTheme } = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
   const profile = navigation.getParam("profile");
-  const [username, setUsername] = useState<string>(me.user.username);
   const [newUsername, setNewUsername] = useState<string>(me.user.username);
   const [bio, setBio] = useState<string>(profile.bio);
   const [gender, setGender] = useState<string>(profile.gender);
@@ -167,10 +166,10 @@ export default ({ navigation }) => {
       ? me.user.profile.residence.countryCode
       : location.currentCountryCode
   );
+  const [isHidePhotos, setIsHidePhotos] = useState<boolean>(
+    profile.isHidePhotos
+  );
   const [isHideTrips, setIsHideTrips] = useState<boolean>(profile.isHideTrips);
-  // const [isHideCoffees, setIsHideCoffees] = useState<boolean>(
-  //   profile.isHideCoffees
-  // );
   const [isHideCities, setIsHideCities] = useState<boolean>(
     profile.isHideCities
   );
@@ -355,7 +354,7 @@ export default ({ navigation }) => {
       try {
         const data = cache.readQuery<UserProfile, UserProfileVariables>({
           query: GET_USER,
-          variables: { username }
+          variables: { uuid: me.user.profile.uuid }
         });
         if (data) {
           data.userProfile.user.profile.phoneNumber =
@@ -368,7 +367,7 @@ export default ({ navigation }) => {
             completeEditPhoneVerification.isVerifiedPhoneNumber;
           cache.writeQuery({
             query: GET_USER,
-            variables: { username },
+            variables: { uuid: me.user.profile.uuid },
             data
           });
         }
@@ -394,14 +393,18 @@ export default ({ navigation }) => {
     ToggleSettingsVariables
   >(TOGGLE_SETTINGS, {
     update(cache, { data: { toggleSettings } }) {
+      console.log("data");
       try {
         const data = cache.readQuery<UserProfile, UserProfileVariables>({
           query: GET_USER,
-          variables: { username }
+          variables: { uuid: me.user.profile.uuid }
         });
+        console.log(data);
         if (data) {
           data.userProfile.user.profile.isDarkMode =
             toggleSettings.user.profile.isDarkMode;
+          data.userProfile.user.profile.isHidePhotos =
+            toggleSettings.user.profile.isHidePhotos;
           data.userProfile.user.profile.isHideTrips =
             toggleSettings.user.profile.isHideTrips;
           data.userProfile.user.profile.isHideCoffees =
@@ -416,7 +419,7 @@ export default ({ navigation }) => {
             toggleSettings.user.profile.isAutoLocationReport;
           cache.writeQuery({
             query: GET_USER,
-            variables: { username },
+            variables: { uuid: me.user.profile.uuid },
             data
           });
         }
@@ -459,10 +462,10 @@ export default ({ navigation }) => {
     }
   };
   const onPressToggleIcon = async (payload: string) => {
-    if (payload === "HIDE_TRIPS") {
+    if (payload === "HIDE_PHOTOS") {
+      setIsHidePhotos(isHidePhotos => !isHidePhotos);
+    } else if (payload === "HIDE_TRIPS") {
       setIsHideTrips(isHideTrips => !isHideTrips);
-      // } else if (payload === "HIDE_COFFEES") {
-      //   setIsHideCoffees(isHideCoffees => !isHideCoffees);
     } else if (payload === "HIDE_CITIES") {
       setIsHideCities(isHideCities => !isHideCities);
     } else if (payload === "HIDE_COUNTRIES") {
@@ -544,7 +547,6 @@ export default ({ navigation }) => {
       } = await editProfileFn();
       if (editProfile.ok) {
         logIn(editProfile);
-        setUsername(newUsername);
         setIsChanged(false);
         toast("Profile edited");
       } else {
@@ -887,7 +889,7 @@ export default ({ navigation }) => {
                   backgroundColor: "transparent",
                   borderBottomWidth: 1,
                   borderBottomColor: "#999",
-                  color: "#999",
+                  color: "#999"
                 }}
                 value={firstName}
                 returnKeyType="done"
@@ -1063,6 +1065,32 @@ export default ({ navigation }) => {
             ) : (
               <ExplainText>Set to make dark background.</ExplainText>
             )}
+
+            <Item>
+              <ToggleText>HIDE PHOTOS</ToggleText>
+              <ToggleIcon
+                disabled={toggleSettingsLoading}
+                onPress={() => onPressToggleIcon("HIDE_PHOTOS")}
+              >
+                <Ionicons
+                  size={18}
+                  name={
+                    Platform.OS === "ios"
+                      ? isHidePhotos
+                        ? "ios-radio-button-on"
+                        : "ios-radio-button-off"
+                      : isHidePhotos
+                      ? "md-radio-button-on"
+                      : "md-radio-button-off"
+                  }
+                  color={"#999"}
+                />
+              </ToggleIcon>
+            </Item>
+            <ExplainText>
+              If you set your photos hide, only you can see your photos,
+              otherwise only number of photos is shown.
+            </ExplainText>
 
             <Item>
               <ToggleText>HIDE TRIPS</ToggleText>

@@ -1247,16 +1247,16 @@ export default ({ navigation }) => {
                   <Bold>KM</Bold>
                 </Item>
               )}
-              {user.profile.isHideTrips ? (
+              {user.profile.isHidePhotos ? (
                 <>
-                  {user.profile.tripCount === 1 ? (
+                  {user.profile.photoCount === 1 ? (
                     <Item>
-                      <UserName>{user.profile.tripCount}</UserName>
+                      <UserName>{user.profile.photoCount}</UserName>
                       <Bold>PHOTO🔒</Bold>
                     </Item>
                   ) : (
                     <Item>
-                      <UserName>{user.profile.tripCount}</UserName>
+                      <UserName>{user.profile.photoCount}</UserName>
                       <Bold>PHOTOS🔒</Bold>
                     </Item>
                   )}
@@ -1266,14 +1266,14 @@ export default ({ navigation }) => {
                   <Touchable
                     onPress={() => navigation.push("AvatarList", { uuid })}
                   >
-                    {user.profile.tripCount === 1 ? (
+                    {user.profile.photoCount === 1 ? (
                       <Item>
-                        <UserName>{user.profile.tripCount}</UserName>
+                        <UserName>{user.profile.photoCount}</UserName>
                         <Bold>PHOTO</Bold>
                       </Item>
                     ) : (
                       <Item>
-                        <UserName>{user.profile.tripCount}</UserName>
+                        <UserName>{user.profile.photoCount}</UserName>
                         <Bold>PHOTOS</Bold>
                       </Item>
                     )}
