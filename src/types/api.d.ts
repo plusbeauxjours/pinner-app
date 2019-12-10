@@ -1865,7 +1865,6 @@ export interface EditProfile_editProfile_user_profile {
   isDarkMode: boolean;
   isHidePhotos: boolean;
   isHideTrips: boolean;
-  isHideCoffees: boolean;
   isHideCities: boolean;
   isHideCountries: boolean;
   isHideContinents: boolean;
@@ -2004,12 +2003,12 @@ export interface StartEditEmailVerificationVariables {
 
 export interface ToggleSettings_toggleSettings_user_profile {
   __typename: "ProfileType";
+  id: string;
   uuid: any | null;
   isSelf: boolean | null;
   isDarkMode: boolean;
   isHidePhotos: boolean;
   isHideTrips: boolean;
-  isHideCoffees: boolean;
   isHideCities: boolean;
   isHideCountries: boolean;
   isHideContinents: boolean;
@@ -2129,7 +2128,6 @@ export interface UserProfile_userProfile_user_profile {
   isDarkMode: boolean;
   isHidePhotos: boolean;
   isHideTrips: boolean;
-  isHideCoffees: boolean;
   isHideCities: boolean;
   isHideCountries: boolean;
   isHideContinents: boolean;
@@ -2510,7 +2508,6 @@ export interface Me_me_user_profile {
   isDarkMode: boolean;
   isHidePhotos: boolean;
   isHideTrips: boolean;
-  isHideCoffees: boolean;
   isHideCities: boolean;
   isHideCountries: boolean;
   isHideContinents: boolean;

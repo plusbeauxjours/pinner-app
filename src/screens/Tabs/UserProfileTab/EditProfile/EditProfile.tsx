@@ -241,13 +241,13 @@ export default ({ navigation }) => {
       try {
         const data = cache.readQuery<UserProfile, UserProfileVariables>({
           query: GET_USER,
-          variables: { uuid: me.user.profile.uuid }
+          variables: { uuid: profile.uuid }
         });
         if (data) {
           data.userProfile.user = editProfile.user;
           cache.writeQuery({
             query: GET_USER,
-            variables: { uuid: me.user.profile.uuid },
+            variables: { uuid: profile.uuid },
             data
           });
         }
@@ -354,7 +354,7 @@ export default ({ navigation }) => {
       try {
         const data = cache.readQuery<UserProfile, UserProfileVariables>({
           query: GET_USER,
-          variables: { uuid: me.user.profile.uuid }
+          variables: { uuid: profile.uuid }
         });
         if (data) {
           data.userProfile.user.profile.phoneNumber =
@@ -367,7 +367,7 @@ export default ({ navigation }) => {
             completeEditPhoneVerification.isVerifiedPhoneNumber;
           cache.writeQuery({
             query: GET_USER,
-            variables: { uuid: me.user.profile.uuid },
+            variables: { uuid: profile.uuid },
             data
           });
         }
@@ -397,7 +397,7 @@ export default ({ navigation }) => {
       try {
         const data = cache.readQuery<UserProfile, UserProfileVariables>({
           query: GET_USER,
-          variables: { uuid: me.user.profile.uuid }
+          variables: { uuid: profile.uuid }
         });
         console.log(data);
         if (data) {
@@ -407,8 +407,6 @@ export default ({ navigation }) => {
             toggleSettings.user.profile.isHidePhotos;
           data.userProfile.user.profile.isHideTrips =
             toggleSettings.user.profile.isHideTrips;
-          data.userProfile.user.profile.isHideCoffees =
-            toggleSettings.user.profile.isHideCoffees;
           data.userProfile.user.profile.isHideCities =
             toggleSettings.user.profile.isHideCities;
           data.userProfile.user.profile.isHideCountries =
@@ -419,7 +417,7 @@ export default ({ navigation }) => {
             toggleSettings.user.profile.isAutoLocationReport;
           cache.writeQuery({
             query: GET_USER,
-            variables: { uuid: me.user.profile.uuid },
+            variables: { uuid: profile.uuid },
             data
           });
         }
@@ -462,22 +460,30 @@ export default ({ navigation }) => {
     }
   };
   const onPressToggleIcon = async (payload: string) => {
-    if (payload === "HIDE_PHOTOS") {
-      setIsHidePhotos(isHidePhotos => !isHidePhotos);
-    } else if (payload === "HIDE_TRIPS") {
-      setIsHideTrips(isHideTrips => !isHideTrips);
-    } else if (payload === "HIDE_CITIES") {
-      setIsHideCities(isHideCities => !isHideCities);
-    } else if (payload === "HIDE_COUNTRIES") {
-      setIsHideCountries(isHideCountries => !isHideCountries);
-    } else if (payload === "HIDE_CONTINENTS") {
-      setIsHideContinents(isHideContinents => !isHideContinents);
-    } else if (payload === "AUTO_LOCATION_REPORT") {
-      setIsAutoLocationReport(isAutoLocationReport => !isAutoLocationReport);
+    try {
+      if (payload === "HIDE_PHOTOS") {
+        setIsHidePhotos(isHidePhotos => !isHidePhotos);
+      } else if (payload === "HIDE_TRIPS") {
+        setIsHideTrips(isHideTrips => !isHideTrips);
+      } else if (payload === "HIDE_CITIES") {
+        setIsHideCities(isHideCities => !isHideCities);
+      } else if (payload === "HIDE_COUNTRIES") {
+        setIsHideCountries(isHideCountries => !isHideCountries);
+      } else if (payload === "HIDE_CONTINENTS") {
+        setIsHideContinents(isHideContinents => !isHideContinents);
+      } else if (payload === "AUTO_LOCATION_REPORT") {
+        setIsAutoLocationReport(isAutoLocationReport => !isAutoLocationReport);
+      }
+      const {
+        data: { toggleSettings }
+      } = await toggleSettingsFn({ variables: { payload } });
+      console.log(toggleSettings);
+      if (toggleSettings.ok) {
+        toast("Setting edited");
+      }
+    } catch (e) {
+      console.log(e);
     }
-    await toggleSettingsFn({
-      variables: { payload }
-    });
   };
   const onInputTextChange = (text, state) => {
     const replaceChar = /[~!@\#$%^&*\()\-=+_'\;<>0-9\/.\`:\"\\,\[\]?|{}]/gi;
@@ -1117,29 +1123,6 @@ export default ({ navigation }) => {
               If you set your trips hide, only you can see your trips, otherwise
               only number of trips and your trip distance are shown.
             </ExplainText>
-
-            {/* <Item>
-              <ToggleText>HIDE COFFEES</ToggleText>
-              <ToggleIcon  disabled={toggleSettingsLoading} onPress={() => onPressToggleIcon("HIDE_COFFEES")}>
-                <Ionicons
-                  size={18}
-                  name={
-                    Platform.OS === "ios"
-                      ? isHideCoffees
-                        ? "ios-radio-button-on"
-                        : "ios-radio-button-off"
-                      : isHideCoffees
-                      ? "md-radio-button-on"
-                      : "md-radio-button-off"
-                  }
-                  color={"#999"}
-                />
-              </ToggleIcon>
-            </Item>
-            <ExplainText>
-              If you set your coffees hide, only you can see you coffees
-              request, otherwise only number of coffees request is shown.
-            </ExplainText> */}
 
             <Item>
               <ToggleText>HIDE CITIES</ToggleText>

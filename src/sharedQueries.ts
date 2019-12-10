@@ -43,7 +43,6 @@ export const ME = gql`
           isDarkMode
           isHidePhotos
           isHideTrips
-          isHideCoffees
           isHideCities
           isHideCountries
           isHideContinents

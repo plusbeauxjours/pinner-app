@@ -43,7 +43,6 @@ export const GET_USER = gql`
           isDarkMode
           isHidePhotos
           isHideTrips
-          isHideCoffees
           isHideCities
           isHideCountries
           isHideContinents

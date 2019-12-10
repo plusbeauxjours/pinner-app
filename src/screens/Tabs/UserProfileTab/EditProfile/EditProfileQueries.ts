@@ -61,7 +61,6 @@ export const EDIT_PROFILE = gql`
           isDarkMode
           isHidePhotos
           isHideTrips
-          isHideCoffees
           isHideCities
           isHideCountries
           isHideContinents
@@ -144,12 +143,12 @@ export const TOGGLE_SETTINGS = gql`
         id
         username
         profile {
+          id
           uuid
           isSelf
           isDarkMode
           isHidePhotos
           isHideTrips
-          isHideCoffees
           isHideCities
           isHideCountries
           isHideContinents

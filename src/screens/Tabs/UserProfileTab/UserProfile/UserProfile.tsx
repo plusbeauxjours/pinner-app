@@ -1309,43 +1309,6 @@ export default ({ navigation }) => {
                   )}
                 </>
               )}
-              {/* {user.profile.coffeeCount !== 0 && (
-              <>
-                {user.profile.isHideCoffees ? (
-                  <>
-                    {user.profile.coffeeCount === 1 ? (
-                      <Item>
-                        <UserName>{user.profile.coffeeCount}</UserName>
-                        <Bold>COFFEE🔒</Bold>
-                      </Item>
-                    ) : (
-                      <Item>
-                        <UserName>{user.profile.coffeeCount}</UserName>
-                        <Bold>COFFEES🔒</Bold>
-                      </Item>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <Touchable
-                      onPress={() => navigation.push("Coffees", { username })}
-                    >
-                      {user.profile.coffeeCount === 1 ? (
-                        <Item>
-                          <UserName>{user.profile.coffeeCount}</UserName>
-                          <Bold>COFFEE</Bold>
-                        </Item>
-                      ) : (
-                        <Item>
-                          <UserName>{user.profile.coffeeCount}</UserName>
-                          <Bold>COFFEES</Bold>
-                        </Item>
-                      )}
-                    </Touchable>
-                  </>
-                )}
-              </>
-            )} */}
               {user.profile.isHideCities ? (
                 <>
                   {user.profile.cityCount === 1 ? (
