@@ -79,10 +79,14 @@ const Bigtext = styled(Text)`
 const Bold = styled.Text`
   font-weight: 500;
   font-size: 20px;
-  text-align: center;
+  text-align: left;
   margin-top: 10px;
   color: ${props => props.theme.color};
 `;
+const ConfirmBold = styled(Bold)`
+text-align: center;
+margin-bottom: 10px;
+`
 const CountryContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
@@ -772,7 +776,8 @@ export default ({ navigation }) => {
           autoCapitalize={"none"}
         />
         <TextContainer>
-          <Bold>Are you absolutely sure?</Bold>
+          <Void />
+          <ConfirmBold>Are you absolutely sure?</ConfirmBold>
           <Text>
             This action cannot be undone. This will permanently delete the{" "}
             {newUsername} account, comments, trip history, and remove all
@@ -845,8 +850,8 @@ export default ({ navigation }) => {
       </Modal>
       <ScrollView>
         <View>
-          <Bold>EDIT PROFILE</Bold>
           <ToggleContainer>
+          <Bold>EDIT PROFILE</Bold>
             <Item>
               <ToggleText>USERNAME</ToggleText>
               <TextInput
@@ -1099,6 +1104,7 @@ export default ({ navigation }) => {
             ) : (
               <ExplainText>Verify your email address to login.</ExplainText>
             )}
+            <Void />
             <Bold>SETTINGS</Bold>
             <Item>
               <ToggleText>DARK MODE</ToggleText>
@@ -1279,6 +1285,7 @@ export default ({ navigation }) => {
               If you set auto location report off, the app cannot find where you
               are. Your lacation will be shown on your profile
             </ExplainText>
+            <Void />
             <Bold>ACCOUNT</Bold>
             <Item>
               <ToggleText>LOG OUT</ToggleText>
