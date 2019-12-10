@@ -69,7 +69,6 @@ export default ({ navigation }) => {
         }
       >
         <View>
-          <Bold>CITIES</Bold>
           {cities.length !== 0 &&
             cities.map((city: any, index: any) => (
               <Touchable

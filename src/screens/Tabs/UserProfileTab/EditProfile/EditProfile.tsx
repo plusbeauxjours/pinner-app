@@ -78,7 +78,7 @@ const Bigtext = styled(Text)`
 `;
 const Bold = styled.Text`
   font-weight: 500;
-  font-size: 20px
+  font-size: 20px;
   text-align: center;
   margin-top: 10px;
   color: ${props => props.theme.color};
@@ -87,6 +87,7 @@ const CountryContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
 `;
+
 const CountryItem = styled.View`
   margin-top: 15px;
   flex-direction: column;
@@ -121,6 +122,11 @@ const ButtonContainer = styled.View`
   justify-content: center;
   align-items: center;
   padding: 15px;
+`;
+const TextContainer = styled.View`
+  width: ${constants.width - 30};
+  justify-content: center;
+  align-items: center;
 `;
 const SubmitButtonContainer = styled.View`
   width: ${constants.width - 80};
@@ -208,6 +214,10 @@ export default ({ navigation }) => {
   const [submitModal, setSubmitModal] = useState<boolean>(false);
   const [isChanged, setIsChanged] = useState<boolean>(false);
   const [logoutModal, setLogoutModal] = useState<boolean>(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
+  const [deleteAccountUsername, setDeleteAccountUsername] = useState<string>(
+    ""
+  );
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
 
   const [editProfileFn, { loading: editProfileLoading }] = useMutation<
@@ -296,7 +306,6 @@ export default ({ navigation }) => {
       }
     );
   };
-
   const onDelete = () => {
     setDeleteModal(true);
     showActionSheetWithOptions(
@@ -393,13 +402,11 @@ export default ({ navigation }) => {
     ToggleSettingsVariables
   >(TOGGLE_SETTINGS, {
     update(cache, { data: { toggleSettings } }) {
-      console.log("data");
       try {
         const data = cache.readQuery<UserProfile, UserProfileVariables>({
           query: GET_USER,
           variables: { uuid: profile.uuid }
         });
-        console.log(data);
         if (data) {
           data.userProfile.user.profile.isDarkMode =
             toggleSettings.user.profile.isDarkMode;
@@ -449,15 +456,19 @@ export default ({ navigation }) => {
     setNewCountryPhoneCode(country.cca2);
   };
   const closeEditPhoneModalOpen = () => {
+    setVerificationKey("");
     setEditPhoneModalOpen(false);
     setIsEditPhoneMode(true);
-    setVerificationKey("");
   };
   const closeEditEmailModalOpen = () => {
     if (!startEditEmailVerificationLoading) {
       setEditEmailModalOpen(false);
       setIsEditEmailMode(true);
     }
+  };
+  const closeDeleteModalOpen = () => {
+    setDeleteAccountUsername("");
+    setDeleteModalOpen(false);
   };
   const onPressToggleIcon = async (payload: string) => {
     try {
@@ -474,13 +485,7 @@ export default ({ navigation }) => {
       } else if (payload === "AUTO_LOCATION_REPORT") {
         setIsAutoLocationReport(isAutoLocationReport => !isAutoLocationReport);
       }
-      const {
-        data: { toggleSettings }
-      } = await toggleSettingsFn({ variables: { payload } });
-      console.log(toggleSettings);
-      if (toggleSettings.ok) {
-        toast("Setting edited");
-      }
+      await toggleSettingsFn({ variables: { payload } });
     } catch (e) {
       console.log(e);
     }
@@ -498,6 +503,8 @@ export default ({ navigation }) => {
       setFirstName(item);
     } else if (state === "lastName") {
       setLastName(item);
+    } else if (state === "deleteAccountUsername") {
+      setDeleteAccountUsername(item);
     } else {
       return null;
     }
@@ -535,9 +542,9 @@ export default ({ navigation }) => {
     const {
       data: { completeEditPhoneVerification }
     } = await completeEditPhoneVerificationFn();
+    setVerificationKey("");
     setEditPhoneModalOpen(false);
     setIsEditPhoneMode(true);
-    setVerificationKey("");
     if (completeEditPhoneVerification.ok) {
       toast("Your phone number is verified");
     } else {
@@ -605,6 +612,11 @@ export default ({ navigation }) => {
     );
   };
   useEffect(() => {
+    if (deleteAccountUsername === me.user.username) {
+      onDelete();
+    }
+  }, [deleteAccountUsername]);
+  useEffect(() => {
     if (
       newUsername !== me.user.username ||
       nationalityCode !==
@@ -664,7 +676,7 @@ export default ({ navigation }) => {
                   fontWeight: "300"
                 }}
                 keyboardType="phone-pad"
-                returnKeyType="send"
+                returnKeyType="done"
                 onChangeText={number => setNewPhoneNumber(number)}
               />
             </EditModalContainer>
@@ -704,7 +716,7 @@ export default ({ navigation }) => {
                 textAlign: "center"
               }}
               keyboardType="phone-pad"
-              returnKeyType="send"
+              returnKeyType="done"
               onChangeText={number => setVerificationKey(number)}
             />
             <ButtonContainer>
@@ -724,6 +736,49 @@ export default ({ navigation }) => {
             </ButtonContainer>
           </>
         )}
+      </Modal>
+      <Modal
+        isVisible={deleteModalOpen}
+        backdropColor={theme ? "#161616" : "#EFEFEF"}
+        onBackdropPress={() => closeDeleteModalOpen()}
+        onBackButtonPress={() =>
+          Platform.OS !== "ios" && closeDeleteModalOpen()
+        }
+        propagateSwipe={true}
+        scrollHorizontal={true}
+        backdropOpacity={0.9}
+        style={{ justifyContent: "center", alignItems: "center" }}
+      >
+        <TextInput
+          style={{
+            width: constants.width - 30,
+            backgroundColor: "transparent",
+            borderBottomWidth: 1,
+            borderBottomColor: "#999",
+            color: theme ? "white" : "black",
+            marginLeft: 5,
+            fontSize: 32,
+            fontWeight: "300",
+            textAlign: "center"
+          }}
+          value={deleteAccountUsername}
+          placeholderTextColor="#999"
+          placeholder={newUsername}
+          returnKeyType="done"
+          onChangeText={text =>
+            onInputTextChange(text, "deleteAccountUsername")
+          }
+          autoCorrect={false}
+          autoCapitalize={"none"}
+        />
+        <TextContainer>
+          <Bold>Are you absolutely sure?</Bold>
+          <Text>
+            This action cannot be undone. This will permanently delete the{" "}
+            {newUsername} account, comments, trip history, and remove all
+            photos. Please type in the name of your username to confirm.
+          </Text>
+        </TextContainer>
       </Modal>
       <Modal
         isVisible={editEmailModalOpen}
@@ -751,7 +806,7 @@ export default ({ navigation }) => {
                   fontWeight: "300"
                 }}
                 keyboardType="email-address"
-                returnKeyType="send"
+                returnKeyType="done"
                 onChangeText={adress => setNewEmailAddress(adress)}
               />
             </EditModalContainer>
@@ -1246,7 +1301,10 @@ export default ({ navigation }) => {
 
             <Item>
               <ToggleText>DELETE PROFILE</ToggleText>
-              <Touchable disabled={deleteeLoading} onPress={() => onDelete()}>
+              <Touchable
+                disabled={deleteeLoading}
+                onPress={() => setDeleteModalOpen(true)}
+              >
                 {deleteeLoading ? (
                   <ActivityIndicator color={"white"} />
                 ) : (

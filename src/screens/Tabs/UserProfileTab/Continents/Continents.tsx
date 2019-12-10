@@ -68,7 +68,6 @@ export default ({ navigation }) => {
         }
       >
         <View>
-          <Bold>CONTINENTS</Bold>
           {continents &&
             continents.map((continent, index) => (
               <Touchable

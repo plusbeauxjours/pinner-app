@@ -67,7 +67,6 @@ export default ({ navigation }) => {
         }
       >
         <View>
-          <Bold>COUNTRIES</Bold>
           {countries &&
             countries.map((country, index) => (
               <Touchable
