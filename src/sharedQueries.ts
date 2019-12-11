@@ -178,3 +178,11 @@ export const UPLOAD_AVATAR = gql`
     }
   }
 `;
+
+export const REGISTER_PUSH = gql`
+  mutation RegisterPush($pushToken: String!) {
+    registerPush(pushToken: $pushToken) {
+      ok
+    }
+  }
+`;

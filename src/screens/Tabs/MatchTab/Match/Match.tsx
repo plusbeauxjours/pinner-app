@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import Loader from "../../../../components/Loader";
-import UserRow from "../../../../components/UserRow";
+import { RefreshControl } from "react-native";
+import { MARK_AS_READ_MATCH } from "./MatchQueries";
+import { SwipeListView } from "react-native-swipe-list-view";
+import { useActionSheet } from "@expo/react-native-action-sheet";
+import Toast from "react-native-root-toast";
+
 import { useQuery, useMutation } from "react-apollo-hooks";
+import * as Permissions from "expo-permissions";
+import { Notifications } from "expo";
 import { Linking } from "expo";
 import {
   GET_MATCHES,
@@ -10,16 +16,14 @@ import {
   COMPLETE_EMAIL_SIGN_IN
 } from "./MatchQueries";
 import { useMe } from "../../../../context/MeContext";
-import { RefreshControl } from "react-native";
-import { MARK_AS_READ_MATCH } from "./MatchQueries";
-import { SwipeListView } from "react-native-swipe-list-view";
-import { useActionSheet } from "@expo/react-native-action-sheet";
-import Toast from "react-native-root-toast";
 import { UNMATCH } from "../../../../components/CoffeeBtn/CoffeeBtnQueries";
 import { chat_leave } from "../../../../../Fire";
-import { ME } from "../../../../sharedQueries";
+import { ME, REGISTER_PUSH } from "../../../../sharedQueries";
 import { useLogIn } from "../../../../context/AuthContext";
 import { useLocation } from "../../../../context/LocationContext";
+import Loader from "../../../../components/Loader";
+import UserRow from "../../../../components/UserRow";
+import axios from "axios";
 import {
   Me,
   CompleteEmailVerification,
@@ -31,7 +35,9 @@ import {
   UnMatch,
   UnMatchVariables,
   CompleteEditEmailVerification,
-  CompleteEditEmailVerificationVariables
+  CompleteEditEmailVerificationVariables,
+  RegisterPush,
+  RegisterPushVariables
 } from "../../../../types/api";
 
 const TextContainer = styled.View`
@@ -100,6 +106,34 @@ export default ({ navigation }) => {
   const location = useLocation();
   const { me } = useMe();
   const [refreshing, setRefreshing] = useState(false);
+  const [registerPushFn, { loading: registerPushLoading }] = useMutation<
+    RegisterPush,
+    RegisterPushVariables
+  >(REGISTER_PUSH);
+  const askPermission = async () => {
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.NOTIFICATIONS
+    );
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      return;
+    }
+    let pushToken = await Notifications.getExpoPushTokenAsync();
+    console.log(pushToken);
+    await registerPushFn({
+      variables: { pushToken }
+    });
+    const { data } = await axios.post("https://exp.host/--/api/v2/push/send", {
+      to: pushToken,
+      title: "new message",
+      body: "new body"
+    });
+    console.log(data);
+  };
   const [
     completeEditEmailVerificationFn,
     { loading: completeEditEmailVerificationLoading }
@@ -303,6 +337,7 @@ export default ({ navigation }) => {
   };
   useEffect(() => {
     Linking.addEventListener("url", handleOpenURL);
+    askPermission();
   }, []);
   if (
     matchLoading ||

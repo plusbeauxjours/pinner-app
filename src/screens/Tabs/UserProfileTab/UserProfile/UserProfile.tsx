@@ -84,7 +84,7 @@ const Text = styled.Text`
   color: ${props => props.theme.color};
 `;
 const BioText = styled(Text)`
-  margin-bottom: 15px;
+  margin: 15px 0 20px 0;
 `;
 const Bold = styled.Text`
   font-size: 12px;
