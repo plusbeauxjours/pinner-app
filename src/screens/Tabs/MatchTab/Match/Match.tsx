@@ -123,16 +123,33 @@ export default ({ navigation }) => {
       return;
     }
     let pushToken = await Notifications.getExpoPushTokenAsync();
-    console.log(pushToken);
-    await registerPushFn({
+    const { data: serverData } = await registerPushFn({
       variables: { pushToken }
     });
-    const { data } = await axios.post("https://exp.host/--/api/v2/push/send", {
-      to: pushToken,
-      title: "new message",
-      body: "new body"
-    });
-    console.log(data);
+
+    /////////////////////////////////////////////////////////
+    /////////////////////   PUSH TEST   /////////////////////
+    console.log("serverData", serverData);
+    const { data: axiosDataA } = await axios.post(
+      "https://exp.host/--/api/v2/push/send",
+      {
+        to: "ExponentPushToken[8cyY19OfrGL6E9_jCzTdCM]",
+        title: "new message to IPhone",
+        body: "new body to IPhone"
+      }
+    );
+    console.log("axiosData to IPHONE", axiosDataA);
+    const { data: axiosDataB } = await axios.post(
+      "https://exp.host/--/api/v2/push/send",
+      {
+        to: "ExponentPushToken[Zyb_NzBAS8TdfXChmRfU84]",
+        title: "new message",
+        body: "new body"
+      }
+    );
+    console.log("axiosData to ANDROID", axiosDataB);
+    //////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
   };
   const [
     completeEditEmailVerificationFn,
@@ -215,7 +232,9 @@ export default ({ navigation }) => {
     data: { getMatches: { matches = null } = {} } = {},
     loading: matchLoading,
     refetch: matchRefetch
-  } = useQuery<GetMatches, GetMatchesVariables>(GET_MATCHES);
+  } = useQuery<GetMatches, GetMatchesVariables>(GET_MATCHES, {
+    fetchPolicy: "network-only"
+  });
 
   const [unMatchFn, { loading: unMatchLoading }] = useMutation<
     UnMatch,
@@ -382,6 +401,9 @@ export default ({ navigation }) => {
                               receiverAvatar: data.item.isHost
                                 ? data.item.guest.profile.appAvatarUrl
                                 : data.item.host.profile.appAvatarUrl,
+                              receiverPushToken: data.item.isHost
+                                ? data.item.guest.profile.pushToken
+                                : data.item.host.profile.pushToken,
                               uuid: me.user.profile.uuid,
                               userName: me.user.username,
                               userUrl: me.user.profile.appAvatarUrl,

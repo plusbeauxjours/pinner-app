@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { AsyncStorage } from "react-native";
+import { AsyncStorage, StatusBar } from "react-native";
 import { Ionicons, AntDesign, FontAwesome } from "@expo/vector-icons";
 import * as Font from "expo-font";
 import { Asset } from "expo-asset";
@@ -25,6 +25,11 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(null);
   const [isDarkMode, setDarkMode] = useState<boolean>(null);
   const preLoad = async () => {
+    if (isDarkMode) {
+      StatusBar.setBarStyle("light-content", true);
+    } else {
+      StatusBar.setBarStyle("dark-content", true);
+    }
     try {
       await Font.loadAsync({
         ...Ionicons.font,

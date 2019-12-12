@@ -74,6 +74,7 @@ export interface Match_match_match_host_profile {
   __typename: "ProfileType";
   id: string;
   uuid: any | null;
+  pushToken: string;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
@@ -104,6 +105,7 @@ export interface Match_match_match_guest_profile {
   __typename: "ProfileType";
   id: string;
   uuid: any | null;
+  pushToken: string;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
@@ -1073,6 +1075,7 @@ export interface GetMatches_getMatches_matches_host_profile {
   __typename: "ProfileType";
   id: string;
   uuid: any | null;
+  pushToken: string;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
@@ -1103,6 +1106,7 @@ export interface GetMatches_getMatches_matches_guest_profile {
   __typename: "ProfileType";
   id: string;
   uuid: any | null;
+  pushToken: string;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
@@ -2483,6 +2487,7 @@ export interface Me_me_user_profile {
   __typename: "ProfileType";
   id: string;
   uuid: any | null;
+  pushToken: string;
   bio: string | null;
   gender: ProfileGender | null;
   avatarUrl: string | null;
@@ -2959,6 +2964,7 @@ export interface MatchParts_host_profile {
   __typename: "ProfileType";
   id: string;
   uuid: any | null;
+  pushToken: string;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
@@ -2989,6 +2995,7 @@ export interface MatchParts_guest_profile {
   __typename: "ProfileType";
   id: string;
   uuid: any | null;
+  pushToken: string;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;

@@ -12,6 +12,7 @@ export const ME = gql`
         profile {
           id
           uuid
+          pushToken
           bio
           gender
           avatarUrl

@@ -8,6 +8,7 @@ import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import styled from "styled-components";
 import { useTheme } from "../context/ThemeContext";
 import { useMe } from "../context/MeContext";
+import axios from "axios";
 import {
   get_last_chat_messages,
   fb_db,

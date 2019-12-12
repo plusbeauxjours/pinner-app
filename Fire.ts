@@ -36,6 +36,7 @@ export interface ChatMessage {
   user: UserChatMessage;
   image?: string;
   location?: LocationChatMessage;
+  receiverPushToken: string;
 }
 
 export const image_upload = async (
@@ -119,6 +120,9 @@ export const chat_send = (chat_id: string, message: ChatMessage) => {
     updates[`/chats/${chat_id}/lastMessage/`] = `${message.text}`;
     updates[`/chats/${chat_id}/lastSender/`] = `${message.user._id}`;
     updates[`/chats/${chat_id}/createdAt/`] = `${message.createdAt}`;
+    updates[
+      `/chats/${chat_id}/receiverPushToken/`
+    ] = `${message.receiverPushToken}`;
     updates[`/chats/${chat_id}/status/`] = `${message.status}`;
   } else if (message.image) {
     updates[`/chats/${chat_id}/lastMessage/`] = "Photo";

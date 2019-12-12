@@ -21,6 +21,7 @@
     "apollo-cache-persist": "^0.1.1",
     "apollo-upload-client": "^11.0.0",
     "axios": "^0.19.0",
+    "eslint-cli": "^1.1.1",
     "expo": "^34.0.1",
     "expo-asset": "~6.0.0",
     "expo-blur": "~6.0.0",
@@ -56,15 +57,14 @@
     "react-native-modal": "^11.4.0",
     "react-native-path": "^0.0.5",
     "react-native-root-toast": "^3.2.0",
-    "react-native-svg": "^9.11.1",
+    "react-native-svg": "^9.13.6",
     "react-native-svg-uri": "^1.2.3",
     "react-native-swipe-list-view": "^2.0.3",
     "react-native-swiper": "^1.5.14",
     "react-native-web": "^0.11.4",
     "react-navigation": "3.11.0",
     "react-navigation-animated-switch": "^0.3.2",
-    "styled-components": "^4.3.2",
-    "uninstall": "0.0.0"
+    "styled-components": "^4.3.2"
   },
   "devDependencies": {
     "@expo/vector-icons": "^10.0.5",

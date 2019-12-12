@@ -130,6 +130,7 @@ export const MATCH_FRAGMENT = gql`
       profile {
         id
         uuid
+        pushToken
         avatarUrl
         appAvatarUrl
         isSelf
@@ -146,6 +147,7 @@ export const MATCH_FRAGMENT = gql`
       profile {
         id
         uuid
+        pushToken
         avatarUrl
         appAvatarUrl
         isSelf

@@ -45,6 +45,7 @@ interface IState {
   userId: string;
   receiverId: string;
   receiverAvatar: string;
+  receiverPushToken: string;
   uuid: string;
   userName: string;
   userUrl: string;
@@ -67,11 +68,13 @@ interface IState {
 class ChatContainer extends React.Component<IProps, IState> {
   constructor(props) {
     super(props);
+    console.ignoredYellowBox = ["Setting a timer"];
     this.state = {
       chatId: this.props.navigation.getParam("chatId"),
       userId: this.props.navigation.getParam("userId"),
       receiverId: this.props.navigation.getParam("receiverId"),
       receiverAvatar: this.props.navigation.getParam("receiverAvatar"),
+      receiverPushToken: this.props.navigation.getParam("receiverPushToken"),
       uuid: this.props.navigation.getParam("uuid"),
       userName: this.props.navigation.getParam("userName"),
       userUrl: this.props.navigation.getParam("userUrl"),
@@ -111,6 +114,7 @@ class ChatContainer extends React.Component<IProps, IState> {
     if (msg) {
       msg._id = get_new_key("messages");
       msg.user.name = this.state.userName;
+      msg.receiverPushToken = this.state.receiverPushToken;
       msg.status = false;
       chat_send(this.state.chatId, msg);
       this.setState(previousState => ({
@@ -130,7 +134,8 @@ class ChatContainer extends React.Component<IProps, IState> {
       createdAt: new Date(),
       status: false,
       user: user,
-      location: { latitude, longitude }
+      location: { latitude, longitude },
+      receiverPushToken: this.state.receiverPushToken
     };
     let messages = [];
     messages.push(messageLocation);
