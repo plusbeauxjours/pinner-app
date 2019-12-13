@@ -116,7 +116,7 @@ class ChatContainer extends React.Component<IProps, IState> {
       msg.user.name = this.state.userName;
       msg.receiverPushToken = this.state.receiverPushToken;
       msg.status = false;
-      chat_send(this.state.chatId, msg);
+      chat_send(this.state.chatId, msg).catch(e => console.log(e));
       this.setState(previousState => ({
         messages: GiftedChat.append(previousState.messages, msg)
       }));

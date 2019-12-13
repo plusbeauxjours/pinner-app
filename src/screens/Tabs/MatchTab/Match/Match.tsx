@@ -129,7 +129,7 @@ export default ({ navigation }) => {
 
     /////////////////////////////////////////////////////////
     /////////////////////   PUSH TEST   /////////////////////
-    console.log("serverData", serverData);
+    // console.log("serverData", serverData);
     const { data: axiosDataA } = await axios.post(
       "https://exp.host/--/api/v2/push/send",
       {
@@ -138,7 +138,7 @@ export default ({ navigation }) => {
         body: "new body to IPhone"
       }
     );
-    console.log("axiosData to IPHONE", axiosDataA);
+    // console.log("axiosData to IPHONE", axiosDataA);
     const { data: axiosDataB } = await axios.post(
       "https://exp.host/--/api/v2/push/send",
       {
@@ -147,7 +147,7 @@ export default ({ navigation }) => {
         body: "new body"
       }
     );
-    console.log("axiosData to ANDROID", axiosDataB);
+    // console.log("axiosData to ANDROID", axiosDataB);
     //////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////
   };

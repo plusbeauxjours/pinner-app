@@ -34,51 +34,8 @@ export interface ChatMessage {
   createdAt: Date;
   status: boolean;
   user: UserChatMessage;
-  image?: string;
   location?: LocationChatMessage;
   receiverPushToken: string;
-}
-
-export const image_upload = async (
-  image_path: string,
-  folder: string,
-  name: string
-) => {
-  const blob = await urlToBlob(image_path);
-  const ref: any = firebase
-    .storage()
-    .ref(folder)
-    .child(name);
-  const result = await ref.put(blob);
-  return result.ref;
-};
-
-export const image_upload_chat = async (
-  chat_id: string,
-  image_path: string,
-  resolution: "full" | "high" | "low"
-) => {
-  const result = await image_upload(
-    image_path,
-    `chat_pictures/${chat_id}/${Date()}`,
-    resolution
-  );
-  return result.getDownloadURL();
-};
-
-function urlToBlob(url: string) {
-  return new Promise((resolve, reject) => {
-    let xhr = new XMLHttpRequest();
-    xhr.onerror = reject;
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === 4) {
-        resolve(xhr.response);
-      }
-    };
-    xhr.open("GET", url);
-    xhr.responseType = "blob";
-    xhr.send();
-  });
 }
 
 export const chat_leave = (
@@ -124,8 +81,6 @@ export const chat_send = (chat_id: string, message: ChatMessage) => {
       `/chats/${chat_id}/receiverPushToken/`
     ] = `${message.receiverPushToken}`;
     updates[`/chats/${chat_id}/status/`] = `${message.status}`;
-  } else if (message.image) {
-    updates[`/chats/${chat_id}/lastMessage/`] = "Photo";
   } else if (message.location) {
     updates[`/chats/${chat_id}/lastMessage/`] = "Location";
   }
@@ -212,23 +167,12 @@ export const get_old_chat_messages = async (
           if (child && child.val() && child.val()["_id"]) {
             let message: ChatMessage;
             let systemMessage: SystemMessage;
-
             if (child.val().system) {
               systemMessage = child.val();
               messages.push(systemMessage);
             } else {
               message = child.val();
-              if (!message.image) {
-                messages.push(message);
-              } else {
-                let promise = image_get_raw(message.image, resolution).then(
-                  image => {
-                    message.image = image;
-                    messages.push(message);
-                  }
-                );
-                promises.push(promise);
-              }
+              messages.push(message);
             }
           }
           /* tslint:enable:no-string-literal */
@@ -238,44 +182,4 @@ export const get_old_chat_messages = async (
         });
       });
   });
-};
-
-export const image_get_raw = async (image_path: string, resolution: string) => {
-  if (image_path.startsWith("chat_pictures")) {
-    if (resolution === "full") {
-      return firebase
-        .storage()
-        .ref(image_path)
-        .getDownloadURL();
-    } else if (resolution === "high") {
-      if (path.basename(image_path) === "full") {
-        return firebase
-          .storage()
-          .ref(image_path)
-          .parent.child("HIGH")
-          .getDownloadURL();
-      } else {
-        return firebase
-          .storage()
-          .ref(image_path)
-          .getDownloadURL();
-      }
-    } else {
-      // resolution === "low"
-      if (path.basename(image_path) === "low") {
-        return firebase
-          .storage()
-          .ref(image_path)
-          .getDownloadURL();
-      } else {
-        return firebase
-          .storage()
-          .ref(image_path)
-          .parent.child("LOW")
-          .getDownloadURL();
-      }
-    }
-    // return firebase.storage().ref(image_path).parent.child("high").getDownloadURL();
-  }
-  return image_path;
 };
