@@ -1,14 +1,30 @@
 import styled from "styled-components";
 import * as Facebook from "expo-facebook";
-import AuthButton from "../../../components/AuthButton";
 import React, { useState } from "react";
 import { useMutation } from "react-apollo-hooks";
 import { FacebookConnect, FacebookConnectVariables } from "../../../types/api";
 import { FACEBOOK_CONNECT } from "./FacebookApproachQueries";
 import { useLogIn } from "../../../context/AuthContext";
 import Toast from "react-native-root-toast";
+import { ActivityIndicator } from "react-native";
 
-const FBContainer = styled.View``;
+const Touchable = styled.TouchableOpacity``;
+
+const Container = styled.View`
+  background-color: #2d4da7;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+  height: 40px;
+  border-radius: 5px;
+`;
+
+const Text = styled.Text`
+  color: white;
+  text-align: center;
+  font-weight: 600;
+`;
 
 export default () => {
   const [loading, setLoading] = useState(false);
@@ -30,12 +46,15 @@ export default () => {
   const fbLogin = async () => {
     try {
       setLoading(true);
-      const { type, token } = await Facebook.logInWithReadPermissionsAsync(
-        "242663513281642",
-        {
-          permissions: ["public_profile", "email"]
-        }
-      );
+      Facebook.initializeAsync("242663513281642", "Pinner");
+      const permissions = ["public_profile", "email"];
+      const {
+        type,
+        token
+      } = await Facebook.logInWithReadPermissionsAsync("242663513281642", {
+        permissions
+      });
+      console.log(type, token);
       if (type === "success") {
         const response = await fetch(
           `https://graph.facebook.com/me?access_token=${token}&fields=id,name,last_name,first_name,email,gender`
@@ -73,13 +92,14 @@ export default () => {
     }
   };
   return (
-    <FBContainer>
-      <AuthButton
-        bgColor={"#2D4DA7"}
-        loading={loading}
-        onPress={fbLogin}
-        text="LOG IN WITH FACEBOOK"
-      />
-    </FBContainer>
+    <Touchable disabled={loading} onPress={fbLogin}>
+      <Container>
+        {loading ? (
+          <ActivityIndicator color={"white"} />
+        ) : (
+          <Text>LOG IN WITH FACEBOOK</Text>
+        )}
+      </Container>
+    </Touchable>
   );
 };
