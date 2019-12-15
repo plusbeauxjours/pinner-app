@@ -48,16 +48,12 @@ export default () => {
       setLoading(true);
       Facebook.initializeAsync("242663513281642", "Pinner");
       const permissions = ["public_profile", "email"];
-      const {
-        type,
-        token
-      } = await Facebook.logInWithReadPermissionsAsync("242663513281642", {
+      const authResult = await Facebook.logInWithReadPermissionsAsync({
         permissions
       });
-      console.log(type, token);
-      if (type === "success") {
+      if (authResult.type === "success") {
         const response = await fetch(
-          `https://graph.facebook.com/me?access_token=${token}&fields=id,name,last_name,first_name,email,gender`
+          `https://graph.facebook.com/me?access_token=${authResult.token}&fields=id,name,last_name,first_name,email,gender`
         );
         const {
           id,

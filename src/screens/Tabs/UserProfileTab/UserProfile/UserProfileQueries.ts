@@ -32,6 +32,7 @@ export const GET_USER = gql`
             countryEmoji
             ...CountryParts
           }
+          blockingUserCount
           photoCount
           postCount
           tripCount

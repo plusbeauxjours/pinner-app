@@ -1666,6 +1666,44 @@ export interface MarkAsMainVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: GetBlockingUser
+// ====================================================
+
+export interface GetBlockingUser_getBlockingUser_blockingUsers_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface GetBlockingUser_getBlockingUser_blockingUsers_currentCity {
+  __typename: "CityType";
+  cityName: string | null;
+  country: GetBlockingUser_getBlockingUser_blockingUsers_currentCity_country;
+}
+
+export interface GetBlockingUser_getBlockingUser_blockingUsers {
+  __typename: "ProfileType";
+  id: string;
+  uuid: any | null;
+  username: string | null;
+  appAvatarUrl: string | null;
+  currentCity: GetBlockingUser_getBlockingUser_blockingUsers_currentCity | null;
+  isSelf: boolean | null;
+}
+
+export interface GetBlockingUser_getBlockingUser {
+  __typename: "GetBlockingUserResponse";
+  blockingUsers: (GetBlockingUser_getBlockingUser_blockingUsers | null)[] | null;
+}
+
+export interface GetBlockingUser {
+  getBlockingUser: GetBlockingUser_getBlockingUser;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: FrequentVisits
 // ====================================================
 
@@ -1858,6 +1896,7 @@ export interface EditProfile_editProfile_user_profile {
   isVerifiedEmailAddress: boolean;
   nationality: EditProfile_editProfile_user_profile_nationality | null;
   residence: EditProfile_editProfile_user_profile_residence | null;
+  blockingUserCount: number | null;
   photoCount: number | null;
   postCount: number | null;
   tripCount: number | null;
@@ -2121,6 +2160,7 @@ export interface UserProfile_userProfile_user_profile {
   isVerifiedEmailAddress: boolean;
   nationality: UserProfile_userProfile_user_profile_nationality | null;
   residence: UserProfile_userProfile_user_profile_residence | null;
+  blockingUserCount: number | null;
   photoCount: number | null;
   postCount: number | null;
   tripCount: number | null;
@@ -2502,6 +2542,7 @@ export interface Me_me_user_profile {
   isVerifiedEmailAddress: boolean;
   nationality: Me_me_user_profile_nationality | null;
   residence: Me_me_user_profile_residence | null;
+  blockingUserCount: number | null;
   photoCount: number | null;
   postCount: number | null;
   tripCount: number | null;
@@ -2743,6 +2784,48 @@ export interface RegisterPush {
 
 export interface RegisterPushVariables {
   pushToken: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: AddBlockUser
+// ====================================================
+
+export interface AddBlockUser_addBlockUser {
+  __typename: "BlockUserResponse";
+  ok: boolean | null;
+}
+
+export interface AddBlockUser {
+  addBlockUser: AddBlockUser_addBlockUser;
+}
+
+export interface AddBlockUserVariables {
+  uuid: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: DeleteBlockUser
+// ====================================================
+
+export interface DeleteBlockUser_deleteBlockUser {
+  __typename: "BlockUserResponse";
+  ok: boolean | null;
+}
+
+export interface DeleteBlockUser {
+  deleteBlockUser: DeleteBlockUser_deleteBlockUser;
+}
+
+export interface DeleteBlockUserVariables {
+  uuid: string;
 }
 
 /* tslint:disable */

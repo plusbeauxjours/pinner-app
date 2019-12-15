@@ -33,6 +33,7 @@ export const ME = gql`
             countryEmoji
             ...CountryParts
           }
+          blockingUserCount
           photoCount
           postCount
           tripCount
@@ -183,6 +184,22 @@ export const UPLOAD_AVATAR = gql`
 export const REGISTER_PUSH = gql`
   mutation RegisterPush($pushToken: String!) {
     registerPush(pushToken: $pushToken) {
+      ok
+    }
+  }
+`;
+
+export const ADD_BLOCK_USER = gql`
+  mutation AddBlockUser($uuid: String!) {
+    addBlockUser(uuid: $uuid) {
+      ok
+    }
+  }
+`;
+
+export const DELETE_BLOCK_USER = gql`
+  mutation DeleteBlockUser($uuid: String!) {
+    deleteBlockUser(uuid: $uuid) {
       ok
     }
   }

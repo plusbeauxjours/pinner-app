@@ -1488,6 +1488,24 @@ export default ({ navigation }) => {
                     </Item>
                   </Touchable>
                 ))}
+                {console.log(user.profile)}
+              {user.profile.isSelf &&
+                user.profile.blockingUserCount !== 0 &&
+                (user.profile.blockingUserCount === 1 ? (
+                  <Touchable onPress={() => navigation.push("BlockingUsers")}>
+                    <Item>
+                      <UserName>{user.profile.blockingUserCount}</UserName>
+                      <Bold>BLOCKED USER</Bold>
+                    </Item>
+                  </Touchable>
+                ) : (
+                  <Touchable onPress={() => navigation.push("BlockingUsers")}>
+                    <Item>
+                      <UserName>{user.profile.blockingUserCount}</UserName>
+                      <Bold>BLOCKED USERS</Bold>
+                    </Item>
+                  </Touchable>
+                ))}
             </ItemContainer>
 
             {(() => {
