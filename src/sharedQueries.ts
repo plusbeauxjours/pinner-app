@@ -33,7 +33,7 @@ export const ME = gql`
             countryEmoji
             ...CountryParts
           }
-          blockingUserCount
+          blockedUserCount
           photoCount
           postCount
           tripCount

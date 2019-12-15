@@ -50,7 +50,7 @@ export const EDIT_PROFILE = gql`
             countryEmoji
             ...CountryParts
           }
-          blockingUserCount
+          blockedUserCount
           photoCount
           postCount
           tripCount

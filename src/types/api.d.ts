@@ -1666,37 +1666,37 @@ export interface MarkAsMainVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: GetBlockingUser
+// GraphQL query operation: GetBlockedUser
 // ====================================================
 
-export interface GetBlockingUser_getBlockingUser_blockingUsers_currentCity_country {
+export interface GetBlockedUser_getBlockedUser_blockedUsers_currentCity_country {
   __typename: "CountryType";
   countryName: string | null;
 }
 
-export interface GetBlockingUser_getBlockingUser_blockingUsers_currentCity {
+export interface GetBlockedUser_getBlockedUser_blockedUsers_currentCity {
   __typename: "CityType";
   cityName: string | null;
-  country: GetBlockingUser_getBlockingUser_blockingUsers_currentCity_country;
+  country: GetBlockedUser_getBlockedUser_blockedUsers_currentCity_country;
 }
 
-export interface GetBlockingUser_getBlockingUser_blockingUsers {
+export interface GetBlockedUser_getBlockedUser_blockedUsers {
   __typename: "ProfileType";
   id: string;
   uuid: any | null;
   username: string | null;
   appAvatarUrl: string | null;
-  currentCity: GetBlockingUser_getBlockingUser_blockingUsers_currentCity | null;
+  currentCity: GetBlockedUser_getBlockedUser_blockedUsers_currentCity | null;
   isSelf: boolean | null;
 }
 
-export interface GetBlockingUser_getBlockingUser {
-  __typename: "GetBlockingUserResponse";
-  blockingUsers: (GetBlockingUser_getBlockingUser_blockingUsers | null)[] | null;
+export interface GetBlockedUser_getBlockedUser {
+  __typename: "GetBlockedUserResponse";
+  blockedUsers: (GetBlockedUser_getBlockedUser_blockedUsers | null)[] | null;
 }
 
-export interface GetBlockingUser {
-  getBlockingUser: GetBlockingUser_getBlockingUser;
+export interface GetBlockedUser {
+  getBlockedUser: GetBlockedUser_getBlockedUser;
 }
 
 /* tslint:disable */
@@ -1896,7 +1896,7 @@ export interface EditProfile_editProfile_user_profile {
   isVerifiedEmailAddress: boolean;
   nationality: EditProfile_editProfile_user_profile_nationality | null;
   residence: EditProfile_editProfile_user_profile_residence | null;
-  blockingUserCount: number | null;
+  blockedUserCount: number | null;
   photoCount: number | null;
   postCount: number | null;
   tripCount: number | null;
@@ -2160,7 +2160,7 @@ export interface UserProfile_userProfile_user_profile {
   isVerifiedEmailAddress: boolean;
   nationality: UserProfile_userProfile_user_profile_nationality | null;
   residence: UserProfile_userProfile_user_profile_residence | null;
-  blockingUserCount: number | null;
+  blockedUserCount: number | null;
   photoCount: number | null;
   postCount: number | null;
   tripCount: number | null;
@@ -2542,7 +2542,7 @@ export interface Me_me_user_profile {
   isVerifiedEmailAddress: boolean;
   nationality: Me_me_user_profile_nationality | null;
   residence: Me_me_user_profile_residence | null;
-  blockingUserCount: number | null;
+  blockedUserCount: number | null;
   photoCount: number | null;
   postCount: number | null;
   tripCount: number | null;

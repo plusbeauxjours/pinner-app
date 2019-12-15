@@ -1,9 +1,9 @@
 import gql from "graphql-tag";
 
-export const GET_BLOCKING_USER = gql`
-  query GetBlockingUser {
-    getBlockingUser {
-      blockingUsers {
+export const GET_BLOCkED_USER = gql`
+  query GetBlockedUser {
+    getBlockedUser {
+      blockedUsers {
         id
         uuid
         username

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { RefreshControl } from "react-native";
-import { GetBlockingUser } from "../../../../types/api";
+import { GetBlockedUser } from "../../../../types/api";
 import { useQuery } from "react-apollo-hooks";
 import { SwipeListView } from "react-native-swipe-list-view";
-import { GET_BLOCKING_USER } from "./BlockingUsersQueries";
+import { GET_BLOCkED_USER } from "./BlockingUsersQueries";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
 import { useMutation } from "react-apollo";
@@ -13,7 +13,20 @@ import {
   DeleteBlockUser,
   DeleteBlockUserVariables
 } from "../../../../types/api";
-
+const Container = styled.View`
+  background-color: ${props => props.theme.bgColor};
+  padding: 0 15px 0 15px;
+`;
+const TextContainer = styled.View`
+  margin-top: 15px;
+  justify-content: center;
+  align-items: center;
+`;
+const Text = styled.Text`
+  color: ${props => props.theme.color};
+  font-size: 8px;
+  margin-left: 5px;
+`;
 const TouchableRow = styled.TouchableOpacity`
   background-color: ${props => props.theme.bgColor};
 `;
@@ -60,10 +73,10 @@ const IconContainer = styled.View`
 export default ({ navigation }) => {
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const {
-    data: { getBlockingUser: { blockingUsers = null } = {} } = {},
+    data: { getBlockedUser: { blockedUsers = null } = {} } = {},
     loading,
     refetch
-  } = useQuery<GetBlockingUser>(GET_BLOCKING_USER);
+  } = useQuery<GetBlockedUser>(GET_BLOCkED_USER, { fetchPolicy: "no-cache" });
   const [deleteBlockUserFn, { loading: deleteBlockUserLoading }] = useMutation<
     DeleteBlockUser,
     DeleteBlockUserVariables
@@ -91,41 +104,50 @@ export default ({ navigation }) => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <SwipeListView
-          useFlatList={false}
-          closeOnRowBeginSwipe={true}
-          data={blockingUsers}
-          previewOpenValue={1000}
-          renderItem={data => (
-            <TouchableBackRow key={data.item.id}>
-              <TouchableRow
-                onPress={() =>
-                  navigation.push("UserProfile", {
-                    uuid: data.item.profile.uuid,
-                    isSelf: data.item.profile.isSelf
-                  })
-                }
-              >
-                <UserRow trip={data.item} type={"user"} />
-              </TouchableRow>
-            </TouchableBackRow>
+        <Container>
+          {blockedUsers && blockedUsers.length !== 0 ? (
+            <SwipeListView
+              useFlatList={false}
+              closeOnRowBeginSwipe={true}
+              data={blockedUsers}
+              previewOpenValue={1000}
+              renderItem={data => (
+                <TouchableBackRow key={data.item.id}>
+                  {console.log("data.item", data.item)}
+                  <TouchableRow
+                    onPress={() =>
+                      navigation.push("UserProfile", {
+                        uuid: data.item.profile.uuid,
+                        isSelf: data.item.profile.isSelf
+                      })
+                    }
+                  >
+                    <UserRow user={data.item} type={"user"} />
+                  </TouchableRow>
+                </TouchableBackRow>
+              )}
+              renderHiddenItem={data => (
+                <RowBack>
+                  <BackLeftBtn
+                    onPress={() =>
+                      deleteBlockUserFn({ variables: { uuid: data.item.uuid } })
+                    }
+                  >
+                    <IconContainer>
+                      <SmallText>UN BLOCK</SmallText>
+                    </IconContainer>
+                  </BackLeftBtn>
+                </RowBack>
+              )}
+              leftOpenValue={45}
+              keyExtractor={item => item.id}
+            />
+          ) : (
+            <TextContainer>
+              <Text>No blocked user yet...</Text>
+            </TextContainer>
           )}
-          renderHiddenItem={data => (
-            <RowBack>
-              <BackLeftBtn
-                onPress={() =>
-                  deleteBlockUserFn({ variables: { uuid: data.item.uuid } })
-                }
-              >
-                <IconContainer>
-                  <SmallText>UNBLOCK</SmallText>
-                </IconContainer>
-              </BackLeftBtn>
-            </RowBack>
-          )}
-          leftOpenValue={45}
-          keyExtractor={item => item.id}
-        />
+        </Container>
       </ScrollView>
     );
   }

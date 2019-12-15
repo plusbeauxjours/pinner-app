@@ -18,12 +18,13 @@ import {
 import { useMe } from "../../../../context/MeContext";
 import { UNMATCH } from "../../../../components/CoffeeBtn/CoffeeBtnQueries";
 import { chat_leave } from "../../../../../Fire";
-import { ME, REGISTER_PUSH } from "../../../../sharedQueries";
+import { ME, REGISTER_PUSH, ADD_BLOCK_USER } from "../../../../sharedQueries";
 import { useLogIn } from "../../../../context/AuthContext";
 import { useLocation } from "../../../../context/LocationContext";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
 import axios from "axios";
+import { AddBlockUser, AddBlockUserVariables } from "../../../../types/api";
 import {
   Me,
   CompleteEmailVerification,
@@ -106,6 +107,10 @@ export default ({ navigation }) => {
   const location = useLocation();
   const { me } = useMe();
   const [refreshing, setRefreshing] = useState(false);
+  const [addBlockUserFn, { loading: addBlockUserLoading }] = useMutation<
+    AddBlockUser,
+    AddBlockUserVariables
+  >(ADD_BLOCK_USER);
   const [registerPushFn, { loading: registerPushLoading }] = useMutation<
     RegisterPush,
     RegisterPushVariables
@@ -307,6 +312,33 @@ export default ({ navigation }) => {
       }
     );
   };
+  const blockedUser = (uuid: string, matchId: string) => {
+    showActionSheetWithOptions(
+      {
+        options: ["Yes", "No"],
+        destructiveButtonIndex: 0,
+        cancelButtonIndex: 1,
+        title: "Are you sure to block user?"
+      },
+      async buttonIndex => {
+        if (buttonIndex === 0) {
+          try {
+            const {
+              data: { addBlockUser }
+            } = await addBlockUserFn({
+              variables: { uuid }
+            });
+            if (addBlockUser.ok) {
+              chat_leave(matchId, me.user.profile.uuid, me.user.username);
+              toast("blocked user");
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      }
+    );
+  };
   const handleOpenURL = async event => {
     const route = await event.url.replace(/.*?:\/\//g, "");
     const key = await route.match(/\/([^\/]+)\/?$/)[0].split("/")[1];
@@ -387,7 +419,7 @@ export default ({ navigation }) => {
                   renderItem={data => (
                     <TouchableBackRow key={data.index}>
                       <Touchable
-                        disabled={unMatchLoading}
+                        disabled={unMatchLoading || addBlockUserLoading}
                         onPress={() => {
                           MarkAsReadMatchFn({
                             variables: { matchId: parseInt(data.item.id, 10) }
@@ -419,14 +451,28 @@ export default ({ navigation }) => {
                   )}
                   renderHiddenItem={data => (
                     <RowBack>
-                      <BackLeftBtn onPress={() => unMatch(data.item.id)}>
+                      <BackLeftBtn
+                        disabled={unMatchLoading}
+                        onPress={() => unMatch(data.item.id)}
+                      >
                         <IconContainer>
                           <SmallText>UN MATCH</SmallText>
                         </IconContainer>
                       </BackLeftBtn>
+
+                      <BackLeftBtn
+                        disabled={addBlockUserLoading}
+                        onPress={() =>
+                          blockedUser(data.item.host.profile.uuid, data.item.id)
+                        }
+                      >
+                        <IconContainer>
+                          <SmallText>BLOCK USER</SmallText>
+                        </IconContainer>
+                      </BackLeftBtn>
                     </RowBack>
                   )}
-                  leftOpenValue={45}
+                  leftOpenValue={90}
                   keyExtractor={item => item.id}
                 />
               </UserContainer>

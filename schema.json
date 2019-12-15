@@ -1336,7 +1336,7 @@
             "deprecationReason": null
           },
           {
-            "name": "getBlockingUser",
+            "name": "getBlockedUser",
             "description": null,
             "args": [],
             "type": {
@@ -1344,7 +1344,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "GetBlockingUserResponse",
+                "name": "GetBlockedUserResponse",
                 "ofType": null
               }
             },
@@ -3146,78 +3146,6 @@
             "deprecationReason": null
           },
           {
-            "name": "blockingUser",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "ProfileType",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "userBlocked",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "ProfileType",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "userBlocking",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "ProfileType",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "username",
             "description": null,
             "args": [],
@@ -3314,7 +3242,7 @@
             "deprecationReason": null
           },
           {
-            "name": "blockingUserCount",
+            "name": "blockedUserCount",
             "description": null,
             "args": [],
             "type": {
@@ -5990,11 +5918,11 @@
       },
       {
         "kind": "OBJECT",
-        "name": "GetBlockingUserResponse",
+        "name": "GetBlockedUserResponse",
         "description": null,
         "fields": [
           {
-            "name": "blockingUsers",
+            "name": "blockedUsers",
             "description": null,
             "args": [],
             "type": {
