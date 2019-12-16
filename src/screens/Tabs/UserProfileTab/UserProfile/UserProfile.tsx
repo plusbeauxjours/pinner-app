@@ -1490,14 +1490,14 @@ export default ({ navigation }) => {
                 ))}
               {user.profile.isSelf &&
                 (user.profile.blockedUserCount === 1 ? (
-                  <Touchable onPress={() => navigation.push("BlockingUsers")}>
+                  <Touchable onPress={() => navigation.push("BlockedUsers")}>
                     <Item>
                       <UserName>{user.profile.blockedUserCount}</UserName>
                       <Bold>BLOCKED USER</Bold>
                     </Item>
                   </Touchable>
                 ) : (
-                  <Touchable onPress={() => navigation.push("BlockingUsers")}>
+                  <Touchable onPress={() => navigation.push("BlockedUsers")}>
                     <Item>
                       <UserName>{user.profile.blockedUserCount}</UserName>
                       <Bold>BLOCKED USERS</Bold>

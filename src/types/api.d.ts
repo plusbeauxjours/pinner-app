@@ -2794,9 +2794,31 @@ export interface RegisterPushVariables {
 // GraphQL mutation operation: AddBlockUser
 // ====================================================
 
+export interface AddBlockUser_addBlockUser_blockedUser_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface AddBlockUser_addBlockUser_blockedUser_currentCity {
+  __typename: "CityType";
+  cityName: string | null;
+  country: AddBlockUser_addBlockUser_blockedUser_currentCity_country;
+}
+
+export interface AddBlockUser_addBlockUser_blockedUser {
+  __typename: "ProfileType";
+  id: string;
+  uuid: any | null;
+  username: string | null;
+  appAvatarUrl: string | null;
+  currentCity: AddBlockUser_addBlockUser_blockedUser_currentCity | null;
+  isSelf: boolean | null;
+}
+
 export interface AddBlockUser_addBlockUser {
-  __typename: "BlockUserResponse";
+  __typename: "AddBlockUserResponse";
   ok: boolean | null;
+  blockedUser: AddBlockUser_addBlockUser_blockedUser | null;
 }
 
 export interface AddBlockUser {
@@ -2816,8 +2838,9 @@ export interface AddBlockUserVariables {
 // ====================================================
 
 export interface DeleteBlockUser_deleteBlockUser {
-  __typename: "BlockUserResponse";
+  __typename: "DeleteBlockUserResponse";
   ok: boolean | null;
+  uuid: string | null;
 }
 
 export interface DeleteBlockUser {

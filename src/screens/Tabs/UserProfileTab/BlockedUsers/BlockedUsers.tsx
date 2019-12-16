@@ -1,14 +1,20 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { RefreshControl } from "react-native";
-import { GetBlockedUser } from "../../../../types/api";
+import {
+  GetBlockedUser,
+  UserProfile,
+  UserProfileVariables
+} from "../../../../types/api";
 import { useQuery } from "react-apollo-hooks";
 import { SwipeListView } from "react-native-swipe-list-view";
-import { GET_BLOCkED_USER } from "./BlockingUsersQueries";
+import { GET_BLOCkED_USER } from "./BlockedUsersQueries";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
 import { useMutation } from "react-apollo";
 import { DELETE_BLOCK_USER } from "../../../../sharedQueries";
+import { GET_USER } from "../UserProfile/UserProfileQueries";
+import { useMe } from "../../../../context/MeContext";
 import {
   DeleteBlockUser,
   DeleteBlockUserVariables
@@ -71,16 +77,53 @@ const IconContainer = styled.View`
 `;
 
 export default ({ navigation }) => {
+  const { me } = useMe();
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const {
     data: { getBlockedUser: { blockedUsers = null } = {} } = {},
     loading,
     refetch
-  } = useQuery<GetBlockedUser>(GET_BLOCkED_USER, { fetchPolicy: "no-cache" });
+  } = useQuery<GetBlockedUser>(GET_BLOCkED_USER);
   const [deleteBlockUserFn, { loading: deleteBlockUserLoading }] = useMutation<
     DeleteBlockUser,
     DeleteBlockUserVariables
-  >(DELETE_BLOCK_USER);
+  >(DELETE_BLOCK_USER, {
+    update(cache, { data: { deleteBlockUser } }) {
+      try {
+        const blockedUserData = cache.readQuery<GetBlockedUser>({
+          query: GET_BLOCkED_USER
+        });
+        if (blockedUserData) {
+          blockedUserData.getBlockedUser.blockedUsers = blockedUserData.getBlockedUser.blockedUsers.filter(
+            i => i.uuid !== deleteBlockUser.uuid
+          );
+          cache.writeQuery({
+            query: GET_BLOCkED_USER,
+            data: blockedUserData
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      try {
+        const userData = cache.readQuery<UserProfile, UserProfileVariables>({
+          query: GET_USER,
+          variables: { uuid: me.user.profile.uuid }
+        });
+        if (userData) {
+          userData.userProfile.user.profile.blockedUserCount =
+            userData.userProfile.user.profile.blockedUserCount - 1;
+          cache.writeQuery({
+            query: GET_USER,
+            variables: { uuid: me.user.profile.uuid },
+            data: userData
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  });
   const onRefresh = async () => {
     try {
       setRefreshing(true);
@@ -113,7 +156,6 @@ export default ({ navigation }) => {
               previewOpenValue={1000}
               renderItem={data => (
                 <TouchableBackRow key={data.item.id}>
-                  {console.log("data.item", data.item)}
                   <TouchableRow
                     onPress={() =>
                       navigation.push("UserProfile", {
@@ -129,6 +171,7 @@ export default ({ navigation }) => {
               renderHiddenItem={data => (
                 <RowBack>
                   <BackLeftBtn
+                    disabled={deleteBlockUserLoading}
                     onPress={() =>
                       deleteBlockUserFn({ variables: { uuid: data.item.uuid } })
                     }

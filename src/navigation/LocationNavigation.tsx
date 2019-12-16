@@ -21,7 +21,7 @@ import LocationCenterHeader from "../components/Header/LocationCenterHeader";
 import constants from "../../constants";
 import UserProfileLeftHeader from "../components/Header/UserProfileLeftHeader";
 import UserProfileCenterHeader from "../components/Header/UserProfileCenterHeader";
-import BlockingUsers from "../screens/Tabs/UserProfileTab/BlockingUsers/index";
+import BlockedUsers from "../screens/Tabs/UserProfileTab/BlockedUsers";
 
 export const CountryProfileTabs = createMaterialTopTabNavigator(
   {
@@ -205,8 +205,8 @@ export default createStackNavigator({
       header: props => <BackCustomHeader />
     }
   },
-  BlockingUsers: {
-    screen: BlockingUsers,
+  BlockedUsers: {
+    screen: BlockedUsers,
     navigationOptions: {
       header: props => <BackCustomHeader />
     }

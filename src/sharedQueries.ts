@@ -193,6 +193,19 @@ export const ADD_BLOCK_USER = gql`
   mutation AddBlockUser($uuid: String!) {
     addBlockUser(uuid: $uuid) {
       ok
+      blockedUser {
+        id
+        uuid
+        username
+        appAvatarUrl
+        currentCity {
+          cityName
+          country {
+            countryName
+          }
+        }
+        isSelf
+      }
     }
   }
 `;
@@ -201,6 +214,7 @@ export const DELETE_BLOCK_USER = gql`
   mutation DeleteBlockUser($uuid: String!) {
     deleteBlockUser(uuid: $uuid) {
       ok
+      uuid
     }
   }
 `;

@@ -7411,7 +7411,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "BlockUserResponse",
+                "name": "AddBlockUserResponse",
                 "ofType": null
               }
             },
@@ -7442,7 +7442,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "BlockUserResponse",
+                "name": "DeleteBlockUserResponse",
                 "ofType": null
               }
             },
@@ -8778,7 +8778,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "BlockUserResponse",
+        "name": "AddBlockUserResponse",
         "description": null,
         "fields": [
           {
@@ -8788,6 +8788,53 @@
             "type": {
               "kind": "SCALAR",
               "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "blockedUser",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "ProfileType",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "DeleteBlockUserResponse",
+        "description": null,
+        "fields": [
+          {
+            "name": "ok",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "uuid",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
               "ofType": null
             },
             "isDeprecated": false,

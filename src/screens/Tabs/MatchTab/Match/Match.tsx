@@ -5,7 +5,7 @@ import { MARK_AS_READ_MATCH } from "./MatchQueries";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import Toast from "react-native-root-toast";
-
+import axios from "axios";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import * as Permissions from "expo-permissions";
 import { Notifications } from "expo";
@@ -15,6 +15,7 @@ import {
   COMPLETE_EDIT_EMAIL_VERIFICATION,
   COMPLETE_EMAIL_SIGN_IN
 } from "./MatchQueries";
+import { GET_BLOCkED_USER } from "../../UserProfileTab/BlockedUsers/BlockedUsersQueries";
 import { useMe } from "../../../../context/MeContext";
 import { UNMATCH } from "../../../../components/CoffeeBtn/CoffeeBtnQueries";
 import { chat_leave } from "../../../../../Fire";
@@ -23,8 +24,8 @@ import { useLogIn } from "../../../../context/AuthContext";
 import { useLocation } from "../../../../context/LocationContext";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
-import axios from "axios";
-import { AddBlockUser, AddBlockUserVariables } from "../../../../types/api";
+import { UserProfile, UserProfileVariables } from "../../../../types/api";
+import { GET_USER } from "../../UserProfileTab/UserProfile/UserProfileQueries";
 import {
   Me,
   CompleteEmailVerification,
@@ -38,7 +39,10 @@ import {
   CompleteEditEmailVerification,
   CompleteEditEmailVerificationVariables,
   RegisterPush,
-  RegisterPushVariables
+  RegisterPushVariables,
+  AddBlockUser,
+  AddBlockUserVariables,
+  GetBlockedUser
 } from "../../../../types/api";
 
 const TextContainer = styled.View`
@@ -110,7 +114,62 @@ export default ({ navigation }) => {
   const [addBlockUserFn, { loading: addBlockUserLoading }] = useMutation<
     AddBlockUser,
     AddBlockUserVariables
-  >(ADD_BLOCK_USER);
+  >(ADD_BLOCK_USER, {
+    update(cache, { data: { addBlockUser } }) {
+      try {
+        const matchData = cache.readQuery<GetMatches, GetMatchesVariables>({
+          query: GET_MATCHES
+        });
+        if (matchData) {
+          matchData.getMatches.matches = matchData.getMatches.matches.filter(
+            i =>
+              i.isHost
+                ? i.guest.profile.uuid !== addBlockUser.blockedUser.uuid
+                : i.host.profile.uuid !== addBlockUser.blockedUser.uuid
+          );
+          cache.writeQuery({
+            query: GET_MATCHES,
+            data: matchData
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      try {
+        const blockedUserData = cache.readQuery<GetBlockedUser>({
+          query: GET_BLOCkED_USER
+        });
+        if (blockedUserData) {
+          blockedUserData.getBlockedUser.blockedUsers.unshift(
+            addBlockUser.blockedUser
+          );
+          cache.writeQuery({
+            query: GET_BLOCkED_USER,
+            data: blockedUserData
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      try {
+        const userData = cache.readQuery<UserProfile, UserProfileVariables>({
+          query: GET_USER,
+          variables: { uuid: me.user.profile.uuid }
+        });
+        if (userData) {
+          userData.userProfile.user.profile.blockedUserCount =
+            userData.userProfile.user.profile.blockedUserCount + 1;
+          cache.writeQuery({
+            query: GET_USER,
+            variables: { uuid: me.user.profile.uuid },
+            data: userData
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  });
   const [registerPushFn, { loading: registerPushLoading }] = useMutation<
     RegisterPush,
     RegisterPushVariables
@@ -459,7 +518,6 @@ export default ({ navigation }) => {
                           <SmallText>UN MATCH</SmallText>
                         </IconContainer>
                       </BackLeftBtn>
-
                       <BackLeftBtn
                         disabled={addBlockUserLoading}
                         onPress={() =>
