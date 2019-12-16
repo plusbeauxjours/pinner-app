@@ -54,8 +54,8 @@ interface IState {
   hasPermission: boolean;
   nowShowing: string;
   imageUrl: string;
-  imageModalOpen: boolean;
   mapModalOpen: boolean;
+  snsModalOpen: boolean;
   loading: boolean;
   messages: any;
   resolution: "full" | "high" | "low";
@@ -85,8 +85,8 @@ class ChatContainer extends React.Component<IProps, IState> {
       hasPermission: false,
       nowShowing: "",
       imageUrl: "",
-      imageModalOpen: false,
       mapModalOpen: false,
+      snsModalOpen: false,
       loading: false,
       messages: [],
       resolution: "high",
@@ -109,6 +109,7 @@ class ChatContainer extends React.Component<IProps, IState> {
       delay: 0
     });
   };
+
   public onSend = (messages = []) => {
     let msg = messages[0];
     if (msg) {
@@ -121,6 +122,37 @@ class ChatContainer extends React.Component<IProps, IState> {
         messages: GiftedChat.append(previousState.messages, msg)
       }));
     }
+  };
+
+  public closeSnsModal = () => {
+    this.setState({ snsModalOpen: false });
+  };
+
+  public openSnsModal = () => {
+    this.setState({ snsModalOpen: true });
+  };
+
+  public onSendSnsId = (snsId: string) => {
+    let new_key = get_new_key("messages");
+    let user: UserChatMessage = {
+      _id: this.state.userId,
+      name: this.state.userName
+    };
+    let messageLocation: ChatMessage = {
+      _id: new_key,
+      createdAt: new Date(),
+      status: false,
+      user: user,
+      snsId,
+      receiverPushToken: this.state.receiverPushToken
+    };
+    let messages = [];
+    messages.push(messageLocation);
+    this.setState(previousState => ({
+      messages: GiftedChat.append(previousState.messages, messages),
+      mapModalOpen: false
+    }));
+    chat_send(this.state.chatId, messageLocation).catch(e => console.log(e));
   };
 
   public onSendLocation = (latitude: string, longitude: string) => {
@@ -211,22 +243,67 @@ class ChatContainer extends React.Component<IProps, IState> {
   };
 
   public renderActions = () => (
-    <TouchableOpacity
+    <View
       style={{
-        backgroundColor: "transparent",
-        height: 45,
-        width: 45,
-        alignItems: "center",
-        justifyContent: "center"
+        top: -2,
+        flexDirection: "row",
+        marginLeft: 5,
+        maxWidth: 85,
+        width: 100,
+        justifyContent: "space-between"
       }}
-      onPress={() => this.setState({ mapModalOpen: true })}
     >
-      <Ionicons
-        name={Platform.OS === "ios" ? "ios-add" : "md-add"}
-        color={"#999"}
-        size={33}
-      />
-    </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          justifyContent: "center"
+        }}
+        onPress={() => this.setState({ mapModalOpen: true })}
+      >
+        <View
+          style={{
+            width: 40,
+            height: 40,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            borderColor: "#999",
+            borderStyle: "solid",
+            borderWidth: 0.5,
+            borderRadius: 5,
+            padding: 2
+          }}
+        >
+          <Text style={{ color: "#999", textAlign: "center", fontSize: 10 }}>
+            MAP
+          </Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          justifyContent: "center"
+        }}
+        onPress={() => this.setState({ snsModalOpen: true })}
+      >
+        <View
+          style={{
+            width: 40,
+            height: 40,
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            borderColor: "#999",
+            borderStyle: "solid",
+            borderWidth: 0.5,
+            borderRadius: 5,
+            padding: 2
+          }}
+        >
+          <Text style={{ color: "#999", textAlign: "center", fontSize: 10 }}>
+            SNS
+          </Text>
+        </View>
+      </TouchableOpacity>
+    </View>
   );
 
   public closeMapModal = () => {
@@ -241,6 +318,7 @@ class ChatContainer extends React.Component<IProps, IState> {
 
   public componentDidMount() {
     this.setState({ mapModalOpen: false });
+    this.setState({ snsModalOpen: false });
     BackHandler.addEventListener("hardwareBackPress", () => {
       if (!this.state.overlayVisible) {
         this.props.navigation.navigate("Match");
@@ -394,10 +472,17 @@ class ChatContainer extends React.Component<IProps, IState> {
     }
   };
   public render() {
-    const { loading, mapModalOpen, messages, userId } = this.state;
+    const {
+      loading,
+      mapModalOpen,
+      snsModalOpen,
+      messages,
+      userId
+    } = this.state;
     return (
       <ChatPresenter
         userId={userId}
+        snsModalOpen={snsModalOpen}
         mapModalOpen={mapModalOpen}
         loading={loading}
         messages={messages}
@@ -408,6 +493,8 @@ class ChatContainer extends React.Component<IProps, IState> {
         closeMapModal={this.closeMapModal}
         messageFooter={this.messageFooter}
         renderAvatar={this.renderAvatar}
+        closeSnsModal={this.closeSnsModal}
+        openSnsModal={this.openSnsModal}
       />
     );
   }

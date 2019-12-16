@@ -49,6 +49,16 @@ export const ME = gql`
           isHideCountries
           isHideContinents
           isAutoLocationReport
+          sendPhone
+          sendEmail
+          sendKakao
+          sendFacebook
+          sendSnapchat
+          sendLine
+          sendWechat
+          sendKik
+          sendVk
+          sendWhatsapp
           currentCity {
             latitude
             longitude

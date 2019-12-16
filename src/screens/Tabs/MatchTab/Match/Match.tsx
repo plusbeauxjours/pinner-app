@@ -296,9 +296,7 @@ export default ({ navigation }) => {
     data: { getMatches: { matches = null } = {} } = {},
     loading: matchLoading,
     refetch: matchRefetch
-  } = useQuery<GetMatches, GetMatchesVariables>(GET_MATCHES, {
-    fetchPolicy: "network-only"
-  });
+  } = useQuery<GetMatches, GetMatchesVariables>(GET_MATCHES);
 
   const [unMatchFn, { loading: unMatchLoading }] = useMutation<
     UnMatch,

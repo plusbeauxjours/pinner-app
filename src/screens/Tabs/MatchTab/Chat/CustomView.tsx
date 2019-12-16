@@ -4,19 +4,19 @@ import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { darkMode, lightMode } from "../../../../styles/mapStyles";
 import { useTheme } from "../../../../context/ThemeContext";
 import styled from "styled-components";
+import Toast from "react-native-root-toast";
 
 const Touchable = styled.TouchableOpacity`
   overflow: hidden;
   border-radius: 13px;
 `;
 
-interface IProps {
-  currentMessage: any;
-}
+const Text = styled.Text``;
 
-export default class CustomViewContainer extends React.Component<IProps> {
-  onMapPress = () => {
-    const { latitude, longitude } = this.props.currentMessage.location;
+export default ({ currentMessage }) => {
+  const isDarkMode = useTheme();
+  const onMapPress = () => {
+    const { latitude, longitude } = currentMessage.location;
     const url = Platform.select({
       ios: `http://maps.apple.com/?ll=${latitude},${longitude}&q=*`,
       android: `http://maps.google.com/?q=${latitude},${longitude}`
@@ -33,46 +33,54 @@ export default class CustomViewContainer extends React.Component<IProps> {
         console.log(e);
       });
   };
+  const onSnsPress = () => {
+    const toast = (message: string) => {
+      Toast.show(message, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.CENTER,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0
+      });
+    };
+    toast("You have copied the username");
+  };
 
-  render() {
-    const { currentMessage } = this.props;
-    if (currentMessage.location) {
-      return (
-        <CustomViewPresenter
-          currentMessage={currentMessage}
-          onMapPress={this.onMapPress}
-        />
-      );
-    }
+  if (currentMessage.snsId) {
+    return (
+      <Touchable onPress={onSnsPress} activeOpacity={0.8}>
+        <Text>SNS</Text>
+      </Touchable>
+    );
+  } else if (currentMessage.location) {
+    return (
+      <Touchable onPress={onMapPress} activeOpacity={0.8}>
+        <MapView
+          provider={PROVIDER_GOOGLE}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.025,
+            longitudeDelta: 0.025
+          }}
+          style={{
+            width: 200,
+            height: 100,
+            borderRadius: 13
+          }}
+          onPress={onMapPress}
+          scrollEnabled={false}
+          zoomEnabled={false}
+          customMapStyle={
+            isDarkMode && isDarkMode === true ? darkMode : lightMode
+          }
+        >
+          <Marker coordinate={currentMessage.location} />
+        </MapView>
+      </Touchable>
+    );
+  } else {
     return null;
   }
-}
-const CustomViewPresenter = ({ currentMessage, onMapPress }) => {
-  const isDarkMode = useTheme();
-  return (
-    <Touchable onPress={onMapPress} activeOpacity={0.8}>
-      <MapView
-        provider={PROVIDER_GOOGLE}
-        region={{
-          latitude: currentMessage.location.latitude,
-          longitude: currentMessage.location.longitude,
-          latitudeDelta: 0.025,
-          longitudeDelta: 0.025
-        }}
-        style={{
-          width: 200,
-          height: 100,
-          borderRadius: 13
-        }}
-        onPress={onMapPress}
-        scrollEnabled={false}
-        zoomEnabled={false}
-        customMapStyle={
-          isDarkMode && isDarkMode === true ? darkMode : lightMode
-        }
-      >
-        <Marker coordinate={currentMessage.location} />
-      </MapView>
-    </Touchable>
-  );
 };

@@ -36,6 +36,7 @@ export interface ChatMessage {
   user: UserChatMessage;
   location?: LocationChatMessage;
   receiverPushToken: string;
+  snsId?: string;
 }
 
 export const chat_leave = (
