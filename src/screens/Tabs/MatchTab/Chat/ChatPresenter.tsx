@@ -30,7 +30,7 @@ const ChatContainer = styled.View`
   background-color: ${props => props.theme.bgColor};
 `;
 const AddListContainer = styled.View`
-  padding: 0 20px 0 20px;
+  padding: 30px 20px 0 20px;
   justify-content: space-between;
 `;
 const Text = styled.Text`
@@ -126,6 +126,13 @@ const MapBtn = styled.TouchableOpacity`
   background-color: #96abbf;
 `;
 const ScrollView = styled.ScrollView``;
+
+const Image = styled.Image`
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+`;
+
 interface IProps {
   userId: string;
   mapModalOpen: boolean;
@@ -206,6 +213,31 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   const [sendWhatsapp, setSendWhatsapp] = useState<string>(
     me.user.profile.sendWhatsapp ? me.user.profile.sendWhatsapp : ""
   );
+  const [sendYoutube, setSendYoutube] = useState<string>(
+    me.user.profile.sendYoutube ? me.user.profile.sendYoutube : ""
+  );
+  const [sendTwitter, setSendTwitter] = useState<string>(
+    me.user.profile.sendTwitter ? me.user.profile.sendTwitter : ""
+  );
+  const [sendTelegram, setSendTelegram] = useState<string>(
+    me.user.profile.sendTelegram ? me.user.profile.sendTelegram : ""
+  );
+  const [sendBehance, setSendBehance] = useState<string>(
+    me.user.profile.sendBehance ? me.user.profile.sendBehance : ""
+  );
+  const [sendLinkedin, setSendLinkedin] = useState<string>(
+    me.user.profile.sendLinkedin ? me.user.profile.sendLinkedin : ""
+  );
+  const [sendPinterest, setSendPinterest] = useState<string>(
+    me.user.profile.sendPinterest ? me.user.profile.sendPinterest : ""
+  );
+  const [sendVine, setSendVine] = useState<string>(
+    me.user.profile.sendVine ? me.user.profile.sendVine : ""
+  );
+  const [sendTumblr, setSendTumblr] = useState<string>(
+    me.user.profile.sendTumblr ? me.user.profile.sendTumblr : ""
+  );
+
   const onInputTextChange = (text, state) => {
     const replaceChar = /[~!@\#$%^&*\()\-=+_'\;<>0-9\/.\`:\"\\,\[\]?|{}]/gi;
     const item = text
@@ -235,6 +267,22 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
       setSendVk(item);
     } else if (state === "sendWhatsapp") {
       setSendWhatsapp(item);
+    } else if (state === "sendYoutube") {
+      setSendYoutube(item);
+    } else if (state === "sendTwitter") {
+      setSendTwitter(item);
+    } else if (state === "sendTelegram") {
+      setSendTelegram(item);
+    } else if (state === "sendBehance") {
+      setSendBehance(item);
+    } else if (state === "sendLinkedin") {
+      setSendLinkedin(item);
+    } else if (state === "sendPinterest") {
+      setSendPinterest(item);
+    } else if (state === "sendVine") {
+      setSendVine(item);
+    } else if (state === "sendTumblr") {
+      setSendTumblr(item);
     } else {
       return null;
     }
@@ -345,7 +393,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
           backdropTransitionInTiming={200}
           backdropTransitionOutTiming={200}
         >
-          {console.log(me.user.profile)}
           {!snsAddMode ? (
             <>
               <Text>sendInstagram</Text>
@@ -394,12 +441,13 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                   <AddListContainer>
                     {!me.user.profile.sendInstagram && (
                       <Item>
-                        <IconContainer>
-                          <Text>sendInstagram</Text>
-                        </IconContainer>
+                        <Image
+                          resizeMode={"contain"}
+                          source={require("../../../../../assets/instagram.png")}
+                        />
                         <TextInput
                           style={{
-                            width: constants.width - 150,
+                            width: constants.width - 140,
                             backgroundColor: "transparent",
                             borderBottomWidth: 1,
                             borderBottomColor: "#999",
@@ -408,6 +456,12 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                             padding: 5,
                             textAlign: "center"
                           }}
+                          placeholder="INSTAGRAM"
+                          placeholderTextColor={
+                            isDarkMode
+                              ? "rgba(55, 55, 55, 1)"
+                              : "rgba(207, 207, 207, 0.6)"
+                          }
                           value={sendInstagram}
                           returnKeyType="done"
                           onChangeText={text =>
@@ -415,7 +469,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                           }
                           autoCorrect={false}
                         />
-                        {sendInstagram.length !== 0 && (
+                        {sendInstagram.length !== 0 ? (
                           <AddItemTouchable
                             onPress={() => console.log("nasnannai")}
                           >
@@ -423,17 +477,24 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                               <AddItemText>ADD</AddItemText>
                             </AddItemView>
                           </AddItemTouchable>
+                        ) : (
+                          <AddHoldItemView>
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddHoldItemView>
                         )}
                       </Item>
                     )}
                     {!me.user.profile.sendPhone && (
                       <Item>
-                        <IconContainer>
-                          <Text>sendPhone</Text>
-                        </IconContainer>
+                        <Image
+                          resizeMode={"contain"}
+                          source={require("../../../../../assets/phone.png")}
+                        />
                         <TextInput
                           style={{
-                            width: constants.width - 150,
+                            width: constants.width - 140,
                             backgroundColor: "transparent",
                             borderBottomWidth: 1,
                             borderBottomColor: "#999",
@@ -442,6 +503,12 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                             padding: 5,
                             textAlign: "center"
                           }}
+                          placeholder="PHONE"
+                          placeholderTextColor={
+                            isDarkMode
+                              ? "rgba(55, 55, 55, 1)"
+                              : "rgba(207, 207, 207, 0.6)"
+                          }
                           value={sendPhone}
                           returnKeyType="done"
                           onChangeText={text =>
@@ -449,7 +516,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                           }
                           autoCorrect={false}
                         />
-                        {sendPhone.length !== 0 && (
+                        {sendPhone.length !== 0 ? (
                           <AddItemTouchable
                             onPress={() => console.log("nasnannai")}
                           >
@@ -457,17 +524,24 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                               <AddItemText>ADD</AddItemText>
                             </AddItemView>
                           </AddItemTouchable>
+                        ) : (
+                          <AddHoldItemView>
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddHoldItemView>
                         )}
                       </Item>
                     )}
                     {!me.user.profile.sendEmail && (
                       <Item>
-                        <IconContainer>
-                          <Text>sendEmail</Text>
-                        </IconContainer>
+                        <Image
+                          resizeMode={"contain"}
+                          source={require("../../../../../assets/email.png")}
+                        />
                         <TextInput
                           style={{
-                            width: constants.width - 150,
+                            width: constants.width - 140,
                             backgroundColor: "transparent",
                             borderBottomWidth: 1,
                             borderBottomColor: "#999",
@@ -476,6 +550,12 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                             padding: 5,
                             textAlign: "center"
                           }}
+                          placeholder="EMAIL"
+                          placeholderTextColor={
+                            isDarkMode
+                              ? "rgba(55, 55, 55, 1)"
+                              : "rgba(207, 207, 207, 0.6)"
+                          }
                           value={sendEmail}
                           returnKeyType="done"
                           onChangeText={text =>
@@ -483,7 +563,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                           }
                           autoCorrect={false}
                         />
-                        {sendEmail.length !== 0 && (
+                        {sendEmail.length !== 0 ? (
                           <AddItemTouchable
                             onPress={() => console.log("nasnannai")}
                           >
@@ -491,17 +571,24 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                               <AddItemText>ADD</AddItemText>
                             </AddItemView>
                           </AddItemTouchable>
+                        ) : (
+                          <AddHoldItemView>
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddHoldItemView>
                         )}
                       </Item>
                     )}
                     {!me.user.profile.sendKakao && (
                       <Item>
-                        <IconContainer>
-                          <Text>sendKakao</Text>
-                        </IconContainer>
+                        <Image
+                          resizeMode={"contain"}
+                          source={require("../../../../../assets/kakao.png")}
+                        />
                         <TextInput
                           style={{
-                            width: constants.width - 150,
+                            width: constants.width - 140,
                             backgroundColor: "transparent",
                             borderBottomWidth: 1,
                             borderBottomColor: "#999",
@@ -510,6 +597,12 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                             padding: 5,
                             textAlign: "center"
                           }}
+                          placeholder="KAKAOTALK"
+                          placeholderTextColor={
+                            isDarkMode
+                              ? "rgba(55, 55, 55, 1)"
+                              : "rgba(207, 207, 207, 0.6)"
+                          }
                           value={sendKakao}
                           returnKeyType="done"
                           onChangeText={text =>
@@ -517,7 +610,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                           }
                           autoCorrect={false}
                         />
-                        {sendKakao.length !== 0 && (
+                        {sendKakao.length !== 0 ? (
                           <AddItemTouchable
                             onPress={() => console.log("nasnannai")}
                           >
@@ -525,17 +618,24 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                               <AddItemText>ADD</AddItemText>
                             </AddItemView>
                           </AddItemTouchable>
+                        ) : (
+                          <AddHoldItemView>
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddHoldItemView>
                         )}
                       </Item>
                     )}
                     {!me.user.profile.sendFacebook && (
                       <Item>
-                        <IconContainer>
-                          <Text>sendFacebook</Text>
-                        </IconContainer>
+                        <Image
+                          resizeMode={"contain"}
+                          source={require("../../../../../assets/facebook.png")}
+                        />
                         <TextInput
                           style={{
-                            width: constants.width - 150,
+                            width: constants.width - 140,
                             backgroundColor: "transparent",
                             borderBottomWidth: 1,
                             borderBottomColor: "#999",
@@ -544,6 +644,12 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                             padding: 5,
                             textAlign: "center"
                           }}
+                          placeholder="FACEBOOK"
+                          placeholderTextColor={
+                            isDarkMode
+                              ? "rgba(55, 55, 55, 1)"
+                              : "rgba(207, 207, 207, 0.6)"
+                          }
                           value={sendFacebook}
                           returnKeyType="done"
                           onChangeText={text =>
@@ -551,7 +657,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                           }
                           autoCorrect={false}
                         />
-                        {sendFacebook.length !== 0 && (
+                        {sendFacebook.length !== 0 ? (
                           <AddItemTouchable
                             onPress={() => console.log("nasnannai")}
                           >
@@ -559,17 +665,24 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                               <AddItemText>ADD</AddItemText>
                             </AddItemView>
                           </AddItemTouchable>
+                        ) : (
+                          <AddHoldItemView>
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddHoldItemView>
                         )}
                       </Item>
                     )}
-                    {!me.user.profile.sendSnapchat && (
+                    {!me.user.profile.sendYoutube && (
                       <Item>
-                        <IconContainer>
-                          <Text>sendSnapchat</Text>
-                        </IconContainer>
+                        <Image
+                          resizeMode={"contain"}
+                          source={require("../../../../../assets/youtube.png")}
+                        />
                         <TextInput
                           style={{
-                            width: constants.width - 150,
+                            width: constants.width - 140,
                             backgroundColor: "transparent",
                             borderBottomWidth: 1,
                             borderBottomColor: "#999",
@@ -578,6 +691,153 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                             padding: 5,
                             textAlign: "center"
                           }}
+                          placeholder="YOUTUBE"
+                          placeholderTextColor={
+                            isDarkMode
+                              ? "rgba(55, 55, 55, 1)"
+                              : "rgba(207, 207, 207, 0.6)"
+                          }
+                          value={sendYoutube}
+                          returnKeyType="done"
+                          onChangeText={text =>
+                            onInputTextChange(text, "sendYoutube")
+                          }
+                          autoCorrect={false}
+                        />
+                        {sendYoutube.length !== 0 ? (
+                          <AddItemTouchable
+                            onPress={() => console.log("nasnannai")}
+                          >
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddItemTouchable>
+                        ) : (
+                          <AddHoldItemView>
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddHoldItemView>
+                        )}
+                      </Item>
+                    )}
+                    {!me.user.profile.sendTwitter && (
+                      <Item>
+                        <Image
+                          resizeMode={"contain"}
+                          source={require("../../../../../assets/twitter.png")}
+                        />
+                        <TextInput
+                          style={{
+                            width: constants.width - 140,
+                            backgroundColor: "transparent",
+                            borderBottomWidth: 1,
+                            borderBottomColor: "#999",
+                            color: "#999",
+                            fontSize: 22,
+                            padding: 5,
+                            textAlign: "center"
+                          }}
+                          placeholder="TWITTER"
+                          placeholderTextColor={
+                            isDarkMode
+                              ? "rgba(55, 55, 55, 1)"
+                              : "rgba(207, 207, 207, 0.6)"
+                          }
+                          value={sendTwitter}
+                          returnKeyType="done"
+                          onChangeText={text =>
+                            onInputTextChange(text, "sendTwitter")
+                          }
+                          autoCorrect={false}
+                        />
+                        {sendTwitter.length !== 0 ? (
+                          <AddItemTouchable
+                            onPress={() => console.log("nasnannai")}
+                          >
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddItemTouchable>
+                        ) : (
+                          <AddHoldItemView>
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddHoldItemView>
+                        )}
+                      </Item>
+                    )}
+                    {!me.user.profile.sendTelegram && (
+                      <Item>
+                        <Image
+                          resizeMode={"contain"}
+                          source={require("../../../../../assets/telegram.png")}
+                        />
+                        <TextInput
+                          style={{
+                            width: constants.width - 140,
+                            backgroundColor: "transparent",
+                            borderBottomWidth: 1,
+                            borderBottomColor: "#999",
+                            color: "#999",
+                            fontSize: 22,
+                            padding: 5,
+                            textAlign: "center"
+                          }}
+                          placeholder="TELEGRAM"
+                          placeholderTextColor={
+                            isDarkMode
+                              ? "rgba(55, 55, 55, 1)"
+                              : "rgba(207, 207, 207, 0.6)"
+                          }
+                          value={sendTelegram}
+                          returnKeyType="done"
+                          onChangeText={text =>
+                            onInputTextChange(text, "sendTelegram")
+                          }
+                          autoCorrect={false}
+                        />
+                        {sendTelegram.length !== 0 ? (
+                          <AddItemTouchable
+                            onPress={() => console.log("nasnannai")}
+                          >
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddItemTouchable>
+                        ) : (
+                          <AddHoldItemView>
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddHoldItemView>
+                        )}
+                      </Item>
+                    )}
+                    {!me.user.profile.sendSnapchat && (
+                      <Item>
+                        <Image
+                          resizeMode={"contain"}
+                          source={require("../../../../../assets/snapchat.png")}
+                        />
+                        <TextInput
+                          style={{
+                            width: constants.width - 140,
+                            backgroundColor: "transparent",
+                            borderBottomWidth: 1,
+                            borderBottomColor: "#999",
+                            color: "#999",
+                            fontSize: 22,
+                            padding: 5,
+                            textAlign: "center"
+                          }}
+                          placeholder="SNAPCHAT"
+                          placeholderTextColor={
+                            isDarkMode
+                              ? "rgba(55, 55, 55, 1)"
+                              : "rgba(207, 207, 207, 0.6)"
+                          }
                           value={sendSnapchat}
                           returnKeyType="done"
                           onChangeText={text =>
@@ -585,7 +845,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                           }
                           autoCorrect={false}
                         />
-                        {sendSnapchat.length !== 0 && (
+                        {sendSnapchat.length !== 0 ? (
                           <AddItemTouchable
                             onPress={() => console.log("nasnannai")}
                           >
@@ -593,17 +853,24 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                               <AddItemText>ADD</AddItemText>
                             </AddItemView>
                           </AddItemTouchable>
+                        ) : (
+                          <AddHoldItemView>
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddHoldItemView>
                         )}
                       </Item>
                     )}
                     {!me.user.profile.sendLine && (
                       <Item>
-                        <IconContainer>
-                          <Text>sendLine</Text>
-                        </IconContainer>
+                        <Image
+                          resizeMode={"contain"}
+                          source={require("../../../../../assets/line.png")}
+                        />
                         <TextInput
                           style={{
-                            width: constants.width - 150,
+                            width: constants.width - 140,
                             backgroundColor: "transparent",
                             borderBottomWidth: 1,
                             borderBottomColor: "#999",
@@ -612,6 +879,12 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                             padding: 5,
                             textAlign: "center"
                           }}
+                          placeholder="LINE"
+                          placeholderTextColor={
+                            isDarkMode
+                              ? "rgba(55, 55, 55, 1)"
+                              : "rgba(207, 207, 207, 0.6)"
+                          }
                           value={sendLine}
                           returnKeyType="done"
                           onChangeText={text =>
@@ -619,7 +892,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                           }
                           autoCorrect={false}
                         />
-                        {sendLine.length !== 0 && (
+                        {sendLine.length !== 0 ? (
                           <AddItemTouchable
                             onPress={() => console.log("nasnannai")}
                           >
@@ -627,17 +900,24 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                               <AddItemText>ADD</AddItemText>
                             </AddItemView>
                           </AddItemTouchable>
+                        ) : (
+                          <AddHoldItemView>
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddHoldItemView>
                         )}
                       </Item>
                     )}
                     {!me.user.profile.sendWechat && (
                       <Item>
-                        <IconContainer>
-                          <Text>sendWechat</Text>
-                        </IconContainer>
+                        <Image
+                          resizeMode={"contain"}
+                          source={require("../../../../../assets/wechat.png")}
+                        />
                         <TextInput
                           style={{
-                            width: constants.width - 150,
+                            width: constants.width - 140,
                             backgroundColor: "transparent",
                             borderBottomWidth: 1,
                             borderBottomColor: "#999",
@@ -646,6 +926,12 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                             padding: 5,
                             textAlign: "center"
                           }}
+                          placeholder="WECHAT"
+                          placeholderTextColor={
+                            isDarkMode
+                              ? "rgba(55, 55, 55, 1)"
+                              : "rgba(207, 207, 207, 0.6)"
+                          }
                           value={sendWechat}
                           returnKeyType="done"
                           onChangeText={text =>
@@ -653,7 +939,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                           }
                           autoCorrect={false}
                         />
-                        {sendWechat.length !== 0 && (
+                        {sendWechat.length !== 0 ? (
                           <AddItemTouchable
                             onPress={() => console.log("nasnannai")}
                           >
@@ -661,17 +947,24 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                               <AddItemText>ADD</AddItemText>
                             </AddItemView>
                           </AddItemTouchable>
+                        ) : (
+                          <AddHoldItemView>
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddHoldItemView>
                         )}
                       </Item>
                     )}
                     {!me.user.profile.sendKik && (
                       <Item>
-                        <IconContainer>
-                          <Text>sendKik</Text>
-                        </IconContainer>
+                        <Image
+                          resizeMode={"contain"}
+                          source={require("../../../../../assets/kik.png")}
+                        />
                         <TextInput
                           style={{
-                            width: constants.width - 150,
+                            width: constants.width - 140,
                             backgroundColor: "transparent",
                             borderBottomWidth: 1,
                             borderBottomColor: "#999",
@@ -680,6 +973,12 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                             padding: 5,
                             textAlign: "center"
                           }}
+                          placeholder="KIK"
+                          placeholderTextColor={
+                            isDarkMode
+                              ? "rgba(55, 55, 55, 1)"
+                              : "rgba(207, 207, 207, 0.6)"
+                          }
                           value={sendKik}
                           returnKeyType="done"
                           onChangeText={text =>
@@ -687,7 +986,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                           }
                           autoCorrect={false}
                         />
-                        {sendKik.length !== 0 && (
+                        {sendKik.length !== 0 ? (
                           <AddItemTouchable
                             onPress={() => console.log("nasnannai")}
                           >
@@ -695,17 +994,24 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                               <AddItemText>ADD</AddItemText>
                             </AddItemView>
                           </AddItemTouchable>
+                        ) : (
+                          <AddHoldItemView>
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddHoldItemView>
                         )}
                       </Item>
                     )}
                     {!me.user.profile.sendVk && (
                       <Item>
-                        <IconContainer>
-                          <Text>sendVk</Text>
-                        </IconContainer>
+                        <Image
+                          resizeMode={"contain"}
+                          source={require("../../../../../assets/vk.png")}
+                        />
                         <TextInput
                           style={{
-                            width: constants.width - 150,
+                            width: constants.width - 140,
                             backgroundColor: "transparent",
                             borderBottomWidth: 1,
                             borderBottomColor: "#999",
@@ -714,6 +1020,12 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                             padding: 5,
                             textAlign: "center"
                           }}
+                          placeholder="VK"
+                          placeholderTextColor={
+                            isDarkMode
+                              ? "rgba(55, 55, 55, 1)"
+                              : "rgba(207, 207, 207, 0.6)"
+                          }
                           value={sendVk}
                           returnKeyType="done"
                           onChangeText={text =>
@@ -721,7 +1033,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                           }
                           autoCorrect={false}
                         />
-                        {sendVk.length !== 0 && (
+                        {sendVk.length !== 0 ? (
                           <AddItemTouchable
                             onPress={() => console.log("nasnannai")}
                           >
@@ -729,17 +1041,24 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                               <AddItemText>ADD</AddItemText>
                             </AddItemView>
                           </AddItemTouchable>
+                        ) : (
+                          <AddHoldItemView>
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddHoldItemView>
                         )}
                       </Item>
                     )}
                     {!me.user.profile.sendWhatsapp && (
                       <Item>
-                        <IconContainer>
-                          <Text>sendWhatsapp</Text>
-                        </IconContainer>
+                        <Image
+                          resizeMode={"contain"}
+                          source={require("../../../../../assets/whatsapp.png")}
+                        />
                         <TextInput
                           style={{
-                            width: constants.width - 150,
+                            width: constants.width - 140,
                             backgroundColor: "transparent",
                             borderBottomWidth: 1,
                             borderBottomColor: "#999",
@@ -748,6 +1067,12 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                             padding: 5,
                             textAlign: "center"
                           }}
+                          placeholder="WHATSAPP"
+                          placeholderTextColor={
+                            isDarkMode
+                              ? "rgba(55, 55, 55, 1)"
+                              : "rgba(207, 207, 207, 0.6)"
+                          }
                           value={sendWhatsapp}
                           returnKeyType="done"
                           onChangeText={text =>
@@ -764,9 +1089,242 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                             </AddItemView>
                           </AddItemTouchable>
                         ) : (
-                          <AddHoldItemView
+                          <AddHoldItemView>
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddHoldItemView>
+                        )}
+                      </Item>
+                    )}
+                    {!me.user.profile.sendBehance && (
+                      <Item>
+                        <Image
+                          resizeMode={"contain"}
+                          source={require("../../../../../assets/behance.png")}
+                        />
+                        <TextInput
+                          style={{
+                            width: constants.width - 140,
+                            backgroundColor: "transparent",
+                            borderBottomWidth: 1,
+                            borderBottomColor: "#999",
+                            color: "#999",
+                            fontSize: 22,
+                            padding: 5,
+                            textAlign: "center"
+                          }}
+                          placeholder="BEHANCE"
+                          placeholderTextColor={
+                            isDarkMode
+                              ? "rgba(55, 55, 55, 1)"
+                              : "rgba(207, 207, 207, 0.6)"
+                          }
+                          value={sendBehance}
+                          returnKeyType="done"
+                          onChangeText={text =>
+                            onInputTextChange(text, "sendBehance")
+                          }
+                          autoCorrect={false}
+                        />
+                        {sendBehance.length !== 0 ? (
+                          <AddItemTouchable
                             onPress={() => console.log("nasnannai")}
                           >
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddItemTouchable>
+                        ) : (
+                          <AddHoldItemView>
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddHoldItemView>
+                        )}
+                      </Item>
+                    )}
+                    {!me.user.profile.sendLinkedin && (
+                      <Item>
+                        <Image
+                          resizeMode={"contain"}
+                          source={require("../../../../../assets/linkedin.png")}
+                        />
+                        <TextInput
+                          style={{
+                            width: constants.width - 140,
+                            backgroundColor: "transparent",
+                            borderBottomWidth: 1,
+                            borderBottomColor: "#999",
+                            color: "#999",
+                            fontSize: 22,
+                            padding: 5,
+                            textAlign: "center"
+                          }}
+                          placeholder="LINKEDIN"
+                          placeholderTextColor={
+                            isDarkMode
+                              ? "rgba(55, 55, 55, 1)"
+                              : "rgba(207, 207, 207, 0.6)"
+                          }
+                          value={sendLinkedin}
+                          returnKeyType="done"
+                          onChangeText={text =>
+                            onInputTextChange(text, "sendLinkedin")
+                          }
+                          autoCorrect={false}
+                        />
+                        {sendLinkedin.length !== 0 ? (
+                          <AddItemTouchable
+                            onPress={() => console.log("nasnannai")}
+                          >
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddItemTouchable>
+                        ) : (
+                          <AddHoldItemView>
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddHoldItemView>
+                        )}
+                      </Item>
+                    )}
+                    {!me.user.profile.sendPinterest && (
+                      <Item>
+                        <Image
+                          resizeMode={"contain"}
+                          source={require("../../../../../assets/pinterest.png")}
+                        />
+                        <TextInput
+                          style={{
+                            width: constants.width - 140,
+                            backgroundColor: "transparent",
+                            borderBottomWidth: 1,
+                            borderBottomColor: "#999",
+                            color: "#999",
+                            fontSize: 22,
+                            padding: 5,
+                            textAlign: "center"
+                          }}
+                          placeholder="PINTEREST"
+                          placeholderTextColor={
+                            isDarkMode
+                              ? "rgba(55, 55, 55, 1)"
+                              : "rgba(207, 207, 207, 0.6)"
+                          }
+                          value={sendPinterest}
+                          returnKeyType="done"
+                          onChangeText={text =>
+                            onInputTextChange(text, "sendPinterest")
+                          }
+                          autoCorrect={false}
+                        />
+                        {sendPinterest.length !== 0 ? (
+                          <AddItemTouchable
+                            onPress={() => console.log("nasnannai")}
+                          >
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddItemTouchable>
+                        ) : (
+                          <AddHoldItemView>
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddHoldItemView>
+                        )}
+                      </Item>
+                    )}
+                    {!me.user.profile.sendVine && (
+                      <Item>
+                        <Image
+                          resizeMode={"contain"}
+                          source={require("../../../../../assets/vine.png")}
+                        />
+                        <TextInput
+                          style={{
+                            width: constants.width - 140,
+                            backgroundColor: "transparent",
+                            borderBottomWidth: 1,
+                            borderBottomColor: "#999",
+                            color: "#999",
+                            fontSize: 22,
+                            padding: 5,
+                            textAlign: "center"
+                          }}
+                          placeholder="VINE"
+                          placeholderTextColor={
+                            isDarkMode
+                              ? "rgba(55, 55, 55, 1)"
+                              : "rgba(207, 207, 207, 0.6)"
+                          }
+                          value={sendVine}
+                          returnKeyType="done"
+                          onChangeText={text =>
+                            onInputTextChange(text, "sendVine")
+                          }
+                          autoCorrect={false}
+                        />
+                        {sendVine.length !== 0 ? (
+                          <AddItemTouchable
+                            onPress={() => console.log("nasnannai")}
+                          >
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddItemTouchable>
+                        ) : (
+                          <AddHoldItemView>
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddHoldItemView>
+                        )}
+                      </Item>
+                    )}
+                    {!me.user.profile.sendTumblr && (
+                      <Item>
+                        <Image
+                          resizeMode={"contain"}
+                          source={require("../../../../../assets/tumblr.png")}
+                        />
+                        <TextInput
+                          style={{
+                            width: constants.width - 140,
+                            backgroundColor: "transparent",
+                            borderBottomWidth: 1,
+                            borderBottomColor: "#999",
+                            color: "#999",
+                            fontSize: 22,
+                            padding: 5,
+                            textAlign: "center"
+                          }}
+                          placeholder="TUMBLR"
+                          placeholderTextColor={
+                            isDarkMode
+                              ? "rgba(55, 55, 55, 1)"
+                              : "rgba(207, 207, 207, 0.6)"
+                          }
+                          value={sendTumblr}
+                          returnKeyType="done"
+                          onChangeText={text =>
+                            onInputTextChange(text, "sendTumblr")
+                          }
+                          autoCorrect={false}
+                        />
+                        {sendTumblr.length !== 0 ? (
+                          <AddItemTouchable
+                            onPress={() => console.log("nasnannai")}
+                          >
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddItemTouchable>
+                        ) : (
+                          <AddHoldItemView>
                             <AddItemView>
                               <AddItemText>ADD</AddItemText>
                             </AddItemView>

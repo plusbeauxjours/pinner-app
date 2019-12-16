@@ -74,7 +74,7 @@ export interface Match_match_match_host_profile {
   __typename: "ProfileType";
   id: string;
   uuid: any | null;
-  pushToken: string;
+  pushToken: string | null;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
@@ -105,7 +105,7 @@ export interface Match_match_match_guest_profile {
   __typename: "ProfileType";
   id: string;
   uuid: any | null;
-  pushToken: string;
+  pushToken: string | null;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
@@ -1075,7 +1075,7 @@ export interface GetMatches_getMatches_matches_host_profile {
   __typename: "ProfileType";
   id: string;
   uuid: any | null;
-  pushToken: string;
+  pushToken: string | null;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
@@ -1106,7 +1106,7 @@ export interface GetMatches_getMatches_matches_guest_profile {
   __typename: "ProfileType";
   id: string;
   uuid: any | null;
-  pushToken: string;
+  pushToken: string | null;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
@@ -1912,6 +1912,25 @@ export interface EditProfile_editProfile_user_profile {
   isHideCountries: boolean;
   isHideContinents: boolean;
   isAutoLocationReport: boolean;
+  sendInstagram: string | null;
+  sendTwitter: string | null;
+  sendYoutube: string | null;
+  sendTelegram: string | null;
+  sendPhone: string | null;
+  sendEmail: string | null;
+  sendKakao: string | null;
+  sendFacebook: string | null;
+  sendSnapchat: string | null;
+  sendLine: string | null;
+  sendWechat: string | null;
+  sendKik: string | null;
+  sendVk: string | null;
+  sendWhatsapp: string | null;
+  sendBehance: string | null;
+  sendLinkedin: string | null;
+  sendPinterest: string | null;
+  sendVine: string | null;
+  sendTumblr: string | null;
   currentCity: EditProfile_editProfile_user_profile_currentCity | null;
 }
 
@@ -2527,7 +2546,7 @@ export interface Me_me_user_profile {
   __typename: "ProfileType";
   id: string;
   uuid: any | null;
-  pushToken: string;
+  pushToken: string | null;
   bio: string | null;
   gender: ProfileGender | null;
   avatarUrl: string | null;
@@ -2558,6 +2577,25 @@ export interface Me_me_user_profile {
   isHideCountries: boolean;
   isHideContinents: boolean;
   isAutoLocationReport: boolean;
+  sendInstagram: string | null;
+  sendTwitter: string | null;
+  sendYoutube: string | null;
+  sendTelegram: string | null;
+  sendPhone: string | null;
+  sendEmail: string | null;
+  sendKakao: string | null;
+  sendFacebook: string | null;
+  sendSnapchat: string | null;
+  sendLine: string | null;
+  sendWechat: string | null;
+  sendKik: string | null;
+  sendVk: string | null;
+  sendWhatsapp: string | null;
+  sendBehance: string | null;
+  sendLinkedin: string | null;
+  sendPinterest: string | null;
+  sendVine: string | null;
+  sendTumblr: string | null;
   currentCity: Me_me_user_profile_currentCity | null;
 }
 
@@ -3070,7 +3108,7 @@ export interface MatchParts_host_profile {
   __typename: "ProfileType";
   id: string;
   uuid: any | null;
-  pushToken: string;
+  pushToken: string | null;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;
@@ -3101,7 +3139,7 @@ export interface MatchParts_guest_profile {
   __typename: "ProfileType";
   id: string;
   uuid: any | null;
-  pushToken: string;
+  pushToken: string | null;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
   isSelf: boolean | null;

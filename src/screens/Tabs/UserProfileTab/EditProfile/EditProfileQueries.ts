@@ -66,6 +66,10 @@ export const EDIT_PROFILE = gql`
           isHideCountries
           isHideContinents
           isAutoLocationReport
+          sendInstagram
+          sendTwitter
+          sendYoutube
+          sendTelegram
           sendPhone
           sendEmail
           sendKakao
@@ -76,6 +80,11 @@ export const EDIT_PROFILE = gql`
           sendKik
           sendVk
           sendWhatsapp
+          sendBehance
+          sendLinkedin
+          sendPinterest
+          sendVine
+          sendTumblr
           currentCity {
             latitude
             longitude
