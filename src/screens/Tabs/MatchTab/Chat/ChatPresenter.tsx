@@ -13,7 +13,8 @@ import {
   Platform,
   Modal as MapModal,
   SafeAreaView,
-  TextInput
+  TextInput,
+  KeyboardAvoidingView
 } from "react-native";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import Loader from "../../../../components/Loader";
@@ -108,6 +109,11 @@ const MapText = styled.Text`
   font-weight: 500;
   opacity: 1;
 `;
+const AddHoldItemView = styled.View`
+  justify-content: center;
+  margin-left: 10px;
+  opacity: 0.2;
+`;
 const MapBtn = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
@@ -119,9 +125,7 @@ const MapBtn = styled.TouchableOpacity`
   opacity: 0.65;
   background-color: #96abbf;
 `;
-const ScrollView = styled.ScrollView`
-  margin-bottom: 60px;
-`;
+const ScrollView = styled.ScrollView``;
 interface IProps {
   userId: string;
   mapModalOpen: boolean;
@@ -376,415 +380,403 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
             </>
           ) : (
             <>
-              <ScrollView>
-                <AddListContainer>
-                  {!me.user.profile.sendInstagram && (
-                    <Item>
-                      <IconContainer>
-                        <Text>sendInstagram</Text>
-                      </IconContainer>
-                      <TextInput
-                        style={{
-                          width:
-                            sendInstagram.length !== 0
-                              ? constants.width - 150
-                              : constants.width - 100,
-                          backgroundColor: "transparent",
-                          borderBottomWidth: 1,
-                          borderBottomColor: "#999",
-                          color: "#999",
-                          fontSize: 22,
-                          padding: 5,
-                          textAlign: "center"
-                        }}
-                        value={sendInstagram}
-                        returnKeyType="done"
-                        onChangeText={text =>
-                          onInputTextChange(text, "sendInstagram")
-                        }
-                        autoCorrect={false}
-                      />
-                      {sendInstagram.length !== 0 && (
-                        <AddItemTouchable
-                          onPress={() => console.log("nasnannai")}
-                        >
-                          <AddItemView>
-                            <AddItemText>ADD</AddItemText>
-                          </AddItemView>
-                        </AddItemTouchable>
-                      )}
-                    </Item>
-                  )}
-                  {!me.user.profile.sendPhone && (
-                    <Item>
-                      <IconContainer>
-                        <Text>sendPhone</Text>
-                      </IconContainer>
-                      <TextInput
-                        style={{
-                          width:
-                            sendPhone.length !== 0
-                              ? constants.width - 150
-                              : constants.width - 100,
-                          backgroundColor: "transparent",
-                          borderBottomWidth: 1,
-                          borderBottomColor: "#999",
-                          color: "#999",
-                          fontSize: 22,
-                          padding: 5,
-                          textAlign: "center"
-                        }}
-                        value={sendPhone}
-                        returnKeyType="done"
-                        onChangeText={text =>
-                          onInputTextChange(text, "sendPhone")
-                        }
-                        autoCorrect={false}
-                      />
-                      {sendPhone.length !== 0 && (
-                        <AddItemTouchable
-                          onPress={() => console.log("nasnannai")}
-                        >
-                          <AddItemView>
-                            <AddItemText>ADD</AddItemText>
-                          </AddItemView>
-                        </AddItemTouchable>
-                      )}
-                    </Item>
-                  )}
-                  {!me.user.profile.sendEmail && (
-                    <Item>
-                      <IconContainer>
-                        <Text>sendEmail</Text>
-                      </IconContainer>
-                      <TextInput
-                        style={{
-                          width:
-                            sendEmail.length !== 0
-                              ? constants.width - 150
-                              : constants.width - 100,
-                          backgroundColor: "transparent",
-                          borderBottomWidth: 1,
-                          borderBottomColor: "#999",
-                          color: "#999",
-                          fontSize: 22,
-                          padding: 5,
-                          textAlign: "center"
-                        }}
-                        value={sendEmail}
-                        returnKeyType="done"
-                        onChangeText={text =>
-                          onInputTextChange(text, "sendEmail")
-                        }
-                        autoCorrect={false}
-                      />
-                      {sendEmail.length !== 0 && (
-                        <AddItemTouchable
-                          onPress={() => console.log("nasnannai")}
-                        >
-                          <AddItemView>
-                            <AddItemText>ADD</AddItemText>
-                          </AddItemView>
-                        </AddItemTouchable>
-                      )}
-                    </Item>
-                  )}
-                  {!me.user.profile.sendKakao && (
-                    <Item>
-                      <IconContainer>
-                        <Text>sendKakao</Text>
-                      </IconContainer>
-                      <TextInput
-                        style={{
-                          width:
-                            sendKakao.length !== 0
-                              ? constants.width - 150
-                              : constants.width - 100,
-                          backgroundColor: "transparent",
-                          borderBottomWidth: 1,
-                          borderBottomColor: "#999",
-                          color: "#999",
-                          fontSize: 22,
-                          padding: 5,
-                          textAlign: "center"
-                        }}
-                        value={sendKakao}
-                        returnKeyType="done"
-                        onChangeText={text =>
-                          onInputTextChange(text, "sendKakao")
-                        }
-                        autoCorrect={false}
-                      />
-                      {sendKakao.length !== 0 && (
-                        <AddItemTouchable
-                          onPress={() => console.log("nasnannai")}
-                        >
-                          <AddItemView>
-                            <AddItemText>ADD</AddItemText>
-                          </AddItemView>
-                        </AddItemTouchable>
-                      )}
-                    </Item>
-                  )}
-                  {!me.user.profile.sendFacebook && (
-                    <Item>
-                      <IconContainer>
-                        <Text>sendFacebook</Text>
-                      </IconContainer>
-                      <TextInput
-                        style={{
-                          width:
-                            sendFacebook.length !== 0
-                              ? constants.width - 150
-                              : constants.width - 100,
-                          backgroundColor: "transparent",
-                          borderBottomWidth: 1,
-                          borderBottomColor: "#999",
-                          color: "#999",
-                          fontSize: 22,
-                          padding: 5,
-                          textAlign: "center"
-                        }}
-                        value={sendFacebook}
-                        returnKeyType="done"
-                        onChangeText={text =>
-                          onInputTextChange(text, "sendFacebook")
-                        }
-                        autoCorrect={false}
-                      />
-                      {sendFacebook.length !== 0 && (
-                        <AddItemTouchable
-                          onPress={() => console.log("nasnannai")}
-                        >
-                          <AddItemView>
-                            <AddItemText>ADD</AddItemText>
-                          </AddItemView>
-                        </AddItemTouchable>
-                      )}
-                    </Item>
-                  )}
-                  {!me.user.profile.sendSnapchat && (
-                    <Item>
-                      <IconContainer>
-                        <Text>sendSnapchat</Text>
-                      </IconContainer>
-                      <TextInput
-                        style={{
-                          width:
-                            sendSnapchat.length !== 0
-                              ? constants.width - 150
-                              : constants.width - 100,
-                          backgroundColor: "transparent",
-                          borderBottomWidth: 1,
-                          borderBottomColor: "#999",
-                          color: "#999",
-                          fontSize: 22,
-                          padding: 5,
-                          textAlign: "center"
-                        }}
-                        value={sendSnapchat}
-                        returnKeyType="done"
-                        onChangeText={text =>
-                          onInputTextChange(text, "sendSnapchat")
-                        }
-                        autoCorrect={false}
-                      />
-                      {sendSnapchat.length !== 0 && (
-                        <AddItemTouchable
-                          onPress={() => console.log("nasnannai")}
-                        >
-                          <AddItemView>
-                            <AddItemText>ADD</AddItemText>
-                          </AddItemView>
-                        </AddItemTouchable>
-                      )}
-                    </Item>
-                  )}
-                  {!me.user.profile.sendLine && (
-                    <Item>
-                      <IconContainer>
-                        <Text>sendLine</Text>
-                      </IconContainer>
-                      <TextInput
-                        style={{
-                          width:
-                            sendLine.length !== 0
-                              ? constants.width - 150
-                              : constants.width - 100,
-                          backgroundColor: "transparent",
-                          borderBottomWidth: 1,
-                          borderBottomColor: "#999",
-                          color: "#999",
-                          fontSize: 22,
-                          padding: 5,
-                          textAlign: "center"
-                        }}
-                        value={sendLine}
-                        returnKeyType="done"
-                        onChangeText={text =>
-                          onInputTextChange(text, "sendLine")
-                        }
-                        autoCorrect={false}
-                      />
-                      {sendLine.length !== 0 && (
-                        <AddItemTouchable
-                          onPress={() => console.log("nasnannai")}
-                        >
-                          <AddItemView>
-                            <AddItemText>ADD</AddItemText>
-                          </AddItemView>
-                        </AddItemTouchable>
-                      )}
-                    </Item>
-                  )}
-                  {!me.user.profile.sendWechat && (
-                    <Item>
-                      <IconContainer>
-                        <Text>sendWechat</Text>
-                      </IconContainer>
-                      <TextInput
-                        style={{
-                          width:
-                            sendWechat.length !== 0
-                              ? constants.width - 150
-                              : constants.width - 100,
-                          backgroundColor: "transparent",
-                          borderBottomWidth: 1,
-                          borderBottomColor: "#999",
-                          color: "#999",
-                          fontSize: 22,
-                          padding: 5,
-                          textAlign: "center"
-                        }}
-                        value={sendWechat}
-                        returnKeyType="done"
-                        onChangeText={text =>
-                          onInputTextChange(text, "sendWechat")
-                        }
-                        autoCorrect={false}
-                      />
-                      {sendWechat.length !== 0 && (
-                        <AddItemTouchable
-                          onPress={() => console.log("nasnannai")}
-                        >
-                          <AddItemView>
-                            <AddItemText>ADD</AddItemText>
-                          </AddItemView>
-                        </AddItemTouchable>
-                      )}
-                    </Item>
-                  )}
-                  {!me.user.profile.sendKik && (
-                    <Item>
-                      <IconContainer>
-                        <Text>sendKik</Text>
-                      </IconContainer>
-                      <TextInput
-                        style={{
-                          width:
-                            sendKik.length !== 0
-                              ? constants.width - 150
-                              : constants.width - 100,
-                          backgroundColor: "transparent",
-                          borderBottomWidth: 1,
-                          borderBottomColor: "#999",
-                          color: "#999",
-                          fontSize: 22,
-                          padding: 5,
-                          textAlign: "center"
-                        }}
-                        value={sendKik}
-                        returnKeyType="done"
-                        onChangeText={text =>
-                          onInputTextChange(text, "sendKik")
-                        }
-                        autoCorrect={false}
-                      />
-                      {sendKik.length !== 0 && (
-                        <AddItemTouchable
-                          onPress={() => console.log("nasnannai")}
-                        >
-                          <AddItemView>
-                            <AddItemText>ADD</AddItemText>
-                          </AddItemView>
-                        </AddItemTouchable>
-                      )}
-                    </Item>
-                  )}
-                  {!me.user.profile.sendVk && (
-                    <Item>
-                      <IconContainer>
-                        <Text>sendVk</Text>
-                      </IconContainer>
-                      <TextInput
-                        style={{
-                          width:
-                            sendVk.length !== 0
-                              ? constants.width - 150
-                              : constants.width - 100,
-                          backgroundColor: "transparent",
-                          borderBottomWidth: 1,
-                          borderBottomColor: "#999",
-                          color: "#999",
-                          fontSize: 22,
-                          padding: 5,
-                          textAlign: "center"
-                        }}
-                        value={sendVk}
-                        returnKeyType="done"
-                        onChangeText={text => onInputTextChange(text, "sendVk")}
-                        autoCorrect={false}
-                      />
-                      {sendVk.length !== 0 && (
-                        <AddItemTouchable
-                          onPress={() => console.log("nasnannai")}
-                        >
-                          <AddItemView>
-                            <AddItemText>ADD</AddItemText>
-                          </AddItemView>
-                        </AddItemTouchable>
-                      )}
-                    </Item>
-                  )}
-                  {!me.user.profile.sendWhatsapp && (
-                    <Item>
-                      <IconContainer>
-                        <Text>sendWhatsapp</Text>
-                      </IconContainer>
-                      <TextInput
-                        style={{
-                          width:
-                            sendWhatsapp.length !== 0
-                              ? constants.width - 150
-                              : constants.width - 100,
-                          backgroundColor: "transparent",
-                          borderBottomWidth: 1,
-                          borderBottomColor: "#999",
-                          color: "#999",
-                          fontSize: 22,
-                          padding: 5,
-                          textAlign: "center"
-                        }}
-                        value={sendWhatsapp}
-                        returnKeyType="done"
-                        onChangeText={text =>
-                          onInputTextChange(text, "sendWhatsapp")
-                        }
-                        autoCorrect={false}
-                      />
-                      {sendWhatsapp.length !== 0 && (
-                        <AddItemTouchable
-                          onPress={() => console.log("nasnannai")}
-                        >
-                          <AddItemView>
-                            <AddItemText>ADD</AddItemText>
-                          </AddItemView>
-                        </AddItemTouchable>
-                      )}
-                    </Item>
-                  )}
-                </AddListContainer>
-              </ScrollView>
+              <KeyboardAvoidingView
+                enabled
+                behavior={Platform.OS === "ios" ? "padding" : false}
+                style={{ flex: 1 }}
+              >
+                <ScrollView
+                  keyboardShouldPersistTaps={"always"}
+                  keyboardDismissMode={
+                    Platform.OS === "ios" ? "interactive" : "on-drag"
+                  }
+                >
+                  <AddListContainer>
+                    {!me.user.profile.sendInstagram && (
+                      <Item>
+                        <IconContainer>
+                          <Text>sendInstagram</Text>
+                        </IconContainer>
+                        <TextInput
+                          style={{
+                            width: constants.width - 150,
+                            backgroundColor: "transparent",
+                            borderBottomWidth: 1,
+                            borderBottomColor: "#999",
+                            color: "#999",
+                            fontSize: 22,
+                            padding: 5,
+                            textAlign: "center"
+                          }}
+                          value={sendInstagram}
+                          returnKeyType="done"
+                          onChangeText={text =>
+                            onInputTextChange(text, "sendInstagram")
+                          }
+                          autoCorrect={false}
+                        />
+                        {sendInstagram.length !== 0 && (
+                          <AddItemTouchable
+                            onPress={() => console.log("nasnannai")}
+                          >
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddItemTouchable>
+                        )}
+                      </Item>
+                    )}
+                    {!me.user.profile.sendPhone && (
+                      <Item>
+                        <IconContainer>
+                          <Text>sendPhone</Text>
+                        </IconContainer>
+                        <TextInput
+                          style={{
+                            width: constants.width - 150,
+                            backgroundColor: "transparent",
+                            borderBottomWidth: 1,
+                            borderBottomColor: "#999",
+                            color: "#999",
+                            fontSize: 22,
+                            padding: 5,
+                            textAlign: "center"
+                          }}
+                          value={sendPhone}
+                          returnKeyType="done"
+                          onChangeText={text =>
+                            onInputTextChange(text, "sendPhone")
+                          }
+                          autoCorrect={false}
+                        />
+                        {sendPhone.length !== 0 && (
+                          <AddItemTouchable
+                            onPress={() => console.log("nasnannai")}
+                          >
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddItemTouchable>
+                        )}
+                      </Item>
+                    )}
+                    {!me.user.profile.sendEmail && (
+                      <Item>
+                        <IconContainer>
+                          <Text>sendEmail</Text>
+                        </IconContainer>
+                        <TextInput
+                          style={{
+                            width: constants.width - 150,
+                            backgroundColor: "transparent",
+                            borderBottomWidth: 1,
+                            borderBottomColor: "#999",
+                            color: "#999",
+                            fontSize: 22,
+                            padding: 5,
+                            textAlign: "center"
+                          }}
+                          value={sendEmail}
+                          returnKeyType="done"
+                          onChangeText={text =>
+                            onInputTextChange(text, "sendEmail")
+                          }
+                          autoCorrect={false}
+                        />
+                        {sendEmail.length !== 0 && (
+                          <AddItemTouchable
+                            onPress={() => console.log("nasnannai")}
+                          >
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddItemTouchable>
+                        )}
+                      </Item>
+                    )}
+                    {!me.user.profile.sendKakao && (
+                      <Item>
+                        <IconContainer>
+                          <Text>sendKakao</Text>
+                        </IconContainer>
+                        <TextInput
+                          style={{
+                            width: constants.width - 150,
+                            backgroundColor: "transparent",
+                            borderBottomWidth: 1,
+                            borderBottomColor: "#999",
+                            color: "#999",
+                            fontSize: 22,
+                            padding: 5,
+                            textAlign: "center"
+                          }}
+                          value={sendKakao}
+                          returnKeyType="done"
+                          onChangeText={text =>
+                            onInputTextChange(text, "sendKakao")
+                          }
+                          autoCorrect={false}
+                        />
+                        {sendKakao.length !== 0 && (
+                          <AddItemTouchable
+                            onPress={() => console.log("nasnannai")}
+                          >
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddItemTouchable>
+                        )}
+                      </Item>
+                    )}
+                    {!me.user.profile.sendFacebook && (
+                      <Item>
+                        <IconContainer>
+                          <Text>sendFacebook</Text>
+                        </IconContainer>
+                        <TextInput
+                          style={{
+                            width: constants.width - 150,
+                            backgroundColor: "transparent",
+                            borderBottomWidth: 1,
+                            borderBottomColor: "#999",
+                            color: "#999",
+                            fontSize: 22,
+                            padding: 5,
+                            textAlign: "center"
+                          }}
+                          value={sendFacebook}
+                          returnKeyType="done"
+                          onChangeText={text =>
+                            onInputTextChange(text, "sendFacebook")
+                          }
+                          autoCorrect={false}
+                        />
+                        {sendFacebook.length !== 0 && (
+                          <AddItemTouchable
+                            onPress={() => console.log("nasnannai")}
+                          >
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddItemTouchable>
+                        )}
+                      </Item>
+                    )}
+                    {!me.user.profile.sendSnapchat && (
+                      <Item>
+                        <IconContainer>
+                          <Text>sendSnapchat</Text>
+                        </IconContainer>
+                        <TextInput
+                          style={{
+                            width: constants.width - 150,
+                            backgroundColor: "transparent",
+                            borderBottomWidth: 1,
+                            borderBottomColor: "#999",
+                            color: "#999",
+                            fontSize: 22,
+                            padding: 5,
+                            textAlign: "center"
+                          }}
+                          value={sendSnapchat}
+                          returnKeyType="done"
+                          onChangeText={text =>
+                            onInputTextChange(text, "sendSnapchat")
+                          }
+                          autoCorrect={false}
+                        />
+                        {sendSnapchat.length !== 0 && (
+                          <AddItemTouchable
+                            onPress={() => console.log("nasnannai")}
+                          >
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddItemTouchable>
+                        )}
+                      </Item>
+                    )}
+                    {!me.user.profile.sendLine && (
+                      <Item>
+                        <IconContainer>
+                          <Text>sendLine</Text>
+                        </IconContainer>
+                        <TextInput
+                          style={{
+                            width: constants.width - 150,
+                            backgroundColor: "transparent",
+                            borderBottomWidth: 1,
+                            borderBottomColor: "#999",
+                            color: "#999",
+                            fontSize: 22,
+                            padding: 5,
+                            textAlign: "center"
+                          }}
+                          value={sendLine}
+                          returnKeyType="done"
+                          onChangeText={text =>
+                            onInputTextChange(text, "sendLine")
+                          }
+                          autoCorrect={false}
+                        />
+                        {sendLine.length !== 0 && (
+                          <AddItemTouchable
+                            onPress={() => console.log("nasnannai")}
+                          >
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddItemTouchable>
+                        )}
+                      </Item>
+                    )}
+                    {!me.user.profile.sendWechat && (
+                      <Item>
+                        <IconContainer>
+                          <Text>sendWechat</Text>
+                        </IconContainer>
+                        <TextInput
+                          style={{
+                            width: constants.width - 150,
+                            backgroundColor: "transparent",
+                            borderBottomWidth: 1,
+                            borderBottomColor: "#999",
+                            color: "#999",
+                            fontSize: 22,
+                            padding: 5,
+                            textAlign: "center"
+                          }}
+                          value={sendWechat}
+                          returnKeyType="done"
+                          onChangeText={text =>
+                            onInputTextChange(text, "sendWechat")
+                          }
+                          autoCorrect={false}
+                        />
+                        {sendWechat.length !== 0 && (
+                          <AddItemTouchable
+                            onPress={() => console.log("nasnannai")}
+                          >
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddItemTouchable>
+                        )}
+                      </Item>
+                    )}
+                    {!me.user.profile.sendKik && (
+                      <Item>
+                        <IconContainer>
+                          <Text>sendKik</Text>
+                        </IconContainer>
+                        <TextInput
+                          style={{
+                            width: constants.width - 150,
+                            backgroundColor: "transparent",
+                            borderBottomWidth: 1,
+                            borderBottomColor: "#999",
+                            color: "#999",
+                            fontSize: 22,
+                            padding: 5,
+                            textAlign: "center"
+                          }}
+                          value={sendKik}
+                          returnKeyType="done"
+                          onChangeText={text =>
+                            onInputTextChange(text, "sendKik")
+                          }
+                          autoCorrect={false}
+                        />
+                        {sendKik.length !== 0 && (
+                          <AddItemTouchable
+                            onPress={() => console.log("nasnannai")}
+                          >
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddItemTouchable>
+                        )}
+                      </Item>
+                    )}
+                    {!me.user.profile.sendVk && (
+                      <Item>
+                        <IconContainer>
+                          <Text>sendVk</Text>
+                        </IconContainer>
+                        <TextInput
+                          style={{
+                            width: constants.width - 150,
+                            backgroundColor: "transparent",
+                            borderBottomWidth: 1,
+                            borderBottomColor: "#999",
+                            color: "#999",
+                            fontSize: 22,
+                            padding: 5,
+                            textAlign: "center"
+                          }}
+                          value={sendVk}
+                          returnKeyType="done"
+                          onChangeText={text =>
+                            onInputTextChange(text, "sendVk")
+                          }
+                          autoCorrect={false}
+                        />
+                        {sendVk.length !== 0 && (
+                          <AddItemTouchable
+                            onPress={() => console.log("nasnannai")}
+                          >
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddItemTouchable>
+                        )}
+                      </Item>
+                    )}
+                    {!me.user.profile.sendWhatsapp && (
+                      <Item>
+                        <IconContainer>
+                          <Text>sendWhatsapp</Text>
+                        </IconContainer>
+                        <TextInput
+                          style={{
+                            width: constants.width - 150,
+                            backgroundColor: "transparent",
+                            borderBottomWidth: 1,
+                            borderBottomColor: "#999",
+                            color: "#999",
+                            fontSize: 22,
+                            padding: 5,
+                            textAlign: "center"
+                          }}
+                          value={sendWhatsapp}
+                          returnKeyType="done"
+                          onChangeText={text =>
+                            onInputTextChange(text, "sendWhatsapp")
+                          }
+                          autoCorrect={false}
+                        />
+                        {sendWhatsapp.length !== 0 ? (
+                          <AddItemTouchable
+                            onPress={() => console.log("nasnannai")}
+                          >
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddItemTouchable>
+                        ) : (
+                          <AddHoldItemView
+                            onPress={() => console.log("nasnannai")}
+                          >
+                            <AddItemView>
+                              <AddItemText>ADD</AddItemText>
+                            </AddItemView>
+                          </AddHoldItemView>
+                        )}
+                      </Item>
+                    )}
+                  </AddListContainer>
+                </ScrollView>
+              </KeyboardAvoidingView>
               <Footer>
                 <AddBtn onPress={() => setSnsAddMode(false)}>
                   <AddContainer>
