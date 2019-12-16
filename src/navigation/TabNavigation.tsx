@@ -32,8 +32,11 @@ export default createBottomTabNavigator(
         let tabBarVisible;
         if (navigation.state.routes.length > 0) {
           if (navigation.state.routes[0].routes.length > 1) {
-            console.log(navigation.state);
-            if (navigation.state.routes[0].routes[1].routeName === "Chat") {
+            console.log(navigation.state.routes);
+            if (
+              navigation.state.routes[0].index === 1 &&
+              navigation.state.routes[0].routes[1].routeName === "Chat"
+            ) {
               tabBarVisible = false;
             } else {
               tabBarVisible = true;
