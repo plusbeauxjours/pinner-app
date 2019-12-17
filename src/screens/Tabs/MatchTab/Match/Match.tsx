@@ -463,6 +463,7 @@ export default ({ navigation }) => {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        showsVerticalScrollIndicator={false}
       >
         <Container>
           {matches && matches.length !== 0 && me ? (

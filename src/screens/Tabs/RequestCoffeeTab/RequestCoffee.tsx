@@ -604,6 +604,7 @@ export default ({ navigation }) => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
+          showsVerticalScrollIndicator={false}
         >
           <Container>
             {trip.filter(r => r.city.hasCoffee).length !== 0 ? (

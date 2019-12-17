@@ -240,6 +240,7 @@ export default ({ navigation }) => {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        showsVerticalScrollIndicator={false}
       >
         {avatars && avatars.length !== 0 ? (
           <>

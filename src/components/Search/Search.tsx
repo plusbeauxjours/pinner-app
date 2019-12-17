@@ -181,6 +181,7 @@ const Search = ({ navigation }) => {
               marginBottom: 25,
               marginLeft: 30 / 2
             }}
+            showsVerticalScrollIndicator={false}
           >
             {loading || createCityLoading || isLoading ? (
               <LoaderContainer>

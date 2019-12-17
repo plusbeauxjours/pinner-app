@@ -67,6 +67,7 @@ export default ({ navigation }) => {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        showsVerticalScrollIndicator={false}
       >
         <View>
           {cities.length !== 0 &&

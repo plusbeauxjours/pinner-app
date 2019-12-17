@@ -84,9 +84,9 @@ const Bold = styled.Text`
   color: ${props => props.theme.color};
 `;
 const ConfirmBold = styled(Bold)`
-text-align: center;
-margin-bottom: 10px;
-`
+  text-align: center;
+  margin-bottom: 10px;
+`;
 const CountryContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
@@ -848,10 +848,10 @@ export default ({ navigation }) => {
           </>
         )}
       </Modal>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View>
           <ToggleContainer>
-          <Bold>EDIT PROFILE</Bold>
+            <Bold>EDIT PROFILE</Bold>
             <Item>
               <ToggleText>USERNAME</ToggleText>
               <TextInput

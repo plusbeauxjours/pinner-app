@@ -146,6 +146,7 @@ export default ({ navigation }) => {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        showsVerticalScrollIndicator={false}
       >
         <Container>
           {blockedUsers && blockedUsers.length !== 0 ? (

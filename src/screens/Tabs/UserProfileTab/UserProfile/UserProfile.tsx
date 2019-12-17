@@ -846,6 +846,7 @@ export default ({ navigation }) => {
                     marginBottom: 25,
                     backgroundColor: "transparent"
                   }}
+                  showsVerticalScrollIndicator={false}
                 >
                   {createCityLoading || isLoading ? (
                     <SearchLoaderContainer>
@@ -1057,6 +1058,7 @@ export default ({ navigation }) => {
                     marginBottom: 25,
                     backgroundColor: "transparent"
                   }}
+                  showsVerticalScrollIndicator={false}
                 >
                   {createCityLoading || isLoading ? (
                     <Loader />
@@ -1149,6 +1151,7 @@ export default ({ navigation }) => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
+          showsVerticalScrollIndicator={false}
         >
           <Header>
             <ImageTouchable

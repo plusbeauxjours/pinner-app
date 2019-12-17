@@ -31,8 +31,8 @@ import { ME } from "../../../../sharedQueries";
 const View = styled.View``;
 const EditView = styled.View``;
 const AddView = styled.View`
-  padding-top: 65px;
-  padding-bottom: 65px;
+  margin-top: 65px;
+  margin-bottom: 65px;
 `;
 const ChatContainer = styled.View`
   flex: 1;
@@ -172,7 +172,9 @@ const SNSTextContainer = styled.View`
   border-bottom-width: 0.5px;
   border-bottom-color: #999;
 `;
-
+const EmptyContainer = styled.View`
+  height: 20px;
+`;
 interface IProps {
   userId: string;
   mapModalOpen: boolean;
@@ -369,8 +371,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
           query: ME
         });
         if (data) {
-          console.log(data);
-          console.log(updateSns);
           data.me.user.profile.sendInstagram =
             updateSns.user.profile.sendInstagram;
           data.me.user.profile.sendPhone = updateSns.user.profile.sendPhone;
@@ -414,71 +414,47 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
       .replace(/\s\s*$/, "")
       .replace(replaceChar, "");
     if (state === "INSTAGRAM") {
-      setIsChangedSendInstagram(
-        me.user.profile.sendInstagram !== sendInstagram
-      );
       setSendInstagram(item);
     } else if (state === "PHONE") {
-      setIsChangedSendPhone(me.user.profile.sendPhone !== sendPhone);
-      setSendPhone(item);
+      setSendPhone(text);
     } else if (state === "EMAIL") {
-      setIsChangedSendEmail(me.user.profile.sendEmail !== sendEmail);
-      setSendEmail(item);
+      setSendEmail(text);
     } else if (state === "KAKAOTALK") {
-      console.log("me.user.profile.sendKakao", me.user.profile.sendKakao);
-      console.log("sendKakao", sendKakao);
-      setIsChangedSendKakao(me.user.profile.sendKakao !== sendKakao);
       setSendKakao(item);
     } else if (state === "FACEBOOK") {
-      setIsChangedSendFacebook(me.user.profile.sendFacebook !== sendFacebook);
       setSendFacebook(item);
     } else if (state === "YOUTUBE") {
-      setIsChangedSendYoutube(me.user.profile.sendYoutube !== sendYoutube);
       setSendYoutube(item);
     } else if (state === "TWITTER") {
-      setIsChangedSendTwitter(me.user.profile.sendTwitter !== sendTwitter);
       setSendTwitter(item);
     } else if (state === "TELEGRAM") {
-      setIsChangedSendTelegram(me.user.profile.sendTelegram !== sendTelegram);
       setSendTelegram(item);
     } else if (state === "SNAPCHAT") {
-      setIsChangedSendSnapchat(me.user.profile.sendSnapchat !== sendSnapchat);
       setSendSnapchat(item);
     } else if (state === "LINE") {
-      setIsChangedSendLine(me.user.profile.sendLine !== sendLine);
       setSendLine(item);
     } else if (state === "WECHAT") {
-      setIsChangedSendWechat(me.user.profile.sendWechat !== sendWechat);
       setSendWechat(item);
     } else if (state === "KIK") {
-      setIsChangedSendKik(me.user.profile.sendKik !== sendKik);
       setSendKik(item);
     } else if (state === "VK") {
-      setIsChangedSendVk(me.user.profile.sendVk !== sendVk);
       setSendVk(item);
     } else if (state === "WHATSAPP") {
-      setIsChangedSendWhatsapp(me.user.profile.sendWhatsapp !== sendWhatsapp);
       setSendWhatsapp(item);
     } else if (state === "BEHANCE") {
-      setIsChangedSendBehance(me.user.profile.sendBehance !== sendBehance);
       setSendBehance(item);
     } else if (state === "LINKEDIN") {
-      setIsChangedSendLinkedin(me.user.profile.sendLinkedin !== sendLinkedin);
       setSendLinkedin(item);
     } else if (state === "PINTEREST") {
-      setIsChangedSendPinterest(
-        me.user.profile.sendPinterest !== sendPinterest
-      );
       setSendPinterest(item);
     } else if (state === "VINE") {
-      setIsChangedSendVine(me.user.profile.sendVine !== sendVine);
       setSendVine(item);
     } else if (state === "TUMBLR") {
-      setIsChangedSendTumblr(me.user.profile.sendTumblr !== sendTumblr);
       setSendTumblr(item);
     } else {
       return null;
     }
+    // }
   };
   const snsList = [
     {
@@ -712,6 +688,47 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
     navigator.geolocation.getCurrentPosition(handleGeoSuccess, handleGeoError);
     setSnsAddMode(false);
   }, []);
+  useEffect(() => {
+    setIsChangedSendInstagram(me.user.profile.sendInstagram !== sendInstagram);
+    setIsChangedSendPhone(me.user.profile.sendPhone !== sendPhone);
+    setIsChangedSendEmail(me.user.profile.sendEmail !== sendEmail);
+    setIsChangedSendKakao(me.user.profile.sendKakao !== sendKakao);
+    setIsChangedSendFacebook(me.user.profile.sendFacebook !== sendFacebook);
+    setIsChangedSendYoutube(me.user.profile.sendYoutube !== sendYoutube);
+    setIsChangedSendTwitter(me.user.profile.sendTwitter !== sendTwitter);
+    setIsChangedSendTelegram(me.user.profile.sendTelegram !== sendTelegram);
+    setIsChangedSendSnapchat(me.user.profile.sendSnapchat !== sendSnapchat);
+    setIsChangedSendLine(me.user.profile.sendLine !== sendLine);
+    setIsChangedSendWechat(me.user.profile.sendWechat !== sendWechat);
+    setIsChangedSendKik(me.user.profile.sendKik !== sendKik);
+    setIsChangedSendVk(me.user.profile.sendVk !== sendVk);
+    setIsChangedSendWhatsapp(me.user.profile.sendWhatsapp !== sendWhatsapp);
+    setIsChangedSendBehance(me.user.profile.sendBehance !== sendBehance);
+    setIsChangedSendLinkedin(me.user.profile.sendLinkedin !== sendLinkedin);
+    setIsChangedSendPinterest(me.user.profile.sendPinterest !== sendPinterest);
+    setIsChangedSendVine(me.user.profile.sendVine !== sendVine);
+    setIsChangedSendTumblr(me.user.profile.sendTumblr !== sendTumblr);
+  }, [
+    sendInstagram,
+    sendPhone,
+    sendEmail,
+    sendKakao,
+    sendFacebook,
+    sendYoutube,
+    sendTwitter,
+    sendTelegram,
+    sendSnapchat,
+    sendLine,
+    sendWechat,
+    sendKik,
+    sendVk,
+    sendWhatsapp,
+    sendBehance,
+    sendLinkedin,
+    sendPinterest,
+    sendVine,
+    sendTumblr
+  ]);
   if (loading) {
     return (
       <Container>
@@ -755,6 +772,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                     Platform.OS === "ios" ? "interactive" : "on-drag"
                   }
                   contentContainerStyle={{ flexGrow: 1 }}
+                  showsVerticalScrollIndicator={false}
                 >
                   <AddListContainer>
                     {me.user.profile.countryPhoneNumber &&
@@ -762,7 +780,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                         <Item>
                           <Image
                             resizeMode={"contain"}
-                            source={require("../../../../../assets/phone.png")}
+                            source={require("../../../../../assets/phone_second.png")}
                           />
                           <SNSTextContainer>
                             <SNSText>
@@ -771,7 +789,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                             </SNSText>
                           </SNSTextContainer>
                           <ItemTouchable
-                            disabled={updateSnsLoading}
                             onPress={() => {
                               console.log("sendsend"), closeSnsModal();
                             }}
@@ -786,13 +803,12 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                       <Item>
                         <Image
                           resizeMode={"contain"}
-                          source={require("../../../../../assets/email.png")}
+                          source={require("../../../../../assets/email_second.png")}
                         />
                         <SNSTextContainer>
                           <SNSText>{me.user.profile.emailAddress}</SNSText>
                         </SNSTextContainer>
                         <ItemTouchable
-                          disabled={updateSnsLoading}
                           onPress={() => {
                             console.log("sendsend"), closeSnsModal();
                           }}
@@ -803,6 +819,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                         </ItemTouchable>
                       </Item>
                     )}
+                    <EmptyContainer />
                     {snsList.map((snsItem, index) => {
                       if (snsItem.meData && snsItem.meData.length > 0) {
                         return (
@@ -815,7 +832,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                               <SNSText>{snsItem.meData}</SNSText>
                             </SNSTextContainer>
                             <ItemTouchable
-                              disabled={updateSnsLoading}
                               onPress={() => {
                                 console.log("sendsend"), closeSnsModal();
                               }}
@@ -826,6 +842,8 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                             </ItemTouchable>
                           </Item>
                         );
+                      } else {
+                        return null;
                       }
                     })}
                   </AddListContainer>
@@ -858,6 +876,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                       Platform.OS === "ios" ? "interactive" : "on-drag"
                     }
                     contentContainerStyle={{ flexGrow: 1 }}
+                    showsVerticalScrollIndicator={false}
                   >
                     <AddListContainer>
                       {snsList.map((snsItem, index) => (
@@ -888,13 +907,17 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                             onChangeText={text =>
                               onInputTextChange(text, snsItem.payload)
                             }
+                            keyboardType={
+                              snsItem.payload === "PHONE"
+                                ? "phone-pad"
+                                : "email-address"
+                            }
                             autoCorrect={false}
                             autoCapitalize={"none"}
                           />
                           {snsItem.meData && snsItem.meData.length > 0 ? (
                             snsItem.isChanged ? (
                               <ItemTouchable
-                                disabled={updateSnsLoading}
                                 onPress={() =>
                                   onPressSendSns(
                                     snsItem.payload,
@@ -914,7 +937,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                             )
                           ) : snsItem.isChanged ? (
                             <ItemTouchable
-                              disabled={updateSnsLoading}
                               onPress={() =>
                                 onPressSendSns(
                                   snsItem.payload,
