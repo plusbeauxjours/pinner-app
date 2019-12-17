@@ -1044,6 +1044,59 @@ export interface TripProfileVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: UpdateSns
+// ====================================================
+
+export interface UpdateSns_updateSns_user_profile {
+  __typename: "ProfileType";
+  id: string;
+  uuid: any | null;
+  sendInstagram: string | null;
+  sendTwitter: string | null;
+  sendYoutube: string | null;
+  sendTelegram: string | null;
+  sendPhone: string | null;
+  sendEmail: string | null;
+  sendKakao: string | null;
+  sendFacebook: string | null;
+  sendSnapchat: string | null;
+  sendLine: string | null;
+  sendWechat: string | null;
+  sendKik: string | null;
+  sendVk: string | null;
+  sendWhatsapp: string | null;
+  sendBehance: string | null;
+  sendLinkedin: string | null;
+  sendPinterest: string | null;
+  sendVine: string | null;
+  sendTumblr: string | null;
+}
+
+export interface UpdateSns_updateSns_user {
+  __typename: "UserType";
+  profile: UpdateSns_updateSns_user_profile | null;
+}
+
+export interface UpdateSns_updateSns {
+  __typename: "UpdateSNSResponse";
+  ok: boolean | null;
+  user: UpdateSns_updateSns_user | null;
+}
+
+export interface UpdateSns {
+  updateSns: UpdateSns_updateSns;
+}
+
+export interface UpdateSnsVariables {
+  payload: string;
+  username: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: GetMatches
 // ====================================================
 

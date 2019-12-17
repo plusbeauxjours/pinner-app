@@ -23,6 +23,10 @@ import { useTheme } from "../../../../context/ThemeContext";
 import { darkMode, lightMode } from "../../../../styles/mapStyles";
 import { useLocation } from "../../../../context/LocationContext";
 import { useMe } from "../../../../context/MeContext";
+import { useMutation } from "react-apollo";
+import { UPDATE_SNS } from "./ChatQueries";
+import { UpdateSns, UpdateSnsVariables, Me } from "../../../../types/api";
+import { ME } from "../../../../sharedQueries";
 
 const View = styled.View``;
 const ChatContainer = styled.View`
@@ -30,11 +34,8 @@ const ChatContainer = styled.View`
   background-color: ${props => props.theme.bgColor};
 `;
 const AddListContainer = styled.View`
-  padding: 30px 20px 0 20px;
+  padding: 30px 20px 40px 20px;
   justify-content: space-between;
-`;
-const Text = styled.Text`
-  color: ${props => props.theme.color};
 `;
 const Item = styled.View`
   flex-direction: row;
@@ -64,28 +65,28 @@ const Footer = styled.View`
   bottom: 25px;
   background-color: ${props => props.theme.bgColor};
 `;
-const IconContainer = styled.View`
-  width: 50px;
-  margin-right: 10px;
-`;
-const AddItemTouchable = styled.TouchableOpacity`
-  justify-content: center;
-  margin-left: 10px;
-`;
+const ItemTouchable = styled.TouchableOpacity``;
 const AddItemView = styled.View`
   width: 40px;
   height: 40px;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  border: 0.5px solid #999;
+  border: 0.5px solid ${props => props.theme.shadowColor};
   border-radius: 5px;
   padding: 2px;
+  margin-left: 10px;
 `;
 const AddItemText = styled.Text`
-  color: #999;
+  color: ${props => props.theme.shadowColor};
   text-align: center;
   font-size: 10px;
+`;
+const EditItemText = styled(AddItemText)`
+  color: #999;
+`;
+const EditItemView = styled(AddItemView)`
+  border: 0.5px solid #999;
 `;
 const MarkerContainer = styled.View`
   position: absolute;
@@ -109,11 +110,6 @@ const MapText = styled.Text`
   font-weight: 500;
   opacity: 1;
 `;
-const AddHoldItemView = styled.View`
-  justify-content: center;
-  margin-left: 10px;
-  opacity: 0.2;
-`;
 const MapBtn = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
@@ -126,11 +122,22 @@ const MapBtn = styled.TouchableOpacity`
   background-color: #96abbf;
 `;
 const ScrollView = styled.ScrollView``;
-
 const Image = styled.Image`
   width: 40px;
   height: 40px;
   margin-right: 10px;
+`;
+const SNSText = styled.Text`
+  font-size: 22px;
+  padding: 5px;
+  color: #999;
+
+  text-align: center;
+`;
+const SNSTextContainer = styled.View`
+  width: ${constants.width - 140};
+  border-bottom-width: 0.5px;
+  border-bottom-color: #999;
 `;
 
 interface IProps {
@@ -181,110 +188,429 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
     longitudeDelta: LONGITUDE_DELTA
   });
   const [sendInstagram, setSendInstagram] = useState<string>(
-    me.user.profile.sendInstagram ? me.user.profile.sendInstagram : ""
+    me.user.profile.sendInstagram && me.user.profile.sendInstagram.length > 0
+      ? me.user.profile.sendInstagram
+      : ""
+  );
+  const [isChangedSendInstagram, setIsChangedSendInstagram] = useState<boolean>(
+    false
   );
   const [sendPhone, setSendPhone] = useState<string>(
-    me.user.profile.sendPhone ? me.user.profile.sendPhone : ""
+    me.user.profile.sendPhone && me.user.profile.sendPhone.length > 0
+      ? me.user.profile.sendPhone
+      : ""
   );
+  const [isChangedSendPhone, setIsChangedSendPhone] = useState<boolean>(false);
   const [sendEmail, setSendEmail] = useState<string>(
-    me.user.profile.sendEmail ? me.user.profile.sendEmail : ""
+    me.user.profile.sendEmail && me.user.profile.sendEmail.length > 0
+      ? me.user.profile.sendEmail
+      : ""
   );
+  const [isChangedSendEmail, setIsChangedSendEmail] = useState<boolean>(false);
   const [sendKakao, setSendKakao] = useState<string>(
-    me.user.profile.sendKakao ? me.user.profile.sendKakao : ""
+    me.user.profile.sendKakao && me.user.profile.sendKakao.length > 0
+      ? me.user.profile.sendKakao
+      : ""
   );
+  const [isChangedSendKakao, setIsChangedSendKakao] = useState<boolean>(false);
   const [sendFacebook, setSendFacebook] = useState<string>(
-    me.user.profile.sendFacebook ? me.user.profile.sendFacebook : ""
+    me.user.profile.sendFacebook && me.user.profile.sendFacebook.length > 0
+      ? me.user.profile.sendFacebook
+      : ""
   );
-  const [sendSnapchat, setSendSnapchat] = useState<string>(
-    me.user.profile.sendSnapchat ? me.user.profile.sendSnapchat : ""
-  );
-  const [sendLine, setSendLine] = useState<string>(
-    me.user.profile.sendLine ? me.user.profile.sendLine : ""
-  );
-  const [sendWechat, setSendWechat] = useState<string>(
-    me.user.profile.sendWechat ? me.user.profile.sendWechat : ""
-  );
-  const [sendKik, setSendKik] = useState<string>(
-    me.user.profile.sendKik ? me.user.profile.sendKik : ""
-  );
-  const [sendVk, setSendVk] = useState<string>(
-    me.user.profile.sendVk ? me.user.profile.sendVk : ""
-  );
-  const [sendWhatsapp, setSendWhatsapp] = useState<string>(
-    me.user.profile.sendWhatsapp ? me.user.profile.sendWhatsapp : ""
+  const [isChangedSendFacebook, setIsChangedSendFacebook] = useState<boolean>(
+    false
   );
   const [sendYoutube, setSendYoutube] = useState<string>(
-    me.user.profile.sendYoutube ? me.user.profile.sendYoutube : ""
+    me.user.profile.sendYoutube && me.user.profile.sendYoutube.length > 0
+      ? me.user.profile.sendYoutube
+      : ""
+  );
+  const [isChangedSendYoutube, setIsChangedSendYoutube] = useState<boolean>(
+    false
   );
   const [sendTwitter, setSendTwitter] = useState<string>(
-    me.user.profile.sendTwitter ? me.user.profile.sendTwitter : ""
+    me.user.profile.sendTwitter && me.user.profile.sendTwitter.length > 0
+      ? me.user.profile.sendTwitter
+      : ""
+  );
+  const [isChangedSendTwitter, setIsChangedSendTwitter] = useState<boolean>(
+    false
   );
   const [sendTelegram, setSendTelegram] = useState<string>(
-    me.user.profile.sendTelegram ? me.user.profile.sendTelegram : ""
+    me.user.profile.sendTelegram && me.user.profile.sendTelegram.length > 0
+      ? me.user.profile.sendTelegram
+      : ""
+  );
+  const [isChangedSendTelegram, setIsChangedSendTelegram] = useState<boolean>(
+    false
+  );
+  const [sendSnapchat, setSendSnapchat] = useState<string>(
+    me.user.profile.sendSnapchat && me.user.profile.sendSnapchat.length > 0
+      ? me.user.profile.sendSnapchat
+      : ""
+  );
+  const [isChangedSendSnapchat, setIsChangedSendSnapchat] = useState<boolean>(
+    false
+  );
+  const [sendLine, setSendLine] = useState<string>(
+    me.user.profile.sendLine && me.user.profile.sendLine.length > 0
+      ? me.user.profile.sendLine
+      : ""
+  );
+  const [isChangedSendLine, setIsChangedSendLine] = useState<boolean>(false);
+  const [sendWechat, setSendWechat] = useState<string>(
+    me.user.profile.sendWechat && me.user.profile.sendWechat.length > 0
+      ? me.user.profile.sendWechat
+      : ""
+  );
+  const [isChangedSendWechat, setIsChangedSendWechat] = useState<boolean>(
+    false
+  );
+  const [sendKik, setSendKik] = useState<string>(
+    me.user.profile.sendKik && me.user.profile.sendKik.length > 0
+      ? me.user.profile.sendKik
+      : ""
+  );
+  const [isChangedSendKik, setIsChangedSendKik] = useState<boolean>(false);
+  const [sendVk, setSendVk] = useState<string>(
+    me.user.profile.sendVk && me.user.profile.sendVk.length > 0
+      ? me.user.profile.sendVk
+      : ""
+  );
+  const [isChangedSendVk, setIsChangedSendVk] = useState<boolean>(false);
+  const [sendWhatsapp, setSendWhatsapp] = useState<string>(
+    me.user.profile.sendWhatsapp && me.user.profile.sendWhatsapp.length > 0
+      ? me.user.profile.sendWhatsapp
+      : ""
+  );
+  const [isChangedSendWhatsapp, setIsChangedSendWhatsapp] = useState<boolean>(
+    false
   );
   const [sendBehance, setSendBehance] = useState<string>(
-    me.user.profile.sendBehance ? me.user.profile.sendBehance : ""
+    me.user.profile.sendBehance && me.user.profile.sendBehance.length > 0
+      ? me.user.profile.sendBehance
+      : ""
+  );
+  const [isChangedSendBehance, setIsChangedSendBehance] = useState<boolean>(
+    false
   );
   const [sendLinkedin, setSendLinkedin] = useState<string>(
-    me.user.profile.sendLinkedin ? me.user.profile.sendLinkedin : ""
+    me.user.profile.sendLinkedin && me.user.profile.sendLinkedin.length > 0
+      ? me.user.profile.sendLinkedin
+      : ""
+  );
+  const [isChangedSendLinkedin, setIsChangedSendLinkedin] = useState<boolean>(
+    false
   );
   const [sendPinterest, setSendPinterest] = useState<string>(
-    me.user.profile.sendPinterest ? me.user.profile.sendPinterest : ""
+    me.user.profile.sendPinterest && me.user.profile.sendPinterest.length > 0
+      ? me.user.profile.sendPinterest
+      : ""
+  );
+  const [isChangedSendPinterest, setIsChangedSendPinterest] = useState<boolean>(
+    false
   );
   const [sendVine, setSendVine] = useState<string>(
-    me.user.profile.sendVine ? me.user.profile.sendVine : ""
+    me.user.profile.sendVine && me.user.profile.sendVine.length > 0
+      ? me.user.profile.sendVine
+      : ""
   );
+  const [isChangedSendVine, setIsChangedSendVine] = useState<boolean>(false);
   const [sendTumblr, setSendTumblr] = useState<string>(
-    me.user.profile.sendTumblr ? me.user.profile.sendTumblr : ""
+    me.user.profile.sendTumblr && me.user.profile.sendTumblr.length > 0
+      ? me.user.profile.sendTumblr
+      : ""
+  );
+  const [isChangedSendTumblr, setIsChangedSendTumblr] = useState<boolean>(
+    false
   );
 
+  const [updateSnsFn, { loading: updateSnsLoading }] = useMutation<
+    UpdateSns,
+    UpdateSnsVariables
+  >(UPDATE_SNS, {
+    update(cache, { data: { updateSns } }) {
+      try {
+        const data = cache.readQuery<Me>({
+          query: ME
+        });
+        if (data) {
+          data.me.user.profile.sendInstagram =
+            updateSns.user.profile.sendInstagram;
+          data.me.user.profile.sendPhone = updateSns.user.profile.sendPhone;
+          data.me.user.profile.sendEmail = updateSns.user.profile.sendEmail;
+          data.me.user.profile.sendKakao = updateSns.user.profile.sendKakao;
+          data.me.user.profile.sendFacebook =
+            updateSns.user.profile.sendFacebook;
+          data.me.user.profile.sendSnapchat =
+            updateSns.user.profile.sendSnapchat;
+          data.me.user.profile.sendLine = updateSns.user.profile.sendLine;
+          data.me.user.profile.sendWechat = updateSns.user.profile.sendWechat;
+          data.me.user.profile.sendKik = updateSns.user.profile.sendKik;
+          data.me.user.profile.sendVk = updateSns.user.profile.sendVk;
+          data.me.user.profile.sendWhatsapp =
+            updateSns.user.profile.sendWhatsapp;
+          data.me.user.profile.sendYoutube = updateSns.user.profile.sendYoutube;
+          data.me.user.profile.sendTwitter = updateSns.user.profile.sendTwitter;
+          data.me.user.profile.sendTelegram =
+            updateSns.user.profile.sendTelegram;
+          data.me.user.profile.sendBehance = updateSns.user.profile.sendBehance;
+          data.me.user.profile.sendLinkedin =
+            updateSns.user.profile.sendLinkedin;
+          data.me.user.profile.sendPinterest =
+            updateSns.user.profile.sendPinterest;
+          data.me.user.profile.sendVine = updateSns.user.profile.sendVine;
+          data.me.user.profile.sendTumblr = updateSns.user.profile.sendTumblr;
+          cache.writeQuery({
+            query: ME,
+            data
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  });
   const onInputTextChange = (text, state) => {
+    console.log("text", text, state);
     const replaceChar = /[~!@\#$%^&*\()\-=+_'\;<>0-9\/.\`:\"\\,\[\]?|{}]/gi;
     const item = text
       .replace(/^\s\s*/, "")
       .replace(/\s\s*$/, "")
       .replace(replaceChar, "")
       .replace(/[^a-z|^A-Z|^0-9]/, "");
-    if (state === "sendInstagram") {
+    if (state === "INSTAGRAM") {
+      setIsChangedSendInstagram(me.user.profile.sendInstagram !== sendInstagram);
       setSendInstagram(item);
-    } else if (state === "sendPhone") {
+    } else if (state === "PHONE") {
+      setIsChangedSendPhone(me.user.profile.sendPhone !== sendPhone);
       setSendPhone(item);
-    } else if (state === "sendEmail") {
+    } else if (state === "EMAIL") {
+      setIsChangedSendEmail(me.user.profile.sendEmail !== sendEmail);
       setSendEmail(item);
-    } else if (state === "sendKakao") {
+    } else if (state === "KAKAOTALK") {
+      setIsChangedSendKakao(me.user.profile.sendKakao !== sendKakao);
       setSendKakao(item);
-    } else if (state === "sendFacebook") {
+    } else if (state === "FACEBOOK") {
+      setIsChangedSendFacebook(me.user.profile.sendFacebook !== sendFacebook);
       setSendFacebook(item);
-    } else if (state === "sendSnapchat") {
-      setSendSnapchat(item);
-    } else if (state === "sendLine") {
-      setSendLine(item);
-    } else if (state === "sendWechat") {
-      setSendWechat(item);
-    } else if (state === "sendKik") {
-      setSendKik(item);
-    } else if (state === "sendVk") {
-      setSendVk(item);
-    } else if (state === "sendWhatsapp") {
-      setSendWhatsapp(item);
-    } else if (state === "sendYoutube") {
+    } else if (state === "YOUTUBE") {
+      setIsChangedSendYoutube(me.user.profile.sendYoutube !== sendYoutube);
       setSendYoutube(item);
-    } else if (state === "sendTwitter") {
+    } else if (state === "TWITTER") {
+      setIsChangedSendTwitter(me.user.profile.sendTwitter !== sendTwitter);
       setSendTwitter(item);
-    } else if (state === "sendTelegram") {
+    } else if (state === "TELEGRAM") {
+      setIsChangedSendTelegram(me.user.profile.sendTelegram !== sendTelegram);
       setSendTelegram(item);
-    } else if (state === "sendBehance") {
+    } else if (state === "SNAPCHAT") {
+      setIsChangedSendSnapchat(me.user.profile.sendSnapchat !== sendSnapchat);
+      setSendSnapchat(item);
+    } else if (state === "LINE") {
+      setIsChangedSendLine(me.user.profile.sendLine !== sendLine);
+      setSendLine(item);
+    } else if (state === "WECHAT") {
+      setIsChangedSendWechat(me.user.profile.sendWechat !== sendWechat);
+      setSendWechat(item);
+    } else if (state === "KIK") {
+      setIsChangedSendKik(me.user.profile.sendKik !== sendKik);
+      setSendKik(item);
+    } else if (state === "VK") {
+      setIsChangedSendVk(me.user.profile.sendVk !== sendVk);
+      setSendVk(item);
+    } else if (state === "WHATSAPP") {
+      setIsChangedSendWhatsapp(me.user.profile.sendWhatsapp !== sendWhatsapp);
+      setSendWhatsapp(item);
+    } else if (state === "BEHANCE") {
+      setIsChangedSendBehance(me.user.profile.sendBehance !== sendBehance);
       setSendBehance(item);
-    } else if (state === "sendLinkedin") {
+    } else if (state === "LINKEDIN") {
+      setIsChangedSendLinkedin(me.user.profile.sendLinkedin !== sendLinkedin);
       setSendLinkedin(item);
-    } else if (state === "sendPinterest") {
+    } else if (state === "PINTEREST") {
+      setIsChangedSendPinterest(me.user.profile.sendPinterest !== sendPinterest);
       setSendPinterest(item);
-    } else if (state === "sendVine") {
+    } else if (state === "VINE") {
+      setIsChangedSendVine(me.user.profile.sendVine !== sendVine);
       setSendVine(item);
-    } else if (state === "sendTumblr") {
+    } else if (state === "TUMBLR") {
+      setIsChangedSendTumblr(me.user.profile.sendTumblr !== sendTumblr);
       setSendTumblr(item);
     } else {
       return null;
+    }
+  };
+  const snsList = [
+    {
+      value: sendInstagram,
+      payload: "INSTAGRAM",
+      image: require("../../../../../assets/instagram.png"),
+      meData: me.user.profile.sendInstagram,
+      isChanged: isChangedSendInstagram,
+      setIsChanged: () => setIsChangedSendInstagram(false)
+    },
+    {
+      value: sendPhone,
+      payload: "PHONE",
+      image: require("../../../../../assets/phone.png"),
+      meData: me.user.profile.sendPhone,
+      isChanged: isChangedSendPhone,
+      setIsChanged: () => setIsChangedSendPhone(false)
+    },
+    {
+      value: sendEmail,
+      payload: "EMAIL",
+      image: require("../../../../../assets/email.png"),
+      meData: me.user.profile.sendEmail,
+      isChanged: isChangedSendEmail,
+      setIsChanged: () => setIsChangedSendEmail(false)
+    },
+    {
+      value: sendKakao,
+      payload: "KAKAOTALK",
+      image: require("../../../../../assets/kakao.png"),
+      meData: me.user.profile.sendKakao,
+      isChanged: isChangedSendKakao,
+      setIsChanged: () => setIsChangedSendKakao(false)
+    },
+    {
+      value: sendFacebook,
+      payload: "FACEBOOK",
+      image: require("../../../../../assets/facebook.png"),
+      meData: me.user.profile.sendFacebook,
+      isChanged: isChangedSendFacebook,
+      setIsChanged: () => setIsChangedSendFacebook(false)
+    },
+    {
+      value: sendYoutube,
+      payload: "YOUTUBE",
+      image: require("../../../../../assets/youtube.png"),
+      meData: me.user.profile.sendYoutube,
+      isChanged: isChangedSendYoutube,
+      setIsChanged: () => setIsChangedSendYoutube(false)
+    },
+    {
+      value: sendTwitter,
+      payload: "TWITTER",
+      image: require("../../../../../assets/twitter.png"),
+      meData: me.user.profile.sendTwitter,
+      isChanged: isChangedSendTwitter,
+      setIsChanged: () => setIsChangedSendTwitter(false)
+    },
+    {
+      value: sendTelegram,
+      payload: "TELEGRAM",
+      image: require("../../../../../assets/telegram.png"),
+      meData: me.user.profile.sendTelegram,
+      isChanged: isChangedSendTelegram,
+      setIsChanged: () => setIsChangedSendTelegram(false)
+    },
+    {
+      value: sendSnapchat,
+      payload: "SNAPCHAT",
+      image: require("../../../../../assets/snapchat.png"),
+      meData: me.user.profile.sendSnapchat,
+      isChanged: isChangedSendSnapchat,
+      setIsChanged: () => setIsChangedSendSnapchat(false)
+    },
+    {
+      value: sendLine,
+      payload: "LINE",
+      image: require("../../../../../assets/line.png"),
+      meData: me.user.profile.sendLine,
+      isChanged: isChangedSendLine,
+      setIsChanged: () => setIsChangedSendLine(false)
+    },
+    {
+      value: sendWechat,
+      payload: "WECHAT",
+      image: require("../../../../../assets/wechat.png"),
+      meData: me.user.profile.sendWechat,
+      isChanged: isChangedSendWechat,
+      setIsChanged: () => setIsChangedSendWechat(false)
+    },
+    {
+      value: sendKik,
+      payload: "KIK",
+      image: require("../../../../../assets/kik.png"),
+      meData: me.user.profile.sendKik,
+      isChanged: isChangedSendKik,
+      setIsChanged: () => setIsChangedSendKik(false)
+    },
+    {
+      value: sendVk,
+      payload: "VK",
+      image: require("../../../../../assets/vk.png"),
+      meData: me.user.profile.sendVk,
+      isChanged: isChangedSendVk,
+      setIsChanged: () => setIsChangedSendVk(false)
+    },
+    {
+      value: sendWhatsapp,
+      payload: "WHATSAPP",
+      image: require("../../../../../assets/whatsapp.png"),
+      meData: me.user.profile.sendWhatsapp,
+      isChanged: isChangedSendWhatsapp,
+      setIsChanged: () => setIsChangedSendWhatsapp(false)
+    },
+    {
+      value: sendBehance,
+      payload: "BEHANCE",
+      image: require("../../../../../assets/behance.png"),
+      meData: me.user.profile.sendBehance,
+      isChanged: isChangedSendBehance,
+      setIsChanged: () => setIsChangedSendBehance(false)
+    },
+    {
+      value: sendLinkedin,
+      payload: "LINKEDIN",
+      image: require("../../../../../assets/linkedin.png"),
+      meData: me.user.profile.sendLinkedin,
+      isChanged: isChangedSendLinkedin,
+      setIsChanged: () => setIsChangedSendLinkedin(false)
+    },
+    {
+      value: sendPinterest,
+      payload: "PINTEREST",
+      image: require("../../../../../assets/pinterest.png"),
+      meData: me.user.profile.sendPinterest,
+      isChanged: isChangedSendPinterest,
+      setIsChanged: () => setIsChangedSendPinterest(false)
+    },
+    {
+      value: sendVine,
+      payload: "VINE",
+      image: require("../../../../../assets/vine.png"),
+      meData: me.user.profile.sendVine,
+      isChanged: isChangedSendVine,
+      setIsChanged: () => setIsChangedSendVine(false)
+    },
+    {
+      value: sendTumblr,
+      payload: "TUMBLR",
+      image: require("../../../../../assets/tumblr.png"),
+      meData: me.user.profile.sendTumblr,
+      isChanged: isChangedSendTumblr,
+      setIsChanged: () => setIsChangedSendTumblr(false)
+    }
+  ];
+
+  const onPressSendSns = (
+    payload: string,
+    value: string,
+    setIsChanged: () => void
+  ) => {
+    try {
+      setIsChanged();
+      updateSnsFn({
+        variables: {
+          payload: payload,
+          username: value
+        }
+      });
+    } catch (e) {
+      console.log(e);
     }
   };
   const onMapReady = () => {
@@ -345,17 +671,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   };
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(handleGeoSuccess, handleGeoError);
-    setSendInstagram("");
-    setSendPhone("");
-    setSendEmail("");
-    setSendKakao("");
-    setSendFacebook("");
-    setSendSnapchat("");
-    setSendLine("");
-    setSendWechat("");
-    setSendKik("");
-    setSendVk("");
-    setSendWhatsapp("");
+    setSnsAddMode(false);
   }, []);
   if (loading) {
     return (
@@ -395,28 +711,39 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
         >
           {!snsAddMode ? (
             <>
-              <Text>sendInstagram</Text>
-              {me.user.profile.sendInstagram && (
-                <Text>sendInstagram{sendInstagram}</Text>
-              )}
-              {me.user.profile.sendPhone && <Text>sendPhone{sendPhone}</Text>}
-              {me.user.profile.sendEmail && <Text>sendEmail{sendEmail}</Text>}
-              {me.user.profile.sendKakao && <Text>sendKakao{sendKakao}</Text>}
-              {me.user.profile.sendFacebook && (
-                <Text>sendFacebook{sendFacebook}</Text>
-              )}
-              {me.user.profile.sendSnapchat && (
-                <Text>sendSnapchat{sendSnapchat}</Text>
-              )}
-              {me.user.profile.sendLine && <Text>sendLine{sendLine}</Text>}
-              {me.user.profile.sendWechat && (
-                <Text>sendWechat{sendWechat}</Text>
-              )}
-              {me.user.profile.sendKik && <Text>sendKik{sendKik}</Text>}
-              {me.user.profile.sendVk && <Text>sendVk{sendVk}</Text>}
-              {me.user.profile.sendWhatsapp && (
-                <Text>sendWhatsapp{sendWhatsapp}</Text>
-              )}
+              <KeyboardAvoidingView
+                enabled
+                behavior={Platform.OS === "ios" ? "padding" : false}
+                style={{ height: constants.height - 65 }}
+              >
+                <ScrollView
+                  keyboardShouldPersistTaps={"always"}
+                  keyboardDismissMode={
+                    Platform.OS === "ios" ? "interactive" : "on-drag"
+                  }
+                >
+                  <AddListContainer>
+                    {snsList.map((snsItem, index) => {
+                      <Item key={index}>
+                        <Image resizeMode={"contain"} source={snsItem.image} />
+                        <SNSTextContainer>
+                          <SNSText>{snsItem.meData}</SNSText>
+                        </SNSTextContainer>
+                        <ItemTouchable
+                          disabled={updateSnsLoading}
+                          onPress={() => {
+                            console.log("sendsend"), closeSnsModal();
+                          }}
+                        >
+                          <EditItemView>
+                            <EditItemText>SEND</EditItemText>
+                          </EditItemView>
+                        </ItemTouchable>
+                      </Item>;
+                    })}
+                  </AddListContainer>
+                </ScrollView>
+              </KeyboardAvoidingView>
               <Footer>
                 <AddBtn onPress={() => setSnsAddMode(true)}>
                   <AddContainer>
@@ -430,7 +757,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
               <KeyboardAvoidingView
                 enabled
                 behavior={Platform.OS === "ios" ? "padding" : false}
-                style={{ flex: 1 }}
+                style={{ height: constants.height - 65 }}
               >
                 <ScrollView
                   keyboardShouldPersistTaps={"always"}
@@ -439,899 +766,77 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                   }
                 >
                   <AddListContainer>
-                    {!me.user.profile.sendInstagram && (
-                      <Item>
-                        <Image
-                          resizeMode={"contain"}
-                          source={require("../../../../../assets/instagram.png")}
-                        />
+                    {snsList.map((snsItem, index) => (
+                      <Item key={index}>
+                        <Image resizeMode={"contain"} source={snsItem.image} />
                         <TextInput
                           style={{
                             width: constants.width - 140,
                             backgroundColor: "transparent",
-                            borderBottomWidth: 1,
+                            borderBottomWidth: 0.5,
                             borderBottomColor: "#999",
                             color: "#999",
                             fontSize: 22,
                             padding: 5,
                             textAlign: "center"
                           }}
-                          placeholder="INSTAGRAM"
+                          placeholder={snsItem.payload}
                           placeholderTextColor={
                             isDarkMode
                               ? "rgba(55, 55, 55, 1)"
                               : "rgba(207, 207, 207, 0.6)"
                           }
-                          value={sendInstagram}
+                          value={snsItem.value}
                           returnKeyType="done"
                           onChangeText={text =>
-                            onInputTextChange(text, "sendInstagram")
+                            onInputTextChange(text, snsItem.payload)
                           }
                           autoCorrect={false}
                         />
-                        {sendInstagram.length !== 0 ? (
-                          <AddItemTouchable
-                            onPress={() => console.log("nasnannai")}
+                        {snsItem.meData && snsItem.meData.length > 0 ? (
+                          snsItem.isChanged ? (
+                            <ItemTouchable
+                              disabled={updateSnsLoading}
+                              onPress={() =>
+                                onPressSendSns(
+                                  snsItem.payload,
+                                  snsItem.value,
+                                  snsItem.setIsChanged
+                                )
+                              }
+                            >
+                              <EditItemView>
+                                <EditItemText>EDIT</EditItemText>
+                              </EditItemView>
+                            </ItemTouchable>
+                          ) : (
+                            <AddItemView>
+                              <AddItemText>EDIT</AddItemText>
+                            </AddItemView>
+                          )
+                        ) : snsItem.isChanged ? (
+                          <ItemTouchable
+                            disabled={updateSnsLoading}
+                            onPress={() =>
+                              updateSnsFn({
+                                variables: {
+                                  payload: snsItem.payload,
+                                  username: snsItem.value
+                                }
+                              })
+                            }
                           >
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddItemTouchable>
+                            <EditItemView>
+                              <EditItemText>ADD</EditItemText>
+                            </EditItemView>
+                          </ItemTouchable>
                         ) : (
-                          <AddHoldItemView>
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddHoldItemView>
+                          <AddItemView>
+                            <AddItemText>ADD</AddItemText>
+                          </AddItemView>
                         )}
                       </Item>
-                    )}
-                    {!me.user.profile.sendPhone && (
-                      <Item>
-                        <Image
-                          resizeMode={"contain"}
-                          source={require("../../../../../assets/phone.png")}
-                        />
-                        <TextInput
-                          style={{
-                            width: constants.width - 140,
-                            backgroundColor: "transparent",
-                            borderBottomWidth: 1,
-                            borderBottomColor: "#999",
-                            color: "#999",
-                            fontSize: 22,
-                            padding: 5,
-                            textAlign: "center"
-                          }}
-                          placeholder="PHONE"
-                          placeholderTextColor={
-                            isDarkMode
-                              ? "rgba(55, 55, 55, 1)"
-                              : "rgba(207, 207, 207, 0.6)"
-                          }
-                          value={sendPhone}
-                          returnKeyType="done"
-                          onChangeText={text =>
-                            onInputTextChange(text, "sendPhone")
-                          }
-                          autoCorrect={false}
-                        />
-                        {sendPhone.length !== 0 ? (
-                          <AddItemTouchable
-                            onPress={() => console.log("nasnannai")}
-                          >
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddItemTouchable>
-                        ) : (
-                          <AddHoldItemView>
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddHoldItemView>
-                        )}
-                      </Item>
-                    )}
-                    {!me.user.profile.sendEmail && (
-                      <Item>
-                        <Image
-                          resizeMode={"contain"}
-                          source={require("../../../../../assets/email.png")}
-                        />
-                        <TextInput
-                          style={{
-                            width: constants.width - 140,
-                            backgroundColor: "transparent",
-                            borderBottomWidth: 1,
-                            borderBottomColor: "#999",
-                            color: "#999",
-                            fontSize: 22,
-                            padding: 5,
-                            textAlign: "center"
-                          }}
-                          placeholder="EMAIL"
-                          placeholderTextColor={
-                            isDarkMode
-                              ? "rgba(55, 55, 55, 1)"
-                              : "rgba(207, 207, 207, 0.6)"
-                          }
-                          value={sendEmail}
-                          returnKeyType="done"
-                          onChangeText={text =>
-                            onInputTextChange(text, "sendEmail")
-                          }
-                          autoCorrect={false}
-                        />
-                        {sendEmail.length !== 0 ? (
-                          <AddItemTouchable
-                            onPress={() => console.log("nasnannai")}
-                          >
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddItemTouchable>
-                        ) : (
-                          <AddHoldItemView>
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddHoldItemView>
-                        )}
-                      </Item>
-                    )}
-                    {!me.user.profile.sendKakao && (
-                      <Item>
-                        <Image
-                          resizeMode={"contain"}
-                          source={require("../../../../../assets/kakao.png")}
-                        />
-                        <TextInput
-                          style={{
-                            width: constants.width - 140,
-                            backgroundColor: "transparent",
-                            borderBottomWidth: 1,
-                            borderBottomColor: "#999",
-                            color: "#999",
-                            fontSize: 22,
-                            padding: 5,
-                            textAlign: "center"
-                          }}
-                          placeholder="KAKAOTALK"
-                          placeholderTextColor={
-                            isDarkMode
-                              ? "rgba(55, 55, 55, 1)"
-                              : "rgba(207, 207, 207, 0.6)"
-                          }
-                          value={sendKakao}
-                          returnKeyType="done"
-                          onChangeText={text =>
-                            onInputTextChange(text, "sendKakao")
-                          }
-                          autoCorrect={false}
-                        />
-                        {sendKakao.length !== 0 ? (
-                          <AddItemTouchable
-                            onPress={() => console.log("nasnannai")}
-                          >
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddItemTouchable>
-                        ) : (
-                          <AddHoldItemView>
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddHoldItemView>
-                        )}
-                      </Item>
-                    )}
-                    {!me.user.profile.sendFacebook && (
-                      <Item>
-                        <Image
-                          resizeMode={"contain"}
-                          source={require("../../../../../assets/facebook.png")}
-                        />
-                        <TextInput
-                          style={{
-                            width: constants.width - 140,
-                            backgroundColor: "transparent",
-                            borderBottomWidth: 1,
-                            borderBottomColor: "#999",
-                            color: "#999",
-                            fontSize: 22,
-                            padding: 5,
-                            textAlign: "center"
-                          }}
-                          placeholder="FACEBOOK"
-                          placeholderTextColor={
-                            isDarkMode
-                              ? "rgba(55, 55, 55, 1)"
-                              : "rgba(207, 207, 207, 0.6)"
-                          }
-                          value={sendFacebook}
-                          returnKeyType="done"
-                          onChangeText={text =>
-                            onInputTextChange(text, "sendFacebook")
-                          }
-                          autoCorrect={false}
-                        />
-                        {sendFacebook.length !== 0 ? (
-                          <AddItemTouchable
-                            onPress={() => console.log("nasnannai")}
-                          >
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddItemTouchable>
-                        ) : (
-                          <AddHoldItemView>
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddHoldItemView>
-                        )}
-                      </Item>
-                    )}
-                    {!me.user.profile.sendYoutube && (
-                      <Item>
-                        <Image
-                          resizeMode={"contain"}
-                          source={require("../../../../../assets/youtube.png")}
-                        />
-                        <TextInput
-                          style={{
-                            width: constants.width - 140,
-                            backgroundColor: "transparent",
-                            borderBottomWidth: 1,
-                            borderBottomColor: "#999",
-                            color: "#999",
-                            fontSize: 22,
-                            padding: 5,
-                            textAlign: "center"
-                          }}
-                          placeholder="YOUTUBE"
-                          placeholderTextColor={
-                            isDarkMode
-                              ? "rgba(55, 55, 55, 1)"
-                              : "rgba(207, 207, 207, 0.6)"
-                          }
-                          value={sendYoutube}
-                          returnKeyType="done"
-                          onChangeText={text =>
-                            onInputTextChange(text, "sendYoutube")
-                          }
-                          autoCorrect={false}
-                        />
-                        {sendYoutube.length !== 0 ? (
-                          <AddItemTouchable
-                            onPress={() => console.log("nasnannai")}
-                          >
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddItemTouchable>
-                        ) : (
-                          <AddHoldItemView>
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddHoldItemView>
-                        )}
-                      </Item>
-                    )}
-                    {!me.user.profile.sendTwitter && (
-                      <Item>
-                        <Image
-                          resizeMode={"contain"}
-                          source={require("../../../../../assets/twitter.png")}
-                        />
-                        <TextInput
-                          style={{
-                            width: constants.width - 140,
-                            backgroundColor: "transparent",
-                            borderBottomWidth: 1,
-                            borderBottomColor: "#999",
-                            color: "#999",
-                            fontSize: 22,
-                            padding: 5,
-                            textAlign: "center"
-                          }}
-                          placeholder="TWITTER"
-                          placeholderTextColor={
-                            isDarkMode
-                              ? "rgba(55, 55, 55, 1)"
-                              : "rgba(207, 207, 207, 0.6)"
-                          }
-                          value={sendTwitter}
-                          returnKeyType="done"
-                          onChangeText={text =>
-                            onInputTextChange(text, "sendTwitter")
-                          }
-                          autoCorrect={false}
-                        />
-                        {sendTwitter.length !== 0 ? (
-                          <AddItemTouchable
-                            onPress={() => console.log("nasnannai")}
-                          >
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddItemTouchable>
-                        ) : (
-                          <AddHoldItemView>
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddHoldItemView>
-                        )}
-                      </Item>
-                    )}
-                    {!me.user.profile.sendTelegram && (
-                      <Item>
-                        <Image
-                          resizeMode={"contain"}
-                          source={require("../../../../../assets/telegram.png")}
-                        />
-                        <TextInput
-                          style={{
-                            width: constants.width - 140,
-                            backgroundColor: "transparent",
-                            borderBottomWidth: 1,
-                            borderBottomColor: "#999",
-                            color: "#999",
-                            fontSize: 22,
-                            padding: 5,
-                            textAlign: "center"
-                          }}
-                          placeholder="TELEGRAM"
-                          placeholderTextColor={
-                            isDarkMode
-                              ? "rgba(55, 55, 55, 1)"
-                              : "rgba(207, 207, 207, 0.6)"
-                          }
-                          value={sendTelegram}
-                          returnKeyType="done"
-                          onChangeText={text =>
-                            onInputTextChange(text, "sendTelegram")
-                          }
-                          autoCorrect={false}
-                        />
-                        {sendTelegram.length !== 0 ? (
-                          <AddItemTouchable
-                            onPress={() => console.log("nasnannai")}
-                          >
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddItemTouchable>
-                        ) : (
-                          <AddHoldItemView>
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddHoldItemView>
-                        )}
-                      </Item>
-                    )}
-                    {!me.user.profile.sendSnapchat && (
-                      <Item>
-                        <Image
-                          resizeMode={"contain"}
-                          source={require("../../../../../assets/snapchat.png")}
-                        />
-                        <TextInput
-                          style={{
-                            width: constants.width - 140,
-                            backgroundColor: "transparent",
-                            borderBottomWidth: 1,
-                            borderBottomColor: "#999",
-                            color: "#999",
-                            fontSize: 22,
-                            padding: 5,
-                            textAlign: "center"
-                          }}
-                          placeholder="SNAPCHAT"
-                          placeholderTextColor={
-                            isDarkMode
-                              ? "rgba(55, 55, 55, 1)"
-                              : "rgba(207, 207, 207, 0.6)"
-                          }
-                          value={sendSnapchat}
-                          returnKeyType="done"
-                          onChangeText={text =>
-                            onInputTextChange(text, "sendSnapchat")
-                          }
-                          autoCorrect={false}
-                        />
-                        {sendSnapchat.length !== 0 ? (
-                          <AddItemTouchable
-                            onPress={() => console.log("nasnannai")}
-                          >
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddItemTouchable>
-                        ) : (
-                          <AddHoldItemView>
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddHoldItemView>
-                        )}
-                      </Item>
-                    )}
-                    {!me.user.profile.sendLine && (
-                      <Item>
-                        <Image
-                          resizeMode={"contain"}
-                          source={require("../../../../../assets/line.png")}
-                        />
-                        <TextInput
-                          style={{
-                            width: constants.width - 140,
-                            backgroundColor: "transparent",
-                            borderBottomWidth: 1,
-                            borderBottomColor: "#999",
-                            color: "#999",
-                            fontSize: 22,
-                            padding: 5,
-                            textAlign: "center"
-                          }}
-                          placeholder="LINE"
-                          placeholderTextColor={
-                            isDarkMode
-                              ? "rgba(55, 55, 55, 1)"
-                              : "rgba(207, 207, 207, 0.6)"
-                          }
-                          value={sendLine}
-                          returnKeyType="done"
-                          onChangeText={text =>
-                            onInputTextChange(text, "sendLine")
-                          }
-                          autoCorrect={false}
-                        />
-                        {sendLine.length !== 0 ? (
-                          <AddItemTouchable
-                            onPress={() => console.log("nasnannai")}
-                          >
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddItemTouchable>
-                        ) : (
-                          <AddHoldItemView>
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddHoldItemView>
-                        )}
-                      </Item>
-                    )}
-                    {!me.user.profile.sendWechat && (
-                      <Item>
-                        <Image
-                          resizeMode={"contain"}
-                          source={require("../../../../../assets/wechat.png")}
-                        />
-                        <TextInput
-                          style={{
-                            width: constants.width - 140,
-                            backgroundColor: "transparent",
-                            borderBottomWidth: 1,
-                            borderBottomColor: "#999",
-                            color: "#999",
-                            fontSize: 22,
-                            padding: 5,
-                            textAlign: "center"
-                          }}
-                          placeholder="WECHAT"
-                          placeholderTextColor={
-                            isDarkMode
-                              ? "rgba(55, 55, 55, 1)"
-                              : "rgba(207, 207, 207, 0.6)"
-                          }
-                          value={sendWechat}
-                          returnKeyType="done"
-                          onChangeText={text =>
-                            onInputTextChange(text, "sendWechat")
-                          }
-                          autoCorrect={false}
-                        />
-                        {sendWechat.length !== 0 ? (
-                          <AddItemTouchable
-                            onPress={() => console.log("nasnannai")}
-                          >
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddItemTouchable>
-                        ) : (
-                          <AddHoldItemView>
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddHoldItemView>
-                        )}
-                      </Item>
-                    )}
-                    {!me.user.profile.sendKik && (
-                      <Item>
-                        <Image
-                          resizeMode={"contain"}
-                          source={require("../../../../../assets/kik.png")}
-                        />
-                        <TextInput
-                          style={{
-                            width: constants.width - 140,
-                            backgroundColor: "transparent",
-                            borderBottomWidth: 1,
-                            borderBottomColor: "#999",
-                            color: "#999",
-                            fontSize: 22,
-                            padding: 5,
-                            textAlign: "center"
-                          }}
-                          placeholder="KIK"
-                          placeholderTextColor={
-                            isDarkMode
-                              ? "rgba(55, 55, 55, 1)"
-                              : "rgba(207, 207, 207, 0.6)"
-                          }
-                          value={sendKik}
-                          returnKeyType="done"
-                          onChangeText={text =>
-                            onInputTextChange(text, "sendKik")
-                          }
-                          autoCorrect={false}
-                        />
-                        {sendKik.length !== 0 ? (
-                          <AddItemTouchable
-                            onPress={() => console.log("nasnannai")}
-                          >
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddItemTouchable>
-                        ) : (
-                          <AddHoldItemView>
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddHoldItemView>
-                        )}
-                      </Item>
-                    )}
-                    {!me.user.profile.sendVk && (
-                      <Item>
-                        <Image
-                          resizeMode={"contain"}
-                          source={require("../../../../../assets/vk.png")}
-                        />
-                        <TextInput
-                          style={{
-                            width: constants.width - 140,
-                            backgroundColor: "transparent",
-                            borderBottomWidth: 1,
-                            borderBottomColor: "#999",
-                            color: "#999",
-                            fontSize: 22,
-                            padding: 5,
-                            textAlign: "center"
-                          }}
-                          placeholder="VK"
-                          placeholderTextColor={
-                            isDarkMode
-                              ? "rgba(55, 55, 55, 1)"
-                              : "rgba(207, 207, 207, 0.6)"
-                          }
-                          value={sendVk}
-                          returnKeyType="done"
-                          onChangeText={text =>
-                            onInputTextChange(text, "sendVk")
-                          }
-                          autoCorrect={false}
-                        />
-                        {sendVk.length !== 0 ? (
-                          <AddItemTouchable
-                            onPress={() => console.log("nasnannai")}
-                          >
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddItemTouchable>
-                        ) : (
-                          <AddHoldItemView>
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddHoldItemView>
-                        )}
-                      </Item>
-                    )}
-                    {!me.user.profile.sendWhatsapp && (
-                      <Item>
-                        <Image
-                          resizeMode={"contain"}
-                          source={require("../../../../../assets/whatsapp.png")}
-                        />
-                        <TextInput
-                          style={{
-                            width: constants.width - 140,
-                            backgroundColor: "transparent",
-                            borderBottomWidth: 1,
-                            borderBottomColor: "#999",
-                            color: "#999",
-                            fontSize: 22,
-                            padding: 5,
-                            textAlign: "center"
-                          }}
-                          placeholder="WHATSAPP"
-                          placeholderTextColor={
-                            isDarkMode
-                              ? "rgba(55, 55, 55, 1)"
-                              : "rgba(207, 207, 207, 0.6)"
-                          }
-                          value={sendWhatsapp}
-                          returnKeyType="done"
-                          onChangeText={text =>
-                            onInputTextChange(text, "sendWhatsapp")
-                          }
-                          autoCorrect={false}
-                        />
-                        {sendWhatsapp.length !== 0 ? (
-                          <AddItemTouchable
-                            onPress={() => console.log("nasnannai")}
-                          >
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddItemTouchable>
-                        ) : (
-                          <AddHoldItemView>
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddHoldItemView>
-                        )}
-                      </Item>
-                    )}
-                    {!me.user.profile.sendBehance && (
-                      <Item>
-                        <Image
-                          resizeMode={"contain"}
-                          source={require("../../../../../assets/behance.png")}
-                        />
-                        <TextInput
-                          style={{
-                            width: constants.width - 140,
-                            backgroundColor: "transparent",
-                            borderBottomWidth: 1,
-                            borderBottomColor: "#999",
-                            color: "#999",
-                            fontSize: 22,
-                            padding: 5,
-                            textAlign: "center"
-                          }}
-                          placeholder="BEHANCE"
-                          placeholderTextColor={
-                            isDarkMode
-                              ? "rgba(55, 55, 55, 1)"
-                              : "rgba(207, 207, 207, 0.6)"
-                          }
-                          value={sendBehance}
-                          returnKeyType="done"
-                          onChangeText={text =>
-                            onInputTextChange(text, "sendBehance")
-                          }
-                          autoCorrect={false}
-                        />
-                        {sendBehance.length !== 0 ? (
-                          <AddItemTouchable
-                            onPress={() => console.log("nasnannai")}
-                          >
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddItemTouchable>
-                        ) : (
-                          <AddHoldItemView>
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddHoldItemView>
-                        )}
-                      </Item>
-                    )}
-                    {!me.user.profile.sendLinkedin && (
-                      <Item>
-                        <Image
-                          resizeMode={"contain"}
-                          source={require("../../../../../assets/linkedin.png")}
-                        />
-                        <TextInput
-                          style={{
-                            width: constants.width - 140,
-                            backgroundColor: "transparent",
-                            borderBottomWidth: 1,
-                            borderBottomColor: "#999",
-                            color: "#999",
-                            fontSize: 22,
-                            padding: 5,
-                            textAlign: "center"
-                          }}
-                          placeholder="LINKEDIN"
-                          placeholderTextColor={
-                            isDarkMode
-                              ? "rgba(55, 55, 55, 1)"
-                              : "rgba(207, 207, 207, 0.6)"
-                          }
-                          value={sendLinkedin}
-                          returnKeyType="done"
-                          onChangeText={text =>
-                            onInputTextChange(text, "sendLinkedin")
-                          }
-                          autoCorrect={false}
-                        />
-                        {sendLinkedin.length !== 0 ? (
-                          <AddItemTouchable
-                            onPress={() => console.log("nasnannai")}
-                          >
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddItemTouchable>
-                        ) : (
-                          <AddHoldItemView>
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddHoldItemView>
-                        )}
-                      </Item>
-                    )}
-                    {!me.user.profile.sendPinterest && (
-                      <Item>
-                        <Image
-                          resizeMode={"contain"}
-                          source={require("../../../../../assets/pinterest.png")}
-                        />
-                        <TextInput
-                          style={{
-                            width: constants.width - 140,
-                            backgroundColor: "transparent",
-                            borderBottomWidth: 1,
-                            borderBottomColor: "#999",
-                            color: "#999",
-                            fontSize: 22,
-                            padding: 5,
-                            textAlign: "center"
-                          }}
-                          placeholder="PINTEREST"
-                          placeholderTextColor={
-                            isDarkMode
-                              ? "rgba(55, 55, 55, 1)"
-                              : "rgba(207, 207, 207, 0.6)"
-                          }
-                          value={sendPinterest}
-                          returnKeyType="done"
-                          onChangeText={text =>
-                            onInputTextChange(text, "sendPinterest")
-                          }
-                          autoCorrect={false}
-                        />
-                        {sendPinterest.length !== 0 ? (
-                          <AddItemTouchable
-                            onPress={() => console.log("nasnannai")}
-                          >
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddItemTouchable>
-                        ) : (
-                          <AddHoldItemView>
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddHoldItemView>
-                        )}
-                      </Item>
-                    )}
-                    {!me.user.profile.sendVine && (
-                      <Item>
-                        <Image
-                          resizeMode={"contain"}
-                          source={require("../../../../../assets/vine.png")}
-                        />
-                        <TextInput
-                          style={{
-                            width: constants.width - 140,
-                            backgroundColor: "transparent",
-                            borderBottomWidth: 1,
-                            borderBottomColor: "#999",
-                            color: "#999",
-                            fontSize: 22,
-                            padding: 5,
-                            textAlign: "center"
-                          }}
-                          placeholder="VINE"
-                          placeholderTextColor={
-                            isDarkMode
-                              ? "rgba(55, 55, 55, 1)"
-                              : "rgba(207, 207, 207, 0.6)"
-                          }
-                          value={sendVine}
-                          returnKeyType="done"
-                          onChangeText={text =>
-                            onInputTextChange(text, "sendVine")
-                          }
-                          autoCorrect={false}
-                        />
-                        {sendVine.length !== 0 ? (
-                          <AddItemTouchable
-                            onPress={() => console.log("nasnannai")}
-                          >
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddItemTouchable>
-                        ) : (
-                          <AddHoldItemView>
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddHoldItemView>
-                        )}
-                      </Item>
-                    )}
-                    {!me.user.profile.sendTumblr && (
-                      <Item>
-                        <Image
-                          resizeMode={"contain"}
-                          source={require("../../../../../assets/tumblr.png")}
-                        />
-                        <TextInput
-                          style={{
-                            width: constants.width - 140,
-                            backgroundColor: "transparent",
-                            borderBottomWidth: 1,
-                            borderBottomColor: "#999",
-                            color: "#999",
-                            fontSize: 22,
-                            padding: 5,
-                            textAlign: "center"
-                          }}
-                          placeholder="TUMBLR"
-                          placeholderTextColor={
-                            isDarkMode
-                              ? "rgba(55, 55, 55, 1)"
-                              : "rgba(207, 207, 207, 0.6)"
-                          }
-                          value={sendTumblr}
-                          returnKeyType="done"
-                          onChangeText={text =>
-                            onInputTextChange(text, "sendTumblr")
-                          }
-                          autoCorrect={false}
-                        />
-                        {sendTumblr.length !== 0 ? (
-                          <AddItemTouchable
-                            onPress={() => console.log("nasnannai")}
-                          >
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddItemTouchable>
-                        ) : (
-                          <AddHoldItemView>
-                            <AddItemView>
-                              <AddItemText>ADD</AddItemText>
-                            </AddItemView>
-                          </AddHoldItemView>
-                        )}
-                      </Item>
-                    )}
+                    ))}
                   </AddListContainer>
                 </ScrollView>
               </KeyboardAvoidingView>
