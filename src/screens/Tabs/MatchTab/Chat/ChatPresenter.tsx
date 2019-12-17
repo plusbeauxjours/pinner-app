@@ -29,13 +29,17 @@ import { UpdateSns, UpdateSnsVariables, Me } from "../../../../types/api";
 import { ME } from "../../../../sharedQueries";
 
 const View = styled.View``;
+const EditView = styled.View``;
+const AddView = styled.View`
+  padding-top: 65px;
+  padding-bottom: 65px;
+`;
 const ChatContainer = styled.View`
   flex: 1;
   background-color: ${props => props.theme.bgColor};
 `;
 const AddListContainer = styled.View`
   padding: 30px 20px 40px 20px;
-  justify-content: space-between;
 `;
 const Item = styled.View`
   flex-direction: row;
@@ -45,14 +49,23 @@ const Item = styled.View`
 `;
 const AddBtn = styled.TouchableOpacity`
   justify-content: center;
+  width: ${(constants.width - 50) / 2};
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+  border: 0.5px solid #999;
+  border-radius: 5px;
+  background-color: ${props => props.theme.bgColor};
 `;
-const AddContainer = styled.View`
+const EditBtn = styled.TouchableOpacity`
+  justify-content: center;
   width: ${constants.width - 40};
   height: 40px;
   justify-content: center;
   align-items: center;
   border: 0.5px solid #999;
   border-radius: 5px;
+  background-color: ${props => props.theme.bgColor};
 `;
 const AddText = styled.Text`
   font-size: 16px;
@@ -63,8 +76,23 @@ const Footer = styled.View`
   margin-left: 20px;
   position: absolute;
   bottom: 25px;
+  justify-content: space-between;
+  width: ${constants.width - 40};
+  flex-direction: row;
+`;
+const AddBackBtn = styled.View`
+  width: ${(constants.width - 50) / 2};
+  height: 40px;
+  border-radius: 5px;
   background-color: ${props => props.theme.bgColor};
 `;
+const EditBackBtn = styled.View`
+  width: ${constants.width - 40};
+  height: 40px;
+  border-radius: 5px;
+  background-color: ${props => props.theme.bgColor};
+`;
+
 const ItemTouchable = styled.TouchableOpacity``;
 const AddItemView = styled.View`
   width: 40px;
@@ -105,21 +133,26 @@ const Container = styled.View`
   flex: 1;
 `;
 const MapText = styled.Text`
-  color: white;
+  color: ${props => props.theme.color};
   font-size: 16px;
   font-weight: 500;
   opacity: 1;
 `;
 const MapBtn = styled.TouchableOpacity`
   justify-content: center;
-  align-items: center;
-  flex: 1;
+  width: ${(constants.width - 50) / 2};
   height: 40px;
-  margin: 5px;
+  justify-content: center;
+  align-items: center;
   border: 0.5px solid #999;
   border-radius: 5px;
-  opacity: 0.65;
-  background-color: #96abbf;
+  background-color: ${props => props.theme.bgColor};
+`;
+const MapBackBtn = styled.View`
+  width: ${(constants.width - 50) / 2};
+  height: 40px;
+  border-radius: 5px;
+  background-color: ${props => props.theme.bgColor};
 `;
 const ScrollView = styled.ScrollView``;
 const Image = styled.Image`
@@ -336,6 +369,8 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
           query: ME
         });
         if (data) {
+          console.log(data);
+          console.log(updateSns);
           data.me.user.profile.sendInstagram =
             updateSns.user.profile.sendInstagram;
           data.me.user.profile.sendPhone = updateSns.user.profile.sendPhone;
@@ -343,6 +378,10 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
           data.me.user.profile.sendKakao = updateSns.user.profile.sendKakao;
           data.me.user.profile.sendFacebook =
             updateSns.user.profile.sendFacebook;
+          data.me.user.profile.sendYoutube = updateSns.user.profile.sendYoutube;
+          data.me.user.profile.sendTwitter = updateSns.user.profile.sendTwitter;
+          data.me.user.profile.sendTelegram =
+            updateSns.user.profile.sendTelegram;
           data.me.user.profile.sendSnapchat =
             updateSns.user.profile.sendSnapchat;
           data.me.user.profile.sendLine = updateSns.user.profile.sendLine;
@@ -351,10 +390,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
           data.me.user.profile.sendVk = updateSns.user.profile.sendVk;
           data.me.user.profile.sendWhatsapp =
             updateSns.user.profile.sendWhatsapp;
-          data.me.user.profile.sendYoutube = updateSns.user.profile.sendYoutube;
-          data.me.user.profile.sendTwitter = updateSns.user.profile.sendTwitter;
-          data.me.user.profile.sendTelegram =
-            updateSns.user.profile.sendTelegram;
           data.me.user.profile.sendBehance = updateSns.user.profile.sendBehance;
           data.me.user.profile.sendLinkedin =
             updateSns.user.profile.sendLinkedin;
@@ -373,15 +408,15 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
     }
   });
   const onInputTextChange = (text, state) => {
-    console.log("text", text, state);
-    const replaceChar = /[~!@\#$%^&*\()\-=+_'\;<>0-9\/.\`:\"\\,\[\]?|{}]/gi;
+    const replaceChar = /[~!@\#$%^&*\()\-=+_'\;<>\/.\`:\"\\,\[\]?|{}]/gi;
     const item = text
       .replace(/^\s\s*/, "")
       .replace(/\s\s*$/, "")
-      .replace(replaceChar, "")
-      .replace(/[^a-z|^A-Z|^0-9]/, "");
+      .replace(replaceChar, "");
     if (state === "INSTAGRAM") {
-      setIsChangedSendInstagram(me.user.profile.sendInstagram !== sendInstagram);
+      setIsChangedSendInstagram(
+        me.user.profile.sendInstagram !== sendInstagram
+      );
       setSendInstagram(item);
     } else if (state === "PHONE") {
       setIsChangedSendPhone(me.user.profile.sendPhone !== sendPhone);
@@ -390,6 +425,8 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
       setIsChangedSendEmail(me.user.profile.sendEmail !== sendEmail);
       setSendEmail(item);
     } else if (state === "KAKAOTALK") {
+      console.log("me.user.profile.sendKakao", me.user.profile.sendKakao);
+      console.log("sendKakao", sendKakao);
       setIsChangedSendKakao(me.user.profile.sendKakao !== sendKakao);
       setSendKakao(item);
     } else if (state === "FACEBOOK") {
@@ -429,7 +466,9 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
       setIsChangedSendLinkedin(me.user.profile.sendLinkedin !== sendLinkedin);
       setSendLinkedin(item);
     } else if (state === "PINTEREST") {
-      setIsChangedSendPinterest(me.user.profile.sendPinterest !== sendPinterest);
+      setIsChangedSendPinterest(
+        me.user.profile.sendPinterest !== sendPinterest
+      );
       setSendPinterest(item);
     } else if (state === "VINE") {
       setIsChangedSendVine(me.user.profile.sendVine !== sendVine);
@@ -702,8 +741,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
           propagateSwipe={true}
           scrollHorizontal={true}
           backdropOpacity={0.95}
-          animationIn="zoomInDown"
-          animationOut="zoomOutUp"
           animationInTiming={200}
           animationOutTiming={200}
           backdropTransitionInTiming={200}
@@ -711,23 +748,48 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
         >
           {!snsAddMode ? (
             <>
-              <KeyboardAvoidingView
-                enabled
-                behavior={Platform.OS === "ios" ? "padding" : false}
-                style={{ height: constants.height - 65 }}
-              >
+              <AddView>
                 <ScrollView
                   keyboardShouldPersistTaps={"always"}
                   keyboardDismissMode={
                     Platform.OS === "ios" ? "interactive" : "on-drag"
                   }
+                  contentContainerStyle={{ flexGrow: 1 }}
                 >
                   <AddListContainer>
-                    {snsList.map((snsItem, index) => {
-                      <Item key={index}>
-                        <Image resizeMode={"contain"} source={snsItem.image} />
+                    {me.user.profile.countryPhoneNumber &&
+                      me.user.profile.phoneNumber && (
+                        <Item>
+                          <Image
+                            resizeMode={"contain"}
+                            source={require("../../../../../assets/phone.png")}
+                          />
+                          <SNSTextContainer>
+                            <SNSText>
+                              {me.user.profile.countryPhoneNumber}
+                              {me.user.profile.phoneNumber}
+                            </SNSText>
+                          </SNSTextContainer>
+                          <ItemTouchable
+                            disabled={updateSnsLoading}
+                            onPress={() => {
+                              console.log("sendsend"), closeSnsModal();
+                            }}
+                          >
+                            <EditItemView>
+                              <EditItemText>SEND</EditItemText>
+                            </EditItemView>
+                          </ItemTouchable>
+                        </Item>
+                      )}
+                    {me.user.profile.emailAddress && (
+                      <Item>
+                        <Image
+                          resizeMode={"contain"}
+                          source={require("../../../../../assets/email.png")}
+                        />
                         <SNSTextContainer>
-                          <SNSText>{snsItem.meData}</SNSText>
+                          <SNSText>{me.user.profile.emailAddress}</SNSText>
                         </SNSTextContainer>
                         <ItemTouchable
                           disabled={updateSnsLoading}
@@ -739,17 +801,47 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                             <EditItemText>SEND</EditItemText>
                           </EditItemView>
                         </ItemTouchable>
-                      </Item>;
+                      </Item>
+                    )}
+                    {snsList.map((snsItem, index) => {
+                      if (snsItem.meData && snsItem.meData.length > 0) {
+                        return (
+                          <Item key={index}>
+                            <Image
+                              resizeMode={"contain"}
+                              source={snsItem.image}
+                            />
+                            <SNSTextContainer>
+                              <SNSText>{snsItem.meData}</SNSText>
+                            </SNSTextContainer>
+                            <ItemTouchable
+                              disabled={updateSnsLoading}
+                              onPress={() => {
+                                console.log("sendsend"), closeSnsModal();
+                              }}
+                            >
+                              <EditItemView>
+                                <EditItemText>SEND</EditItemText>
+                              </EditItemView>
+                            </ItemTouchable>
+                          </Item>
+                        );
+                      }
                     })}
                   </AddListContainer>
                 </ScrollView>
-              </KeyboardAvoidingView>
+              </AddView>
               <Footer>
-                <AddBtn onPress={() => setSnsAddMode(true)}>
-                  <AddContainer>
-                    <AddText>ADD SNS</AddText>
-                  </AddContainer>
-                </AddBtn>
+                <AddBackBtn>
+                  <AddBtn onPress={() => closeSnsModal()}>
+                    <AddText>BACK</AddText>
+                  </AddBtn>
+                </AddBackBtn>
+                <AddBackBtn>
+                  <AddBtn onPress={() => setSnsAddMode(true)}>
+                    <AddText>SNS</AddText>
+                  </AddBtn>
+                </AddBackBtn>
               </Footer>
             </>
           ) : (
@@ -757,44 +849,70 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
               <KeyboardAvoidingView
                 enabled
                 behavior={Platform.OS === "ios" ? "padding" : false}
-                style={{ height: constants.height - 65 }}
+                style={{ height: constants.height - 130 }}
               >
-                <ScrollView
-                  keyboardShouldPersistTaps={"always"}
-                  keyboardDismissMode={
-                    Platform.OS === "ios" ? "interactive" : "on-drag"
-                  }
-                >
-                  <AddListContainer>
-                    {snsList.map((snsItem, index) => (
-                      <Item key={index}>
-                        <Image resizeMode={"contain"} source={snsItem.image} />
-                        <TextInput
-                          style={{
-                            width: constants.width - 140,
-                            backgroundColor: "transparent",
-                            borderBottomWidth: 0.5,
-                            borderBottomColor: "#999",
-                            color: "#999",
-                            fontSize: 22,
-                            padding: 5,
-                            textAlign: "center"
-                          }}
-                          placeholder={snsItem.payload}
-                          placeholderTextColor={
-                            isDarkMode
-                              ? "rgba(55, 55, 55, 1)"
-                              : "rgba(207, 207, 207, 0.6)"
-                          }
-                          value={snsItem.value}
-                          returnKeyType="done"
-                          onChangeText={text =>
-                            onInputTextChange(text, snsItem.payload)
-                          }
-                          autoCorrect={false}
-                        />
-                        {snsItem.meData && snsItem.meData.length > 0 ? (
-                          snsItem.isChanged ? (
+                <EditView>
+                  <ScrollView
+                    keyboardShouldPersistTaps={"always"}
+                    keyboardDismissMode={
+                      Platform.OS === "ios" ? "interactive" : "on-drag"
+                    }
+                    contentContainerStyle={{ flexGrow: 1 }}
+                  >
+                    <AddListContainer>
+                      {snsList.map((snsItem, index) => (
+                        <Item key={index}>
+                          <Image
+                            resizeMode={"contain"}
+                            source={snsItem.image}
+                          />
+                          <TextInput
+                            style={{
+                              width: constants.width - 140,
+                              backgroundColor: "transparent",
+                              borderBottomWidth: 0.5,
+                              borderBottomColor: "#999",
+                              color: "#999",
+                              fontSize: 22,
+                              padding: 5,
+                              textAlign: "center"
+                            }}
+                            placeholder={snsItem.payload}
+                            placeholderTextColor={
+                              isDarkMode
+                                ? "rgba(55, 55, 55, 1)"
+                                : "rgba(207, 207, 207, 0.6)"
+                            }
+                            value={snsItem.value}
+                            returnKeyType="done"
+                            onChangeText={text =>
+                              onInputTextChange(text, snsItem.payload)
+                            }
+                            autoCorrect={false}
+                            autoCapitalize={"none"}
+                          />
+                          {snsItem.meData && snsItem.meData.length > 0 ? (
+                            snsItem.isChanged ? (
+                              <ItemTouchable
+                                disabled={updateSnsLoading}
+                                onPress={() =>
+                                  onPressSendSns(
+                                    snsItem.payload,
+                                    snsItem.value,
+                                    snsItem.setIsChanged
+                                  )
+                                }
+                              >
+                                <EditItemView>
+                                  <EditItemText>EDIT</EditItemText>
+                                </EditItemView>
+                              </ItemTouchable>
+                            ) : (
+                              <AddItemView>
+                                <AddItemText>EDIT</AddItemText>
+                              </AddItemView>
+                            )
+                          ) : snsItem.isChanged ? (
                             <ItemTouchable
                               disabled={updateSnsLoading}
                               onPress={() =>
@@ -806,46 +924,26 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                               }
                             >
                               <EditItemView>
-                                <EditItemText>EDIT</EditItemText>
+                                <EditItemText>ADD</EditItemText>
                               </EditItemView>
                             </ItemTouchable>
                           ) : (
                             <AddItemView>
-                              <AddItemText>EDIT</AddItemText>
+                              <AddItemText>ADD</AddItemText>
                             </AddItemView>
-                          )
-                        ) : snsItem.isChanged ? (
-                          <ItemTouchable
-                            disabled={updateSnsLoading}
-                            onPress={() =>
-                              updateSnsFn({
-                                variables: {
-                                  payload: snsItem.payload,
-                                  username: snsItem.value
-                                }
-                              })
-                            }
-                          >
-                            <EditItemView>
-                              <EditItemText>ADD</EditItemText>
-                            </EditItemView>
-                          </ItemTouchable>
-                        ) : (
-                          <AddItemView>
-                            <AddItemText>ADD</AddItemText>
-                          </AddItemView>
-                        )}
-                      </Item>
-                    ))}
-                  </AddListContainer>
-                </ScrollView>
+                          )}
+                        </Item>
+                      ))}
+                    </AddListContainer>
+                  </ScrollView>
+                </EditView>
               </KeyboardAvoidingView>
               <Footer>
-                <AddBtn onPress={() => setSnsAddMode(false)}>
-                  <AddContainer>
+                <EditBackBtn>
+                  <EditBtn onPress={() => setSnsAddMode(false)}>
                     <AddText>DONE</AddText>
-                  </AddContainer>
-                </AddBtn>
+                  </EditBtn>
+                </EditBackBtn>
               </Footer>
             </>
           )}
@@ -880,28 +978,22 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
               containerStyle={{ marginBottom: 30 }}
             />
           </MarkerContainer>
-          <View
-            style={{
-              bottom: 20,
-              position: "absolute",
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              width: constants.width,
-              paddingRight: 10,
-              paddingLeft: 10,
-              marginBottom: 0
-            }}
-          >
-            <MapBtn onPress={() => closeMapModal()}>
-              <MapText>BACK</MapText>
-            </MapBtn>
-            <MapBtn
-              onPress={() => onSendLocation(region.latitude, region.longitude)}
-            >
-              <MapText>SEND</MapText>
-            </MapBtn>
-          </View>
+          <Footer>
+            <MapBackBtn>
+              <MapBtn onPress={() => closeMapModal()}>
+                <MapText>BACK</MapText>
+              </MapBtn>
+            </MapBackBtn>
+            <MapBackBtn>
+              <MapBtn
+                onPress={() =>
+                  onSendLocation(region.latitude, region.longitude)
+                }
+              >
+                <MapText>SEND</MapText>
+              </MapBtn>
+            </MapBackBtn>
+          </Footer>
         </MapModal>
         <ChatContainer>
           {Platform.OS === "android" ? (
