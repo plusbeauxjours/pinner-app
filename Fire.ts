@@ -1,7 +1,6 @@
 import firebase from "firebase";
 import keys from "./keys";
 import { SystemMessage } from "react-native-gifted-chat";
-import path from "react-native-path";
 
 const firebaseConfig = {
   apiKey: keys.REACT_APP_FIREBASE_API_KEY,
@@ -37,6 +36,7 @@ export interface ChatMessage {
   location?: LocationChatMessage;
   receiverPushToken: string;
   snsId?: string;
+  snsIdPlatform?: string;
 }
 
 export const chat_leave = (

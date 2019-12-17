@@ -37,6 +37,28 @@ export default function App() {
         ...FontAwesome.font
       });
       await Asset.loadAsync(require("./assets/logo.png"));
+      await Asset.loadAsync(require("./assets/phone_second.png"));
+      await Asset.loadAsync(require("./assets/email_second.png"));
+      await Asset.loadAsync(require("./assets/instagram.png"));
+      await Asset.loadAsync(require("./assets/phone.png"));
+      await Asset.loadAsync(require("./assets/email.png"));
+      await Asset.loadAsync(require("./assets/kakao.png"));
+      await Asset.loadAsync(require("./assets/facebook.png"));
+      await Asset.loadAsync(require("./assets/youtube.png"));
+      await Asset.loadAsync(require("./assets/twitter.png"));
+      await Asset.loadAsync(require("./assets/telegram.png"));
+      await Asset.loadAsync(require("./assets/snapchat.png"));
+      await Asset.loadAsync(require("./assets/line.png"));
+      await Asset.loadAsync(require("./assets/wechat.png"));
+      await Asset.loadAsync(require("./assets/kik.png"));
+      await Asset.loadAsync(require("./assets/vk.png"));
+      await Asset.loadAsync(require("./assets/whatsapp.png"));
+      await Asset.loadAsync(require("./assets/behance.png"));
+      await Asset.loadAsync(require("./assets/linkedin.png"));
+      await Asset.loadAsync(require("./assets/pinterest.png"));
+      await Asset.loadAsync(require("./assets/vine.png"));
+      await Asset.loadAsync(require("./assets/tumblr.png"));
+
       const cache = new InMemoryCache();
       // await AsyncStorage.clear();
       await persistCache({

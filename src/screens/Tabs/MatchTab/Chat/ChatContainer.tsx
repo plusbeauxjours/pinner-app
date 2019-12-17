@@ -132,27 +132,28 @@ class ChatContainer extends React.Component<IProps, IState> {
     this.setState({ snsModalOpen: true });
   };
 
-  public onSendSnsId = (snsId: string) => {
+  public onSendSnsId = (snsId: string, snsIdPlatform: string) => {
     let new_key = get_new_key("messages");
     let user: UserChatMessage = {
       _id: this.state.userId,
       name: this.state.userName
     };
-    let messageLocation: ChatMessage = {
+    let messageSnsId: ChatMessage = {
       _id: new_key,
       createdAt: new Date(),
       status: false,
       user: user,
       snsId,
+      snsIdPlatform,
       receiverPushToken: this.state.receiverPushToken
     };
     let messages = [];
-    messages.push(messageLocation);
+    messages.push(messageSnsId);
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
       mapModalOpen: false
     }));
-    chat_send(this.state.chatId, messageLocation).catch(e => console.log(e));
+    chat_send(this.state.chatId, messageSnsId).catch(e => console.log(e));
   };
 
   public onSendLocation = (latitude: string, longitude: string) => {
@@ -487,6 +488,7 @@ class ChatContainer extends React.Component<IProps, IState> {
         loading={loading}
         messages={messages}
         onSend={this.onSend}
+        onSendSnsId={this.onSendSnsId}
         onSendLocation={this.onSendLocation}
         renderCustomView={this.renderCustomView}
         renderActions={this.renderActions}

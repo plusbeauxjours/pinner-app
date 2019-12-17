@@ -31,7 +31,6 @@ import { ME } from "../../../../sharedQueries";
 const View = styled.View``;
 const EditView = styled.View``;
 const AddView = styled.View`
-  margin-top: 65px;
   margin-bottom: 65px;
 `;
 const ChatContainer = styled.View`
@@ -182,6 +181,7 @@ interface IProps {
   loading: boolean;
   messages: any;
   onSend: any;
+  onSendSnsId: any;
   onSendLocation: any;
   renderCustomView: any;
   renderActions: any;
@@ -199,6 +199,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   loading,
   messages,
   onSend,
+  onSendSnsId,
   onSendLocation,
   renderCustomView,
   renderActions,
@@ -790,7 +791,11 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                           </SNSTextContainer>
                           <ItemTouchable
                             onPress={() => {
-                              console.log("sendsend"), closeSnsModal();
+                              onSendSnsId(
+                                `${me.user.profile.countryPhoneNumber}${me.user.profile.phoneNumber}`,
+                                "PHONE_SECOND"
+                              ),
+                                closeSnsModal();
                             }}
                           >
                             <EditItemView>
@@ -810,7 +815,11 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                         </SNSTextContainer>
                         <ItemTouchable
                           onPress={() => {
-                            console.log("sendsend"), closeSnsModal();
+                            onSendSnsId(
+                              `${me.user.profile.emailAddress}`,
+                              "EMAIL_SECOND"
+                            ),
+                              closeSnsModal();
                           }}
                         >
                           <EditItemView>
@@ -833,7 +842,11 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                             </SNSTextContainer>
                             <ItemTouchable
                               onPress={() => {
-                                console.log("sendsend"), closeSnsModal();
+                                onSendSnsId(
+                                  `${snsItem.meData}`,
+                                  `${snsItem.payload}`
+                                ),
+                                  closeSnsModal();
                               }}
                             >
                               <EditItemView>
@@ -867,7 +880,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
               <KeyboardAvoidingView
                 enabled
                 behavior={Platform.OS === "ios" ? "padding" : false}
-                style={{ height: constants.height - 130 }}
+                style={{ marginBottom: 65 }}
               >
                 <EditView>
                   <ScrollView

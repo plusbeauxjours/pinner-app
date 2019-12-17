@@ -1,5 +1,5 @@
 import React from "react";
-import { Platform, Linking } from "react-native";
+import { Platform, Linking, Clipboard } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { darkMode, lightMode } from "../../../../styles/mapStyles";
 import { useTheme } from "../../../../context/ThemeContext";
@@ -12,9 +12,53 @@ const Touchable = styled.TouchableOpacity`
 `;
 
 const Text = styled.Text``;
+const SnsView = styled.View`
+  width: 100px;
+  height: 100px;
+  border-radius: 13px;
+`;
+const Image = styled.Image`
+  width: 100px;
+  height: 100px;
+  margin-right: 10px;
+`;
+
+const snsList = {
+  PHONE_SECOND: require("../../../../../assets/phone_second.png"),
+  EMAIL_SECOND: require("../../../../../assets/email_second.png"),
+  INSTAGRAM: require("../../../../../assets/instagram.png"),
+  PHONE: require("../../../../../assets/phone.png"),
+  EMAIL: require("../../../../../assets/email.png"),
+  KAKAOTALK: require("../../../../../assets/kakao.png"),
+  FACEBOOK: require("../../../../../assets/facebook.png"),
+  YOUTUBE: require("../../../../../assets/youtube.png"),
+  TWITTER: require("../../../../../assets/twitter.png"),
+  TELEGRAM: require("../../../../../assets/telegram.png"),
+  SNAPCHAT: require("../../../../../assets/snapchat.png"),
+  LINE: require("../../../../../assets/line.png"),
+  WECHAT: require("../../../../../assets/wechat.png"),
+  KIK: require("../../../../../assets/kik.png"),
+  VK: require("../../../../../assets/vk.png"),
+  WHATSAPP: require("../../../../../assets/whatsapp.png"),
+  BEHANCE: require("../../../../../assets/behance.png"),
+  LINKEDIN: require("../../../../../assets/linkedin.png"),
+  PINTEREST: require("../../../../../assets/pinterest.png"),
+  VINE: require("../../../../../assets/vine.png"),
+  TUMBLR: require("../../../../../assets/tumblr.png")
+};
 
 export default ({ currentMessage }) => {
   const isDarkMode = useTheme();
+  const toast = (message: string) => {
+    Toast.show(message, {
+      duration: Toast.durations.LONG,
+      position: Toast.positions.CENTER,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      delay: 0
+    });
+  };
   const onMapPress = () => {
     const { latitude, longitude } = currentMessage.location;
     const url = Platform.select({
@@ -33,24 +77,19 @@ export default ({ currentMessage }) => {
         console.log(e);
       });
   };
-  const onSnsPress = () => {
-    const toast = (message: string) => {
-      Toast.show(message, {
-        duration: Toast.durations.LONG,
-        position: Toast.positions.CENTER,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0
-      });
-    };
-    toast("You have copied the username");
-  };
-
   if (currentMessage.snsId) {
     return (
-      <Touchable onPress={onSnsPress} activeOpacity={0.8}>
-        <Text>SNS</Text>
+      <Touchable
+        onPress={() => Clipboard.setString(currentMessage.snsId)}
+        activeOpacity={0.8}
+      >
+        <SnsView>
+          <Image
+            resizeMode={"contain"}
+            source={snsList[currentMessage.snsIdPlatform]}
+          />
+          <Text>SNS</Text>
+        </SnsView>
       </Touchable>
     );
   } else if (currentMessage.location) {
