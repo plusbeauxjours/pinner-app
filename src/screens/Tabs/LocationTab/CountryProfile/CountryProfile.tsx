@@ -97,6 +97,10 @@ const NoPhotoContainer = styled.View`
   justify-content: center;
   align-items: center;
   background-color: ${props => props.theme.bgColor};
+  height: ${constants.width - 30};
+  width: ${constants.width - 30};
+  border-radius: 3;
+  border: 0.5px solid #999;
 `;
 export default ({ navigation }) => {
   const location = useLocation();

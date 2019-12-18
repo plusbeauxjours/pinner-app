@@ -48,7 +48,7 @@ const Text = styled.Text`
 `;
 const UserName = styled.Text`
   font-weight: 500;
-  font-size: 30px;
+  font-size: 28px;
   color: ${props => props.theme.color};
 `;
 const ItemContainer = styled.View`

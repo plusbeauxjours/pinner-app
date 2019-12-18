@@ -120,7 +120,7 @@ const ImageTouchable = styled(Touchable)`
 `;
 const UserName = styled.Text`
   font-weight: 500;
-  font-size: 30px;
+  font-size: 28px;
   color: ${props => props.theme.color};
 `;
 const ScrollView = styled.ScrollView`
@@ -1486,8 +1486,8 @@ export default ({ navigation }) => {
                     onPress={() => onPress(coffee.uuid)}
                   >
                     <Item>
-                      <UserName>☕️</UserName>
-                      <Bold>COFFEE </Bold>
+                      <UserName>📍</UserName>
+                      <Bold>PIN</Bold>
                     </Item>
                   </Touchable>
                 ))}

@@ -51,7 +51,7 @@ export default ({ currentMessage }) => {
   const isDarkMode = useTheme();
   const toast = (message: string) => {
     Toast.show(message, {
-      duration: Toast.durations.LONG,
+      duration: Toast.durations.SHORT,
       position: Toast.positions.CENTER,
       shadow: true,
       animation: true,
@@ -81,8 +81,21 @@ export default ({ currentMessage }) => {
     return (
       <Touchable
         onPress={() => {
-          Clipboard.setString(currentMessage.snsId),
-            toast(`you have copied the username${currentMessage.snsId}`);
+          if (currentMessage.snsIdPlatform === "PHONE" || "PHONE_SECOND") {
+            Clipboard.setString(currentMessage.snsId);
+            toast(`you have copied the phonenumber ${currentMessage.snsId}`);
+          } else if (
+            currentMessage.snsIdPlatform === "EMAIL" ||
+            "EMAIL_SECOND"
+          ) {
+            Clipboard.setString(currentMessage.snsId);
+            toast(`you have copied the email address ${currentMessage.snsId}`);
+          } else {
+            Clipboard.setString(currentMessage.snsId);
+            toast(
+              `you have copied the ${currentMessage.snsIdPlatform} username ${currentMessage.snsId}`
+            );
+          }
         }}
         activeOpacity={0.8}
       >

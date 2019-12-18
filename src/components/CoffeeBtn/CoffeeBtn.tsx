@@ -164,7 +164,7 @@ const CoffeeBtn: React.FC<IProps> = ({
             {deleteCoffeeLoading ? (
               <ActivityIndicator color={"#999"} />
             ) : (
-              <Text>CANCEL COFFEE</Text>
+              <Text>CANCEL PIN</Text>
             )}
           </Container>
         </Touchable>

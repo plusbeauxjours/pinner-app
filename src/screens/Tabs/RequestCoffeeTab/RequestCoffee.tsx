@@ -743,7 +743,7 @@ export default ({ navigation }) => {
               onPress={() => cancelCoffee(coffeeId)}
             >
               <CoffeeSubmitContainer>
-                <CoffeeText>CANCEL COFFEE</CoffeeText>
+                <CoffeeText>CANCEL PIN</CoffeeText>
               </CoffeeSubmitContainer>
             </CoffeeSubmitBtn>
           ) : (
@@ -752,7 +752,7 @@ export default ({ navigation }) => {
               onPress={() => requestCoffee()}
             >
               <CoffeeSubmitContainer>
-                <CoffeeText>REQUEST COFFEE</CoffeeText>
+                <CoffeeText>REQUEST PIN</CoffeeText>
               </CoffeeSubmitContainer>
             </CoffeeSubmitBtn>
           )}

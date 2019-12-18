@@ -437,7 +437,11 @@ export default ({ navigation }) => {
             )}
             {samenameCities && samenameCities.length !== 0 && (
               <Item>
-                <Title>SAMENAME CITIES</Title>
+                {samenameCities.length === 1 ? (
+                  <Title>SAMENAME CITY</Title>
+                ) : (
+                  <Title>SAMENAME CITIES</Title>
+                )}
                 <UserContainer>
                   <Swiper
                     style={
@@ -494,7 +498,11 @@ export default ({ navigation }) => {
             )}
             {coffees && coffees.length !== 0 && (
               <Item>
-                <Title>NEED SOME COFFEE NOW</Title>
+                {coffees.length === 1 ? (
+                  <Title>PINNER NOW</Title>
+                ) : (
+                  <Title>PINNERS NOW</Title>
+                )}
                 <UserContainer>
                   <Swiper
                     style={
@@ -547,7 +555,11 @@ export default ({ navigation }) => {
             )}
             {usersBefore && usersBefore.length !== 0 && (
               <Item>
-                <Title>USERS BEFORE</Title>
+                {usersBefore.length === 1 ? (
+                  <Title>USER BEFORE</Title>
+                ) : (
+                  <Title>USERS BEFORE</Title>
+                )}
                 <UserContainer>
                   <Swiper
                     style={
@@ -605,7 +617,11 @@ export default ({ navigation }) => {
             )}
             {usersNow && usersNow.length !== 0 && (
               <Item>
-                <Title>USERS NOW</Title>
+                {usersNow.length === 1 ? (
+                  <Title>USER NOW</Title>
+                ) : (
+                  <Title>USERS NOW</Title>
+                )}
                 {usersNow.map((user: any, index: any) => (
                   <Touchable
                     key={index}

@@ -15,7 +15,7 @@ const View = styled.View``;
 export default () => {
   return (
     <View>
-      <Text>COFFEES</Text>
+      <Text>PINS</Text>
     </View>
   );
 };
