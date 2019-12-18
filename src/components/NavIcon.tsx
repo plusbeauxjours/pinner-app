@@ -1,9 +1,6 @@
 import React from "react";
-import { Ionicons } from "@expo/vector-icons";
-import styled from "styled-components";
+import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { useTheme } from "../context/ThemeContext";
-
-const Text = styled.Text``;
 
 interface IProps {
   name: string;
@@ -19,22 +16,42 @@ const NavIcon: React.FC<IProps> = ({
   focused = true
 }) => {
   const isDarkMode = useTheme();
-  if (isDarkMode) {
-    return (
-      <Ionicons
-        name={name}
-        color={focused ? "#EFEFEF" : "#424242"}
-        size={size}
-      />
-    );
+  if (name === "map-pin") {
+    if (isDarkMode) {
+      return (
+        <FontAwesome
+          name={name}
+          color={focused ? "#EFEFEF" : "#424242"}
+          size={size}
+        />
+      );
+    } else {
+      return (
+        <FontAwesome
+          name={name}
+          color={focused ? "#161616" : "#DADADA"}
+          size={size}
+        />
+      );
+    }
   } else {
-    return (
-      <Ionicons
-        name={name}
-        color={focused ? "#161616" : "#DADADA"}
-        size={size}
-      />
-    );
+    if (isDarkMode) {
+      return (
+        <Ionicons
+          name={name}
+          color={focused ? "#EFEFEF" : "#424242"}
+          size={size}
+        />
+      );
+    } else {
+      return (
+        <Ionicons
+          name={name}
+          color={focused ? "#161616" : "#DADADA"}
+          size={size}
+        />
+      );
+    }
   }
 };
 

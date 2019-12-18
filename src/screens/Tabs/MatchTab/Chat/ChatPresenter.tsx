@@ -20,7 +20,7 @@ import KeyboardSpacer from "react-native-keyboard-spacer";
 import Loader from "../../../../components/Loader";
 import constants from "../../../../../constants";
 import { useTheme } from "../../../../context/ThemeContext";
-import { darkMode, lightMode } from "../../../../styles/mapStyles";
+import { darkSendMode, lightSendMode } from "../../../../styles/mapStyles";
 import { useLocation } from "../../../../context/LocationContext";
 import { useMe } from "../../../../context/MeContext";
 import { useMutation } from "react-apollo";
@@ -1001,7 +1001,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
             rotateEnabled={false}
             onRegionChangeComplete={onRegionChangeComplete}
             customMapStyle={
-              isDarkMode && isDarkMode === true ? darkMode : lightMode
+              isDarkMode && isDarkMode === true ? darkSendMode : lightSendMode
             }
           />
           <MarkerContainer pointerEvents="none">
