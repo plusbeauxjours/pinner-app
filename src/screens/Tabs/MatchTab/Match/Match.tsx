@@ -190,30 +190,6 @@ export default ({ navigation }) => {
     const { data: serverData } = await registerPushFn({
       variables: { pushToken }
     });
-
-    /////////////////////////////////////////////////////////
-    /////////////////////   PUSH TEST   /////////////////////
-    // console.log("serverData", serverData);
-    const { data: axiosDataA } = await axios.post(
-      "https://exp.host/--/api/v2/push/send",
-      {
-        to: "ExponentPushToken[8cyY19OfrGL6E9_jCzTdCM]",
-        title: "new message to IPhone",
-        body: "new body to IPhone"
-      }
-    );
-    // console.log("axiosData to IPHONE", axiosDataA);
-    const { data: axiosDataB } = await axios.post(
-      "https://exp.host/--/api/v2/push/send",
-      {
-        to: "ExponentPushToken[Zyb_NzBAS8TdfXChmRfU84]",
-        title: "new message",
-        body: "new body"
-      }
-    );
-    // console.log("axiosData to ANDROID", axiosDataB);
-    //////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////
   };
   const [
     completeEditEmailVerificationFn,
@@ -446,6 +422,9 @@ export default ({ navigation }) => {
   useEffect(() => {
     Linking.addEventListener("url", handleOpenURL);
     askPermission();
+    return () => {
+      Linking.removeEventListener("url", handleOpenURL);
+    };
   }, []);
   if (
     matchLoading ||

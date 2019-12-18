@@ -26,28 +26,8 @@ exports.sendNotification = functions.database
     console.log("sendMsg", JSON.stringify(sendMsg));
 
     return axios.post("https://exp.host/--/api/v2/push/send", {
-      to: "ExponentPushToken[8cyY19OfrGL6E9_jCzTdCM]",
+      to: receiverPushToken,
       title: "New message",
-      body: JSON.stringify(sendMsg)
+      body: `${sendUserName}: ${sendMsg}`
     });
   });
-
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-
-// expo.sendPushNotificationsAsync([{
-//     to: token,
-//     sound: 'default',
-//     body: `${author.name}: ${updateInfo.lastMessage}`,
-//     data: {
-//       chatId: event.data.key,
-//       chatInfo: updateInfo
-//     },
-//     title: 'WoodyBoater',
-//   }]).then(receipts => {
-//     console.log('Successfully sent push');
-//     console.log(receipts);
-//   }).catch(error => {
-//     console.log('Error sending push notification');
-//     console.log(error);
-//   });

@@ -1,9 +1,10 @@
 {
   "expo": {
-    "name": "pinner-app\\",
-    "slug": "app",
+    "name": "pinner",
+    "slug": "pinner-plusbeauxjours",
     "privacy": "public",
     "sdkVersion": "36.0.0",
+    "scheme": "pinner.plusbeauxjours",
     "platforms": [
       "ios",
       "android"
@@ -24,7 +25,27 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "pinner.plusbeauxjours"
-    }
+      "bundleIdentifier": "pinner.plusbeauxjours",
+      "icon": "./assets/icon.png"
+    },
+    "android": {
+      "package": "pinner.plusbeauxjours",
+      "icon": "./assets/icon.png",
+      "permissions": [
+        "CAMERA",
+        "RECORD_AUDIO",
+        "READ_PHONE_STATE",
+        "READ_CONTACTS",
+        "READ_INTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "com.google.android.c2dm.permission.RECEIVE",
+        "com.android.launcher.permission.INSTALL_SHORTCUT",
+        "com.htc.launcher.permission.UPDATE_SHORTCUT"
+      ]
+    },
+    "description": ""
   }
 }
