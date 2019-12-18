@@ -147,7 +147,7 @@ const CoffeeBtn: React.FC<IProps> = ({
             });
             setModalOpen(false);
             if (deleteCoffee.ok) {
-              toast("canceld");
+              toast("canceled");
             }
           } catch (e) {
             console.log(e);

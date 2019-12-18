@@ -218,7 +218,8 @@ export default ({ navigation }) => {
   );
   const {
     data: { getCoffees: { coffees = null } = {} } = {},
-    loading: coffeeLoading
+    loading: coffeeLoading,
+    refetch: coffeeRefetch
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
     variables: { location: "city", cityId },
     fetchPolicy: "no-cache"
@@ -229,6 +230,7 @@ export default ({ navigation }) => {
       await profileRefetch();
       await nearCitiesRefetch();
       await samenameCitiesRefetch();
+      await coffeeRefetch();
     } catch (e) {
       console.log(e);
     } finally {

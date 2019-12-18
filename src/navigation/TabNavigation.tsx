@@ -11,6 +11,7 @@ import LocationNavigation from "./LocationNavigation";
 import UserProfileNavigation from "./UserProfileNavigation";
 import RequestNavigation from "./RequestNavigation";
 import { useTheme } from "../context/ThemeContext";
+import { FontAwesome } from "@expo/vector-icons";
 
 const stackFactory = initialRoute =>
   createStackNavigator({
@@ -57,9 +58,10 @@ export default createBottomTabNavigator(
       screen: stackFactory(RequestNavigation),
       navigationOptions: {
         tabBarIcon: ({ focused }) => (
-          <NavIcon
-            focused={focused}
-            name={Platform.OS === "ios" ? "ios-cafe" : "md-cafe"}
+          <FontAwesome
+            name={"map-pin"}
+            color={focused ? "#EFEFEF" : "#424242"}
+            size={26}
           />
         )
       }

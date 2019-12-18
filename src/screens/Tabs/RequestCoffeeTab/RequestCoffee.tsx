@@ -398,7 +398,7 @@ export default ({ navigation }) => {
               variables: { coffeeId }
             });
             if (deleteCoffee.ok) {
-              toast("Canceld");
+              toast("Canceled");
             }
           } catch (e) {
             console.log(e);
@@ -752,7 +752,7 @@ export default ({ navigation }) => {
               onPress={() => requestCoffee()}
             >
               <CoffeeSubmitContainer>
-                <CoffeeText>REQUEST PIN</CoffeeText>
+                <CoffeeText>PIN</CoffeeText>
               </CoffeeSubmitContainer>
             </CoffeeSubmitBtn>
           )}

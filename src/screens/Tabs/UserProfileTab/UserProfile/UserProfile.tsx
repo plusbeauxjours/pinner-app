@@ -384,7 +384,8 @@ export default ({ navigation }) => {
   });
   const {
     data: { getCoffees: { coffees = null } = {} } = {},
-    loading: coffeeLoading
+    loading: coffeeLoading,
+    refetch: coffeeRefetch
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
     variables: {
       uuid,
@@ -484,6 +485,7 @@ export default ({ navigation }) => {
       await profileRefetch();
       await tripRefetch();
       await getSameTripsRefetch();
+      await coffeeRefetch()
     } catch (e) {
       console.log(e);
     } finally {
