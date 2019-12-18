@@ -13,14 +13,10 @@ const View = styled.View`
   flex: 1;
   background-color: ${props => props.theme.bgColor};
 `;
-const Bold = styled.Text`
-  font-weight: 500;
-  font-size: 20px;
-  color: ${props => props.theme.color};
-`;
-
 const Text = styled.Text`
   color: ${props => props.theme.color};
+  font-size: 8px;
+  margin-left: 5px;
 `;
 const Touchable = styled.TouchableOpacity``;
 const ScrollView = styled.ScrollView`
@@ -32,7 +28,11 @@ const LoaderContainer = styled.View`
   justify-content: center;
   align-items: center;
 `;
-
+const TextContainer = styled.View`
+  margin-top: 15px;
+  justify-content: center;
+  align-items: center;
+`;
 export default ({ navigation }) => {
   const uuid = navigation.getParam("uuid");
 
@@ -69,7 +69,7 @@ export default ({ navigation }) => {
         showsVerticalScrollIndicator={false}
       >
         <View>
-          {continents &&
+          {continents && continents.length !== 0 ? (
             continents.map((continent, index) => (
               <Touchable
                 key={index}
@@ -86,7 +86,12 @@ export default ({ navigation }) => {
                   type={"userProfileContinent"}
                 />
               </Touchable>
-            ))}
+            ))
+          ) : (
+            <TextContainer>
+              <Text>No continent yet...</Text>
+            </TextContainer>
+          )}
         </View>
       </ScrollView>
     );

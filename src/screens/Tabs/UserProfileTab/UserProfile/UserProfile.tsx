@@ -485,7 +485,7 @@ export default ({ navigation }) => {
       await profileRefetch();
       await tripRefetch();
       await getSameTripsRefetch();
-      await coffeeRefetch()
+      await coffeeRefetch();
     } catch (e) {
       console.log(e);
     } finally {
@@ -650,8 +650,7 @@ export default ({ navigation }) => {
     tripLoading ||
     coffeeLoading ||
     getSameTripsLoading ||
-    meLoading ||
-    createCityLoading
+    meLoading
   ) {
     return (
       <LoaderContainer>
