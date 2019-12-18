@@ -34,8 +34,12 @@ const View = styled.View`
 `;
 const Image = styled.Image`
   width: ${constants.width / 2.5};
+  height: ${constants.width / 2.5};
 `;
-
+const Container = styled.View`
+  flex-direction: column;
+  align-items: center;
+`;
 const LoginLink = styled.View`
   border: 0.5px solid #999;
   width: 250px;
@@ -70,7 +74,17 @@ const ButtonContainer = styled.View`
 const Void = styled.View`
   height: 40px;
 `;
+const Title = styled.Text`
+  font-weight: 300;
+  font-size: 23px;
+  top: -25px;
+  color: #3897f0;
+`;
 const Touchable = styled.TouchableOpacity``;
+const BtnContainer = styled.View`
+  position: absolute;
+  bottom: 100px;
+`;
 const SubmitButtonContainer = styled.View`
   width: ${constants.width - 80};
   height: 40px;
@@ -421,20 +435,25 @@ export default ({ navigation }) => {
         })()}
       </Modal>
       <View>
-        <Image
-          resizeMode={"contain"}
-          source={require("../../../../assets/logo.png")}
-        />
-        <Touchable
-          onPress={() => {
-            setApproachModalOpen(true);
-          }}
-        >
-          <LoginLink>
-            <LoginLinkText>LOG IN WITH PHONE NUMBER</LoginLinkText>
-          </LoginLink>
-        </Touchable>
-        <FacebookApproach />
+        <Container>
+          <Image
+            resizeMode={"contain"}
+            source={require("../../../../assets/logo.png")}
+          />
+          <Title>PINNER</Title>
+        </Container>
+        <BtnContainer>
+          <Touchable
+            onPress={() => {
+              setApproachModalOpen(true);
+            }}
+          >
+            <LoginLink>
+              <LoginLinkText>LOG IN WITH PHONE NUMBER</LoginLinkText>
+            </LoginLink>
+          </Touchable>
+          <FacebookApproach />
+        </BtnContainer>
       </View>
     </>
   );

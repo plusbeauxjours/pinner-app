@@ -80,7 +80,10 @@ export default ({ currentMessage }) => {
   if (currentMessage.snsId) {
     return (
       <Touchable
-        onPress={() => Clipboard.setString(currentMessage.snsId)}
+        onPress={() => {
+          Clipboard.setString(currentMessage.snsId),
+            toast(`you have copied the username${currentMessage.snsId}`);
+        }}
         activeOpacity={0.8}
       >
         <SnsView>

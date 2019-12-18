@@ -83,7 +83,13 @@ export const chat_send = (chat_id: string, message: ChatMessage) => {
     ] = `${message.receiverPushToken}`;
     updates[`/chats/${chat_id}/status/`] = `${message.status}`;
   } else if (message.location) {
-    updates[`/chats/${chat_id}/lastMessage/`] = "Location";
+    updates[`/chats/${chat_id}/lastMessage/`] = "LOCATION";
+  } else if (message.snsIdPlatform === "PHONE_SECOND") {
+    updates[`/chats/${chat_id}/lastMessage/`] = "PHONE";
+  } else if (message.snsIdPlatform === "EMAIL_SECOND") {
+    updates[`/chats/${chat_id}/lastMessage/`] = "EMAIL";
+  } else if (message.snsIdPlatform) {
+    updates[`/chats/${chat_id}/lastMessage/`] = `${message.snsIdPlatform}`;
   }
   updates[`/messages/${chat_id}/${new_key}/`] = message;
   return fb_db.ref.update(updates);

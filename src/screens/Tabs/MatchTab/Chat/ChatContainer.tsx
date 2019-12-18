@@ -5,13 +5,7 @@ import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import firebase from "firebase";
 import CustomView from "./CustomView";
 import { chat_send } from "../../../../../Fire";
-import {
-  Platform,
-  TouchableOpacity,
-  BackHandler,
-  View,
-  Text
-} from "react-native";
+import { TouchableOpacity, BackHandler, View, Text } from "react-native";
 import { BACKEND_URL } from "../../../../../constants";
 import ChatPresenter from "./ChatPresenter";
 import {
@@ -22,7 +16,6 @@ import {
   update_message_info,
   fb_db
 } from "../../../../../Fire";
-import { Ionicons } from "@expo/vector-icons";
 import * as moment from "moment-timezone";
 import Toast from "react-native-root-toast";
 import { Image } from "react-native";
