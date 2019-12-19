@@ -22,7 +22,7 @@ const NavIcon: React.FC<IProps> = ({
         <FontAwesome
           name={name}
           color={focused ? "#EFEFEF" : "#424242"}
-          size={size}
+          size={22}
         />
       );
     } else {
@@ -30,7 +30,7 @@ const NavIcon: React.FC<IProps> = ({
         <FontAwesome
           name={name}
           color={focused ? "#161616" : "#DADADA"}
-          size={size}
+          size={22}
         />
       );
     }

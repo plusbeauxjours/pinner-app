@@ -24,6 +24,8 @@ import keys from "../../../keys";
 import useGoogleAutocomplete from "../../hooks/useGoogleAutocomplete";
 import SearchCityPhoto from "../SearchCityPhoto";
 import { useTheme } from "../../context/ThemeContext";
+import PhotoLink from "../PhotoLink";
+import { useMe } from "../../context/MeContext";
 
 const Text = styled.Text`
   color: ${props => props.theme.color};
@@ -85,6 +87,7 @@ const ImageContainer = styled.View`
 `;
 const Search = ({ navigation }) => {
   const isDarkMode = useTheme();
+  const { me } = useMe();
   const [search, setSearch] = useState<string>("");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [createCityFn, { loading: createCityLoading }] = useMutation<
@@ -306,13 +309,19 @@ const Search = ({ navigation }) => {
           </ScrollView>
         </Touchable>
       </Modal>
-      <TouchableIcon onPress={() => setModalOpen(true)}>
-        <Ionicons
-          name={Platform.OS === "ios" ? "ios-search" : "md-search"}
-          size={25}
-          color={isDarkMode ? "#EFEFEF" : "#161616"}
-        />
-      </TouchableIcon>
+      {navigation.state.params &&
+      navigation.state.params.uuid === me.user.profile.uuid &&
+      navigation.state.routeName === "AvatarList" ? (
+        <PhotoLink />
+      ) : (
+        <TouchableIcon onPress={() => setModalOpen(true)}>
+          <Ionicons
+            name={Platform.OS === "ios" ? "ios-search" : "md-search"}
+            size={25}
+            color={isDarkMode ? "#EFEFEF" : "#161616"}
+          />
+        </TouchableIcon>
+      )}
     </>
   );
 };

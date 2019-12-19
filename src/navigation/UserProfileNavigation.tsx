@@ -18,7 +18,6 @@ import BackArrow from "../components/Header/BackArrow";
 import LocationCenterHeader from "../components/Header/LocationCenterHeader";
 import constants from "../../constants";
 import UserProfileLeftHeader from "../components/Header/UserProfileLeftHeader";
-import UserProfileCenterHeader from "../components/Header/UserProfileCenterHeader";
 import BlockedUsers from "../screens/Tabs/UserProfileTab/BlockedUsers";
 import { View } from "react-native";
 
@@ -108,7 +107,6 @@ const UserProfileCustomHeader = () => {
       }}
     >
       <UserProfileLeftHeader />
-      <UserProfileCenterHeader />
       <Search />
     </View>
   );

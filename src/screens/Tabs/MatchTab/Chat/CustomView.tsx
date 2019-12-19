@@ -51,7 +51,7 @@ export default ({ currentMessage }) => {
   const isDarkMode = useTheme();
   const toast = (message: string) => {
     Toast.show(message, {
-      duration: Toast.durations.SHORT,
+      duration: 1000,
       position: Toast.positions.CENTER,
       shadow: true,
       animation: true,

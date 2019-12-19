@@ -45,7 +45,6 @@ export default function App() {
         ...Ionicons.font,
         ...AntDesign.font,
         ...FontAwesome.font,
-        ...SimpleLineIcons.font["location-pin"],
         ...SimpleLineIcons.font["arrow-up"],
         ...SimpleLineIcons.font["arrow-down"]
       });

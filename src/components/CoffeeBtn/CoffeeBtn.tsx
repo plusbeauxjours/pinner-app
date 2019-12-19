@@ -97,7 +97,7 @@ const CoffeeBtn: React.FC<IProps> = ({
 
   const toast = (message: string) => {
     Toast.show(message, {
-      duration: Toast.durations.LONG,
+      duration: 1000,
       position: Toast.positions.CENTER,
       shadow: true,
       animation: true,

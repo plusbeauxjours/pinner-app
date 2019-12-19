@@ -350,7 +350,7 @@ export default ({ navigation }) => {
   };
   const toast = (message: string) => {
     Toast.show(message, {
-      duration: Toast.durations.LONG,
+      duration: 1000,
       position: Toast.positions.CENTER,
       shadow: true,
       animation: true,
@@ -692,7 +692,9 @@ export default ({ navigation }) => {
             }}
             onSwipeDown={() => setAvatarModalOpen(false)}
             backgroundColor={
-              isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
+              isDarkMode && isDarkMode === true
+                ? "rgba(0, 0, 0, 0.9)"
+                : "rgba(255, 255, 255, 0.9)"
             }
             enableSwipeDown={true}
             loadingRender={() => {
