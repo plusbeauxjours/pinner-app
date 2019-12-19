@@ -98,7 +98,6 @@ export default createBottomTabNavigator(
     },
     defaultNavigationOptions: {
       tabBarOnPress: ({ navigation, defaultHandler }) => {
-        console.log(navigation);
         const isFocused = navigation.isFocused();
         defaultHandler();
         if (navigation.state.routes[0].index > 0 && isFocused) {

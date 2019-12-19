@@ -47,6 +47,9 @@ const Touchable = styled.TouchableOpacity`
 
 const TouchableIcon = styled.TouchableOpacity`
   margin-right: 20px;
+  width: 40px;
+  flex-direction: row;
+  justify-content: flex-end;
   margin-bottom: 2px;
 `;
 
