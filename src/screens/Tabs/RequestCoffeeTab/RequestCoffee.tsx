@@ -628,16 +628,7 @@ export default ({ navigation }) => {
                 <Title>RECOMMEND USERS</Title>
                 <UserContainer>
                   <Swiper
-                    style={
-                      Platform.OS === "ios"
-                        ? {
-                            height: recommendUsers.length < 3 ? 90 : 135
-                          }
-                        : {
-                            width: constants.width,
-                            height: recommendUsers.length < 3 ? 90 : 135
-                          }
-                    }
+                    style={{ height: recommendUsers.length < 3 ? 90 : 135 }}
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
                     dotColor={isDarkMode ? "#424242" : "#DADADA"}
@@ -682,16 +673,7 @@ export default ({ navigation }) => {
                 <Title>RECOMMEND LOCATIONS</Title>
                 <UserContainer>
                   <Swiper
-                    style={
-                      Platform.OS === "ios"
-                        ? {
-                            height: recommendLocations.length < 3 ? 90 : 135
-                          }
-                        : {
-                            width: constants.width,
-                            height: recommendLocations.length < 3 ? 90 : 135
-                          }
-                    }
+                    style={{ height: recommendLocations.length < 3 ? 90 : 135 }}
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
                     dotColor={isDarkMode ? "#424242" : "#DADADA"}

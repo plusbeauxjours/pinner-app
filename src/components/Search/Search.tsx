@@ -46,7 +46,7 @@ const Touchable = styled.TouchableOpacity`
 `;
 
 const TouchableIcon = styled.TouchableOpacity`
-  margin-right: 10px;
+  margin-right: 20px;
   margin-bottom: 2px;
 `;
 

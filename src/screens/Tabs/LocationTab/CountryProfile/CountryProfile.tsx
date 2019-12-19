@@ -25,6 +25,7 @@ import Toast from "react-native-root-toast";
 import { Ionicons } from "@expo/vector-icons";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import { withNavigation } from "react-navigation";
 
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -102,7 +103,7 @@ const NoPhotoContainer = styled.View`
   border-radius: 3;
   border: 0.5px solid #999;
 `;
-export default ({ navigation }) => {
+export default withNavigation(({ navigation }) => {
   const location = useLocation();
   const isDarkMode = useTheme();
   const [countryCode, setCountryCode] = useState<string>(
@@ -362,4 +363,4 @@ export default ({ navigation }) => {
       </ScrollView>
     );
   }
-};
+});

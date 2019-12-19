@@ -1,9 +1,6 @@
 import React from "react";
-import {
-  createBottomTabNavigator,
-  createStackNavigator,
-  BottomTabBar
-} from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
+import { createBottomTabNavigator, BottomTabBar } from "react-navigation-tabs";
 import { Platform } from "react-native";
 import NavIcon from "../components/NavIcon";
 import MatchNavigation from "./MatchNavigation";
@@ -85,9 +82,6 @@ export default createBottomTabNavigator(
     }
   },
   {
-    animationEnabled: true,
-    swipeEnabled: true,
-    tabBarPosition: "bottom",
     tabBarComponent: props => {
       const isDarkMode = useTheme();
       return (
@@ -104,6 +98,7 @@ export default createBottomTabNavigator(
     },
     defaultNavigationOptions: {
       tabBarOnPress: ({ navigation, defaultHandler }) => {
+        console.log(navigation);
         const isFocused = navigation.isFocused();
         defaultHandler();
         if (navigation.state.routes[0].index > 0 && isFocused) {

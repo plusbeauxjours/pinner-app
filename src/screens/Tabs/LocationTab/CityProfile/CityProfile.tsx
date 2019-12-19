@@ -39,6 +39,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import CoffeeDetail from "../../../CoffeeDetail";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
+import { withNavigation } from "react-navigation";
 
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -117,7 +118,7 @@ const NoPhotoContainer = styled.View`
   border-radius: 3;
   border: 0.5px solid #999;
 `;
-export default ({ navigation }) => {
+export default withNavigation(({ navigation }) => {
   const location = useLocation();
   const isDarkMode = useTheme();
   const [cityId, setCityId] = useState<string>(
@@ -385,16 +386,7 @@ export default ({ navigation }) => {
                 <Title>NEAR CITIES</Title>
                 <UserContainer>
                   <Swiper
-                    style={
-                      Platform.OS === "ios"
-                        ? {
-                            height: nearCities.length < 3 ? 90 : 135
-                          }
-                        : {
-                            width: constants.width,
-                            height: nearCities.length < 3 ? 90 : 135
-                          }
-                    }
+                    style={{ height: nearCities.length < 3 ? 90 : 135 }}
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
                     dotColor={isDarkMode ? "#424242" : "#DADADA"}
@@ -446,16 +438,7 @@ export default ({ navigation }) => {
                 )}
                 <UserContainer>
                   <Swiper
-                    style={
-                      Platform.OS === "ios"
-                        ? {
-                            height: samenameCities.length < 3 ? 90 : 135
-                          }
-                        : {
-                            width: constants.width,
-                            height: samenameCities.length < 3 ? 90 : 135
-                          }
-                    }
+                    style={{ height: samenameCities.length < 3 ? 90 : 135 }}
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
                     dotColor={isDarkMode ? "#424242" : "#DADADA"}
@@ -507,16 +490,7 @@ export default ({ navigation }) => {
                 )}
                 <UserContainer>
                   <Swiper
-                    style={
-                      Platform.OS === "ios"
-                        ? {
-                            height: coffees.length < 3 ? 90 : 135
-                          }
-                        : {
-                            width: constants.width,
-                            height: coffees.length < 3 ? 90 : 135
-                          }
-                    }
+                    style={{ height: coffees.length < 3 ? 90 : 135 }}
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
                     dotColor={isDarkMode ? "#424242" : "#DADADA"}
@@ -564,16 +538,7 @@ export default ({ navigation }) => {
                 )}
                 <UserContainer>
                   <Swiper
-                    style={
-                      Platform.OS === "ios"
-                        ? {
-                            height: usersBefore.length < 3 ? 90 : 135
-                          }
-                        : {
-                            width: constants.width,
-                            height: usersBefore.length < 3 ? 90 : 135
-                          }
-                    }
+                    style={{ height: usersBefore.length < 3 ? 90 : 135 }}
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
                     dotColor={isDarkMode ? "#424242" : "#DADADA"}
@@ -644,4 +609,4 @@ export default ({ navigation }) => {
       </>
     );
   }
-};
+});

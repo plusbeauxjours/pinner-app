@@ -1,6 +1,6 @@
 import React from "react";
-import { createStackNavigator } from "react-navigation";
-import { createMaterialTopTabNavigator } from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
+import { createMaterialTopTabNavigator } from "react-navigation-tabs";
 import CityProfile from "../screens/Tabs/LocationTab/CityProfile";
 import CountryProfile from "../screens/Tabs/LocationTab/CountryProfile";
 import ContinentProfile from "../screens/Tabs/LocationTab/ContinentProfile";
@@ -17,33 +17,23 @@ import LocationLeftHeader from "../components/Header/LocationLeftHeader";
 import BackArrow from "../components/Header/BackArrow";
 import LocationCenterHeader from "../components/Header/LocationCenterHeader";
 import constants from "../../constants";
-import { Header } from "native-base";
 import { useTheme } from "../context/ThemeContext";
 import UserProfileLeftHeader from "../components/Header/UserProfileLeftHeader";
 import UserProfileCenterHeader from "../components/Header/UserProfileCenterHeader";
 import BlockedUsers from "../screens/Tabs/UserProfileTab/BlockedUsers";
+import { View } from "react-native";
 
 export const CountryProfileTabs = createMaterialTopTabNavigator(
   {
     CountryProfile: {
-      screen: CountryProfile,
-      navigationOptions: {
-        header: null,
-        mode: "modal"
-      }
+      screen: CountryProfile
     },
     ContinentProfile: {
-      screen: ContinentProfile,
-      navigationOptions: {
-        header: null,
-        mode: "modal"
-      }
+      screen: ContinentProfile
     }
   },
   {
-    animationEnabled: true,
     swipeEnabled: true,
-    tabBarPosition: "bottom",
     tabBarOptions: {
       style: {
         display: "none"
@@ -59,31 +49,17 @@ export const CountryProfileTabs = createMaterialTopTabNavigator(
 export const CityProfileTabs = createMaterialTopTabNavigator(
   {
     CityProfile: {
-      screen: CityProfile,
-      navigationOptions: {
-        header: null,
-        mode: "modal"
-      }
+      screen: CityProfile
     },
     CountryProfile: {
-      screen: CountryProfile,
-      navigationOptions: {
-        header: null,
-        mode: "modal"
-      }
+      screen: CountryProfile
     },
     ContinentProfile: {
-      screen: ContinentProfile,
-      navigationOptions: {
-        header: null,
-        mode: "modal"
-      }
+      screen: ContinentProfile
     }
   },
   {
-    animationEnabled: true,
     swipeEnabled: true,
-    tabBarPosition: "bottom",
     tabBarOptions: {
       style: {
         display: "none"
@@ -99,71 +75,83 @@ export const CityProfileTabs = createMaterialTopTabNavigator(
 const CoffeeCustomHeader = () => {
   const isDarkMode = useTheme();
   return (
-    <Header
+    <View
       style={{
         backgroundColor: isDarkMode ? "#161616" : "#EFEFEF",
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "flex-end",
-        width: constants.width
+        width: constants.width,
+        height: 60,
+        borderBottomWidth: 0.5,
+        borderBottomColor: "#999"
       }}
     >
       <CoffeeHeader />
       <Search />
-    </Header>
+    </View>
   );
 };
 const LocationCustomHeader = () => {
   const isDarkMode = useTheme();
   return (
-    <Header
+    <View
       style={{
         backgroundColor: isDarkMode ? "#161616" : "#EFEFEF",
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "flex-end",
-        width: constants.width
+        width: constants.width,
+        height: 60,
+        borderBottomWidth: 0.5,
+        borderBottomColor: "#999"
       }}
     >
       <LocationLeftHeader />
       <LocationCenterHeader />
       <Search />
-    </Header>
+    </View>
   );
 };
 const UserProfileCustomHeader = () => {
   const isDarkMode = useTheme();
   return (
-    <Header
+    <View
       style={{
         backgroundColor: isDarkMode ? "#161616" : "#EFEFEF",
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "flex-end",
-        width: constants.width
+        width: constants.width,
+        height: 60,
+        borderBottomWidth: 0.5,
+        borderBottomColor: "#999"
       }}
     >
       <UserProfileLeftHeader />
       <UserProfileCenterHeader />
       <Search />
-    </Header>
+    </View>
   );
 };
 const BackCustomHeader = () => {
   const isDarkMode = useTheme();
   return (
-    <Header
+    <View
       style={{
         backgroundColor: isDarkMode ? "#161616" : "#EFEFEF",
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "flex-end",
-        width: constants.width
+        width: constants.width,
+        height: 60,
+        borderBottomWidth: 0.5,
+        borderBottomColor: "#999"
       }}
     >
       <BackArrow />
       <Search />
-    </Header>
+    </View>
   );
 };
 
