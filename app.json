@@ -25,12 +25,13 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "pinner.plusbeauxjours",
-      "icon": "./assets/icon.png"
+      "bundleIdentifier": "pinner.plusbeauxjours"
     },
     "android": {
-      "package": "pinner.plusbeauxjours",
-      "icon": "./assets/icon.png"
+      "package": "pinner.plusbeauxjours"
+    },
+    "notification": {
+      "icon": "./assets/notification.png"
     },
     "description": ""
   }
