@@ -24,7 +24,6 @@ exports.sendNotification = functions.database
     console.log("receiverPushToken", JSON.stringify(receiverPushToken));
     console.log("sendMsg", sendMsg);
     console.log("sendMsg", JSON.stringify(sendMsg));
-
     return axios.post("https://exp.host/--/api/v2/push/send", {
       to: receiverPushToken,
       title: "New message",
