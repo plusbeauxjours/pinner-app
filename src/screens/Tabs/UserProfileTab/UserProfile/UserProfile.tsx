@@ -94,7 +94,7 @@ const Item = styled.View`
   flex-direction: column;
   align-items: center;
   width: ${constants.width / 4 - 2.5};
-  height: ${constants.width / 5 - 10};
+  height: 70px;
 `;
 const ItemContainer = styled.View`
   flex-wrap: wrap;

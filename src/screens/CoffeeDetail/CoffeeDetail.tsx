@@ -14,7 +14,7 @@ import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 
 const Container = styled.View`
   width: ${constants.width};
-  height: ${constants.width};
+  height: 450px;
   border-top-width: 0.5;
   border-top-color: #999;
   border-bottom-width: 0.5;
@@ -54,7 +54,6 @@ const UserName = styled.Text`
 const ItemContainer = styled.View`
   flex-direction: row;
   margin-top: 80px;
-  justify-content: center;
   align-items: center;
   width: ${constants.width};
   flex-wrap: wrap;
@@ -64,7 +63,7 @@ const Item = styled.View`
   justify-content: center;
   align-items: center;
   width: ${constants.width / 4 - 2.5};
-  height: ${constants.width / 5};
+  height: 70px;
 `;
 const GreyText = styled.Text`
   color: #999;
