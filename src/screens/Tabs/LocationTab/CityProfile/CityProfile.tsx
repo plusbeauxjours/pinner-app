@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RefreshControl, Platform } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useQuery, useMutation } from "react-apollo-hooks";
@@ -40,6 +40,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import CoffeeDetail from "../../../CoffeeDetail";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import { withNavigation } from "react-navigation";
+import { useMe } from "../../../../context/MeContext";
 
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -119,10 +120,10 @@ const NoPhotoContainer = styled.View`
   border: 0.5px solid #999;
 `;
 export default withNavigation(({ navigation }) => {
-  const location = useLocation();
+  const { me } = useMe();
   const isDarkMode = useTheme();
   const [cityId, setCityId] = useState<string>(
-    navigation.getParam("cityId") || location.currentCityId
+    navigation.getParam("cityId") || me.user.profile.currentCity.cityId
   );
   const [coffeeId, setCoffeeId] = useState<string>("");
   const [modalOpen, setModalOpen] = useState<boolean>(false);

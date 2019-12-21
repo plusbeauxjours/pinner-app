@@ -22,6 +22,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { withNavigation } from "react-navigation";
+import { useMe } from "../../../../context/MeContext";
 
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -84,11 +85,13 @@ const NoPhotoContainer = styled.View`
   background-color: ${props => props.theme.bgColor};
 `;
 export default withNavigation(({ navigation }) => {
-  const location = useLocation();
+  const { me } = useMe();
   const isDarkMode = useTheme();
   const [continentCode, setContinentCode] = useState<string>(
     navigation.getParam("continentCode") ||
-      countryData.find(i => i.code === location.currentCountryCode).continent
+      countryData.find(
+        i => i.code === me.user.profile.currentCity.country.countryCode
+      ).continent
   );
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const { showActionSheetWithOptions } = useActionSheet();

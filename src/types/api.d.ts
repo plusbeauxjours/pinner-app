@@ -646,9 +646,7 @@ export interface CityProfile_cityProfile_city {
 
 export interface CityProfile_cityProfile {
   __typename: "CityProfileResponse";
-  page: number | null;
   count: number | null;
-  hasNextPage: boolean | null;
   usersNow: (CityProfile_cityProfile_usersNow | null)[] | null;
   usersBefore: (CityProfile_cityProfile_usersBefore | null)[] | null;
   city: CityProfile_cityProfile_city | null;
@@ -868,9 +866,7 @@ export interface CountryProfile_countryProfile_cities {
 
 export interface CountryProfile_countryProfile {
   __typename: "CountryProfileResponse";
-  page: number | null;
   count: number | null;
-  hasNextPage: boolean | null;
   country: CountryProfile_countryProfile_country | null;
   cities: (CountryProfile_countryProfile_cities | null)[] | null;
 }
@@ -1808,7 +1804,6 @@ export interface FrequentVisitsVariables {
 export interface TopContinents_topContinents_continents {
   __typename: "ContinentType";
   count: number | null;
-  diff: number | null;
   id: string;
   continentName: string | null;
   continentCode: string | null;
