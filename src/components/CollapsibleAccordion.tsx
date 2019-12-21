@@ -42,7 +42,7 @@ const Header = styled.View`
   flex-direction: row;
 `;
 const Location = styled.Text`
-  font-size: 12px;
+  font-size: 11px;
   color: ${props => props.theme.color};
 `;
 export default ({ cityId }) => {

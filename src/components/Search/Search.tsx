@@ -65,7 +65,7 @@ const Bold = styled.Text`
 `;
 
 const Location = styled.Text`
-  font-size: 12px;
+  font-size: 11px;
   color: ${props => props.theme.color};
 `;
 

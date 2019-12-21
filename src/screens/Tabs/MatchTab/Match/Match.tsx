@@ -508,7 +508,7 @@ export default ({ navigation }) => {
                       </BackLeftBtn>
                     </RowBack>
                   )}
-                  leftOpenValue={90}
+                  leftOpenValue={91}
                   keyExtractor={item => item.id}
                 />
               </UserContainer>

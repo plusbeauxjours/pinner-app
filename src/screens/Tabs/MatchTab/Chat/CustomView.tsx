@@ -81,19 +81,23 @@ export default ({ currentMessage }) => {
     return (
       <Touchable
         onPress={() => {
-          if (currentMessage.snsIdPlatform === "PHONE" || "PHONE_SECOND") {
-            Clipboard.setString(currentMessage.snsId);
-            toast(`you have copied the phonenumber ${currentMessage.snsId}`);
-          } else if (
-            currentMessage.snsIdPlatform === "EMAIL" ||
-            "EMAIL_SECOND"
+          console.log(currentMessage.snsIdPlatform);
+          if (
+            currentMessage.snsIdPlatform === "PHONE" ||
+            currentMessage.snsIdPlatform === "PHONE_SECOND"
           ) {
             Clipboard.setString(currentMessage.snsId);
-            toast(`you have copied the email address ${currentMessage.snsId}`);
+            toast(`You have copied ${currentMessage.snsId}`);
+          } else if (
+            currentMessage.snsIdPlatform === "EMAIL" ||
+            currentMessage.snsIdPlatform === "EMAIL_SECOND"
+          ) {
+            Clipboard.setString(currentMessage.snsId);
+            toast(`You have copied the email address ${currentMessage.snsId}`);
           } else {
             Clipboard.setString(currentMessage.snsId);
             toast(
-              `you have copied the ${currentMessage.snsIdPlatform} username ${currentMessage.snsId}`
+              `You have copied the ${currentMessage.snsIdPlatform} username ${currentMessage.snsId}`
             );
           }
         }}

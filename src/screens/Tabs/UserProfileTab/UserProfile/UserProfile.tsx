@@ -5,7 +5,8 @@ import {
   Platform,
   Image,
   KeyboardAvoidingView,
-  Modal as AvatarModal
+  Modal as AvatarModal,
+  TextInput
 } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -54,7 +55,6 @@ import Modal from "react-native-modal";
 import { useTheme } from "../../../../context/ThemeContext";
 import { CalendarList } from "react-native-calendars";
 import { CREATE_CITY } from "../../../../components/Search/SearchQueries";
-import { TextInput } from "react-native-gesture-handler";
 import useGoogleAutocomplete from "../../../../hooks/useGoogleAutocomplete";
 import keys from "../../../../../keys";
 import SearchCityPhoto from "../../../../components/SearchCityPhoto";
@@ -87,7 +87,7 @@ const BioText = styled(Text)`
   margin-bottom: 20px;
 `;
 const Bold = styled.Text`
-  font-size: 12px;
+  font-size: 11px;
   color: ${props => props.theme.color};
 `;
 const Item = styled.View`
@@ -138,8 +138,13 @@ const LoaderContainer = styled.View`
 `;
 const EditText = styled.Text`
   color: ${props => props.theme.color};
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 100;
+`;
+const IconTextContainer = styled.View`
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 const IconContainer = styled.View`
   width: 40px;
@@ -227,7 +232,7 @@ const SearchHeaderUserContainer = styled.View`
   margin-left: 10px;
 `;
 const Location = styled.Text`
-  font-size: 12px;
+  font-size: 11px;
   color: ${props => props.theme.color};
 `;
 const TripSmallText = styled(SmallText)`
@@ -1572,7 +1577,10 @@ export default ({ navigation }) => {
                             }
                           >
                             <IconContainer>
-                              <SmallText>EDIT TRIP</SmallText>
+                              <IconTextContainer>
+                                <SmallText>EDIT</SmallText>
+                                <SmallText>TRIP</SmallText>
+                              </IconTextContainer>
                             </IconContainer>
                           </BackLeftBtn>
                           <BackLeftBtn
@@ -1585,7 +1593,7 @@ export default ({ navigation }) => {
                           </BackLeftBtn>
                         </RowBack>
                       )}
-                      leftOpenValue={90}
+                      leftOpenValue={91}
                       keyExtractor={item => item.id}
                     />
                   );

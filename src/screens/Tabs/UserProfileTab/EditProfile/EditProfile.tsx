@@ -112,7 +112,7 @@ const Void = styled.View`
 const ToggleIcon = styled.TouchableOpacity``;
 const Touchable = styled.TouchableOpacity``;
 const ExplainText = styled.Text<IProps>`
-  font-size: 12px;
+  font-size: 11px;
   color: ${props => (props.isChanged ? "#d60000" : props.theme.color)};
   font-weight: ${props => (props.isChanged ? "300" : "100")};
 `;

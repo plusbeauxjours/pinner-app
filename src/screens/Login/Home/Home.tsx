@@ -12,11 +12,10 @@ import {
   StartEmailVerificationVariables
 } from "../../../types/api";
 import Toast from "react-native-root-toast";
-import { Platform, ActivityIndicator } from "react-native";
 import { useTheme } from "../../../context/ThemeContext";
 import { DARK_THEME } from "react-native-country-picker-modal";
 import CountryPicker from "react-native-country-picker-modal";
-import { TextInput } from "react-native-gesture-handler";
+import { Platform, TextInput, ActivityIndicator } from "react-native";
 import { countries } from "../../../../countryData";
 import { useLogIn } from "../../../context/AuthContext";
 import {
