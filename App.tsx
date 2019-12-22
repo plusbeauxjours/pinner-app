@@ -70,6 +70,31 @@ export default function App() {
       await Asset.loadAsync(require("./assets/pinterest.png"));
       await Asset.loadAsync(require("./assets/vine.png"));
       await Asset.loadAsync(require("./assets/tumblr.png"));
+      await Asset.loadAsync(require("./assets/tumblr.png"));
+
+      await Asset.loadAsync(require("./src/Images/weatherIcon/01d.svg"));
+      await Asset.loadAsync(require("./src/Images/weatherIcon/01n.svg"));
+      await Asset.loadAsync(require("./src/Images/weatherIcon/02d.svg"));
+      await Asset.loadAsync(require("./src/Images/weatherIcon/02n.svg"));
+      await Asset.loadAsync(require("./src/Images/weatherIcon/03d.svg"));
+      await Asset.loadAsync(require("./src/Images/weatherIcon/03n.svg"));
+      await Asset.loadAsync(require("./src/Images/weatherIcon/04d.svg"));
+      await Asset.loadAsync(require("./src/Images/weatherIcon/04n.svg"));
+      await Asset.loadAsync(require("./src/Images/weatherIcon/09d.svg"));
+      await Asset.loadAsync(require("./src/Images/weatherIcon/09n.svg"));
+      await Asset.loadAsync(require("./src/Images/weatherIcon/10d.svg"));
+      await Asset.loadAsync(require("./src/Images/weatherIcon/10n.svg"));
+      await Asset.loadAsync(require("./src/Images/weatherIcon/11d.svg"));
+      await Asset.loadAsync(require("./src/Images/weatherIcon/11n.svg"));
+      await Asset.loadAsync(require("./src/Images/weatherIcon/13d.svg"));
+      await Asset.loadAsync(require("./src/Images/weatherIcon/13n.svg"));
+      await Asset.loadAsync(require("./src/Images/weatherIcon/50d.svg"));
+      await Asset.loadAsync(require("./src/Images/weatherIcon/50n.svg"));
+      await Asset.loadAsync(require("./src/Images/weatherIcon/wi-celsius.svg"));
+      await Asset.loadAsync(
+        require("./src/Images/weatherIcon/wi-humidity.svg")
+      );
+      await Asset.loadAsync(require("./src/Images/weatherIcon/wi-na.svg"));
 
       const cache = new InMemoryCache();
       // await AsyncStorage.clear();
