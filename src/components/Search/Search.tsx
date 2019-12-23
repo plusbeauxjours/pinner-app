@@ -153,6 +153,12 @@ const Search = ({ navigation }) => {
         propagateSwipe={true}
         scrollHorizontal={true}
         backdropOpacity={0.9}
+        animationIn="fadeIn"
+        animationOut="fadeOut"
+        animationInTiming={200}
+        animationOutTiming={200}
+        backdropTransitionInTiming={200}
+        backdropTransitionOutTiming={200}
       >
         <TextInput
           style={{

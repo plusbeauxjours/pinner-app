@@ -728,7 +728,7 @@ export default ({ navigation }) => {
           }}
           propagateSwipe={true}
           scrollHorizontal={true}
-          backdropOpacity={0.95}
+          backdropOpacity={0.9}
           animationIn="fadeIn"
           animationOut="fadeOut"
           animationInTiming={200}
@@ -939,7 +939,7 @@ export default ({ navigation }) => {
           }}
           propagateSwipe={true}
           scrollHorizontal={true}
-          backdropOpacity={0.95}
+          backdropOpacity={0.9}
           animationIn="fadeIn"
           animationOut="fadeOut"
           animationInTiming={200}

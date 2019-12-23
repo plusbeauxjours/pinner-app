@@ -643,6 +643,7 @@ export default ({ navigation }) => {
   return (
     <>
       <Modal
+        style={{ justifyContent: "center", alignItems: "center" }}
         isVisible={editPhoneModalOpen}
         backdropColor={theme ? "#161616" : "#EFEFEF"}
         onBackdropPress={() => closeEditPhoneModalOpen()}
@@ -652,7 +653,12 @@ export default ({ navigation }) => {
         propagateSwipe={true}
         scrollHorizontal={true}
         backdropOpacity={0.9}
-        style={{ justifyContent: "center", alignItems: "center" }}
+        animationIn="fadeIn"
+        animationOut="fadeOut"
+        animationInTiming={200}
+        animationOutTiming={200}
+        backdropTransitionInTiming={200}
+        backdropTransitionOutTiming={200}
       >
         {isEditPhoneMode ? (
           <>
@@ -742,6 +748,7 @@ export default ({ navigation }) => {
         )}
       </Modal>
       <Modal
+        style={{ justifyContent: "center", alignItems: "center" }}
         isVisible={deleteModalOpen}
         backdropColor={theme ? "#161616" : "#EFEFEF"}
         onBackdropPress={() => closeDeleteModalOpen()}
@@ -751,7 +758,12 @@ export default ({ navigation }) => {
         propagateSwipe={true}
         scrollHorizontal={true}
         backdropOpacity={0.9}
-        style={{ justifyContent: "center", alignItems: "center" }}
+        animationIn="fadeIn"
+        animationOut="fadeOut"
+        animationInTiming={200}
+        animationOutTiming={200}
+        backdropTransitionInTiming={200}
+        backdropTransitionOutTiming={200}
       >
         <TextInput
           style={{
@@ -786,6 +798,7 @@ export default ({ navigation }) => {
         </TextContainer>
       </Modal>
       <Modal
+        style={{ justifyContent: "center", alignItems: "center" }}
         isVisible={editEmailModalOpen}
         backdropColor={theme ? "#161616" : "#EFEFEF"}
         onBackdropPress={() => closeEditEmailModalOpen()}
@@ -795,7 +808,12 @@ export default ({ navigation }) => {
         propagateSwipe={true}
         scrollHorizontal={true}
         backdropOpacity={0.9}
-        style={{ justifyContent: "center", alignItems: "center" }}
+        animationIn="fadeIn"
+        animationOut="fadeOut"
+        animationInTiming={200}
+        animationOutTiming={200}
+        backdropTransitionInTiming={200}
+        backdropTransitionOutTiming={200}
       >
         {isEditEmailMode ? (
           <>
