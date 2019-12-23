@@ -262,6 +262,7 @@ export default ({ navigation }) => {
   return (
     <>
       <Modal
+        style={{ justifyContent: "center", alignItems: "center" }}
         isVisible={approachModalOpen}
         backdropColor={isDarkMode ? "#161616" : "#EFEFEF"}
         onBackdropPress={() => closePhoneApproachModalOpen()}
@@ -271,7 +272,12 @@ export default ({ navigation }) => {
         propagateSwipe={true}
         scrollHorizontal={true}
         backdropOpacity={0.9}
-        style={{ justifyContent: "center", alignItems: "center" }}
+        animationIn="fadeIn"
+        animationOut="fadeOut"
+        animationInTiming={200}
+        animationOutTiming={200}
+        backdropTransitionInTiming={200}
+        backdropTransitionOutTiming={200}
       >
         {(() => {
           switch (modalMode) {
