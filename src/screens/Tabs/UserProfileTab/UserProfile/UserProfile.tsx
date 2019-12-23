@@ -1195,7 +1195,7 @@ export default ({ navigation }) => {
               {user.profile.isSelf ? (
                 <IconTouchable
                   onPress={() =>
-                    navigation.push("EditProfile", {
+                    navigation.navigate("EditProfile", {
                       ...user
                     })
                   }

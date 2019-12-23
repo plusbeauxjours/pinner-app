@@ -26,7 +26,7 @@ const Text = styled.Text`
   font-weight: 600;
 `;
 
-export default () => {
+export default ({ cityId, countryCode }) => {
   const [loading, setLoading] = useState(false);
   const logIn = useLogIn();
   const [facebookConnectFn, { loading: facebookConnectLoading }] = useMutation<
@@ -70,8 +70,8 @@ export default () => {
             lastName: last_name,
             email,
             gender,
-            cityId: "ChIJuQhD6D7sfDURB6J0Dx5TGW8",
-            countryCode: "KR",
+            cityId,
+            countryCode,
             fbId: id
           }
         });

@@ -4,6 +4,7 @@ import Loader from "./Loader";
 import { useState } from "react";
 import styled from "styled-components";
 import SvgUri from "react-native-svg-uri";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const colorMidium = "#FFA500";
 const colorHigh = "#FF4500";
@@ -89,8 +90,6 @@ const IconContainer = styled.View`
   align-items: center;
 `;
 
-const Text = styled.Text``;
-
 interface ITheme {
   temp?: number;
   chill?: number;
@@ -120,34 +119,35 @@ export default ({ latitude, longitude }) => {
     getWeather(latitude, longitude);
   }, [latitude, longitude]);
   const iconUrl = {
-    "01d": require(`../Images/weatherIcon/01d.svg`),
-    "01n": require(`../Images/weatherIcon/01n.svg`),
-    "02d": require(`../Images/weatherIcon/02d.svg`),
-    "02n": require(`../Images/weatherIcon/02n.svg`),
-    "03d": require(`../Images/weatherIcon/03d.svg`),
-    "03n": require(`../Images/weatherIcon/03n.svg`),
-    "04d": require(`../Images/weatherIcon/04d.svg`),
-    "04n": require(`../Images/weatherIcon/04n.svg`),
-    "09d": require(`../Images/weatherIcon/09d.svg`),
-    "09n": require(`../Images/weatherIcon/09n.svg`),
-    "10d": require(`../Images/weatherIcon/10d.svg`),
-    "10n": require(`../Images/weatherIcon/10n.svg`),
-    "11d": require(`../Images/weatherIcon/11d.svg`),
-    "11n": require(`../Images/weatherIcon/11n.svg`),
-    "13d": require(`../Images/weatherIcon/13d.svg`),
-    "13n": require(`../Images/weatherIcon/13n.svg`),
-    "50d": require(`../Images/weatherIcon/50d.svg`),
-    "50n": require(`../Images/weatherIcon/50n.svg`),
-    "wi-celsius": require(`../Images/weatherIcon/wi-celsius.svg`),
-    "wi-humidity": require(`../Images/weatherIcon/wi-humidity.svg`),
-    "wi-na": require(`../Images/weatherIcon/wi-na.svg`)
+    "01d": "weather-sunny",
+    "01n": "weather-sunny",
+    "02d": "weather-partlycloudy",
+    "02n": "weather-partlycloudy",
+    "03d": "weather-cloudy",
+    "03n": "weather-cloudy",
+    "04d": "weather-partlycloudy",
+    "04n": "weather-partlycloudy",
+    "09d": "weather-pouring",
+    "09n": "weather-pouring",
+    "10d": "weather-rainy",
+    "10n": "weather-rainy",
+    "11d": "weather-lightning-rainy",
+    "11n": "weather-lightning-rainy",
+    "13d": "weather-snowy",
+    "13n": "weather-snowy",
+    "50d": "weather-fog",
+    "50n": "weather-fog"
   };
 
   return (
     <Container>
       <IconContainer>
         {icon ? (
-          <SvgUri width="30px" height="30px" source={iconUrl[icon]} />
+          <MaterialCommunityIcons
+            size={38}
+            name={iconUrl[icon]}
+            color={"#999"}
+          />
         ) : (
           <Loader />
         )}

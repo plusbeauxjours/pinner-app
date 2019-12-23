@@ -457,7 +457,7 @@ export default ({ navigation }) => {
               <LoginLinkText>LOG IN WITH PHONE NUMBER</LoginLinkText>
             </LoginLink>
           </Touchable>
-          <FacebookApproach />
+          <FacebookApproach cityId={cityId} countryCode={countryPhoneCode} />
         </BtnContainer>
       </View>
     </>
