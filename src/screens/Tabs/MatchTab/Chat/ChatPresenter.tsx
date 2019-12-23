@@ -361,7 +361,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   const [isChangedSendTumblr, setIsChangedSendTumblr] = useState<boolean>(
     false
   );
-
   const [updateSnsFn, { loading: updateSnsLoading }] = useMutation<
     UpdateSns,
     UpdateSnsVariables
@@ -415,47 +414,84 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
       .replace(/\s\s*$/, "")
       .replace(replaceChar, "");
     if (state === "INSTAGRAM") {
-      setSendInstagram(item);
+      if (sendInstagram.length < 199) {
+        setSendInstagram(item);
+      }
     } else if (state === "PHONE") {
-      setSendPhone(text);
+      if (sendPhone.length < 20) {
+        setSendPhone(text);
+      }
     } else if (state === "EMAIL") {
-      setSendEmail(text);
+      if (sendEmail.length < 199) {
+        setSendEmail(text);
+      }
     } else if (state === "KAKAOTALK") {
-      setSendKakao(item);
+      if (sendKakao.length < 199) {
+        setSendKakao(item);
+      }
     } else if (state === "FACEBOOK") {
-      setSendFacebook(item);
+      if (sendFacebook.length < 199) {
+        setSendFacebook(item);
+      }
     } else if (state === "YOUTUBE") {
-      setSendYoutube(item);
+      if (sendYoutube.length < 199) {
+        setSendYoutube(item);
+      }
     } else if (state === "TWITTER") {
-      setSendTwitter(item);
+      if (sendTwitter.length < 199) {
+        setSendTwitter(item);
+      }
     } else if (state === "TELEGRAM") {
-      setSendTelegram(item);
+      if (sendTelegram.length < 199) {
+        setSendTelegram(item);
+      }
     } else if (state === "SNAPCHAT") {
-      setSendSnapchat(item);
+      if (sendSnapchat.length < 199) {
+        setSendSnapchat(item);
+      }
     } else if (state === "LINE") {
-      setSendLine(item);
+      if (sendLine.length < 199) {
+        setSendLine(item);
+      }
     } else if (state === "WECHAT") {
-      setSendWechat(item);
+      if (sendWechat.length < 199) {
+        setSendWechat(item);
+      }
     } else if (state === "KIK") {
-      setSendKik(item);
+      if (sendKik.length < 199) {
+        setSendKik(item);
+      }
     } else if (state === "VK") {
-      setSendVk(item);
+      if (sendVk.length < 199) {
+        setSendVk(item);
+      }
     } else if (state === "WHATSAPP") {
-      setSendWhatsapp(item);
+      if (sendWhatsapp.length < 199) {
+        setSendWhatsapp(item);
+      }
     } else if (state === "BEHANCE") {
-      setSendBehance(item);
+      if (sendBehance.length < 199) {
+        setSendBehance(item);
+      }
     } else if (state === "LINKEDIN") {
-      setSendLinkedin(item);
+      if (sendLinkedin.length < 199) {
+        setSendLinkedin(item);
+      }
     } else if (state === "PINTEREST") {
-      setSendPinterest(item);
+      if (sendPinterest.length < 199) {
+        setSendPinterest(item);
+      }
     } else if (state === "VINE") {
-      setSendVine(item);
+      if (sendVine.length < 199) {
+        setSendVine(item);
+      }
     } else if (state === "TUMBLR") {
-      setSendTumblr(item);
+      if (sendTumblr.length < 199) {
+        setSendTumblr(item);
+      }
     } else {
       return null;
     }
-    // }
   };
   const snsList = [
     {
