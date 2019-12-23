@@ -32,8 +32,8 @@ const View = styled.View`
   flex: 1;
 `;
 const Image = styled.Image`
-  width: ${constants.width / 2.5};
-  height: ${constants.width / 2.5};
+  width: 180px;
+  height: 180px;
 `;
 const Container = styled.View`
   flex-direction: column;
@@ -77,6 +77,7 @@ const Title = styled.Text`
   font-weight: 300;
   font-size: 23px;
   top: -25px;
+  font-family: "Georgia";
   color: #3897f0;
 `;
 const Touchable = styled.TouchableOpacity``;
