@@ -124,7 +124,6 @@ export default withNavigation(({ navigation }) => {
   const [cityId, setCityId] = useState<string>(
     navigation.getParam("cityId") || me.user.profile.currentCity.cityId
   );
-  console.log(cityId);
   const [coffeeId, setCoffeeId] = useState<string>("");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);

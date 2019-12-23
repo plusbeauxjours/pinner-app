@@ -1196,7 +1196,7 @@ export default ({ navigation }) => {
                 <IconTouchable
                   onPress={() =>
                     navigation.navigate("EditProfile", {
-                      ...user
+                      profile: user.profile
                     })
                   }
                 >

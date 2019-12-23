@@ -81,7 +81,6 @@ export default ({ currentMessage }) => {
     return (
       <Touchable
         onPress={() => {
-          console.log(currentMessage.snsIdPlatform);
           if (
             currentMessage.snsIdPlatform === "PHONE" ||
             currentMessage.snsIdPlatform === "PHONE_SECOND"
