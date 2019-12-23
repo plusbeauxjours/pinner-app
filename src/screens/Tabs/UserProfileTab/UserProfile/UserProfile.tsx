@@ -5,7 +5,6 @@ import {
   Platform,
   Image,
   KeyboardAvoidingView,
-  Modal as AvatarModal,
   TextInput
 } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
@@ -61,7 +60,7 @@ import SearchCityPhoto from "../../../../components/SearchCityPhoto";
 import { countries } from "../../../../../countryData";
 import CoffeeDetail from "../../../CoffeeDetail/index";
 import { GET_COFFEES } from "../../../../sharedQueries";
-import ImageViewer from "react-native-image-zoom-viewer";
+import ImageZoom from "react-native-image-pan-zoom";
 
 const View = styled.View``;
 const Header = styled.View`
@@ -665,51 +664,51 @@ export default ({ navigation }) => {
   } else {
     return (
       <>
-        <AvatarModal visible={avatarModalOpen} transparent={true}>
-          <ImageViewer
-            imageUrls={[
-              { url: `${BACKEND_URL}/media/${user.profile.avatarUrl}` }
-            ]}
-            enablePreload={true}
-            style={{
-              height: constants.width,
-              width: constants.width,
-              padding: 0,
-              margin: 0
-            }}
-            renderImage={() => {
-              return (
-                <ProgressiveImage
-                  tint={isDarkMode ? "dark" : "light"}
-                  style={{
-                    height: constants.width,
-                    width: constants.width,
-                    padding: 0,
-                    margin: 0,
-                    position: "absolute"
-                  }}
-                  preview={{
-                    uri: `${BACKEND_URL}/media/${user.profile.avatarUrl}`
-                  }}
-                  uri={`${BACKEND_URL}/media/${user.profile.avatarUrl}`}
-                />
-              );
-            }}
-            onSwipeDown={() => setAvatarModalOpen(false)}
-            backgroundColor={
-              isDarkMode && isDarkMode === true
-                ? "rgba(0, 0, 0, 0.9)"
-                : "rgba(255, 255, 255, 0.9)"
-            }
-            enableSwipeDown={true}
-            loadingRender={() => {
-              return <Loader />;
-            }}
-            //@ts-ignore
-            renderIndicator={() => {}}
-            saveToLocalByLongPress={false}
-          />
-        </AvatarModal>
+        <Modal
+          style={{ margin: 0, alignItems: "flex-start" }}
+          isVisible={avatarModalOpen}
+          backdropColor={
+            isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
+          }
+          onBackdropPress={() => setAvatarModalOpen(false)}
+          onBackButtonPress={() =>
+            Platform.OS !== "ios" && setAvatarModalOpen(false)
+          }
+          onModalHide={() => setAvatarModalOpen(false)}
+          propagateSwipe={true}
+          scrollHorizontal={true}
+          backdropOpacity={0.9}
+          animationIn="fadeIn"
+          animationOut="fadeOut"
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropTransitionInTiming={200}
+          backdropTransitionOutTiming={200}
+        >
+          <ImageZoom
+            cropWidth={constants.width}
+            cropHeight={constants.width}
+            imageWidth={constants.width}
+            imageHeight={constants.width}
+          >
+            <ProgressiveImage
+              tint={isDarkMode ? "dark" : "light"}
+              resizeMode={"cover"}
+              style={{
+                height: constants.width,
+                width: constants.width,
+                padding: 0,
+                margin: 0,
+                position: "absolute"
+              }}
+              onSwipeDown={() => setAvatarModalOpen(false)}
+              preview={{
+                uri: `${BACKEND_URL}/media/${user.profile.avatarUrl}`
+              }}
+              uri={`${BACKEND_URL}/media/${user.profile.avatarUrl}`}
+            />
+          </ImageZoom>
+        </Modal>
         <Modal
           style={{ margin: 0, alignItems: "flex-start" }}
           isVisible={addTripModalOpen}
@@ -730,8 +729,8 @@ export default ({ navigation }) => {
           propagateSwipe={true}
           scrollHorizontal={true}
           backdropOpacity={0.95}
-          animationIn="zoomInDown"
-          animationOut="zoomOutUp"
+          animationIn="fadeIn"
+          animationOut="fadeOut"
           animationInTiming={200}
           animationOutTiming={200}
           backdropTransitionInTiming={200}
@@ -941,8 +940,8 @@ export default ({ navigation }) => {
           propagateSwipe={true}
           scrollHorizontal={true}
           backdropOpacity={0.95}
-          animationIn="zoomInDown"
-          animationOut="zoomOutUp"
+          animationIn="fadeIn"
+          animationOut="fadeOut"
           animationInTiming={200}
           animationOutTiming={200}
           backdropTransitionInTiming={200}
@@ -1141,8 +1140,8 @@ export default ({ navigation }) => {
           propagateSwipe={true}
           scrollHorizontal={true}
           backdropOpacity={0.9}
-          animationIn="zoomInDown"
-          animationOut="zoomOutUp"
+          animationIn="fadeIn"
+          animationOut="fadeOut"
           animationInTiming={200}
           animationOutTiming={200}
           backdropTransitionInTiming={200}

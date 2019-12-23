@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import { ScreenOrientation } from "expo";
-import { RefreshControl, FlatList, Modal, Platform } from "react-native";
+import { RefreshControl, FlatList, Platform } from "react-native";
 import Toast from "react-native-root-toast";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
@@ -20,9 +20,9 @@ import {
 import Loader from "../../../../components/Loader";
 import constants, { BACKEND_URL } from "../../../../../constants";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
-import ImageViewer from "react-native-image-zoom-viewer";
 import { useTheme } from "../../../../context/ThemeContext";
-import { Ionicons } from "@expo/vector-icons";
+import Modal from "react-native-modal";
+import ImageZoom from "react-native-image-pan-zoom";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { GET_USER } from "../UserProfile/UserProfileQueries";
 import { ME } from "../../../../sharedQueries";
@@ -43,10 +43,6 @@ const Container = styled.View`
 `;
 const ScrollView = styled.ScrollView`
   background-color: ${props => props.theme.bgColor};
-`;
-const FooterIconTouchable = styled.TouchableOpacity`
-  margin-left: 20px;
-  margin-bottom: 20px;
 `;
 const LoaderContainer = styled.View`
   flex: 1;
@@ -244,89 +240,68 @@ export default ({ navigation }) => {
       >
         {avatars && avatars.length !== 0 ? (
           <>
-            <Modal visible={modalOpen} transparent={true}>
-              <ImageViewer
-                imageUrls={[{ url: `${BACKEND_URL}/media/${avatar.image}` }]}
-                enablePreload={true}
-                style={{
-                  height: constants.width,
-                  width: constants.width,
-                  padding: 0,
-                  margin: 0
-                }}
-                renderImage={() => {
-                  return (
-                    <ProgressiveImage
-                      tint={isDarkMode ? "dark" : "light"}
-                      style={{
-                        height: constants.width,
-                        width: constants.width,
-                        padding: 0,
-                        margin: 0,
-                        position: "absolute"
-                      }}
-                      preview={{
-                        uri: `${BACKEND_URL}/media/${avatar.thumbnail}`
-                      }}
-                      uri={`${BACKEND_URL}/media/${avatar.image}`}
-                    />
-                  );
-                }}
-                onSwipeDown={async () => {
+            <Modal
+              style={{ margin: 0, alignItems: "flex-start" }}
+              isVisible={modalOpen}
+              backdropColor={
+                isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
+              }
+              onBackdropPress={async () => {
+                await ScreenOrientation.lockAsync(
+                  ScreenOrientation.OrientationLock.PORTRAIT_UP
+                );
+                closeModal();
+              }}
+              onBackButtonPress={async () => {
+                Platform.OS !== "ios" &&
+                  (await ScreenOrientation.lockAsync(
+                    ScreenOrientation.OrientationLock.PORTRAIT_UP
+                  ));
+                closeModal();
+              }}
+              onModalHide={async () => {
+                {
                   await ScreenOrientation.lockAsync(
                     ScreenOrientation.OrientationLock.PORTRAIT_UP
                   );
                   closeModal();
-                }}
-                renderFooter={() => {
-                  if (isSelf && !avatar.isMain && !avatarLoading) {
-                    return (
-                      <FooterIconTouchable
-                        onPress={() => {
-                          onPress();
-                        }}
-                      >
-                        <Ionicons
-                          name={Platform.OS === "ios" ? "ios-list" : "md-list"}
-                          size={25}
-                          color={"#999"}
-                        />
-                      </FooterIconTouchable>
-                    );
-                  } else {
-                    return null;
-                  }
-                }}
-                backgroundColor={
-                  isDarkMode && isDarkMode === true
-                    ? "rgba(0, 0, 0, 0.9)"
-                    : "rgba(255, 255, 255, 0.9)"
                 }
-                enableSwipeDown={true}
-                loadingRender={() => {
-                  return <Loader />;
+              }}
+              propagateSwipe={true}
+              scrollHorizontal={true}
+              backdropOpacity={0.9}
+              animationIn="fadeIn"
+              animationOut="fadeOut"
+              animationInTiming={200}
+              animationOutTiming={200}
+              backdropTransitionInTiming={200}
+              backdropTransitionOutTiming={200}
+            >
+              <ImageZoom
+                cropWidth={constants.width}
+                cropHeight={constants.width}
+                imageWidth={constants.width}
+                imageHeight={constants.width}
+                onClick={() => {
+                  isSelf && !avatar.isMain && !avatarLoading && onPress();
                 }}
-                //@ts-ignore
-                renderIndicator={() => {}}
-                saveToLocalByLongPress={false}
-              />
+              >
+                <ProgressiveImage
+                  tint={isDarkMode ? "dark" : "light"}
+                  style={{
+                    height: constants.width,
+                    width: constants.width,
+                    padding: 0,
+                    margin: 0,
+                    position: "absolute"
+                  }}
+                  preview={{
+                    uri: `${BACKEND_URL}/media/${avatar.thumbnail}`
+                  }}
+                  uri={`${BACKEND_URL}/media/${avatar.image}`}
+                />
+              </ImageZoom>
             </Modal>
-            {/* {isSelf && !avatar.isMain && (
-              <Button
-                title="DELETE AVATAR"
-                onPress={() => deleteAvatar(avatar.uuid)}
-              />
-            )}
-            {isSelf && !avatar.isMain && (
-              <Button
-                title="MARK AS MAIN"
-                onPress={() =>
-                  markAsMainFn({ variables: { uuid: avatar.uuid } })
-                }
-              />
-            )}
-            <Button title="CLOSE AVATAR" onPress={() => closeModal()} />
-          </Modal> */}
             <Container>
               <FlatList
                 data={avatars}

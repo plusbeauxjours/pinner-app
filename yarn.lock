@@ -6038,15 +6038,9 @@ react-native-gifted-chat@^0.11.2:
     react-native-parsed-text "https://github.com/EvanBacon/react-native-parsed-text.git"
     uuid "3.3.3"
 
-react-native-image-pan-zoom@^2.1.9:
+react-native-image-pan-zoom@^2.1.11:
   version "2.1.11"
   resolved "https://registry.yarnpkg.com/react-native-image-pan-zoom/-/react-native-image-pan-zoom-2.1.11.tgz#61bcb69219d95e76a9797d23e4a2e8e0bd654ae9"
-
-react-native-image-zoom-viewer@^2.2.26:
-  version "2.2.27"
-  resolved "https://registry.yarnpkg.com/react-native-image-zoom-viewer/-/react-native-image-zoom-viewer-2.2.27.tgz#fb3314c5dc86ac33da48cb31bf4920d97eecb6eb"
-  dependencies:
-    react-native-image-pan-zoom "^2.1.9"
 
 react-native-infinite-flatlist-patch@^1.0.3:
   version "1.0.3"
