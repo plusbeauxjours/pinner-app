@@ -389,6 +389,7 @@ export default withNavigation(({ navigation }) => {
                     style={{ height: nearCities.length < 3 ? 90 : 135 }}
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
+                    index={0}
                     dotColor={isDarkMode ? "#424242" : "#DADADA"}
                     activeDotStyle={{
                       backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",
@@ -441,6 +442,7 @@ export default withNavigation(({ navigation }) => {
                     style={{ height: samenameCities.length < 3 ? 90 : 135 }}
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
+                    index={0}
                     dotColor={isDarkMode ? "#424242" : "#DADADA"}
                     activeDotStyle={{
                       backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",
@@ -493,6 +495,7 @@ export default withNavigation(({ navigation }) => {
                     style={{ height: coffees.length < 3 ? 90 : 135 }}
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
+                    index={0}
                     dotColor={isDarkMode ? "#424242" : "#DADADA"}
                     activeDotStyle={{
                       backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",
@@ -541,6 +544,7 @@ export default withNavigation(({ navigation }) => {
                     style={{ height: usersBefore.length < 3 ? 90 : 135 }}
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
+                    index={0}
                     dotColor={isDarkMode ? "#424242" : "#DADADA"}
                     activeDotStyle={{
                       backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",

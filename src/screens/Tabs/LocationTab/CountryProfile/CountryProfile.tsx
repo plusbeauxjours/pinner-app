@@ -300,6 +300,7 @@ export default withNavigation(({ navigation }) => {
                   style={{ height: 135 }}
                   paginationStyle={{ bottom: -15 }}
                   loop={false}
+                  index={0}
                   dotColor={isDarkMode ? "#424242" : "#DADADA"}
                   activeDotStyle={{
                     backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",

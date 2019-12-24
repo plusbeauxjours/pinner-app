@@ -631,6 +631,7 @@ export default ({ navigation }) => {
                     style={{ height: recommendUsers.length < 3 ? 90 : 135 }}
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
+                    index={0}
                     dotColor={isDarkMode ? "#424242" : "#DADADA"}
                     activeDotStyle={{
                       backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",
@@ -676,6 +677,7 @@ export default ({ navigation }) => {
                     style={{ height: recommendLocations.length < 3 ? 90 : 135 }}
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
+                    index={0}
                     dotColor={isDarkMode ? "#424242" : "#DADADA"}
                     activeDotStyle={{
                       backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",
