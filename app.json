@@ -25,10 +25,18 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "pinner.plusbeauxjours"
+      "bundleIdentifier": "pinner.plusbeauxjours",
+      "infoPlist": {
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Pinner uses your location for features like Filters, Search, Pinner Map, and more.",
+        "NSLocationWhenInUseUsageDescription": "Pinner uses your location for features like Filters, Search, Pinner Map, and more.",
+        "NSPhotoLibraryUsageDescription": ""
+      }
     },
     "android": {
-      "package": "pinner.plusbeauxjours"
+      "package": "pinner.plusbeauxjours",
+      "permissions": [
+        "ACCESS_COARSE_LOCATION"
+      ]
     },
     "notification": {
       "icon": "./assets/notification.png"
