@@ -366,6 +366,12 @@ export default ({ navigation }) => {
                     onChangeText={number => setVerificationKey(number)}
                   />
                   <ButtonContainer>
+                    <Text>Didn't receive text?</Text>
+                    <Touchable onPress={() => setModalMode("phoneApproach")}>
+                      <Text style={{ textDecorationLine: "underline" }}>
+                        Resend
+                      </Text>
+                    </Touchable>
                     <Void />
                     <SubmitButton
                       disabled={completePhoneVerificationLoading}
@@ -406,6 +412,14 @@ export default ({ navigation }) => {
                       When you tap "SEND EMAIL", Pinner will email you a link
                       that will instantly log you in.
                     </Text>
+                    <Text style={{ marginTop: 15 }}>
+                      Do you want to login with phone number?
+                    </Text>
+                    <Touchable onPress={() => setModalMode("phoneApproach")}>
+                      <Text style={{ textDecorationLine: "underline" }}>
+                        Login with phone number
+                      </Text>
+                    </Touchable>
                     <Void />
                     <SubmitButton
                       disabled={startEmailVerificationLoading}
