@@ -322,14 +322,14 @@ export default ({ navigation }) => {
                       verification code. Message and data rates may apply. The
                       verified phone number can be used to login.
                     </Text>
-                    <Text style={{ marginTop: 15 }}>
+                    {/* <Text style={{ marginTop: 15 }}>
                       Changed your phone number?
                     </Text>
                     <Touchable onPress={() => setModalMode("emailApproach")}>
                       <Text style={{ textDecorationLine: "underline" }}>
                         Login with email
                       </Text>
-                    </Touchable>
+                    </Touchable> */}
                     <Void />
                     <SubmitButton
                       disabled={startPhoneVerificationLoading}

@@ -1099,7 +1099,8 @@ export default ({ navigation }) => {
             )}
             <Item>
               <ToggleText>EMAIL</ToggleText>
-              {emailAddress ? (
+              {emailAddress&&<ToggleText>{emailAddress}</ToggleText> }
+              {/* {emailAddress ? (
                 <Touchable onPress={() => setEditEmailModalOpen(true)}>
                   <ToggleText>{emailAddress}</ToggleText>
                 </Touchable>
@@ -1115,7 +1116,7 @@ export default ({ navigation }) => {
                     color={"#999"}
                   />
                 </ToggleIcon>
-              )}
+              )} */}
             </Item>
             {profile.isVerifiedEmailAddress ? (
               <ExplainText>Your email address is already verified.</ExplainText>

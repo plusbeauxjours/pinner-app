@@ -1,5 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "react-navigation-stack";
+import { Hader } from "react-native-elements";
 import { createMaterialTopTabNavigator } from "react-navigation-tabs";
 import UserProfile from "../screens/Tabs/UserProfileTab/UserProfile";
 import AvatarList from "../screens/Tabs/UserProfileTab/AvatarList";
@@ -94,7 +95,8 @@ const LocationCustomHeader = () => {
 const UserProfileCustomHeader = () => {
   const isDarkMode = useTheme();
   return (
-    <View
+    <Header>
+      {/* <Header
       style={{
         backgroundColor: isDarkMode ? "#161616" : "#EFEFEF",
         flexDirection: "row",
@@ -105,10 +107,10 @@ const UserProfileCustomHeader = () => {
         borderBottomWidth: 0.5,
         borderBottomColor: "#999"
       }}
-    >
+    > */}
       <UserProfileLeftHeader />
       <Search />
-    </View>
+    </Header>
   );
 };
 const BackCustomHeader = () => {
