@@ -53,6 +53,7 @@ export const chat_leave = (
   };
   let updates = {};
   updates[`/chats/${chat_id}/lastMessage/`] = message.text;
+  updates[`/chats/${chat_id}/lastSender/`] = "system";
   updates[`/messages/${chat_id}/${new_key}/`] = message;
   return fb_db.ref.update(updates);
 };
@@ -92,6 +93,21 @@ export const chat_send = (chat_id: string, message: ChatMessage) => {
   } else {
     updates[`/chats/${chat_id}/lastMessage/`] = `${message.snsIdPlatform}`;
   }
+  return fb_db.ref.update(updates);
+};
+
+export const create_chat = (chat_id: string) => {
+  let new_key = fb_db.ref.child("messages").push().key;
+  let message = {
+    _id: new_key,
+    text: "You've got new match.",
+    createdAt: new Date(),
+    system: true
+  };
+  let updates = {};
+  updates[`/chats/${chat_id}/lastMessage/`] = message.text;
+  updates[`/chats/${chat_id}/lastSender/`] = "system";
+  updates[`/messages/${chat_id}/${new_key}/`] = message;
   return fb_db.ref.update(updates);
 };
 

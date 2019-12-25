@@ -18,7 +18,7 @@ import {
 import { GET_BLOCkED_USER } from "../../UserProfileTab/BlockedUsers/BlockedUsersQueries";
 import { useMe } from "../../../../context/MeContext";
 import { UNMATCH } from "../../../../components/CoffeeBtn/CoffeeBtnQueries";
-import { chat_leave } from "../../../../../Fire";
+import { chat_leave, fb_db } from "../../../../../Fire";
 import { ME, REGISTER_PUSH, ADD_BLOCK_USER } from "../../../../sharedQueries";
 import { useLogIn } from "../../../../context/AuthContext";
 import { useLocation } from "../../../../context/LocationContext";
@@ -419,6 +419,16 @@ export default ({ navigation }) => {
       return;
     }
   };
+  fb_db.ref.child("chats").on("child_added", child => {
+    if (child.val()) {
+      if (child.val()["lastSender"] === "system") {
+        console.log("차였다");
+        matchRefetch();
+      } else {
+        return;
+      }
+    }
+  });
   useEffect(() => {
     Linking.addEventListener("url", handleOpenURL);
     askPermission();

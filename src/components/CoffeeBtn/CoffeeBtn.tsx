@@ -1,10 +1,8 @@
 import React from "react";
-import { MATCH, UNMATCH } from "./CoffeeBtnQueries";
+import { MATCH } from "./CoffeeBtnQueries";
 import {
   Match,
   MatchVariables,
-  UnMatch,
-  UnMatchVariables,
   DeleteCoffee,
   DeleteCoffeeVariables,
   GetMatches,
@@ -16,7 +14,7 @@ import { ActivityIndicator } from "react-native";
 import Toast from "react-native-root-toast";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { DELETE_COFFEE } from "../../sharedQueries";
-import { chat_leave } from "../../../Fire";
+import { create_chat } from "../../../Fire";
 import { useMe } from "../../context/MeContext";
 import { GET_MATCHES } from "../../screens/Tabs/MatchTab/Match/MatchQueries";
 import constants from "../../../constants";
@@ -83,13 +81,6 @@ const CoffeeBtn: React.FC<IProps> = ({
       }
     }
   });
-  const [unMatchFn, { loading: unMatchLoading }] = useMutation<
-    UnMatch,
-    UnMatchVariables
-  >(UNMATCH, {
-    // unmatch btn won't be shown
-    variables: { matchId: parseInt(matchId, 10) }
-  });
   const [deleteCoffeeFn, { loading: deleteCoffeeLoading }] = useMutation<
     DeleteCoffee,
     DeleteCoffeeVariables
@@ -106,29 +97,14 @@ const CoffeeBtn: React.FC<IProps> = ({
     });
   };
   const match = async coffeeId => {
-    await matchFn(coffeeId);
+    const {
+      data: { match }
+    } = await matchFn(coffeeId);
+    await create_chat(match.match.id);
     setModalOpen(false);
     toast("Matched");
   };
   const { showActionSheetWithOptions } = useActionSheet();
-  const unMatch = (matchId: string) => {
-    showActionSheetWithOptions(
-      {
-        options: ["Yes", "No"],
-        destructiveButtonIndex: 0,
-        cancelButtonIndex: 1,
-        title: "Are you sure to unmatch?"
-      },
-      buttonIndex => {
-        if (buttonIndex === 0) {
-          chat_leave(matchId, me.user.profile.id, me.user.username);
-          unMatchFn();
-          setModalOpen(false);
-          toast("unmatched");
-        }
-      }
-    );
-  };
   const deleteCoffee = () => {
     showActionSheetWithOptions(
       {
@@ -170,17 +146,7 @@ const CoffeeBtn: React.FC<IProps> = ({
         </Touchable>
       ) : (
         <>
-          {!isSelf && isMatching ? (
-            <Touchable disabled={unMatchLoading} onPress={unMatch}>
-              <Container>
-                {unMatchLoading ? (
-                  <ActivityIndicator color={"#999"} />
-                ) : (
-                  <Text>UNMATCH</Text>
-                )}
-              </Container>
-            </Touchable>
-          ) : (
+          {!isSelf && !isMatching && (
             <Touchable disabled={matchLoading} onPress={match}>
               <Container>
                 {matchLoading ? (
