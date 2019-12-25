@@ -30,13 +30,22 @@
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Pinner uses your location for features like Filters, Search, Pinner Map, and more.",
         "NSLocationWhenInUseUsageDescription": "Pinner uses your location for features like Filters, Search, Pinner Map, and more.",
         "NSPhotoLibraryUsageDescription": ""
+      },
+      "config": {
+        "googleMapsApiKey": "AIzaSyDv66JZo6YNvVnnQu_x65TK_ik2EF_vCcQ"
       }
+
     },
     "android": {
       "package": "pinner.plusbeauxjours",
       "permissions": [
         "ACCESS_COARSE_LOCATION"
-      ]
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDv66JZo6YNvVnnQu_x65TK_ik2EF_vCcQ"
+        }
+      }
     },
     "notification": {
       "icon": "./assets/notification.png"

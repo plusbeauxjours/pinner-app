@@ -1026,6 +1026,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
             ref={map => {
               mapRef = map;
             }}
+            mapType={Platform.OS == "android" ? "none" : "standard"}
             provider={PROVIDER_GOOGLE}
             style={{
               borderRadius: 5,

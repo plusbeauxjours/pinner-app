@@ -422,7 +422,6 @@ export default ({ navigation }) => {
   fb_db.ref.child("chats").on("child_added", child => {
     if (child.val()) {
       if (child.val()["lastSender"] === "system") {
-        console.log("차였다");
         matchRefetch();
       } else {
         return;

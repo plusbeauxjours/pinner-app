@@ -45,7 +45,7 @@ export default ({
   const placesAbortSignal = React.useRef<any>(null);
 
   React.useEffect(() => {
-    sessionTokenTimeout.current = window.setInterval(resetSessionToken, 180000);
+    sessionTokenTimeout.current = window.setInterval(resetSessionToken, 10000);
     abortController.current = new AbortController();
     abortSignal.current = abortController.current.signal;
     placesAbortController.current = new AbortController();

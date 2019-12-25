@@ -48,6 +48,7 @@ const snsList = {
 };
 
 export default ({ currentMessage }) => {
+  let mapRef: MapView | null;
   const isDarkMode = useTheme();
   const toast = (message: string) => {
     Toast.show(message, {
@@ -115,17 +116,21 @@ export default ({ currentMessage }) => {
     return (
       <Touchable onPress={onMapPress} activeOpacity={0.8}>
         <MapView
+          ref={map => {
+            mapRef = map;
+          }}
+          mapType={Platform.OS == "android" ? "none" : "standard"}
           provider={PROVIDER_GOOGLE}
+          style={{
+            width: 200,
+            height: 100,
+            borderRadius: 13
+          }}
           region={{
             latitude: currentMessage.location.latitude,
             longitude: currentMessage.location.longitude,
             latitudeDelta: 0.025,
             longitudeDelta: 0.025
-          }}
-          style={{
-            width: 200,
-            height: 100,
-            borderRadius: 13
           }}
           onPress={onMapPress}
           scrollEnabled={false}

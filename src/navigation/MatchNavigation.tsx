@@ -2,7 +2,6 @@ import React from "react";
 import { createStackNavigator } from "react-navigation-stack";
 import { createMaterialTopTabNavigator } from "react-navigation-tabs";
 import Chat from "../screens/Tabs/MatchTab/Chat";
-import SendLocationScreen from "../screens/Tabs/MatchTab/Chat/SendLocationScreen";
 import Match from "../screens/Tabs/MatchTab/Match";
 import CityProfile from "../screens/Tabs/LocationTab/CityProfile";
 import CountryProfile from "../screens/Tabs/LocationTab/CountryProfile";
@@ -224,12 +223,6 @@ export default createStackNavigator({
   },
   Chat: {
     screen: Chat,
-    navigationOptions: {
-      header: props => <BackCustomHeader />
-    }
-  },
-  SendLocationScreen: {
-    screen: SendLocationScreen,
     navigationOptions: {
       header: props => <BackCustomHeader />
     }
