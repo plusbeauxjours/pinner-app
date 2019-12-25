@@ -74,13 +74,14 @@ export const chat_send = (chat_id: string, message: ChatMessage) => {
     new_key = message._id;
   }
   let updates = {};
+  updates[`/messages/${chat_id}/${new_key}/`] = message;
+  updates[`/chats/${chat_id}/lastSender/`] = `${message.user._id}`;
+  updates[`/chats/${chat_id}/createdAt/`] = `${message.createdAt}`;
+  updates[
+    `/chats/${chat_id}/receiverPushToken/`
+  ] = `${message.receiverPushToken}`;
   if (message.text) {
     updates[`/chats/${chat_id}/lastMessage/`] = `${message.text}`;
-    updates[`/chats/${chat_id}/lastSender/`] = `${message.user._id}`;
-    updates[`/chats/${chat_id}/createdAt/`] = `${message.createdAt}`;
-    updates[
-      `/chats/${chat_id}/receiverPushToken/`
-    ] = `${message.receiverPushToken}`;
     updates[`/chats/${chat_id}/status/`] = `${message.status}`;
   } else if (message.location) {
     updates[`/chats/${chat_id}/lastMessage/`] = "LOCATION";
@@ -88,10 +89,9 @@ export const chat_send = (chat_id: string, message: ChatMessage) => {
     updates[`/chats/${chat_id}/lastMessage/`] = "PHONE";
   } else if (message.snsIdPlatform === "EMAIL_SECOND") {
     updates[`/chats/${chat_id}/lastMessage/`] = "EMAIL";
-  } else if (message.snsIdPlatform) {
+  } else {
     updates[`/chats/${chat_id}/lastMessage/`] = `${message.snsIdPlatform}`;
   }
-  updates[`/messages/${chat_id}/${new_key}/`] = message;
   return fb_db.ref.update(updates);
 };
 
