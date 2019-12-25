@@ -3,7 +3,6 @@ import { useWeatherAqi, useWeather } from "../hooks/weatherHelper";
 import Loader from "./Loader";
 import { useState } from "react";
 import styled from "styled-components";
-import SvgUri from "react-native-svg-uri";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const colorMidium = "#FFA500";

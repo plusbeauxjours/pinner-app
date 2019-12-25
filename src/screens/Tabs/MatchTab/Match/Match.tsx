@@ -9,7 +9,7 @@ import axios from "axios";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import * as Permissions from "expo-permissions";
 import { Notifications } from "expo";
-import { Linking } from "expo";
+// import { Linking } from "expo";
 import {
   GET_MATCHES,
   COMPLETE_EDIT_EMAIL_VERIFICATION,
@@ -428,13 +428,13 @@ export default ({ navigation }) => {
       }
     }
   });
-  useEffect(() => {
-    Linking.addEventListener("url", handleOpenURL);
-    askPermission();
-    return () => {
-      Linking.removeEventListener("url", handleOpenURL);
-    };
-  }, []);
+  // useEffect(() => {
+  //   Linking.addEventListener("url", handleOpenURL);
+  //   askPermission();
+  //   return () => {
+  //     Linking.removeEventListener("url", handleOpenURL);
+  //   };
+  // }, []);
   if (
     matchLoading ||
     completeEditEmailVerificationLoading ||
