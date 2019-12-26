@@ -7,9 +7,9 @@ import {
   StartPhoneVerification,
   StartPhoneVerificationVariables,
   CompletePhoneVerification,
-  CompletePhoneVerificationVariables,
-  StartEmailVerification,
-  StartEmailVerificationVariables
+  CompletePhoneVerificationVariables
+  // StartEmailVerification,
+  // StartEmailVerificationVariables
 } from "../../../types/api";
 import Toast from "react-native-root-toast";
 import { useTheme } from "../../../context/ThemeContext";
@@ -19,7 +19,7 @@ import { Platform, TextInput, ActivityIndicator } from "react-native";
 import { countries } from "../../../../countryData";
 import { useLogIn } from "../../../context/AuthContext";
 import {
-  EMAIL_SIGN_IN,
+  // EMAIL_SIGN_IN,
   PHONE_SIGN_IN,
   COMPLETE_PHONE_SIGN_IN
 } from "./HomeQueries";
@@ -109,7 +109,7 @@ export default ({ navigation }) => {
   const [approachModalOpen, setApproachModalOpen] = useState<boolean>(false);
   const [modalMode, setModalMode] = useState<string>("phoneApproach");
   const [verificationKey, setVerificationKey] = useState<string>("");
-  const [emailAddress, setEmailAddress] = useState<string>("");
+  // const [emailAddress, setEmailAddress] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [countryPhoneCode, setCountryPhoneCode] = useState<any>("");
   const [countryPhoneNumber, setCountryPhoneNumber] = useState("");
@@ -163,15 +163,15 @@ export default ({ navigation }) => {
       cityId
     }
   });
-  const [
-    startEmailVerificationFn,
-    { loading: startEmailVerificationLoading }
-  ] = useMutation<StartEmailVerification, StartEmailVerificationVariables>(
-    EMAIL_SIGN_IN,
-    {
-      variables: { emailAddress }
-    }
-  );
+  // const [
+  //   startEmailVerificationFn,
+  //   { loading: startEmailVerificationLoading }
+  // ] = useMutation<StartEmailVerification, StartEmailVerificationVariables>(
+  //   EMAIL_SIGN_IN,
+  //   {
+  //     variables: { emailAddress }
+  //   }
+  // );
   const toast = (message: string) => {
     Toast.show(message, {
       duration: 1000,
@@ -186,11 +186,6 @@ export default ({ navigation }) => {
     setCountryPhoneNumber(countries.find(i => i.code === country.cca2).phone);
     setCountryPhoneCode(country.cca2);
   };
-  const closePhoneApproachModalOpen = () => {
-    setApproachModalOpen(false);
-    setModalMode("phoneApproach");
-    setVerificationKey("");
-  };
   const handlePhoneNumber = async () => {
     const phone = `${countryPhoneNumber}${
       phoneNumber.startsWith("0") ? phoneNumber.substring(1) : phoneNumber
@@ -201,55 +196,52 @@ export default ({ navigation }) => {
     } = await startPhoneVerificationFn();
     if (startPhoneVerification.ok) {
       setModalMode("phoneVerification");
-      setVerificationKey("");
     } else if (phoneNumber === "") {
-      closePhoneApproachModalOpen();
+      setApproachModalOpen(false);
       toast("Phone number can't be empty");
     } else if (countryPhoneNumber === "") {
-      closePhoneApproachModalOpen();
+      setApproachModalOpen(false);
       toast("Please choose a country");
     } else if (!phoneRegex.test(phone)) {
-      closePhoneApproachModalOpen();
+      setApproachModalOpen(false);
       toast("This phone number is invalid");
     } else if (!startPhoneVerification.ok) {
-      closePhoneApproachModalOpen();
+      setApproachModalOpen(false);
       toast("Could not send you a key");
     } else {
-      closePhoneApproachModalOpen();
+      setApproachModalOpen(false);
       toast("Please write a valid phone number");
     }
   };
-  const handleEmailAddress = async () => {
-    if (emailAddress !== "") {
-      const isValid = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(
-        emailAddress
-      );
-      if (isValid) {
-        const {
-          data: { startEmailVerification }
-        } = await startEmailVerificationFn();
-        if (startEmailVerification.ok) {
-          setModalMode("emailVerification");
-        } else {
-          setApproachModalOpen(false);
-          toast("Requested email address is already verified");
-        }
-      } else {
-        setApproachModalOpen(false);
-        toast("Please write a valid email");
-      }
-    } else {
-      setApproachModalOpen(false);
-      toast("Please write a email address");
-    }
-  };
+  // const handleEmailAddress = async () => {
+  //   if (emailAddress !== "") {
+  //     const isValid = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(
+  //       emailAddress
+  //     );
+  //     if (isValid) {
+  //       const {
+  //         data: { startEmailVerification }
+  //       } = await startEmailVerificationFn();
+  //       if (startEmailVerification.ok) {
+  //         setModalMode("emailVerification");
+  //       } else {
+  //         setApproachModalOpen(false);
+  //         toast("Requested email address is already verified");
+  //       }
+  //     } else {
+  //       setApproachModalOpen(false);
+  //       toast("Please write a valid email");
+  //     }
+  //   } else {
+  //     setApproachModalOpen(false);
+  //     toast("Please write a email address");
+  //   }
+  // };
   const handlePhoneVerification = async () => {
     const {
       data: { completePhoneVerification }
     } = await completePhoneVerificationFn();
     setApproachModalOpen(false);
-    setModalMode("phoneApproach");
-    setVerificationKey("");
     if (completePhoneVerification.ok) {
       logIn(completePhoneVerification);
       toast("Your phone number is verified! welcome!");
@@ -266,10 +258,13 @@ export default ({ navigation }) => {
         style={{ justifyContent: "center", alignItems: "center" }}
         isVisible={approachModalOpen}
         backdropColor={isDarkMode ? "#161616" : "#EFEFEF"}
-        onBackdropPress={() => closePhoneApproachModalOpen()}
+        onBackdropPress={() => setApproachModalOpen(false)}
         onBackButtonPress={() =>
-          Platform.OS !== "ios" && closePhoneApproachModalOpen()
+          Platform.OS !== "ios" && setApproachModalOpen(false)
         }
+        onModalHide={() => {
+          setVerificationKey(""), setModalMode("phoneApproach");
+        }}
         propagateSwipe={true}
         scrollHorizontal={true}
         backdropOpacity={0.9}
@@ -388,67 +383,67 @@ export default ({ navigation }) => {
                   </ButtonContainer>
                 </>
               );
-            case "emailApproach":
-              return (
-                <>
-                  <ApproachModalContainer>
-                    <TextInput
-                      style={{
-                        width: constants.width - 80,
-                        backgroundColor: "transparent",
-                        borderBottomWidth: 1,
-                        borderBottomColor: "#999",
-                        color: isDarkMode ? "white" : "black",
-                        fontSize: 32,
-                        fontWeight: "300"
-                      }}
-                      keyboardType="email-address"
-                      returnKeyType="send"
-                      onChangeText={adress => setEmailAddress(adress)}
-                    />
-                  </ApproachModalContainer>
-                  <ButtonContainer>
-                    <Text>
-                      When you tap "SEND EMAIL", Pinner will email you a link
-                      that will instantly log you in.
-                    </Text>
-                    <Text style={{ marginTop: 15 }}>
-                      Do you want to login with phone number?
-                    </Text>
-                    <Touchable onPress={() => setModalMode("phoneApproach")}>
-                      <Text style={{ textDecorationLine: "underline" }}>
-                        Login with phone number
-                      </Text>
-                    </Touchable>
-                    <Void />
-                    <SubmitButton
-                      disabled={startEmailVerificationLoading}
-                      onPress={handleEmailAddress}
-                    >
-                      <SubmitButtonContainer>
-                        {startEmailVerificationLoading ? (
-                          <ActivityIndicator color={"#999"} />
-                        ) : (
-                          <SubmitButtonText>SEND EMAIL</SubmitButtonText>
-                        )}
-                      </SubmitButtonContainer>
-                    </SubmitButton>
-                  </ButtonContainer>
-                </>
-              );
-            case "emailVerification":
-              return (
-                <>
-                  <Text>{emailAddress}, an email has been sent</Text>
-                  <Text>
-                    Please check your email in a moment to verify email address.
-                  </Text>
-                  <Text>Didn't receive a link?</Text>
-                  <Touchable onPress={() => setModalMode("emailApproach")}>
-                    <Text> Use a different email.</Text>
-                  </Touchable>
-                </>
-              );
+            // case "emailApproach":
+            //   return (
+            //     <>
+            //       <ApproachModalContainer>
+            //         <TextInput
+            //           style={{
+            //             width: constants.width - 80,
+            //             backgroundColor: "transparent",
+            //             borderBottomWidth: 1,
+            //             borderBottomColor: "#999",
+            //             color: isDarkMode ? "white" : "black",
+            //             fontSize: 32,
+            //             fontWeight: "300"
+            //           }}
+            //           keyboardType="email-address"
+            //           returnKeyType="send"
+            //           onChangeText={adress => setEmailAddress(adress)}
+            //         />
+            //       </ApproachModalContainer>
+            //       <ButtonContainer>
+            //         <Text>
+            //           When you tap "SEND EMAIL", Pinner will email you a link
+            //           that will instantly log you in.
+            //         </Text>
+            //         <Text style={{ marginTop: 15 }}>
+            //           Do you want to login with phone number?
+            //         </Text>
+            //         <Touchable onPress={() => setModalMode("phoneApproach")}>
+            //           <Text style={{ textDecorationLine: "underline" }}>
+            //             Login with phone number
+            //           </Text>
+            //         </Touchable>
+            //         <Void />
+            //         <SubmitButton
+            //           disabled={startEmailVerificationLoading}
+            //           onPress={handleEmailAddress}
+            //         >
+            //           <SubmitButtonContainer>
+            //             {startEmailVerificationLoading ? (
+            //               <ActivityIndicator color={"#999"} />
+            //             ) : (
+            //               <SubmitButtonText>SEND EMAIL</SubmitButtonText>
+            //             )}
+            //           </SubmitButtonContainer>
+            //         </SubmitButton>
+            //       </ButtonContainer>
+            //     </>
+            //   );
+            // case "emailVerification":
+            //   return (
+            //     <>
+            //       <Text>{emailAddress}, an email has been sent</Text>
+            //       <Text>
+            //         Please check your email in a moment to verify email address.
+            //       </Text>
+            //       <Text>Didn't receive a link?</Text>
+            //       <Touchable onPress={() => setModalMode("emailApproach")}>
+            //         <Text> Use a different email.</Text>
+            //       </Touchable>
+            //     </>
+            //   );
             default:
               return null;
           }

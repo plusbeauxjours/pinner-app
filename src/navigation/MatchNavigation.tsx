@@ -1,4 +1,5 @@
 import React from "react";
+import { Header } from "react-native-elements";
 import { createStackNavigator } from "react-navigation-stack";
 import { createMaterialTopTabNavigator } from "react-navigation-tabs";
 import Chat from "../screens/Tabs/MatchTab/Chat";
@@ -21,7 +22,7 @@ import { useTheme } from "../context/ThemeContext";
 import constants from "../../constants";
 import UserProfileLeftHeader from "../components/Header/UserProfileLeftHeader";
 import BlockedUsers from "../screens/Tabs/UserProfileTab/BlockedUsers";
-import { View } from "react-native";
+import { Platform } from "react-native";
 
 const CountryProfileTabs = createMaterialTopTabNavigator(
   {
@@ -75,85 +76,81 @@ const CityProfileTabs = createMaterialTopTabNavigator(
 const MatchCustomHeader = () => {
   const isDarkMode = useTheme();
   return (
-    <View
-      style={{
-        backgroundColor: isDarkMode ? "#161616" : "#EFEFEF",
-        flexDirection: "row",
+    <Header
+      placement="left"
+      leftComponent={<MatchHeader />}
+      rightComponent={<Search />}
+      backgroundColor={isDarkMode ? "#161616" : "#EFEFEF"}
+      containerStyle={{
         justifyContent: "space-between",
-        alignItems: "flex-end",
-        width: constants.width,
-        height: 60,
-        borderBottomWidth: 0.5,
-        borderBottomColor: "#999"
+        alignItems: "center",
+        borderBottomColor: "#999",
+        borderBottomWidth: 0.5
       }}
-    >
-      <MatchHeader />
-      <Search />
-    </View>
+      barStyle={isDarkMode ? "light-content" : "dark-content"}
+    />
   );
 };
 const LocationCustomHeader = () => {
   const isDarkMode = useTheme();
   return (
-    <View
-      style={{
-        backgroundColor: isDarkMode ? "#161616" : "#EFEFEF",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "flex-end",
-        width: constants.width,
-        height: 60,
-        borderBottomWidth: 0.5,
-        borderBottomColor: "#999"
+    <Header
+      placement="left"
+      leftComponent={<LocationLeftHeader />}
+      centerComponent={<LocationCenterHeader />}
+      rightComponent={<Search />}
+      backgroundColor={isDarkMode ? "#161616" : "#EFEFEF"}
+      centerContainerStyle={{
+        position: "absolute",
+        bottom: 13,
+        marginLeft: constants.width / 2 - 40
       }}
-    >
-      <LocationLeftHeader />
-      <LocationCenterHeader />
-      <Search />
-    </View>
+      containerStyle={{
+        justifyContent: "space-between",
+        alignItems: "center",
+        borderBottomColor: "#999",
+        borderBottomWidth: 0.5
+      }}
+      barStyle={isDarkMode ? "light-content" : "dark-content"}
+    />
   );
 };
 const UserProfileCustomHeader = () => {
   const isDarkMode = useTheme();
   return (
-    <View
-      style={{
-        backgroundColor: isDarkMode ? "#161616" : "#EFEFEF",
-        flexDirection: "row",
+    <Header
+      placement="left"
+      leftComponent={<UserProfileLeftHeader />}
+      rightComponent={<Search />}
+      backgroundColor={isDarkMode ? "#161616" : "#EFEFEF"}
+      containerStyle={{
         justifyContent: "space-between",
-        alignItems: "flex-end",
-        width: constants.width,
-        height: 60,
-        borderBottomWidth: 0.5,
-        borderBottomColor: "#999"
+        alignItems: "center",
+        borderBottomColor: "#999",
+        borderBottomWidth: 0.5
       }}
-    >
-      <UserProfileLeftHeader />
-      <Search />
-    </View>
+      barStyle={isDarkMode ? "light-content" : "dark-content"}
+    />
   );
 };
 const BackCustomHeader = () => {
   const isDarkMode = useTheme();
   return (
-    <View
-      style={{
-        backgroundColor: isDarkMode ? "#161616" : "#EFEFEF",
-        flexDirection: "row",
+    <Header
+      placement="left"
+      leftComponent={<BackArrow />}
+      rightComponent={<Search />}
+      backgroundColor={isDarkMode ? "#161616" : "#EFEFEF"}
+      containerStyle={{
         justifyContent: "space-between",
-        alignItems: "flex-end",
-        width: constants.width,
-        height: 60,
-        borderBottomWidth: 0.5,
-        borderBottomColor: "#999"
+        alignItems: "center",
+        borderBottomColor: "#999",
+        borderBottomWidth: 0.5
       }}
-    >
-      <BackArrow />
-      <Search />
-    </View>
+      barStyle={isDarkMode ? "light-content" : "dark-content"}
+    />
   );
 };
-
 export default createStackNavigator({
   Match: {
     screen: Match,

@@ -5,8 +5,6 @@ import { AntDesign } from "@expo/vector-icons";
 import { useTheme } from "../../context/ThemeContext";
 
 const IconContainer = styled.TouchableOpacity`
-  margin-bottom: 3px;
-  margin-left: 10px;
   width: 50px;
 `;
 

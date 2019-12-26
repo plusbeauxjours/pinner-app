@@ -3,17 +3,11 @@ import styled from "styled-components";
 import { withNavigation } from "react-navigation";
 import { FontAwesome } from "@expo/vector-icons";
 import { useTheme } from "../../context/ThemeContext";
-import constants from "../../../constants";
 
 const View = styled.View`
   flex-direction: row;
   justify-content: center;
-  position: absolute;
-  width: 100px;
-  right: 0px;
-  left: 0px;
-  margin-left: ${constants.width / 2 - 50};
-  bottom: 5px;
+  width: 50px;
 `;
 
 const LocationCenterHeader = ({ navigation }) => {
