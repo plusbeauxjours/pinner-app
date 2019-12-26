@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import * as Facebook from "expo-facebook";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMutation } from "react-apollo-hooks";
 import { FacebookConnect, FacebookConnectVariables } from "../../../types/api";
 import { FACEBOOK_CONNECT } from "./FacebookApproachQueries";
@@ -46,10 +46,9 @@ export default ({ cityId, countryCode }) => {
   const fbLogin = async () => {
     try {
       setLoading(true);
-      Facebook.initializeAsync("242663513281642", "Pinner");
-      const permissions = ["public_profile", "email"];
+      await Facebook.initializeAsync("242663513281642", "Pinner");
       const authResult = await Facebook.logInWithReadPermissionsAsync({
-        permissions
+        permissions: ["public_profile", "email"]
       });
       if (authResult.type === "success") {
         const response = await fetch(
