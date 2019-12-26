@@ -199,7 +199,10 @@ const Search = ({ navigation }) => {
                 <Loader />
               </LoaderContainer>
             ) : (
-              <KeyboardAvoidingView enabled behavior="padding">
+              <KeyboardAvoidingView
+                enabled
+                behavior={Platform.OS === "ios" ? "padding" : false}
+              >
                 {users && users.length !== 0 && (
                   <>
                     {users.length === 1 ? (

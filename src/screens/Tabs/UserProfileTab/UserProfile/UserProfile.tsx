@@ -1070,7 +1070,7 @@ export default ({ navigation }) => {
                   {createCityLoading || isLoading ? (
                     <Loader />
                   ) : (
-                    <KeyboardAvoidingView enabled behavior="padding">
+                    <KeyboardAvoidingView enabled behavior={Platform.OS === "ios" ? "padding" : false}>
                       {search !== "" &&
                         results.predictions &&
                         results.predictions.length !== 0 && (
