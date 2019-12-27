@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { RefreshControl, Image, Platform } from "react-native";
+import { RefreshControl, Platform } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
-import { useLocation } from "../../../../context/LocationContext";
 import { useTheme } from "../../../../context/ThemeContext";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";

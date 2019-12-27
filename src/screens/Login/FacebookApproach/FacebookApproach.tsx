@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import * as Facebook from "expo-facebook";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useMutation } from "react-apollo-hooks";
 import { FacebookConnect, FacebookConnectVariables } from "../../../types/api";
 import { FACEBOOK_CONNECT } from "./FacebookApproachQueries";

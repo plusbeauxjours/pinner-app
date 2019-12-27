@@ -25,6 +25,7 @@ import {
 } from "./HomeQueries";
 import FacebookApproach from "../FacebookApproach";
 import { useReverseGeoCode } from "../../../hooks/useReverseGeoCode";
+import AppleApproach from "../AppleApproach";
 
 const View = styled.View`
   justify-content: center;
@@ -102,9 +103,11 @@ const SubmitButton = styled.TouchableOpacity`
   justify-content: center;
   padding: 0 5px 5px 5px;
 `;
+
 export default ({ navigation }) => {
   const logIn = useLogIn();
   const isDarkMode = useTheme();
+  const [loading, setLoading] = useState<boolean>(false);
   const [cityId, setCityId] = useState<string>("");
   const [approachModalOpen, setApproachModalOpen] = useState<boolean>(false);
   const [modalMode, setModalMode] = useState<string>("phoneApproach");
@@ -129,8 +132,10 @@ export default ({ navigation }) => {
           .phone
       );
     }
+    setLoading(false);
   };
   const handleGeoError = () => {
+    setLoading(false);
     console.log("No location");
   };
   const [
@@ -250,6 +255,7 @@ export default ({ navigation }) => {
     }
   };
   useEffect(() => {
+    setLoading(true);
     navigator.geolocation.getCurrentPosition(handleGeoSuccess, handleGeoError);
   }, []);
   return (
@@ -281,7 +287,7 @@ export default ({ navigation }) => {
               return (
                 <>
                   <ApproachModalContainer>
-                    {countryPhoneCode && (
+                    {countryPhoneCode && countryPhoneCode.length !== 0 && (
                       <CountryPicker
                         theme={isDarkMode && DARK_THEME}
                         countryCode={countryPhoneCode}
@@ -292,7 +298,7 @@ export default ({ navigation }) => {
                         onSelect={onSelectrPhone}
                       />
                     )}
-                    {countryPhoneNumber && (
+                    {countryPhoneNumber && countryPhoneNumber.length !== 0 && (
                       <Bigtext>{countryPhoneNumber}</Bigtext>
                     )}
                     <TextInput
@@ -459,15 +465,21 @@ export default ({ navigation }) => {
         </Container>
         <BtnContainer>
           <Touchable
+            disabled={loading}
             onPress={() => {
               setApproachModalOpen(true);
             }}
           >
             <LoginLink>
-              <LoginLinkText>LOG IN WITH PHONE NUMBER</LoginLinkText>
+              {loading ? (
+                <ActivityIndicator color={"#999"} />
+              ) : (
+                <LoginLinkText>LOG IN WITH PHONE NUMBER</LoginLinkText>
+              )}
             </LoginLink>
           </Touchable>
           <FacebookApproach cityId={cityId} countryCode={countryPhoneCode} />
+          {Platform.OS === "ios" && <AppleApproach />}
         </BtnContainer>
       </View>
     </>

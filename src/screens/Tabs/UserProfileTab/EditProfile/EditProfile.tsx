@@ -35,7 +35,6 @@ import { countries } from "../../../../../countryData";
 import { useLogOut, useLogIn } from "../../../../context/AuthContext";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
-import { useLocation } from "../../../../context/LocationContext";
 import { Ionicons } from "@expo/vector-icons";
 import { ME } from "../../../../sharedQueries";
 import { useMe } from "../../../../context/MeContext";
@@ -156,7 +155,6 @@ export default ({ navigation }) => {
   const logIn = useLogIn();
   const { me } = useMe();
   const logOut = useLogOut();
-  const location = useLocation();
   const isDarkMode = useTheme();
   const { theme, toggleTheme } = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
@@ -167,14 +165,14 @@ export default ({ navigation }) => {
   const [firstName, setFirstName] = useState<string>(me.user.firstName);
   const [lastName, setLastName] = useState<string>(me.user.lastName);
   const [nationalityCode, setNationalityCode] = useState<any>(
-    me.user.profile.nationality
-      ? me.user.profile.nationality.countryCode
-      : location.currentCountryCode
+    profile.nationality
+      ? profile.nationality.countryCode
+      : profile.currentCity.country.CountryCode
   );
   const [residenceCode, setResidenceCode] = useState<any>(
-    me.user.profile.residence
-      ? me.user.profile.residence.countryCode
-      : location.currentCountryCode
+    profile.residence
+      ? profile.residence.countryCode
+      : profile.currentCity.country.CountryCode
   );
   const [isHidePhotos, setIsHidePhotos] = useState<boolean>(
     profile.isHidePhotos
@@ -201,12 +199,13 @@ export default ({ navigation }) => {
   const [newCountryPhoneNumber, setNewCountryPhoneNumber] = useState<string>(
     profile.countryPhoneNumber
       ? profile.countryPhoneNumber
-      : countries.find(i => i.code === location.currentCountryCode).phone
+      : countries.find(i => i.code === profile.currentCity.country.CountryCode)
+          .phone
   );
   const [newCountryPhoneCode, setNewCountryPhoneCode] = useState<any>(
     profile.countryPhoneCode
       ? profile.countryPhoneCode
-      : location.currentCountryCode
+      : profile.currentCity.country.CountryCode
   );
   const [editPhoneModalOpen, setEditPhoneModalOpen] = useState<boolean>(false);
   const [isEditPhoneMode, setIsEditPhoneMode] = useState<boolean>(true);
@@ -626,10 +625,10 @@ export default ({ navigation }) => {
       nationalityCode !==
         ((me.user.profile.nationality &&
           me.user.profile.nationality.countryCode) ||
-          nationalityCode !== location.currentCountryCode) ||
+          nationalityCode !== profile.currentCity.country.CountryCode) ||
       residenceCode !==
         ((me.user.profile.residence && me.user.profile.residence.countryCode) ||
-          residenceCode !== location.currentCountryCode) ||
+          residenceCode !== profile.currentCity.country.CountryCode) ||
       gender !== me.user.profile.gender ||
       firstName !== me.user.firstName ||
       lastName !== me.user.lastName ||
@@ -1051,12 +1050,12 @@ export default ({ navigation }) => {
               {nationalityCode !==
                 ((me.user.profile.nationality &&
                   me.user.profile.nationality.countryCode) ||
-                  nationalityCode !== location.currentCountryCode) &&
+                  nationalityCode !== profile.currentCity.country.CountryCode) &&
                 "NATIONALITY "}
               {residenceCode !==
                 ((me.user.profile.residence &&
                   me.user.profile.residence.countryCode) ||
-                  residenceCode !== location.currentCountryCode) &&
+                  residenceCode !== profile.currentCity.country.CountryCode) &&
                 "RESIDENCE "}
               {gender !== me.user.profile.gender && "GENDER "}
               {firstName !== me.user.firstName && "FIRSTNAME "}
@@ -1099,7 +1098,7 @@ export default ({ navigation }) => {
             )}
             <Item>
               <ToggleText>EMAIL</ToggleText>
-              {emailAddress&&<ToggleText>{emailAddress}</ToggleText> }
+              {emailAddress && <ToggleText>{emailAddress}</ToggleText>}
               {/* {emailAddress ? (
                 <Touchable onPress={() => setEditEmailModalOpen(true)}>
                   <ToggleText>{emailAddress}</ToggleText>
