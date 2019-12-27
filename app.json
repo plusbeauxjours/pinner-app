@@ -39,7 +39,8 @@
     "android": {
       "package": "pinner.plusbeauxjours",
       "permissions": [
-        "ACCESS_COARSE_LOCATION"
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
       ],
       "config": {
         "googleMaps": {

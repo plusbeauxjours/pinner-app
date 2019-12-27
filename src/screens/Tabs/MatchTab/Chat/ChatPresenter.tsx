@@ -209,7 +209,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   closeSnsModal,
   openSnsModal
 }) => {
-  let mapRef: MapView | null;
   const { me } = useMe();
   const isDarkMode = useTheme();
   const location = useLocation();
@@ -1023,10 +1022,6 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
         </Modal>
         <MapModal visible={mapModalOpen} transparent={true}>
           <MapView
-            ref={map => {
-              mapRef = map;
-            }}
-            mapType={Platform.OS == "android" ? "none" : "standard"}
             provider={PROVIDER_GOOGLE}
             style={{
               borderRadius: 5,

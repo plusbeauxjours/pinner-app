@@ -1,6 +1,6 @@
 import React from "react";
 import { Platform, Linking, Clipboard } from "react-native";
-import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { darkMode, lightMode } from "../../../../styles/mapStyles";
 import { useTheme } from "../../../../context/ThemeContext";
 import styled from "styled-components";
@@ -48,7 +48,6 @@ const snsList = {
 };
 
 export default ({ currentMessage }) => {
-  let mapRef: MapView | null;
   const isDarkMode = useTheme();
   const toast = (message: string) => {
     Toast.show(message, {
@@ -116,10 +115,6 @@ export default ({ currentMessage }) => {
     return (
       <Touchable onPress={onMapPress} activeOpacity={0.8}>
         <MapView
-          ref={map => {
-            mapRef = map;
-          }}
-          mapType={Platform.OS == "android" ? "none" : "standard"}
           provider={PROVIDER_GOOGLE}
           style={{
             width: 200,
@@ -135,12 +130,12 @@ export default ({ currentMessage }) => {
           onPress={onMapPress}
           scrollEnabled={false}
           zoomEnabled={false}
+          loadingEnabled={true}
+          rotateEnabled={false}
           customMapStyle={
             isDarkMode && isDarkMode === true ? darkMode : lightMode
           }
-        >
-          <Marker coordinate={currentMessage.location} />
-        </MapView>
+        />
       </Touchable>
     );
   } else {

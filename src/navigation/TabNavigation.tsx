@@ -27,8 +27,11 @@ export default createBottomTabNavigator(
       screen: stackFactory(MatchNavigation),
       navigationOptions: ({ navigation }) => {
         let tabBarVisible;
-        if (navigation.state.routes.length > 0) {
-          if (navigation.state.routes[0].routes.length > 1) {
+        if (navigation.state.routes && navigation.state.routes.length > 0) {
+          if (
+            navigation.state.routes &&
+            navigation.state.routes[0].routes.length > 1
+          ) {
             if (
               navigation.state.routes[0].index === 1 &&
               navigation.state.routes[0].routes[1].routeName === "Chat"

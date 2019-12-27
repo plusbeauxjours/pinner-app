@@ -119,7 +119,6 @@ const NoPhotoContainer = styled.View`
   border: 0.5px solid #999;
 `;
 export default withNavigation(({ navigation }) => {
-  let mapRef: MapView | null;
   const { me } = useMe();
   const isDarkMode = useTheme();
   const [cityId, setCityId] = useState<string>(
@@ -302,13 +301,8 @@ export default withNavigation(({ navigation }) => {
             {city && (
               <View>
                 {mapOpen ? (
-                  // <Touchable onPress={() => setMapOpen(false)}>
                   <Touchable>
                     <MapView
-                      ref={map => {
-                        mapRef = map;
-                      }}
-                      mapType={Platform.OS == "android" ? "none" : "standard"}
                       provider={PROVIDER_GOOGLE}
                       style={{
                         height: constants.width - 30,
