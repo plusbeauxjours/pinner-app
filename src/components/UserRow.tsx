@@ -152,6 +152,7 @@ const UserRow: React.FC<IProps> = ({
   type
 }) => {
   const randomAvatar = {
+    0: require(`../Images/thumbnails/earth6.png`),
     1: require(`../Images/thumbnails/earth1.png`),
     2: require(`../Images/thumbnails/earth2.png`),
     3: require(`../Images/thumbnails/earth3.png`),

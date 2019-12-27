@@ -119,6 +119,7 @@ const CoffeeDetails: React.FC<IProps> = ({
   };
   const imageNumber = Math.round(Math.random() * 9);
   const randomAvatar = {
+    0: require(`../../Images/avatars/earth6.png`),
     1: require(`../../Images/avatars/earth1.png`),
     2: require(`../../Images/avatars/earth2.png`),
     3: require(`../../Images/avatars/earth3.png`),
