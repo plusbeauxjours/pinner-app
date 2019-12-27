@@ -84,7 +84,7 @@ const Title = styled.Text`
 const Touchable = styled.TouchableOpacity``;
 const BtnContainer = styled.View`
   position: absolute;
-  bottom: 100px;
+  bottom: 70px;
 `;
 const SubmitButtonContainer = styled.View`
   width: ${constants.width - 80};
@@ -479,7 +479,9 @@ export default ({ navigation }) => {
             </LoginLink>
           </Touchable>
           <FacebookApproach cityId={cityId} countryCode={countryPhoneCode} />
-          {Platform.OS === "ios" && <AppleApproach />}
+          {Platform.OS === "ios" && (
+            <AppleApproach cityId={cityId} countryCode={countryPhoneCode} />
+          )}
         </BtnContainer>
       </View>
     </>

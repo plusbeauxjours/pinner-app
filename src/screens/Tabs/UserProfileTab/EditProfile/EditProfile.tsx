@@ -167,12 +167,12 @@ export default ({ navigation }) => {
   const [nationalityCode, setNationalityCode] = useState<any>(
     profile.nationality
       ? profile.nationality.countryCode
-      : profile.currentCity.country.CountryCode
+      : profile.currentCity.country.countryCode
   );
   const [residenceCode, setResidenceCode] = useState<any>(
     profile.residence
       ? profile.residence.countryCode
-      : profile.currentCity.country.CountryCode
+      : profile.currentCity.country.countryCode
   );
   const [isHidePhotos, setIsHidePhotos] = useState<boolean>(
     profile.isHidePhotos
@@ -191,21 +191,21 @@ export default ({ navigation }) => {
     profile.isAutoLocationReport
   );
   const phoneNumber = profile.phoneNumber;
-  const countryPhoneNumber = profile.countryPhoneNumber;
-  const countryPhoneCode = profile.countryPhoneCode;
+  const countryPhoneNumber = profile.countryPhoneNumber
+  const countryPhoneCode = profile.countryPhoneCode
   const [newPhoneNumber, setNewPhoneNumber] = useState<string>(
     profile.phoneNumber || ""
   );
   const [newCountryPhoneNumber, setNewCountryPhoneNumber] = useState<string>(
     profile.countryPhoneNumber
       ? profile.countryPhoneNumber
-      : countries.find(i => i.code === profile.currentCity.country.CountryCode)
+      : countries.find(i => i.code === profile.currentCity.country.countryCode)
           .phone
   );
   const [newCountryPhoneCode, setNewCountryPhoneCode] = useState<any>(
     profile.countryPhoneCode
       ? profile.countryPhoneCode
-      : profile.currentCity.country.CountryCode
+      : profile.currentCity.country.countryCode
   );
   const [editPhoneModalOpen, setEditPhoneModalOpen] = useState<boolean>(false);
   const [isEditPhoneMode, setIsEditPhoneMode] = useState<boolean>(true);
@@ -625,10 +625,10 @@ export default ({ navigation }) => {
       nationalityCode !==
         ((me.user.profile.nationality &&
           me.user.profile.nationality.countryCode) ||
-          nationalityCode !== profile.currentCity.country.CountryCode) ||
+          nationalityCode !== profile.currentCity.country.countryCode) ||
       residenceCode !==
         ((me.user.profile.residence && me.user.profile.residence.countryCode) ||
-          residenceCode !== profile.currentCity.country.CountryCode) ||
+          residenceCode !== profile.currentCity.country.countryCode) ||
       gender !== me.user.profile.gender ||
       firstName !== me.user.firstName ||
       lastName !== me.user.lastName ||
@@ -1050,12 +1050,12 @@ export default ({ navigation }) => {
               {nationalityCode !==
                 ((me.user.profile.nationality &&
                   me.user.profile.nationality.countryCode) ||
-                  nationalityCode !== profile.currentCity.country.CountryCode) &&
-                "NATIONALITY "}
+                  nationalityCode !==
+                    profile.currentCity.country.countryCode) && "NATIONALITY "}
               {residenceCode !==
                 ((me.user.profile.residence &&
                   me.user.profile.residence.countryCode) ||
-                  residenceCode !== profile.currentCity.country.CountryCode) &&
+                  residenceCode !== profile.currentCity.country.countryCode) &&
                 "RESIDENCE "}
               {gender !== me.user.profile.gender && "GENDER "}
               {firstName !== me.user.firstName && "FIRSTNAME "}
