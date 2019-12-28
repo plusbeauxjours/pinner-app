@@ -7,17 +7,25 @@ import { FACEBOOK_CONNECT } from "./FacebookApproachQueries";
 import { useLogIn } from "../../../context/AuthContext";
 import Toast from "react-native-root-toast";
 import { ActivityIndicator } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 
 const Touchable = styled.TouchableOpacity``;
 
 const Container = styled.View`
   background-color: #2d4da7;
-  padding: 10px;
-  justify-content: center;
-  align-items: center;
-  width: 250px;
+  width: 260px;
   height: 40px;
   border-radius: 5px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+`;
+
+const LoginTextContainer = styled.View`
+  width: 200px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
 `;
 
 const Text = styled.Text`
@@ -92,7 +100,15 @@ export default ({ cityId, countryCode }) => {
         {loading ? (
           <ActivityIndicator color={"white"} />
         ) : (
-          <Text>LOG IN WITH FACEBOOK</Text>
+          <LoginTextContainer>
+            <FontAwesome
+              name={"facebook"}
+              color={"white"}
+              size={25}
+              style={{ marginRight: 10 }}
+            />
+            <Text>Continue with Facebook</Text>
+          </LoginTextContainer>
         )}
       </Container>
     </Touchable>

@@ -26,6 +26,7 @@ import {
 import FacebookApproach from "../FacebookApproach";
 import { useReverseGeoCode } from "../../../hooks/useReverseGeoCode";
 import AppleApproach from "../AppleApproach";
+import { FontAwesome } from "@expo/vector-icons";
 
 const View = styled.View`
   justify-content: center;
@@ -41,15 +42,21 @@ const Container = styled.View`
   align-items: center;
 `;
 const LoginLink = styled.View`
+  flex-direction: row;
   border: 0.5px solid #999;
-  width: 250px;
+  width: 260px;
   height: 40px;
   border-radius: 5px;
-  margin-bottom: 10px;
-  flex-direction: row;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 `;
+const LoginTextContainer = styled.View`
+  width: 220px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+`;
+
 const LoginLinkText = styled.Text`
   color: #999;
   font-weight: 600;
@@ -474,7 +481,15 @@ export default ({ navigation }) => {
               {loading ? (
                 <ActivityIndicator color={"#999"} />
               ) : (
-                <LoginLinkText>LOG IN WITH PHONE NUMBER</LoginLinkText>
+                <LoginTextContainer>
+                  <FontAwesome
+                    name={"phone"}
+                    color={"#999"}
+                    size={25}
+                    style={{ marginRight: 10 }}
+                  />
+                  <LoginLinkText>Continue with Phone</LoginLinkText>
+                </LoginTextContainer>
               )}
             </LoginLink>
           </Touchable>
