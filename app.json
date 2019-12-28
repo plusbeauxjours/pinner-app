@@ -9,7 +9,7 @@
       "ios",
       "android"
     ],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -29,7 +29,7 @@
       "infoPlist": {
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Pinner uses your location for features like Filters, Search, Pinner Map, and more.",
         "NSLocationWhenInUseUsageDescription": "Pinner uses your location for features like Filters, Search, Pinner Map, and more.",
-        "NSPhotoLibraryUsageDescription": ""
+        "NSPhotoLibraryUsageDescription": "Pinner uses photo library to select pictures'."
       },
       "config": {
         "googleMapsApiKey": "AIzaSyDv66JZo6YNvVnnQu_x65TK_ik2EF_vCcQ"
@@ -37,6 +37,7 @@
       "usesAppleSignIn": true
     },
     "android": {
+      "versionCode": 2,
       "package": "pinner.plusbeauxjours",
       "permissions": [
         "ACCESS_COARSE_LOCATION",
