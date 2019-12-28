@@ -43,6 +43,7 @@ export default function App() {
         ...SimpleLineIcons.font["arrow-up"],
         ...SimpleLineIcons.font["arrow-down"]
       });
+      await Asset.loadAsync(require("./assets/splash.png"));
       await Asset.loadAsync(require("./assets/logo.png"));
       await Asset.loadAsync(require("./assets/phone_second.png"));
       await Asset.loadAsync(require("./assets/email_second.png"));

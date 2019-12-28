@@ -8,17 +8,12 @@ import Toast from "react-native-root-toast";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import * as Permissions from "expo-permissions";
 import { Notifications } from "expo";
-// import { Linking } from "expo";
-import {
-  GET_MATCHES
-  // COMPLETE_EDIT_EMAIL_VERIFICATION,
-  // COMPLETE_EMAIL_SIGN_IN
-} from "./MatchQueries";
+import { GET_MATCHES } from "./MatchQueries";
 import { GET_BLOCkED_USER } from "../../UserProfileTab/BlockedUsers/BlockedUsersQueries";
 import { useMe } from "../../../../context/MeContext";
 import { UNMATCH } from "../../../../components/CoffeeBtn/CoffeeBtnQueries";
 import { chat_leave, fb_db } from "../../../../../Fire";
-import {  REGISTER_PUSH, ADD_BLOCK_USER } from "../../../../sharedQueries";
+import { REGISTER_PUSH, ADD_BLOCK_USER } from "../../../../sharedQueries";
 import { useLogIn } from "../../../../context/AuthContext";
 import { useLocation } from "../../../../context/LocationContext";
 import Loader from "../../../../components/Loader";
@@ -26,11 +21,6 @@ import UserRow from "../../../../components/UserRow";
 import { UserProfile, UserProfileVariables } from "../../../../types/api";
 import { GET_USER } from "../../UserProfileTab/UserProfile/UserProfileQueries";
 import {
-  // Me,
-  // CompleteEmailVerification,
-  // CompleteEmailVerificationVariables,
-  // CompleteEditEmailVerification,
-  // CompleteEditEmailVerificationVariables,
   GetMatches,
   GetMatchesVariables,
   MarkAsReadMatch,
@@ -106,8 +96,6 @@ const TouchableBackRow = styled.View`
   background-color: ${props => props.theme.bgColor};
 `;
 export default ({ navigation }) => {
-  const logIn = useLogIn();
-  const location = useLocation();
   const { me } = useMe();
   const [refreshing, setRefreshing] = useState(false);
   const [addBlockUserFn, { loading: addBlockUserLoading }] = useMutation<
@@ -190,55 +178,6 @@ export default ({ navigation }) => {
       variables: { pushToken }
     });
   };
-  // const [
-  //   completeEditEmailVerificationFn,
-  //   { loading: completeEditEmailVerificationLoading }
-  // ] = useMutation<
-  //   CompleteEditEmailVerification,
-  //   CompleteEditEmailVerificationVariables
-  // >(COMPLETE_EDIT_EMAIL_VERIFICATION, {
-  //   update(cache, { data: { completeEditEmailVerification } }) {
-  //     try {
-  //       const data = cache.readQuery<Me>({
-  //         query: ME
-  //       });
-  //       if (data) {
-  //         data.me.user = completeEditEmailVerification.user;
-  //         cache.writeQuery({
-  //           query: ME,
-  //           data
-  //         });
-  //       }
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   }
-  // });
-
-  // const [
-  //   CompleteEmailVerificationFn,
-  //   { loading: CompleteEmailVerificationLoading }
-  // ] = useMutation<
-  //   CompleteEmailVerification,
-  //   CompleteEmailVerificationVariables
-  // >(COMPLETE_EMAIL_SIGN_IN, {
-  //   update(cache, { data: { completeEmailVerification } }) {
-  //     try {
-  //       const data = cache.readQuery<Me>({
-  //         query: ME
-  //       });
-  //       if (data) {
-  //         data.me.user = completeEmailVerification.user;
-  //         cache.writeQuery({
-  //           query: ME,
-  //           data
-  //         });
-  //       }
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   }
-  // });
 
   const [MarkAsReadMatchFn, { loading: MarkAsReadMatchLoading }] = useMutation<
     MarkAsReadMatch,
@@ -380,68 +319,10 @@ export default ({ navigation }) => {
       }
     }
   });
-  // const handleOpenURL = async event => {
-  //   const route = await event.url.replace(/.*?:\/\//g, "");
-  //   const key = await route.match(/\/([^\/]+)\/?$/)[0].split("/")[1];
-  //   const routeName = await route.split("/")[2];
-  //   const toast = (message: string) => {
-  //     Toast.show(message, {
-  //       duration: 1000,
-  //       position: Toast.positions.CENTER,
-  //       shadow: true,
-  //       animation: true,
-  //       hideOnPress: true,
-  //       delay: 0
-  //     });
-  //   };
-  //   if (routeName === "confirm") {
-  //     const {
-  //       data: { completeEditEmailVerification }
-  //     } = await completeEditEmailVerificationFn({
-  //       variables: {
-  //         key
-  //       }
-  //     });
-  //     if (completeEditEmailVerification.ok) {
-  //       logIn(completeEditEmailVerification);
-  //       toast("Your new email address is verified");
-  //     } else {
-  //       toast("Could not be verified your new email address, please try again");
-  //     }
-  //   } else if (routeName === "verification") {
-  //     const {
-  //       data: { completeEmailVerification }
-  //     } = await CompleteEmailVerificationFn({
-  //       variables: {
-  //         cityId: me.user.profile.currentCity.country.countryCode,
-  //         key
-  //       }
-  //     });
-  //     if (completeEmailVerification.ok) {
-  //       logIn(completeEmailVerification);
-  //       toast("Your new email address is verified");
-  //     } else {
-  //       toast("Could not be verified your new email address, please try again");
-  //     }
-  //   } else {
-  //     return;
-  //   }
-  // };
-  // useEffect(() => {
-  //   Linking.addEventListener("url", handleOpenURL);
-  //   askPermission();
-  //   return () => {
-  //     Linking.removeEventListener("url", handleOpenURL);
-  //   };
-  // }, []);
   useEffect(() => {
     askPermission();
   }, []);
-  if (
-    // completeEditEmailVerificationLoading ||
-    // CompleteEmailVerificationLoading ||
-    matchLoading
-  ) {
+  if (matchLoading) {
     return (
       <LoaderContainer>
         <Loader />
