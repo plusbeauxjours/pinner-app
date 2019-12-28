@@ -1033,7 +1033,10 @@ export default ({ navigation }) => {
               </View>
             </>
           ) : (
-            <>
+            <KeyboardAvoidingView
+              enabled
+              behavior={Platform.OS === "ios" ? "padding" : false}
+            >
               <TextInput
                 style={{
                   alignSelf: "center",
@@ -1071,10 +1074,7 @@ export default ({ navigation }) => {
                   {createCityLoading || isLoading ? (
                     <Loader />
                   ) : (
-                    <KeyboardAvoidingView
-                      enabled
-                      behavior={Platform.OS === "ios" ? "padding" : false}
-                    >
+                    <>
                       {search !== "" &&
                         results.predictions &&
                         results.predictions.length !== 0 && (
@@ -1123,11 +1123,11 @@ export default ({ navigation }) => {
                             ))}
                           </>
                         )}
-                    </KeyboardAvoidingView>
+                    </>
                   )}
                 </ScrollView>
               </Touchable>
-            </>
+            </KeyboardAvoidingView>
           )}
         </Modal>
         <Modal
