@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { Image } from "react-native";
 import constants, { BACKEND_URL } from "../../constants";
@@ -8,7 +8,6 @@ import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import styled from "styled-components";
 import { useTheme } from "../context/ThemeContext";
 import { useMe } from "../context/MeContext";
-import firebase from "firebase";
 import {
   get_last_chat_messages,
   fb_db,
@@ -168,10 +167,6 @@ const UserRow: React.FC<IProps> = ({
   const [lastMessage, setLastMessage] = useState<string>("");
   const [hasUnreadMessage, setHasUnreadMessage] = useState<boolean>(false);
   if (match) {
-    const dbref = firebase
-      .database()
-      .ref("chats")
-      .child(match.id);
     get_last_chat_messages(match.id).then(message => {
       setLastMessage(message);
     });
@@ -205,11 +200,6 @@ const UserRow: React.FC<IProps> = ({
           }
         }
       });
-    useEffect(() => {
-      return () => {
-        dbref.off("child_changed");
-      };
-    });
   }
   switch (type) {
     case "user":

@@ -14,11 +14,8 @@ import { useMe } from "../../../../context/MeContext";
 import { UNMATCH } from "../../../../components/CoffeeBtn/CoffeeBtnQueries";
 import { chat_leave, fb_db } from "../../../../../Fire";
 import { REGISTER_PUSH, ADD_BLOCK_USER } from "../../../../sharedQueries";
-import { useLogIn } from "../../../../context/AuthContext";
-import { useLocation } from "../../../../context/LocationContext";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
-import { UserProfile, UserProfileVariables } from "../../../../types/api";
 import { GET_USER } from "../../UserProfileTab/UserProfile/UserProfileQueries";
 import {
   GetMatches,
@@ -31,7 +28,9 @@ import {
   RegisterPushVariables,
   AddBlockUser,
   AddBlockUserVariables,
-  GetBlockedUser
+  GetBlockedUser,
+  UserProfile,
+  UserProfileVariables
 } from "../../../../types/api";
 
 const TextContainer = styled.View`
