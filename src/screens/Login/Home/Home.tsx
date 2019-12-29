@@ -18,6 +18,7 @@ import CountryPicker from "react-native-country-picker-modal";
 import { Platform, TextInput, ActivityIndicator } from "react-native";
 import { countries } from "../../../../countryData";
 import { useLogIn } from "../../../context/AuthContext";
+import Loader from "../../../components/Loader";
 import {
   // EMAIL_SIGN_IN,
   PHONE_SIGN_IN,
@@ -77,6 +78,7 @@ const ButtonContainer = styled.View`
   justify-content: center;
   align-items: center;
   padding: 15px;
+  max-width: 400px;
 `;
 const Void = styled.View`
   height: 40px;
@@ -95,6 +97,7 @@ const BtnContainer = styled.View`
 `;
 const SubmitButtonContainer = styled.View`
   width: ${constants.width - 80};
+  max-width: 360px;
   height: 40px;
   justify-content: center;
   align-items: center;
@@ -110,7 +113,12 @@ const SubmitButton = styled.TouchableOpacity`
   justify-content: center;
   padding: 0 5px 5px 5px;
 `;
-
+const LoaderContainer = styled.View`
+  flex: 1;
+  background-color: ${props => props.theme.bgColor};
+  justify-content: center;
+  align-items: center;
+`;
 export default ({ navigation }) => {
   const logIn = useLogIn();
   const isDarkMode = useTheme();
@@ -130,16 +138,28 @@ export default ({ navigation }) => {
     getAddress(latitude, longitude);
   };
   const getAddress = async (latitude: number, longitude: number) => {
-    const address = await useReverseGeoCode(latitude, longitude);
-    if (address) {
-      setCityId(address.storableLocation.cityId);
-      setCountryPhoneCode(address.storableLocation.countryCode);
-      setCountryPhoneNumber(
-        countries.find(i => i.code === address.storableLocation.countryCode)
-          .phone
-      );
+    try {
+      const address = await useReverseGeoCode(latitude, longitude);
+      if (
+        address &&
+        address.storableLocation.cityId.length > 0 &&
+        address.storableLocation.countryCode.length > 0
+      ) {
+        setCityId(address.storableLocation.cityId);
+        setCountryPhoneCode(address.storableLocation.countryCode);
+        setCountryPhoneNumber(
+          countries.find(i => i.code === address.storableLocation.countryCode)
+            .phone
+        );
+      } else {
+        setCityId("ChIJzWXFYYuifDUR64Pq5LTtioU");
+        setCountryPhoneCode("KR");
+        setCountryPhoneNumber("+82");
+      }
+      setLoading(false);
+    } catch (e) {
+      console.log(e);
     }
-    setLoading(false);
   };
   const handleGeoError = () => {
     setLoading(false);
@@ -291,46 +311,54 @@ export default ({ navigation }) => {
         {(() => {
           switch (modalMode) {
             case "phoneApproach":
-              return (
-                <>
-                  <ApproachModalContainer>
-                    {countryPhoneCode && countryPhoneCode.length !== 0 && (
-                      <CountryPicker
-                        theme={isDarkMode && DARK_THEME}
-                        countryCode={countryPhoneCode}
-                        withFilter={true}
-                        withFlag={true}
-                        withAlphaFilter={true}
-                        withEmoji={true}
-                        onSelect={onSelectrPhone}
+              if (loading) {
+                return (
+                  <LoaderContainer>
+                    <Loader />
+                  </LoaderContainer>
+                );
+              } else {
+                return (
+                  <>
+                    <ApproachModalContainer>
+                      {countryPhoneCode && countryPhoneCode.length !== 0 && (
+                        <CountryPicker
+                          theme={isDarkMode && DARK_THEME}
+                          countryCode={countryPhoneCode}
+                          withFilter={true}
+                          withFlag={true}
+                          withAlphaFilter={true}
+                          withEmoji={true}
+                          onSelect={onSelectrPhone}
+                        />
+                      )}
+                      {countryPhoneNumber &&
+                        countryPhoneNumber.length !== 0 && (
+                          <Bigtext>{countryPhoneNumber}</Bigtext>
+                        )}
+                      <TextInput
+                        style={{
+                          width: 220,
+                          backgroundColor: "transparent",
+                          borderBottomWidth: 1,
+                          borderBottomColor: "#999",
+                          color: isDarkMode ? "white" : "black",
+                          marginLeft: 5,
+                          fontSize: 32,
+                          fontWeight: "300"
+                        }}
+                        keyboardType="phone-pad"
+                        returnKeyType="send"
+                        onChangeText={number => setPhoneNumber(number)}
                       />
-                    )}
-                    {countryPhoneNumber && countryPhoneNumber.length !== 0 && (
-                      <Bigtext>{countryPhoneNumber}</Bigtext>
-                    )}
-                    <TextInput
-                      style={{
-                        width: 220,
-                        backgroundColor: "transparent",
-                        borderBottomWidth: 1,
-                        borderBottomColor: "#999",
-                        color: isDarkMode ? "white" : "black",
-                        marginLeft: 5,
-                        fontSize: 32,
-                        fontWeight: "300"
-                      }}
-                      keyboardType="phone-pad"
-                      returnKeyType="send"
-                      onChangeText={number => setPhoneNumber(number)}
-                    />
-                  </ApproachModalContainer>
-                  <ButtonContainer>
-                    <Text>
-                      When you tap "SEND SMS", Pinner will send a text with
-                      verification code. Message and data rates may apply. The
-                      verified phone number can be used to login.
-                    </Text>
-                    {/* <Text style={{ marginTop: 15 }}>
+                    </ApproachModalContainer>
+                    <ButtonContainer>
+                      <Text>
+                        When you tap "SEND SMS", Pinner will send a text with
+                        verification code. Message and data rates may apply. The
+                        verified phone number can be used to login.
+                      </Text>
+                      {/* <Text style={{ marginTop: 15 }}>
                       Changed your phone number?
                     </Text>
                     <Touchable onPress={() => setModalMode("emailApproach")}>
@@ -338,28 +366,30 @@ export default ({ navigation }) => {
                         Login with email
                       </Text>
                     </Touchable> */}
-                    <Void />
-                    <SubmitButton
-                      disabled={startPhoneVerificationLoading}
-                      onPress={handlePhoneNumber}
-                    >
-                      <SubmitButtonContainer>
-                        {startPhoneVerificationLoading ? (
-                          <ActivityIndicator color={"#999"} />
-                        ) : (
-                          <SubmitButtonText>SEND SMS</SubmitButtonText>
-                        )}
-                      </SubmitButtonContainer>
-                    </SubmitButton>
-                  </ButtonContainer>
-                </>
-              );
+                      <Void />
+                      <SubmitButton
+                        disabled={startPhoneVerificationLoading}
+                        onPress={handlePhoneNumber}
+                      >
+                        <SubmitButtonContainer>
+                          {startPhoneVerificationLoading ? (
+                            <ActivityIndicator color={"#999"} />
+                          ) : (
+                            <SubmitButtonText>SEND SMS</SubmitButtonText>
+                          )}
+                        </SubmitButtonContainer>
+                      </SubmitButton>
+                    </ButtonContainer>
+                  </>
+                );
+              }
             case "phoneVerification":
               return (
                 <>
                   <TextInput
                     style={{
                       width: constants.width - 80,
+                      maxWidth: 360,
                       backgroundColor: "transparent",
                       borderBottomWidth: 1,
                       borderBottomColor: "#999",
@@ -472,25 +502,20 @@ export default ({ navigation }) => {
         </Container>
         <BtnContainer>
           <Touchable
-            disabled={loading}
             onPress={() => {
               setApproachModalOpen(true);
             }}
           >
             <LoginLink>
-              {loading ? (
-                <ActivityIndicator color={"#999"} />
-              ) : (
-                <LoginTextContainer>
-                  <FontAwesome
-                    name={"phone"}
-                    color={"#999"}
-                    size={25}
-                    style={{ marginRight: 10 }}
-                  />
-                  <LoginLinkText>Continue with Phone</LoginLinkText>
-                </LoginTextContainer>
-              )}
+              <LoginTextContainer>
+                <FontAwesome
+                  name={"phone"}
+                  color={"#999"}
+                  size={25}
+                  style={{ marginRight: 10 }}
+                />
+                <LoginLinkText>Continue with Phone</LoginLinkText>
+              </LoginTextContainer>
             </LoginLink>
           </Touchable>
           <FacebookApproach cityId={cityId} countryCode={countryPhoneCode} />

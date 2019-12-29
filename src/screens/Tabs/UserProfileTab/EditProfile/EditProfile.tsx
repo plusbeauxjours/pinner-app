@@ -125,6 +125,7 @@ const ButtonContainer = styled.View`
   justify-content: center;
   align-items: center;
   padding: 15px;
+  max-width: 400px;
 `;
 const TextContainer = styled.View`
   width: ${constants.width - 30};
@@ -133,6 +134,7 @@ const TextContainer = styled.View`
 `;
 const SubmitButtonContainer = styled.View`
   width: ${constants.width - 80};
+  max-width: 360px;
   height: 40px;
   justify-content: center;
   align-items: center;
@@ -191,8 +193,8 @@ export default ({ navigation }) => {
     profile.isAutoLocationReport
   );
   const phoneNumber = profile.phoneNumber;
-  const countryPhoneNumber = profile.countryPhoneNumber
-  const countryPhoneCode = profile.countryPhoneCode
+  const countryPhoneNumber = profile.countryPhoneNumber;
+  const countryPhoneCode = profile.countryPhoneCode;
   const [newPhoneNumber, setNewPhoneNumber] = useState<string>(
     profile.phoneNumber || ""
   );
