@@ -30,6 +30,7 @@ export const EDIT_PROFILE = gql`
         profile {
           id
           uuid
+          pushToken
           bio
           gender
           avatarUrl

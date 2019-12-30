@@ -12,6 +12,7 @@ export const GET_USER = gql`
         profile {
           id
           uuid
+          pushToken
           bio
           gender
           avatarUrl

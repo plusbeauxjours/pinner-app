@@ -53,7 +53,6 @@ export default ({ cityId, countryCode }) => {
   };
   const appleLogin = async () => {
     try {
-      setLoading(true);
       const credential = await AppleAuthentication.signInAsync({
         requestedScopes: [
           AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
@@ -61,6 +60,7 @@ export default ({ cityId, countryCode }) => {
         ]
       });
       if (credential.hasOwnProperty("user")) {
+        console.log("nanannai");
         try {
           const {
             data: { appleConnect }
@@ -93,7 +93,12 @@ export default ({ cityId, countryCode }) => {
     }
   };
   return (
-    <Touchable disabled={loading} onPress={() => appleLogin()}>
+    <Touchable
+      disabled={loading}
+      onPress={() => {
+        setLoading(true), appleLogin();
+      }}
+    >
       <Container>
         {loading ? (
           <ActivityIndicator color={"white"} />

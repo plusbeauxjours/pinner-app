@@ -77,7 +77,8 @@ const ApproachModalContainer = styled.View`
 const Text = styled.Text`
   color: ${props => props.theme.color};
 `;
-const Bigtext = styled(Text)`
+const Bigtext = styled.Text`
+  color: ${props => props.theme.color};
   font-weight: 300;
   font-size: 30px;
 `;
@@ -122,7 +123,6 @@ const SubmitButton = styled.TouchableOpacity`
 `;
 const LoaderContainer = styled.View`
   flex: 1;
-  background-color: ${props => props.theme.bgColor};
   justify-content: center;
   align-items: center;
 `;
@@ -146,7 +146,6 @@ export default ({ navigation }) => {
   };
   const getAddress = async (latitude: number, longitude: number) => {
     try {
-      console.log("am here");
       const address = await useReverseGeoCode(latitude, longitude);
       if (
         address &&
@@ -294,11 +293,11 @@ export default ({ navigation }) => {
     }
   };
   const askPermission = async () => {
-    const { status: existingStatus } = await Permissions.getAsync(
+    const { status: existingLocationStatus } = await Permissions.getAsync(
       Permissions.LOCATION
     );
-    let finalStatus = existingStatus;
-    if (Platform.OS === "ios" && existingStatus === "denied") {
+    let finalLocationStatus = existingLocationStatus;
+    if (Platform.OS === "ios" && existingLocationStatus === "denied") {
       Alert.alert(
         "Permission Denied",
         "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
@@ -312,10 +311,34 @@ export default ({ navigation }) => {
           }
         ]
       );
-    } else if (existingStatus !== "granted") {
+    } else if (existingLocationStatus !== "granted") {
       const { status } = await Permissions.askAsync(Permissions.LOCATION);
-      finalStatus = status;
-    } else if (finalStatus !== "granted") {
+      finalLocationStatus = status;
+    } else if (finalLocationStatus !== "granted") {
+      return;
+    }
+    const { status: existingNotificationStatus } = await Permissions.getAsync(
+      Permissions.LOCATION
+    );
+    let finalNotificationStatus = existingNotificationStatus;
+    if (Platform.OS === "ios" && existingNotificationStatus === "denied") {
+      Alert.alert(
+        "Permission Denied",
+        "To enable notifications, tap Open Settings and then toggle the Notifications switch.",
+        [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "Open Settings",
+            onPress: () => {
+              Linking.openURL("app-settings:");
+            }
+          }
+        ]
+      );
+    } else if (existingNotificationStatus !== "granted") {
+      const { status } = await Permissions.askAsync(Permissions.LOCATION);
+      finalNotificationStatus = status;
+    } else if (finalNotificationStatus !== "granted") {
       return;
     }
   };
@@ -349,7 +372,11 @@ export default ({ navigation }) => {
         {(() => {
           switch (modalMode) {
             case "phoneApproach":
-              if (loading) {
+              if (
+                loading ||
+                countryPhoneCode.length === 0 ||
+                countryPhoneNumber.length === 0
+              ) {
                 return (
                   <LoaderContainer>
                     <Loader />
@@ -370,10 +397,9 @@ export default ({ navigation }) => {
                           onSelect={onSelectrPhone}
                         />
                       )}
-                      {countryPhoneNumber &&
-                        countryPhoneNumber.length !== 0 && (
-                          <Bigtext>{countryPhoneNumber}</Bigtext>
-                        )}
+                      {countryPhoneNumber && countryPhoneNumber.length > 0 && (
+                        <Bigtext>{countryPhoneNumber}</Bigtext>
+                      )}
                       <TextInput
                         style={{
                           width: 220,

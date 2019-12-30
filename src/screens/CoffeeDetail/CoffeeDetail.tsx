@@ -53,10 +53,10 @@ const UserName = styled.Text`
 `;
 const ItemContainer = styled.View`
   flex-direction: row;
-  margin-top: 80px;
   align-items: center;
+  justify-content: center;
   width: ${constants.width};
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 `;
 const Item = styled.View`
   flex-direction: column;
@@ -80,6 +80,9 @@ const Image = styled.Image`
   height: 150px;
   width: 150px;
   border-radius: 75px;
+`;
+const Void = styled.View`
+  height: 40px;
 `;
 interface IProps {
   navigation: any;
@@ -186,6 +189,7 @@ const CoffeeDetails: React.FC<IProps> = ({
                 {coffee.host.profile.currentCity.country.countryName}
               </Text>
             </Touchable>
+            <Void />
             <ItemContainer>
               {coffee.host.profile.distance !== 0 && (
                 <Item>
@@ -205,6 +209,8 @@ const CoffeeDetails: React.FC<IProps> = ({
                   )}
                 </Item>
               )}
+            </ItemContainer>
+            <ItemContainer>
               {/* {coffee.host.profile.coffeeCount !== 0 && (
                   <Item>
                     <UserName>{coffee.host.profile.coffeeCount} </UserName>
