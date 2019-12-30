@@ -92,7 +92,7 @@ export default ({ cityId, countryCode }) => {
     }
   };
   return (
-    <Touchable disabled={loading} onPress={appleLogin}>
+    <Touchable disabled={loading} onPress={() => appleLogin()}>
       <Container>
         {loading ? (
           <ActivityIndicator color={"white"} />

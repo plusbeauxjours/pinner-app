@@ -196,7 +196,7 @@ export default withNavigation(({ navigation }) => {
     return (
       <ScrollView
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={"#999"} />
         }
         showsVerticalScrollIndicator={false}
       >

@@ -151,12 +151,13 @@ export default ({ navigation }) => {
           countries.find(i => i.code === address.storableLocation.countryCode)
             .phone
         );
+        setLoading(false);
       } else {
         setCityId("ChIJzWXFYYuifDUR64Pq5LTtioU");
         setCountryPhoneCode("KR");
         setCountryPhoneNumber("+82");
+        setLoading(false);
       }
-      setLoading(false);
     } catch (e) {
       console.log(e);
     }
