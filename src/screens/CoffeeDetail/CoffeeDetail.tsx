@@ -1,8 +1,6 @@
 import React from "react";
 import { useQuery } from "react-apollo-hooks";
 import styled from "styled-components";
-import { useState } from "react";
-import { useLocation } from "../../context/LocationContext";
 import { CoffeeDetail, CoffeeDetailVariables } from "../../types/api";
 import { COFFEE_DETAIL } from "./CoffeeDetailQueries";
 import { useTheme } from "../../context/ThemeContext";
@@ -99,14 +97,6 @@ const CoffeeDetails: React.FC<IProps> = ({
   isSelf
 }) => {
   const isDarkMode = useTheme();
-  const location = useLocation();
-  const [countryCode, setCountryCode] = useState<string>(
-    location.currentCountryCode
-  );
-  const [gender, setGender] = useState<string>();
-  const [currentCityId, setCurrentCityId] = useState<string>(
-    location.currentCityId
-  );
   const {
     data: { coffeeDetail: { coffee = null } = {} } = {},
     loading: coffeeDetailLoading

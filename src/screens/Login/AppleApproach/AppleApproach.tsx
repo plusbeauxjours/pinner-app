@@ -60,7 +60,6 @@ export default ({ cityId, countryCode }) => {
         ]
       });
       if (credential.hasOwnProperty("user")) {
-        console.log("nanannai");
         try {
           const {
             data: { appleConnect }
@@ -82,12 +81,10 @@ export default ({ cityId, countryCode }) => {
           setLoading(false);
         }
       } else {
-        // type === 'cancel'
         setLoading(false);
       }
     } catch ({ message }) {
-      console.log(`Facebook Login Error: ${message}`);
-      setLoading(false);
+      console.log(`Apple Login Error: ${message}`);
     } finally {
       setLoading(false);
     }

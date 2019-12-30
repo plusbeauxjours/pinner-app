@@ -4,6 +4,7 @@ import Modal from "react-native-modal";
 import constants from "../../../../constants";
 import { useMutation } from "react-apollo-hooks";
 import * as Permissions from "expo-permissions";
+import * as Location from "expo-location";
 import {
   StartPhoneVerification,
   StartPhoneVerificationVariables,
@@ -134,10 +135,43 @@ export default ({ navigation }) => {
   const [approachModalOpen, setApproachModalOpen] = useState<boolean>(false);
   const [modalMode, setModalMode] = useState<string>("phoneApproach");
   const [verificationKey, setVerificationKey] = useState<string>("");
-  // const [emailAddress, setEmailAddress] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [countryPhoneCode, setCountryPhoneCode] = useState<any>("");
   const [countryPhoneNumber, setCountryPhoneNumber] = useState("");
+  // const [emailAddress, setEmailAddress] = useState<string>("");
+  // const [
+  //   startEmailVerificationFn,
+  //   { loading: startEmailVerificationLoading }
+  // ] = useMutation<StartEmailVerification, StartEmailVerificationVariables>(
+  //   EMAIL_SIGN_IN,
+  //   {
+  //     variables: { emailAddress }
+  //   }
+  // );
+  // const handleEmailAddress = async () => {
+  //   if (emailAddress !== "") {
+  //     const isValid = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(
+  //       emailAddress
+  //     );
+  //     if (isValid) {
+  //       const {
+  //         data: { startEmailVerification }
+  //       } = await startEmailVerificationFn();
+  //       if (startEmailVerification.ok) {
+  //         setModalMode("emailVerification");
+  //       } else {
+  //         setApproachModalOpen(false);
+  //         toast("Requested email address is already verified");
+  //       }
+  //     } else {
+  //       setApproachModalOpen(false);
+  //       toast("Please write a valid email");
+  //     }
+  //   } else {
+  //     setApproachModalOpen(false);
+  //     toast("Please write a email address");
+  //   }
+  // };
   const handleGeoSuccess = (position: Position) => {
     const {
       coords: { latitude, longitude }
@@ -158,13 +192,18 @@ export default ({ navigation }) => {
           countries.find(i => i.code === address.storableLocation.countryCode)
             .phone
         );
+        setLoading(false);
       } else {
         setCityId("ChIJOwg_06VPwokRYv534QaPC8g");
-        setCountryPhoneCode("KR");
-        setCountryPhoneNumber("+82");
+        setCountryPhoneCode("US");
+        setCountryPhoneNumber("+1");
+        setLoading(false);
       }
     } catch (e) {
-      console.log(e);
+      setCityId("ChIJOwg_06VPwokRYv534QaPC8g");
+      setCountryPhoneCode("US");
+      setCountryPhoneNumber("+1");
+      setLoading(false);
     } finally {
       setLoading(false);
     }
@@ -206,15 +245,6 @@ export default ({ navigation }) => {
       cityId
     }
   });
-  // const [
-  //   startEmailVerificationFn,
-  //   { loading: startEmailVerificationLoading }
-  // ] = useMutation<StartEmailVerification, StartEmailVerificationVariables>(
-  //   EMAIL_SIGN_IN,
-  //   {
-  //     variables: { emailAddress }
-  //   }
-  // );
   const toast = (message: string) => {
     Toast.show(message, {
       duration: 1000,
@@ -256,30 +286,7 @@ export default ({ navigation }) => {
       toast("Please write a valid phone number");
     }
   };
-  // const handleEmailAddress = async () => {
-  //   if (emailAddress !== "") {
-  //     const isValid = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(
-  //       emailAddress
-  //     );
-  //     if (isValid) {
-  //       const {
-  //         data: { startEmailVerification }
-  //       } = await startEmailVerificationFn();
-  //       if (startEmailVerification.ok) {
-  //         setModalMode("emailVerification");
-  //       } else {
-  //         setApproachModalOpen(false);
-  //         toast("Requested email address is already verified");
-  //       }
-  //     } else {
-  //       setApproachModalOpen(false);
-  //       toast("Please write a valid email");
-  //     }
-  //   } else {
-  //     setApproachModalOpen(false);
-  //     toast("Please write a email address");
-  //   }
-  // };
+
   const handlePhoneVerification = async () => {
     const {
       data: { completePhoneVerification }
@@ -302,7 +309,15 @@ export default ({ navigation }) => {
         "Permission Denied",
         "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
         [
-          { text: "Cancel", style: "cancel" },
+          {
+            text: "Cancel",
+            style: "cancel",
+            onPress: () => {
+              setCityId("ChIJOwg_06VPwokRYv534QaPC8g");
+              setCountryPhoneCode("US");
+              setCountryPhoneNumber("+1");
+            }
+          },
           {
             text: "Open Settings",
             onPress: () => {
@@ -386,6 +401,7 @@ export default ({ navigation }) => {
                 return (
                   <>
                     <ApproachModalContainer>
+                      {console.log(countryPhoneCode)}
                       {countryPhoneCode && countryPhoneCode.length !== 0 && (
                         <CountryPicker
                           theme={isDarkMode && DARK_THEME}

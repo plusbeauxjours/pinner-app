@@ -53,7 +53,6 @@ export default ({ cityId, countryCode }) => {
   };
   const fbLogin = async () => {
     try {
-      setLoading(true);
       await Facebook.initializeAsync("242663513281642", "Pinner");
       const authResult = await Facebook.logInWithReadPermissionsAsync({
         permissions: ["public_profile", "email"]
@@ -92,10 +91,17 @@ export default ({ cityId, countryCode }) => {
     } catch ({ message }) {
       console.log(`Facebook Login Error: ${message}`);
       setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
   return (
-    <Touchable disabled={loading} onPress={fbLogin}>
+    <Touchable
+      disabled={loading}
+      onPress={() => {
+        setLoading(true), fbLogin();
+      }}
+    >
       <Container>
         {loading ? (
           <ActivityIndicator color={"white"} />
