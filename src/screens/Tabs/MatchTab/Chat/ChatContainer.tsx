@@ -1,11 +1,20 @@
 import React from "react";
 import { GiftedChat } from "react-native-gifted-chat";
+import * as Permissions from "expo-permissions";
 import { withNavigation, NavigationScreenProp } from "react-navigation";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import firebase from "firebase";
 import CustomView from "./CustomView";
 import { chat_send } from "../../../../../Fire";
-import { TouchableOpacity, BackHandler, View, Text } from "react-native";
+import {
+  TouchableOpacity,
+  BackHandler,
+  View,
+  Text,
+  Platform,
+  Alert,
+  Linking
+} from "react-native";
 import { BACKEND_URL } from "../../../../../constants";
 import ChatPresenter from "./ChatPresenter";
 import {
@@ -175,7 +184,32 @@ class ChatContainer extends React.Component<IProps, IState> {
   public renderCustomView = props => {
     return <CustomView {...props} />;
   };
-
+  public askPermission = async () => {
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.LOCATION
+    );
+    let finalStatus = existingStatus;
+    if (Platform.OS === "ios" && existingStatus === "denied") {
+      Alert.alert(
+        "Permission Denied",
+        "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
+        [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "Open Settings",
+            onPress: () => {
+              Linking.openURL("app-settings:");
+            }
+          }
+        ]
+      );
+    } else if (existingStatus !== "granted") {
+      const { status } = await Permissions.askAsync(Permissions.LOCATION);
+      finalStatus = status;
+    } else if (finalStatus !== "granted") {
+      return;
+    }
+  };
   public renderAvatar = () => {
     const { targetUuid } = this.state;
     const randomAvatar = {
@@ -252,7 +286,9 @@ class ChatContainer extends React.Component<IProps, IState> {
         style={{
           justifyContent: "center"
         }}
-        onPress={() => this.setState({ mapModalOpen: true })}
+        onPress={() => {
+          this.askPermission(), this.setState({ mapModalOpen: true });
+        }}
       >
         <View
           style={{

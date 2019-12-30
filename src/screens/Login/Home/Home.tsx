@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Modal from "react-native-modal";
 import constants from "../../../../constants";
 import { useMutation } from "react-apollo-hooks";
+import * as Permissions from "expo-permissions";
 import {
   StartPhoneVerification,
   StartPhoneVerificationVariables,
@@ -15,7 +16,13 @@ import Toast from "react-native-root-toast";
 import { useTheme } from "../../../context/ThemeContext";
 import { DARK_THEME } from "react-native-country-picker-modal";
 import CountryPicker from "react-native-country-picker-modal";
-import { Platform, TextInput, ActivityIndicator } from "react-native";
+import {
+  Platform,
+  TextInput,
+  ActivityIndicator,
+  Alert,
+  Linking
+} from "react-native";
 import { countries } from "../../../../countryData";
 import { useLogIn } from "../../../context/AuthContext";
 import Loader from "../../../components/Loader";
@@ -139,6 +146,7 @@ export default ({ navigation }) => {
   };
   const getAddress = async (latitude: number, longitude: number) => {
     try {
+      console.log("am here");
       const address = await useReverseGeoCode(latitude, longitude);
       if (
         address &&
@@ -151,18 +159,21 @@ export default ({ navigation }) => {
           countries.find(i => i.code === address.storableLocation.countryCode)
             .phone
         );
-        setLoading(false);
       } else {
-        setCityId("ChIJzWXFYYuifDUR64Pq5LTtioU");
+        setCityId("ChIJOwg_06VPwokRYv534QaPC8g");
         setCountryPhoneCode("KR");
         setCountryPhoneNumber("+82");
-        setLoading(false);
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      setLoading(false);
     }
   };
   const handleGeoError = () => {
+    setCityId("ChIJOwg_06VPwokRYv534QaPC8g");
+    setCountryPhoneCode("US");
+    setCountryPhoneNumber("+1");
     setLoading(false);
     console.log("No location");
   };
@@ -282,8 +293,34 @@ export default ({ navigation }) => {
       toast("Could not be verified your phone number");
     }
   };
+  const askPermission = async () => {
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.LOCATION
+    );
+    let finalStatus = existingStatus;
+    if (Platform.OS === "ios" && existingStatus === "denied") {
+      Alert.alert(
+        "Permission Denied",
+        "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
+        [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "Open Settings",
+            onPress: () => {
+              Linking.openURL("app-settings:");
+            }
+          }
+        ]
+      );
+    } else if (existingStatus !== "granted") {
+      const { status } = await Permissions.askAsync(Permissions.LOCATION);
+      finalStatus = status;
+    } else if (finalStatus !== "granted") {
+      return;
+    }
+  };
   useEffect(() => {
-    setLoading(true);
+    askPermission();
     navigator.geolocation.getCurrentPosition(handleGeoSuccess, handleGeoError);
   }, []);
   return (

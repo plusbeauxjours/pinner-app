@@ -60,8 +60,7 @@ export default ({ cityId, countryCode }) => {
           AppleAuthentication.AppleAuthenticationScope.EMAIL
         ]
       });
-      console.log(credential);
-      if (credential.user && credential.user.length > 0) {
+      if (credential.hasOwnProperty("user")) {
         try {
           const {
             data: { appleConnect }
@@ -88,6 +87,8 @@ export default ({ cityId, countryCode }) => {
       }
     } catch ({ message }) {
       console.log(`Facebook Login Error: ${message}`);
+      setLoading(false);
+    } finally {
       setLoading(false);
     }
   };
