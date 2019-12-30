@@ -131,13 +131,13 @@ export default ({ navigation }) => {
   const logIn = useLogIn();
   const isDarkMode = useTheme();
   const [loading, setLoading] = useState<boolean>(false);
-  const [cityId, setCityId] = useState<string>("");
+  const [cityId, setCityId] = useState<string>("ChIJOwg_06VPwokRYv534QaPC8g");
   const [approachModalOpen, setApproachModalOpen] = useState<boolean>(false);
   const [modalMode, setModalMode] = useState<string>("phoneApproach");
   const [verificationKey, setVerificationKey] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [countryPhoneCode, setCountryPhoneCode] = useState<any>("");
-  const [countryPhoneNumber, setCountryPhoneNumber] = useState("");
+  const [countryPhoneCode, setCountryPhoneCode] = useState<any>("US");
+  const [countryPhoneNumber, setCountryPhoneNumber] = useState("+1");
   // const [emailAddress, setEmailAddress] = useState<string>("");
   // const [
   //   startEmailVerificationFn,
@@ -194,24 +194,15 @@ export default ({ navigation }) => {
         );
         setLoading(false);
       } else {
-        setCityId("ChIJOwg_06VPwokRYv534QaPC8g");
-        setCountryPhoneCode("US");
-        setCountryPhoneNumber("+1");
         setLoading(false);
       }
     } catch (e) {
-      setCityId("ChIJOwg_06VPwokRYv534QaPC8g");
-      setCountryPhoneCode("US");
-      setCountryPhoneNumber("+1");
       setLoading(false);
     } finally {
       setLoading(false);
     }
   };
   const handleGeoError = () => {
-    setCityId("ChIJOwg_06VPwokRYv534QaPC8g");
-    setCountryPhoneCode("US");
-    setCountryPhoneNumber("+1");
     setLoading(false);
     console.log("No location");
   };
@@ -311,12 +302,7 @@ export default ({ navigation }) => {
         [
           {
             text: "Cancel",
-            style: "cancel",
-            onPress: () => {
-              setCityId("ChIJOwg_06VPwokRYv534QaPC8g");
-              setCountryPhoneCode("US");
-              setCountryPhoneNumber("+1");
-            }
+            style: "cancel"
           },
           {
             text: "Open Settings",
@@ -330,30 +316,6 @@ export default ({ navigation }) => {
       const { status } = await Permissions.askAsync(Permissions.LOCATION);
       finalLocationStatus = status;
     } else if (finalLocationStatus !== "granted") {
-      return;
-    }
-    const { status: existingNotificationStatus } = await Permissions.getAsync(
-      Permissions.LOCATION
-    );
-    let finalNotificationStatus = existingNotificationStatus;
-    if (Platform.OS === "ios" && existingNotificationStatus === "denied") {
-      Alert.alert(
-        "Permission Denied",
-        "To enable notifications, tap Open Settings and then toggle the Notifications switch.",
-        [
-          { text: "Cancel", style: "cancel" },
-          {
-            text: "Open Settings",
-            onPress: () => {
-              Linking.openURL("app-settings:");
-            }
-          }
-        ]
-      );
-    } else if (existingNotificationStatus !== "granted") {
-      const { status } = await Permissions.askAsync(Permissions.LOCATION);
-      finalNotificationStatus = status;
-    } else if (finalNotificationStatus !== "granted") {
       return;
     }
   };

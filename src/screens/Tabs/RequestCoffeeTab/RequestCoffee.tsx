@@ -165,7 +165,10 @@ export default ({ navigation }) => {
             } = await requestCoffeeFn({
               variables: {
                 target: "everyone",
-                currentCityId: location.currentCityId
+                currentCityId:
+                  location.currentCityId && location.currentCityId.length !== 0
+                    ? location.currentCityId
+                    : me.user.profile.currentCity
               }
             });
             if (requestCoffee.ok) {
@@ -182,7 +185,11 @@ export default ({ navigation }) => {
               } = await requestCoffeeFn({
                 variables: {
                   target: "nationality",
-                  currentCityId: location.currentCityId,
+                  currentCityId:
+                    location.currentCityId &&
+                    location.currentCityId.length !== 0
+                      ? location.currentCityId
+                      : me.user.profile.currentCity,
                   countryCode: me.user.profile.nationality.countryCode
                 }
               });
@@ -203,7 +210,11 @@ export default ({ navigation }) => {
               } = await requestCoffeeFn({
                 variables: {
                   target: "residence",
-                  currentCityId: location.currentCityId,
+                  currentCityId:
+                    location.currentCityId &&
+                    location.currentCityId.length !== 0
+                      ? location.currentCityId
+                      : me.user.profile.currentCity,
                   countryCode: me.user.profile.residence.countryCode
                 }
               });
@@ -224,7 +235,11 @@ export default ({ navigation }) => {
               } = await requestCoffeeFn({
                 variables: {
                   target: "gender",
-                  currentCityId: location.currentCityId,
+                  currentCityId:
+                    location.currentCityId &&
+                    location.currentCityId.length !== 0
+                      ? location.currentCityId
+                      : me.user.profile.currentCity,
                   countryCode: me.user.profile.gender
                 }
               });
@@ -258,7 +273,10 @@ export default ({ navigation }) => {
             } = await requestCoffeeFn({
               variables: {
                 target: "gender",
-                currentCityId: location.currentCityId,
+                currentCityId:
+                  location.currentCityId && location.currentCityId.length !== 0
+                    ? location.currentCityId
+                    : me.user.profile.currentCity,
                 gender: "MALE"
               }
             });
@@ -275,7 +293,10 @@ export default ({ navigation }) => {
             } = await requestCoffeeFn({
               variables: {
                 target: "gender",
-                currentCityId: location.currentCityId,
+                currentCityId:
+                  location.currentCityId && location.currentCityId.length !== 0
+                    ? location.currentCityId
+                    : me.user.profile.currentCity,
                 gender: "FEMALE"
               }
             });
@@ -292,7 +313,10 @@ export default ({ navigation }) => {
             } = await requestCoffeeFn({
               variables: {
                 target: "gender",
-                currentCityId: location.currentCityId,
+                currentCityId:
+                  location.currentCityId && location.currentCityId.length !== 0
+                    ? location.currentCityId
+                    : me.user.profile.currentCity,
                 gender: "OTHER"
               }
             });
@@ -452,7 +476,10 @@ export default ({ navigation }) => {
       } = await requestCoffeeFn({
         variables: {
           target: "nationality",
-          currentCityId: location.currentCityId,
+          currentCityId:
+            location.currentCityId && location.currentCityId.length !== 0
+              ? location.currentCityId
+              : me.user.profile.currentCity,
           countryCode: country.cca2
         }
       });
@@ -471,7 +498,10 @@ export default ({ navigation }) => {
       } = await requestCoffeeFn({
         variables: {
           target: "residence",
-          currentCityId: location.currentCityId,
+          currentCityId:
+            location.currentCityId && location.currentCityId.length !== 0
+              ? location.currentCityId
+              : me.user.profile.currentCity,
           countryCode: country.cca2
         }
       });
@@ -504,7 +534,10 @@ export default ({ navigation }) => {
   };
   const renderContent = section => (
     <CoffeeContainer>
-      <CollapsibleAccordion cityId={section.city.cityId} />
+      <CollapsibleAccordion
+        cityId={section.city.cityId}
+        refreshing={refreshing}
+      />
     </CoffeeContainer>
   );
   const onChange = (activeSections: any) => {
@@ -602,7 +635,11 @@ export default ({ navigation }) => {
         </Modal>
         <ScrollView
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={"#999"} />
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={"#999"}
+            />
           }
           showsVerticalScrollIndicator={false}
         >

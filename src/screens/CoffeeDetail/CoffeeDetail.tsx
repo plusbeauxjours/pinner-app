@@ -12,7 +12,7 @@ import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 
 const Container = styled.View`
   width: ${constants.width};
-  height: 450px;
+  height: 400px;
   border-top-width: 0.5;
   border-top-color: #999;
   border-bottom-width: 0.5;
@@ -73,6 +73,7 @@ const CoffeeBtnContainer = styled.View`
   align-items: center;
   position: absolute;
   bottom: 10;
+  max-width: 400px;
 `;
 const Image = styled.Image`
   height: 150px;

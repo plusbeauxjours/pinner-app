@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Modal from "react-native-modal";
 import { useQuery } from "react-apollo-hooks";
@@ -45,7 +45,7 @@ const Location = styled.Text`
   font-size: 11px;
   color: ${props => props.theme.color};
 `;
-export default ({ cityId }) => {
+export default ({ cityId, refreshing }) => {
   const randomAvatar = {
     0: require(`../Images/thumbnails/earth6.png`),
     1: require(`../Images/thumbnails/earth1.png`),
@@ -67,11 +67,15 @@ export default ({ cityId }) => {
   };
   const {
     data: { getCoffees: { coffees = null } = {} } = {},
-    loading: coffeeLoading
+    loading: coffeeLoading,
+    refetch
   } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
     variables: { location: "city", cityId },
     fetchPolicy: "no-cache"
   });
+  useEffect(() => {
+    refetch();
+  }, [refreshing]);
   if (coffeeLoading) {
     return (
       <LoaderContainer>
