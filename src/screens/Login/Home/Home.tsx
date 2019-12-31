@@ -4,7 +4,6 @@ import Modal from "react-native-modal";
 import constants from "../../../../constants";
 import { useMutation } from "react-apollo-hooks";
 import * as Permissions from "expo-permissions";
-import * as Location from "expo-location";
 import {
   StartPhoneVerification,
   StartPhoneVerificationVariables,
@@ -363,7 +362,6 @@ export default ({ navigation }) => {
                 return (
                   <>
                     <ApproachModalContainer>
-                      {console.log(countryPhoneCode)}
                       {countryPhoneCode && countryPhoneCode.length !== 0 && (
                         <CountryPicker
                           theme={isDarkMode && DARK_THEME}

@@ -196,6 +196,7 @@ const Search = ({ navigation }) => {
                 marginBottom: 25,
                 marginLeft: 30 / 2
               }}
+              keyboardShouldPersistTaps="always"
               showsVerticalScrollIndicator={false}
             >
               {loading || createCityLoading || isLoading ? (

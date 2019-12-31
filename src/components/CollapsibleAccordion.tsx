@@ -93,7 +93,6 @@ export default ({ cityId, refreshing }) => {
           }
           onBackdropPress={() => setModalOpen(false)}
           onBackButtonPress={() => Platform.OS !== "ios" && setModalOpen(false)}
-          onModalHide={() => setModalOpen(false)}
           propagateSwipe={true}
           scrollHorizontal={true}
           backdropOpacity={0.9}

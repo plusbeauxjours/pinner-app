@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import * as Permissions from "expo-permissions";
 import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
-import { RefreshControl, Platform, TouchableOpacity } from "react-native";
+import {
+  RefreshControl,
+  Platform,
+  TouchableOpacity,
+  Alert,
+  Linking
+} from "react-native";
 import Swiper from "react-native-swiper";
 import Toast from "react-native-root-toast";
 import { SimpleLineIcons } from "@expo/vector-icons";
@@ -155,7 +162,19 @@ export default ({ navigation }) => {
         ],
         cancelButtonIndex: 4,
         title: `Choose a target.`,
-        showSeparators: true
+        showSeparators: true,
+       containerStyle: {
+          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
+          borderRadius: 10,
+          width: constants.width - 30,
+          marginLeft: 15
+        },
+        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
+        titleTextStyle: {
+          color: isDarkMode ? "#EFEFEF" : "#161616",
+          fontWeight: "400"
+        },
+        separatorStyle: { opacity: 0.3 }
       },
       async buttonIndex => {
         if (buttonIndex === 0) {
@@ -168,7 +187,7 @@ export default ({ navigation }) => {
                 currentCityId:
                   location.currentCityId && location.currentCityId.length !== 0
                     ? location.currentCityId
-                    : me.user.profile.currentCity
+                    : me.user.profile.currentCity.cityId
               }
             });
             if (requestCoffee.ok) {
@@ -189,7 +208,7 @@ export default ({ navigation }) => {
                     location.currentCityId &&
                     location.currentCityId.length !== 0
                       ? location.currentCityId
-                      : me.user.profile.currentCity,
+                      : me.user.profile.currentCity.cityId,
                   countryCode: me.user.profile.nationality.countryCode
                 }
               });
@@ -214,7 +233,7 @@ export default ({ navigation }) => {
                     location.currentCityId &&
                     location.currentCityId.length !== 0
                       ? location.currentCityId
-                      : me.user.profile.currentCity,
+                      : me.user.profile.currentCity.cityId,
                   countryCode: me.user.profile.residence.countryCode
                 }
               });
@@ -239,7 +258,7 @@ export default ({ navigation }) => {
                     location.currentCityId &&
                     location.currentCityId.length !== 0
                       ? location.currentCityId
-                      : me.user.profile.currentCity,
+                      : me.user.profile.currentCity.cityId,
                   countryCode: me.user.profile.gender
                 }
               });
@@ -263,7 +282,19 @@ export default ({ navigation }) => {
       {
         options: ["Male", "Female", "Other", "Cancel"],
         cancelButtonIndex: 3,
-        showSeparators: true
+        showSeparators: true,
+       containerStyle: {
+          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
+          borderRadius: 10,
+          width: constants.width - 30,
+          marginLeft: 15
+        },
+        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
+        titleTextStyle: {
+          color: isDarkMode ? "#EFEFEF" : "#161616",
+          fontWeight: "400"
+        },
+        separatorStyle: { opacity: 0.3 }
       },
       async buttonIndex => {
         if (buttonIndex === 0) {
@@ -276,7 +307,7 @@ export default ({ navigation }) => {
                 currentCityId:
                   location.currentCityId && location.currentCityId.length !== 0
                     ? location.currentCityId
-                    : me.user.profile.currentCity,
+                    : me.user.profile.currentCity.cityId,
                 gender: "MALE"
               }
             });
@@ -296,7 +327,7 @@ export default ({ navigation }) => {
                 currentCityId:
                   location.currentCityId && location.currentCityId.length !== 0
                     ? location.currentCityId
-                    : me.user.profile.currentCity,
+                    : me.user.profile.currentCity.cityId,
                 gender: "FEMALE"
               }
             });
@@ -316,7 +347,7 @@ export default ({ navigation }) => {
                 currentCityId:
                   location.currentCityId && location.currentCityId.length !== 0
                     ? location.currentCityId
-                    : me.user.profile.currentCity,
+                    : me.user.profile.currentCity.cityId,
                 gender: "OTHER"
               }
             });
@@ -411,7 +442,20 @@ export default ({ navigation }) => {
         options: ["Yes", "No"],
         destructiveButtonIndex: 0,
         cancelButtonIndex: 1,
-        title: "Are you sure to cancel?"
+        showSeparators: true,
+        title: "Are you sure to cancel?",
+       containerStyle: {
+          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
+          borderRadius: 10,
+          width: constants.width - 30,
+          marginLeft: 15
+        },
+        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
+        titleTextStyle: {
+          color: isDarkMode ? "#EFEFEF" : "#161616",
+          fontWeight: "400"
+        },
+        separatorStyle: { opacity: 0.3 }
       },
       async buttonIndex => {
         if (buttonIndex === 0) {
@@ -479,7 +523,7 @@ export default ({ navigation }) => {
           currentCityId:
             location.currentCityId && location.currentCityId.length !== 0
               ? location.currentCityId
-              : me.user.profile.currentCity,
+              : me.user.profile.currentCity.cityId,
           countryCode: country.cca2
         }
       });
@@ -501,7 +545,7 @@ export default ({ navigation }) => {
           currentCityId:
             location.currentCityId && location.currentCityId.length !== 0
               ? location.currentCityId
-              : me.user.profile.currentCity,
+              : me.user.profile.currentCity.cityId,
           countryCode: country.cca2
         }
       });
@@ -543,6 +587,32 @@ export default ({ navigation }) => {
   const onChange = (activeSections: any) => {
     setActiveSections(activeSections.includes(undefined) ? [] : activeSections);
   };
+  const askPermission = async () => {
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.LOCATION
+    );
+    let finalStatus = existingStatus;
+    if (Platform.OS === "ios" && existingStatus === "denied") {
+      Alert.alert(
+        "Permission Denied",
+        "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
+        [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "Open Settings",
+            onPress: () => {
+              Linking.openURL("app-settings:");
+            }
+          }
+        ]
+      );
+    } else if (existingStatus !== "granted") {
+      const { status } = await Permissions.askAsync(Permissions.LOCATION);
+      finalStatus = status;
+    } else if (finalStatus !== "granted") {
+      return;
+    }
+  };
   if (
     recommendUserLoading ||
     recommendLocationLoading ||
@@ -570,7 +640,6 @@ export default ({ navigation }) => {
           onBackButtonPress={() =>
             Platform.OS !== "ios" && setNationalityModalOpen(false)
           }
-          onModalHide={() => setNationalityModalOpen(false)}
           propagateSwipe={true}
           scrollHorizontal={true}
           backdropOpacity={0.9}
@@ -608,7 +677,6 @@ export default ({ navigation }) => {
           onBackButtonPress={() =>
             Platform.OS !== "ios" && setResidenceModalOpen(false)
           }
-          onModalHide={() => setResidenceModalOpen(false)}
           propagateSwipe={true}
           scrollHorizontal={true}
           backdropOpacity={0.9}
@@ -770,7 +838,9 @@ export default ({ navigation }) => {
           ) : (
             <CoffeeSubmitBtn
               disabled={requestCoffeeLoading}
-              onPress={() => requestCoffee()}
+              onPress={() => {
+                askPermission(), requestCoffee();
+              }}
             >
               <CoffeeSubmitContainer>
                 <CoffeeText>PIN</CoffeeText>

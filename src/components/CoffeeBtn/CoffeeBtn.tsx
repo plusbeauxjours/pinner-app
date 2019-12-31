@@ -111,7 +111,20 @@ const CoffeeBtn: React.FC<IProps> = ({
         options: ["Yes", "No"],
         destructiveButtonIndex: 0,
         cancelButtonIndex: 1,
-        title: "Are you sure to cancel?"
+        showSeparators: true,
+        title: "Are you sure to cancel?",
+       containerStyle: {
+          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
+          borderRadius: 10,
+          width: constants.width - 30,
+          marginLeft: 15
+        },
+        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
+        titleTextStyle: {
+          color: isDarkMode ? "#EFEFEF" : "#161616",
+          fontWeight: "400"
+        },
+        separatorStyle: { opacity: 0.3 }
       },
       async buttonIndex => {
         if (buttonIndex === 0) {

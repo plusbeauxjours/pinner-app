@@ -135,7 +135,19 @@ export default withNavigation(({ navigation }) => {
         options: ["Inappropriate Photoes", "Wrong Location", "Other", "Cancel"],
         cancelButtonIndex: 3,
         title: `Choose a reason for reporting this city.`,
-        showSeparators: true
+        showSeparators: true,
+        containerStyle: {
+          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
+          borderRadius: 10,
+          width: constants.width - 30,
+          marginLeft: 15
+        },
+        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
+        titleTextStyle: {
+          color: isDarkMode ? "#EFEFEF" : "#161616",
+          fontWeight: "400"
+        },
+        separatorStyle: { opacity: 0.3 }
       },
       buttonIndex => {
         if (buttonIndex === 0) {
@@ -166,7 +178,20 @@ export default withNavigation(({ navigation }) => {
         options: ["Yes", "No"],
         destructiveButtonIndex: 0,
         cancelButtonIndex: 1,
-        title: `Are you sure to report this city?`
+        showSeparators: true,
+        title: `Are you sure to report this city?`,
+       containerStyle: {
+          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
+          borderRadius: 10,
+          width: constants.width - 30,
+          marginLeft: 15
+        },
+        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
+        titleTextStyle: {
+          color: isDarkMode ? "#EFEFEF" : "#161616",
+          fontWeight: "400"
+        },
+        separatorStyle: { opacity: 0.3 }
       },
       buttonIndex => {
         if (buttonIndex === 0) {
@@ -274,7 +299,6 @@ export default withNavigation(({ navigation }) => {
           }
           onBackdropPress={() => setModalOpen(false)}
           onBackButtonPress={() => Platform.OS !== "ios" && setModalOpen(false)}
-          onModalHide={() => setModalOpen(false)}
           propagateSwipe={true}
           scrollHorizontal={true}
           backdropOpacity={0.9}
@@ -293,7 +317,11 @@ export default withNavigation(({ navigation }) => {
         </Modal>
         <ScrollView
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={"#999"} />
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={"#999"}
+            />
           }
           showsVerticalScrollIndicator={false}
         >

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import { ScreenOrientation } from "expo";
-import { RefreshControl, FlatList, Platform } from "react-native";
+import { RefreshControl, FlatList, Platform, Alert } from "react-native";
 import Toast from "react-native-root-toast";
 import styled from "styled-components";
 import { useMe } from "../../../../context/MeContext";
@@ -26,6 +26,7 @@ import ImageZoom from "react-native-image-pan-zoom";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { GET_USER } from "../UserProfile/UserProfileQueries";
 import { ME } from "../../../../sharedQueries";
+import { continents } from "../../../../../countryData";
 
 const TextContainer = styled.View`
   margin-top: 15px;
@@ -178,41 +179,93 @@ export default ({ navigation }) => {
     }
   };
   const onPress = () => {
-    showActionSheetWithOptions(
-      {
-        options: ["Change main photo", "Delete photo", "Cancel"],
-        cancelButtonIndex: 2,
-        showSeparators: true
-      },
-      buttonIndex => {
-        if (buttonIndex === 0 && !deleteAvatarLoading && !markAsMainLoading) {
-          markAsMainFn({ variables: { uuid: avatar.uuid } });
-          setModalOpen(false);
-          toast("Main photo changed");
-        } else if (buttonIndex === 1) {
-          onConfirmPress();
-        } else {
-          null;
-        }
-      }
-    );
+    Platform.OS === "ios"
+      ? showActionSheetWithOptions(
+          {
+            options: ["Change main photo", "Delete photo", "Cancel"],
+            showSeparators: true,
+            cancelButtonIndex: 2
+          },
+          buttonIndex => {
+            if (
+              buttonIndex === 0 &&
+              !deleteAvatarLoading &&
+              !markAsMainLoading
+            ) {
+              markAsMainFn({ variables: { uuid: avatar.uuid } });
+              setModalOpen(false);
+              toast("Main photo changed");
+            } else if (buttonIndex === 1) {
+              onConfirmPress();
+            } else {
+              null;
+            }
+          }
+        )
+      : Alert.alert("Options", "please tab an option.", [
+          {
+            text: "Cancel",
+            style: "cancel"
+          },
+          {
+            text: "Change main photo",
+            onPress: () => {
+              !deleteAvatarLoading &&
+                !markAsMainLoading &&
+                markAsMainFn({ variables: { uuid: avatar.uuid } });
+              setModalOpen(false);
+              toast("Main photo changed");
+            }
+          },
+          {
+            text: "Delete photo",
+            onPress: () => {
+              onConfirmPress();
+            }
+          }
+        ]);
   };
   const onConfirmPress = () => {
-    showActionSheetWithOptions(
-      {
-        options: ["Yes", "No"],
-        destructiveButtonIndex: 0,
-        cancelButtonIndex: 1
-      },
-      buttonIndex => {
-        if (buttonIndex === 0 && !deleteAvatarLoading && !markAsMainLoading) {
-          deleteAvatar(avatar.uuid);
-          toast("Photo deleted");
-        } else {
-          null;
-        }
-      }
-    );
+    Platform.OS === "ios"
+      ? showActionSheetWithOptions(
+          {
+            options: ["Yes", "No"],
+            destructiveButtonIndex: 0,
+            showSeparators: true,
+            cancelButtonIndex: 1
+          },
+          buttonIndex => {
+            if (
+              buttonIndex === 0 &&
+              !deleteAvatarLoading &&
+              !markAsMainLoading
+            ) {
+              deleteAvatar(avatar.uuid);
+              toast("Photo deleted");
+            } else {
+              null;
+            }
+          }
+        )
+      : Alert.alert(
+          "Delete Photo",
+          "Once you delete your photo, there is no going back. Please be certain to delete photo. Are you sure to delete this photo?",
+          [
+            {
+              text: "No",
+              style: "cancel"
+            },
+            {
+              text: "Yes",
+              onPress: () => {
+                !deleteAvatarLoading &&
+                  !markAsMainLoading &&
+                  deleteAvatar(avatar.uuid);
+                toast("Photo deleted");
+              }
+            }
+          ]
+        );
   };
   const toast = (message: string) => {
     Toast.show(message, {
@@ -234,14 +287,18 @@ export default ({ navigation }) => {
     return (
       <ScrollView
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={"#999"} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={"#999"}
+          />
         }
         showsVerticalScrollIndicator={false}
       >
         {avatars && avatars.length !== 0 ? (
           <>
             <Modal
-              style={{ margin: 0, alignItems: "flex-start" }}
+              style={{ margin: 0, alignItems: "flex-start", zIndex: 10 }}
               isVisible={modalOpen}
               backdropColor={
                 isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"

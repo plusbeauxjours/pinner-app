@@ -194,7 +194,13 @@ class ChatContainer extends React.Component<IProps, IState> {
         "Permission Denied",
         "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
         [
-          { text: "Cancel", style: "cancel" },
+          {
+            text: "Cancel",
+            style: "cancel",
+            onPress: () => {
+              this.closeMapModal();
+            }
+          },
           {
             text: "Open Settings",
             onPress: () => {

@@ -291,7 +291,20 @@ export default ({ navigation }) => {
         options: ["Yes", "No"],
         destructiveButtonIndex: 0,
         cancelButtonIndex: 1,
-        title: "Are you sure to delete trip?"
+        showSeparators: true,
+        title: "Are you sure to delete trip?",
+       containerStyle: {
+          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
+          borderRadius: 10,
+          width: constants.width - 30,
+          marginLeft: 15
+        },
+        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
+        titleTextStyle: {
+          color: isDarkMode ? "#EFEFEF" : "#161616",
+          fontWeight: "400"
+        },
+        separatorStyle: { opacity: 0.3 }
       },
       buttonIndex => {
         if (buttonIndex === 0) {
@@ -318,7 +331,19 @@ export default ({ navigation }) => {
         ],
         cancelButtonIndex: 4,
         title: `Choose a reason for reporting this account. We won't tell ${user.username} who reported them.`,
-        showSeparators: true
+        showSeparators: true,
+       containerStyle: {
+          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
+          borderRadius: 10,
+          width: constants.width - 30,
+          marginLeft: 15
+        },
+        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
+        titleTextStyle: {
+          color: isDarkMode ? "#EFEFEF" : "#161616",
+          fontWeight: "400"
+        },
+        separatorStyle: { opacity: 0.3 }
       },
       async buttonIndex => {
         if (buttonIndex === 0) {
@@ -341,7 +366,20 @@ export default ({ navigation }) => {
         options: ["Yes", "No"],
         destructiveButtonIndex: 0,
         cancelButtonIndex: 1,
-        title: `Are you sure to report ${user.username}?`
+        showSeparators: true,
+        title: `Are you sure to report ${user.username}?`,
+       containerStyle: {
+          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
+          borderRadius: 10,
+          width: constants.width - 30,
+          marginLeft: 15
+        },
+        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
+        titleTextStyle: {
+          color: isDarkMode ? "#EFEFEF" : "#161616",
+          fontWeight: "400"
+        },
+        separatorStyle: { opacity: 0.3 }
       },
       buttonIndex => {
         if (buttonIndex === 0) {
@@ -675,12 +713,11 @@ export default ({ navigation }) => {
           onBackButtonPress={() =>
             Platform.OS !== "ios" && setAvatarModalOpen(false)
           }
-          onModalHide={() => setAvatarModalOpen(false)}
           propagateSwipe={true}
           scrollHorizontal={true}
           backdropOpacity={0.9}
-          animationIn="fadeIn"
-          animationOut="fadeOut"
+          animationIn={"fadeIn"}
+          animationOut={"fadeOut"}
           animationInTiming={200}
           animationOutTiming={200}
           backdropTransitionInTiming={200}
@@ -854,6 +891,7 @@ export default ({ navigation }) => {
                     marginBottom: 25,
                     backgroundColor: "transparent"
                   }}
+                  keyboardShouldPersistTaps="always"
                   showsVerticalScrollIndicator={false}
                 >
                   {createCityLoading || isLoading ? (
@@ -1069,6 +1107,7 @@ export default ({ navigation }) => {
                     marginBottom: 25,
                     backgroundColor: "transparent"
                   }}
+                  keyboardShouldPersistTaps="always"
                   showsVerticalScrollIndicator={false}
                 >
                   {createCityLoading || isLoading ? (
@@ -1140,7 +1179,6 @@ export default ({ navigation }) => {
           onBackButtonPress={() =>
             Platform.OS !== "ios" && setCoffeeModalOpen(false)
           }
-          onModalHide={() => setCoffeeModalOpen(false)}
           propagateSwipe={true}
           scrollHorizontal={true}
           backdropOpacity={0.9}

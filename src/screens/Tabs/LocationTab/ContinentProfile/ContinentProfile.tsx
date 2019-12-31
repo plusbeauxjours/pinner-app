@@ -100,7 +100,19 @@ export default withNavigation(({ navigation }) => {
         options: ["Inappropriate Photoes", "Wrong Location", "Other", "Cancel"],
         cancelButtonIndex: 3,
         title: `Choose a reason for reporting this continent.`,
-        showSeparators: true
+        showSeparators: true,
+       containerStyle: {
+          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
+          borderRadius: 10,
+          width: constants.width - 30,
+          marginLeft: 15
+        },
+        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
+        titleTextStyle: {
+          color: isDarkMode ? "#EFEFEF" : "#161616",
+          fontWeight: "400"
+        },
+        separatorStyle: { opacity: 0.3 }
       },
       async buttonIndex => {
         if (buttonIndex === 0) {
@@ -131,7 +143,20 @@ export default withNavigation(({ navigation }) => {
         options: ["Yes", "No"],
         destructiveButtonIndex: 0,
         cancelButtonIndex: 1,
-        title: `Are you sure to report this continent?`
+        showSeparators: true,
+        title: `Are you sure to report this continent?`,
+       containerStyle: {
+          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
+          borderRadius: 10,
+          width: constants.width - 30,
+          marginLeft: 15
+        },
+        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
+        titleTextStyle: {
+          color: isDarkMode ? "#EFEFEF" : "#161616",
+          fontWeight: "400"
+        },
+        separatorStyle: { opacity: 0.3 }
       },
       buttonIndex => {
         if (buttonIndex === 0) {
@@ -196,7 +221,11 @@ export default withNavigation(({ navigation }) => {
     return (
       <ScrollView
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={"#999"} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={"#999"}
+          />
         }
         showsVerticalScrollIndicator={false}
       >
