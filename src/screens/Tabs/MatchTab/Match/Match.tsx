@@ -33,6 +33,7 @@ import {
   UserProfileVariables
 } from "../../../../types/api";
 import constants from "../../../../../constants";
+import { useTheme } from "../../../../context/ThemeContext";
 
 const TextContainer = styled.View`
   margin-top: 15px;
@@ -97,6 +98,7 @@ const TouchableBackRow = styled.View`
 `;
 export default ({ navigation }) => {
   const { me } = useMe();
+  const isDarkMode = useTheme();
   const [refreshing, setRefreshing] = useState(false);
   const [addBlockUserFn, { loading: addBlockUserLoading }] = useMutation<
     AddBlockUser,
@@ -264,7 +266,7 @@ export default ({ navigation }) => {
         cancelButtonIndex: 1,
         showSeparators: true,
         title: "Are you sure to unmatch?",
-       containerStyle: {
+        containerStyle: {
           backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
           borderRadius: 10,
           width: constants.width - 30,
@@ -275,7 +277,7 @@ export default ({ navigation }) => {
           color: isDarkMode ? "#EFEFEF" : "#161616",
           fontWeight: "400"
         },
-        separatorStyle: { opacity: 0.3 }
+        separatorStyle: { opacity: 0.5 }
       },
       async buttonIndex => {
         if (buttonIndex === 0) {
@@ -304,7 +306,7 @@ export default ({ navigation }) => {
         cancelButtonIndex: 1,
         showSeparators: true,
         title: "Are you sure to block user?",
-       containerStyle: {
+        containerStyle: {
           backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
           borderRadius: 10,
           width: constants.width - 30,
@@ -315,7 +317,7 @@ export default ({ navigation }) => {
           color: isDarkMode ? "#EFEFEF" : "#161616",
           fontWeight: "400"
         },
-        separatorStyle: { opacity: 0.3 }
+        separatorStyle: { opacity: 0.5 }
       },
       async buttonIndex => {
         if (buttonIndex === 0) {

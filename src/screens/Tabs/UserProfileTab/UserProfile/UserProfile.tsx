@@ -304,7 +304,7 @@ export default ({ navigation }) => {
           color: isDarkMode ? "#EFEFEF" : "#161616",
           fontWeight: "400"
         },
-        separatorStyle: { opacity: 0.3 }
+        separatorStyle: { opacity: 0.5 }
       },
       buttonIndex => {
         if (buttonIndex === 0) {
@@ -343,7 +343,7 @@ export default ({ navigation }) => {
           color: isDarkMode ? "#EFEFEF" : "#161616",
           fontWeight: "400"
         },
-        separatorStyle: { opacity: 0.3 }
+        separatorStyle: { opacity: 0.5 }
       },
       async buttonIndex => {
         if (buttonIndex === 0) {
@@ -379,7 +379,7 @@ export default ({ navigation }) => {
           color: isDarkMode ? "#EFEFEF" : "#161616",
           fontWeight: "400"
         },
-        separatorStyle: { opacity: 0.3 }
+        separatorStyle: { opacity: 0.5 }
       },
       buttonIndex => {
         if (buttonIndex === 0) {

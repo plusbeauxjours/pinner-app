@@ -18,6 +18,7 @@ import { create_chat } from "../../../Fire";
 import { useMe } from "../../context/MeContext";
 import { GET_MATCHES } from "../../screens/Tabs/MatchTab/Match/MatchQueries";
 import constants from "../../../constants";
+import { useTheme } from "../../context/ThemeContext";
 
 const Touchable = styled.TouchableOpacity`
   justify-content: center;
@@ -58,7 +59,7 @@ const CoffeeBtn: React.FC<IProps> = ({
   setModalOpen,
   userName
 }) => {
-  const { me } = useMe();
+  const isDarkMode = useTheme();
   const [matchFn, { loading: matchLoading }] = useMutation<
     Match,
     MatchVariables
@@ -113,7 +114,7 @@ const CoffeeBtn: React.FC<IProps> = ({
         cancelButtonIndex: 1,
         showSeparators: true,
         title: "Are you sure to cancel?",
-       containerStyle: {
+        containerStyle: {
           backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
           borderRadius: 10,
           width: constants.width - 30,
@@ -124,7 +125,7 @@ const CoffeeBtn: React.FC<IProps> = ({
           color: isDarkMode ? "#EFEFEF" : "#161616",
           fontWeight: "400"
         },
-        separatorStyle: { opacity: 0.3 }
+        separatorStyle: { opacity: 0.5 }
       },
       async buttonIndex => {
         if (buttonIndex === 0) {
