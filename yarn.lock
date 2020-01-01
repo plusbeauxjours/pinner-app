@@ -3328,6 +3328,10 @@ expo-image-picker@~8.0.0:
   version "8.0.1"
   resolved "https://registry.yarnpkg.com/expo-image-picker/-/expo-image-picker-8.0.1.tgz#bae9e0d89722de9a6e60e55f0e4291fc099abb14"
 
+expo-intent-launcher@~8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/expo-intent-launcher/-/expo-intent-launcher-8.0.0.tgz#1242d4e9122f69a1ec9637a621a35caf6ae73cca"
+
 expo-keep-awake@~8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/expo-keep-awake/-/expo-keep-awake-8.0.0.tgz#f9200a876a5db86e3f0aec8843428a918cdc08d6"
@@ -6100,7 +6104,7 @@ react-native-lightbox@^0.7.0:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-maps@*, react-native-maps@0.26.1:
+react-native-maps@*, react-native-maps@^0.26.1:
   version "0.26.1"
   resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.26.1.tgz#6ec316259b38d259c8974448d894bd7a23101da4"
 

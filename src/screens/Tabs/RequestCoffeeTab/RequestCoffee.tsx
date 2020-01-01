@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import * as Permissions from "expo-permissions";
+import * as IntentLauncher from "expo-intent-launcher";
 import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
 import {
   RefreshControl,
@@ -163,11 +164,12 @@ export default ({ navigation }) => {
         cancelButtonIndex: 4,
         title: `Choose a target.`,
         showSeparators: true,
-       containerStyle: {
+        containerStyle: {
           backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
           borderRadius: 10,
           width: constants.width - 30,
-          marginLeft: 15
+          marginLeft: 15,
+          marginBottom: 10
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
@@ -283,11 +285,12 @@ export default ({ navigation }) => {
         options: ["Male", "Female", "Other", "Cancel"],
         cancelButtonIndex: 3,
         showSeparators: true,
-       containerStyle: {
+        containerStyle: {
           backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
           borderRadius: 10,
           width: constants.width - 30,
-          marginLeft: 15
+          marginLeft: 15,
+          marginBottom: 10
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
@@ -444,11 +447,12 @@ export default ({ navigation }) => {
         cancelButtonIndex: 1,
         showSeparators: true,
         title: "Are you sure to cancel?",
-       containerStyle: {
+        containerStyle: {
           backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
           borderRadius: 10,
           width: constants.width - 30,
-          marginLeft: 15
+          marginLeft: 15,
+          marginBottom: 10
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
@@ -592,6 +596,7 @@ export default ({ navigation }) => {
       Permissions.LOCATION
     );
     let finalStatus = existingStatus;
+    console.log("existingStatus", existingStatus);
     if (Platform.OS === "ios" && existingStatus === "denied") {
       Alert.alert(
         "Permission Denied",
@@ -602,6 +607,22 @@ export default ({ navigation }) => {
             text: "Open Settings",
             onPress: () => {
               Linking.openURL("app-settings:");
+            }
+          }
+        ]
+      );
+    } else if (Platform.OS !== "ios" && existingStatus === "denied") {
+      Alert.alert(
+        "Permission Denied",
+        "To enable location, tap Open Settings, then tap on Pinner, then tap on Permissions, and finally tap on Allow only while using the app.",
+        [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "Open Settings",
+            onPress: () => {
+              IntentLauncher.startActivityAsync(
+                IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS
+              );
             }
           }
         ]

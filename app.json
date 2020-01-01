@@ -34,6 +34,9 @@
       "config": {
         "googleMapsApiKey": "AIzaSyDv66JZo6YNvVnnQu_x65TK_ik2EF_vCcQ"
       },
+      "splash": {
+        "backgroundColor": "#ffffff"
+      },
       "usesAppleSignIn": true
     },
     "android": {
@@ -42,12 +45,27 @@
       "permissions": [
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION",
-        "READ_EXTERNAL_STORAGE,"
+        "READ_EXTERNAL_STORAGE",
+        "ACCESS_NOTIFICATION_POLICY",
+        "com.anddoes.launcher.permission.UPDATE_COUNT",
+        "com.android.launcher.permission.INSTALL_SHORTCUT",
+        "com.google.android.c2dm.permission.RECEIVE",
+        "com.google.android.gms.permission.ACTIVITY_RECOGNITION",
+        "com.google.android.providers.gsf.permission.READ_GSERVICES",
+        "com.htc.launcher.permission.READ_SETTINGS",
+        "com.htc.launcher.permission.UPDATE_SHORTCUT",
+        "com.majeur.launcher.permission.UPDATE_BADGE",
+        "com.sec.android.provider.badge.permission.READ",
+        "com.sec.android.provider.badge.permission.WRITE",
+        "com.sonyericsson.home.permission.BROADCAST_BADGE"
       ],
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyDv66JZo6YNvVnnQu_x65TK_ik2EF_vCcQ"
         }
+      },
+      "splash": {
+        "backgroundColor": "#ffffff"
       }
     },
     "notification": {

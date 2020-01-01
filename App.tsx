@@ -4,7 +4,8 @@ import {
   Ionicons,
   AntDesign,
   FontAwesome,
-  SimpleLineIcons
+  SimpleLineIcons,
+  Entypo
 } from "@expo/vector-icons";
 import * as Font from "expo-font";
 import { Asset } from "expo-asset";
@@ -41,7 +42,8 @@ export default function App() {
         ...AntDesign.font,
         ...FontAwesome.font,
         ...SimpleLineIcons.font["arrow-up"],
-        ...SimpleLineIcons.font["arrow-down"]
+        ...SimpleLineIcons.font["arrow-down"],
+        ...Entypo.font["pin"]
       });
       await Asset.loadAsync(require("./assets/splash.png"));
       await Asset.loadAsync(require("./assets/logo.png"));

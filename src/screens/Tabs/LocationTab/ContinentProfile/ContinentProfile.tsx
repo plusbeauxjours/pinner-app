@@ -105,7 +105,8 @@ export default withNavigation(({ navigation }) => {
           backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
           borderRadius: 10,
           width: constants.width - 30,
-          marginLeft: 15
+          marginLeft: 15,
+        marginBottom: 10
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
@@ -149,7 +150,8 @@ export default withNavigation(({ navigation }) => {
           backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
           borderRadius: 10,
           width: constants.width - 30,
-          marginLeft: 15
+          marginLeft: 15,
+        marginBottom: 10
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {

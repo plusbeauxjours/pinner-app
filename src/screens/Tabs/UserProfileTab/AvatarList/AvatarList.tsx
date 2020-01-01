@@ -26,7 +26,6 @@ import ImageZoom from "react-native-image-pan-zoom";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { GET_USER } from "../UserProfile/UserProfileQueries";
 import { ME } from "../../../../sharedQueries";
-import { continents } from "../../../../../countryData";
 
 const TextContainer = styled.View`
   margin-top: 15px;

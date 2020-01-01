@@ -174,6 +174,16 @@ const SNSTextContainer = styled.View`
 const EmptyContainer = styled.View`
   height: 20px;
 `;
+const TextContainer = styled.View`
+  margin-top: 15px;
+  justify-content: center;
+  align-items: center;
+`;
+const Text = styled.Text`
+  color: ${props => props.theme.color};
+  font-size: 8px;
+  margin-left: 5px;
+`;
 interface IProps {
   userId: string;
   mapModalOpen: boolean;
@@ -813,6 +823,13 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                   showsVerticalScrollIndicator={false}
                 >
                   <AddListContainer>
+                    {!me.user.profile.phoneNumber &&
+                      !me.user.profile.emailAddress &&
+                      snsList.length === 0 && (
+                        <TextContainer>
+                          <Text>No SNS yet...</Text>
+                        </TextContainer>
+                      )}
                     {me.user.profile.countryPhoneNumber &&
                       me.user.profile.phoneNumber && (
                         <Item>

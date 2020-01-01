@@ -97,7 +97,7 @@ const TouchableBackRow = styled.View`
   background-color: ${props => props.theme.bgColor};
 `;
 export default ({ navigation }) => {
-  const { me } = useMe();
+  const { me, loading: meLoading } = useMe();
   const isDarkMode = useTheme();
   const [refreshing, setRefreshing] = useState(false);
   const [addBlockUserFn, { loading: addBlockUserLoading }] = useMutation<
@@ -270,7 +270,8 @@ export default ({ navigation }) => {
           backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
           borderRadius: 10,
           width: constants.width - 30,
-          marginLeft: 15
+          marginLeft: 15,
+          marginBottom: 10
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
@@ -310,7 +311,8 @@ export default ({ navigation }) => {
           backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
           borderRadius: 10,
           width: constants.width - 30,
-          marginLeft: 15
+          marginLeft: 15,
+          marginBottom: 10
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
@@ -350,7 +352,7 @@ export default ({ navigation }) => {
   useEffect(() => {
     askPermission();
   }, []);
-  if (matchLoading) {
+  if (matchLoading || meLoading) {
     return (
       <LoaderContainer>
         <Loader />
@@ -402,7 +404,9 @@ export default ({ navigation }) => {
                               userUrl: me.user.profile.appAvatarUrl,
                               targetUuid: data.item.isHost
                                 ? data.item.guest.profile.uuid
-                                : data.item.host.profile.uuid
+                                : data.item.host.profile.uuid,
+                              latitude: me.user.profile.currentCity.latitude,
+                              longitude: me.user.profile.currentCity.longitude
                             });
                         }}
                       >

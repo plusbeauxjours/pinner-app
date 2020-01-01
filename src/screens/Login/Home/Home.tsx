@@ -4,6 +4,7 @@ import Modal from "react-native-modal";
 import constants from "../../../../constants";
 import { useMutation } from "react-apollo-hooks";
 import * as Permissions from "expo-permissions";
+import * as IntentLauncher from "expo-intent-launcher";
 import {
   StartPhoneVerification,
   StartPhoneVerificationVariables,
@@ -290,11 +291,11 @@ export default ({ navigation }) => {
     }
   };
   const askPermission = async () => {
-    const { status: existingLocationStatus } = await Permissions.getAsync(
+    const { status: existingStatus } = await Permissions.getAsync(
       Permissions.LOCATION
     );
-    let finalLocationStatus = existingLocationStatus;
-    if (Platform.OS === "ios" && existingLocationStatus === "denied") {
+    let finalStatus = existingStatus;
+    if (Platform.OS === "ios" && existingStatus === "denied") {
       Alert.alert(
         "Permission Denied",
         "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
@@ -311,16 +312,38 @@ export default ({ navigation }) => {
           }
         ]
       );
-    } else if (existingLocationStatus !== "granted") {
+    } else if (Platform.OS !== "ios" && existingStatus === "denied") {
+      Alert.alert(
+        "Permission Denied",
+        "To enable location, tap Open Settings, then tap on Pinner, then tap on Permissions, and finally tap on Allow only while using the app.",
+        [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "Open Settings",
+            onPress: () => {
+              IntentLauncher.startActivityAsync(
+                IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS
+              );
+            }
+          }
+        ]
+      );
+    } else if (existingStatus !== "granted") {
       const { status } = await Permissions.askAsync(Permissions.LOCATION);
-      finalLocationStatus = status;
-    } else if (finalLocationStatus !== "granted") {
+      finalStatus = status;
+    } else if (finalStatus !== "granted") {
+      return;
+    } else if (finalStatus === "granted") {
+      navigator.geolocation.getCurrentPosition(
+        handleGeoSuccess,
+        handleGeoError
+      );
+    } else {
       return;
     }
   };
   useEffect(() => {
     askPermission();
-    navigator.geolocation.getCurrentPosition(handleGeoSuccess, handleGeoError);
   }, []);
   return (
     <>

@@ -56,9 +56,7 @@ export default createBottomTabNavigator(
     RequestCoffee: {
       screen: stackFactory(RequestNavigation),
       navigationOptions: {
-        tabBarIcon: ({ focused }) => (
-          <NavIcon focused={focused} name={"map-pin"} />
-        )
+        tabBarIcon: ({ focused }) => <NavIcon focused={focused} name={"pin"} />
       }
     },
     Location: {

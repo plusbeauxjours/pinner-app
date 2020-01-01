@@ -1,6 +1,7 @@
 import React from "react";
 import { GiftedChat } from "react-native-gifted-chat";
 import * as Permissions from "expo-permissions";
+import * as IntentLauncher from "expo-intent-launcher";
 import { withNavigation, NavigationScreenProp } from "react-navigation";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import firebase from "firebase";
@@ -205,6 +206,28 @@ class ChatContainer extends React.Component<IProps, IState> {
             text: "Open Settings",
             onPress: () => {
               Linking.openURL("app-settings:");
+            }
+          }
+        ]
+      );
+    } else if (Platform.OS !== "ios" && existingStatus === "denied") {
+      Alert.alert(
+        "Permission Denied",
+        "To enable location, tap Open Settings, then tap on Pinner, then tap on Permissions, and finally tap on Allow only while using the app.",
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
+            onPress: () => {
+              this.closeMapModal();
+            }
+          },
+          {
+            text: "Open Settings",
+            onPress: () => {
+              IntentLauncher.startActivityAsync(
+                IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS
+              );
             }
           }
         ]

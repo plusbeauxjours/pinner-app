@@ -15,7 +15,6 @@ import Toast from "react-native-root-toast";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { DELETE_COFFEE } from "../../sharedQueries";
 import { create_chat } from "../../../Fire";
-import { useMe } from "../../context/MeContext";
 import { GET_MATCHES } from "../../screens/Tabs/MatchTab/Match/MatchQueries";
 import constants from "../../../constants";
 import { useTheme } from "../../context/ThemeContext";
@@ -118,7 +117,8 @@ const CoffeeBtn: React.FC<IProps> = ({
           backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
           borderRadius: 10,
           width: constants.width - 30,
-          marginLeft: 15
+          marginLeft: 15,
+          marginBottom: 10
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {

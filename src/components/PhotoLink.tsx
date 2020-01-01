@@ -2,6 +2,7 @@ import React from "react";
 import uuid from "uuid/v4";
 import styled from "styled-components";
 import { withNavigation } from "react-navigation";
+import * as IntentLauncher from "expo-intent-launcher";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
@@ -23,6 +24,7 @@ import Toast from "react-native-root-toast";
 import { useMe } from "../context/MeContext";
 import { GET_AVATARS } from "../screens/Tabs/UserProfileTab/AvatarList/AvatarListQueries";
 import { GET_USER } from "../screens/Tabs/UserProfileTab/UserProfile/UserProfileQueries";
+import { Platform, Alert, Linking } from "react-native";
 
 const Touchable = styled.TouchableOpacity`
   margin-right: 5px;
@@ -184,8 +186,36 @@ export default withNavigation(({ navigation }) => {
       } catch (e) {
         console.log(e);
       }
-    } else {
-      toast("You can't take pictures without CAMERA_ROLL permissions");
+    } else if (Platform.OS === "ios" && status === "denied") {
+      Alert.alert(
+        "Permission Denied",
+        "To enable photo library, tap Open Settings, then tap on Photos, and finally tap on Read and Write.",
+        [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "Open Settings",
+            onPress: () => {
+              Linking.openURL("app-settings:");
+            }
+          }
+        ]
+      );
+    } else if (Platform.OS !== "ios" && status === "denied") {
+      Alert.alert(
+        "Permission Denied",
+        "To enable photo library, tap Open Settings, then tap on Photos, and finally tap on Read and Write.",
+        [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "Open Settings",
+            onPress: async () => {
+              await IntentLauncher.startActivityAsync(
+                IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS
+              );
+            }
+          }
+        ]
+      );
     }
   };
   return (
