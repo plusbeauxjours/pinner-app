@@ -19,7 +19,6 @@ import { ApolloProvider as ApolloHooksProvider } from "react-apollo-hooks";
 import { ApolloProvider } from "react-apollo";
 import { ThemeProvider } from "./src/context/ThemeContext";
 import { AuthProvider } from "./src/context/AuthContext";
-import { LocationProvider } from "./src/context/LocationContext";
 import NavController from "./src/components/NavController";
 import { createUploadLink } from "apollo-upload-client";
 import { setContext } from "apollo-link-context";
@@ -119,11 +118,9 @@ export default function App() {
       <ApolloProvider client={client}>
         <ThemeProvider isDarkMode={isDarkMode}>
           <AuthProvider isLoggedIn={isLoggedIn} client={client}>
-            <LocationProvider>
-              <ActionSheetProvider>
-                <NavController />
-              </ActionSheetProvider>
-            </LocationProvider>
+            <ActionSheetProvider>
+              <NavController />
+            </ActionSheetProvider>
           </AuthProvider>
         </ThemeProvider>
       </ApolloProvider>

@@ -291,6 +291,7 @@ export default ({ navigation }) => {
     }
   };
   const askPermission = async () => {
+    try{
     const { status: existingStatus } = await Permissions.getAsync(
       Permissions.LOCATION
     );
@@ -307,7 +308,7 @@ export default ({ navigation }) => {
           {
             text: "Open Settings",
             onPress: () => {
-              Linking.openURL("app-settings:");
+              Linking.openURL("app-settings:"), setLoading(false);
             }
           }
         ]
@@ -323,7 +324,8 @@ export default ({ navigation }) => {
             onPress: () => {
               IntentLauncher.startActivityAsync(
                 IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS
-              );
+              ),
+                setLoading(false);
             }
           }
         ]
@@ -341,6 +343,9 @@ export default ({ navigation }) => {
     } else {
       return;
     }
+  }catch(e){
+    console.log(e)
+  }
   };
   useEffect(() => {
     askPermission();

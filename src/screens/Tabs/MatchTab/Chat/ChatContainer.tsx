@@ -108,8 +108,8 @@ class ChatContainer extends React.Component<IProps, IState> {
         .child(this.props.navigation.getParam("chatId")),
       imageLoading: false,
       region: {
-        latitude: 22.1,
-        longitude: 127.2,
+        latitude: this.props.navigation.getParam("latitude"),
+        longitude: this.props.navigation.getParam("longitude"),
         latitudeDelta: 0.01,
         longitudeDelta: 0.01
       },
@@ -491,67 +491,71 @@ class ChatContainer extends React.Component<IProps, IState> {
     }
   };
   public askPermission = async () => {
-    const { status: existingStatus } = await Permissions.getAsync(
-      Permissions.LOCATION
-    );
-    let finalStatus = existingStatus;
-    if (Platform.OS === "ios" && existingStatus === "denied") {
-      Alert.alert(
-        "Permission Denied",
-        "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
-        [
-          {
-            text: "Cancel",
-            style: "cancel",
-            onPress: () => {
-              this.setState({ mapLoading: false, mapModalOpen: false });
-            }
-          },
-          {
-            text: "Open Settings",
-            onPress: () => {
-              Linking.openURL("app-settings:"),
-                this.setState({ mapLoading: false, mapModalOpen: false });
-            }
-          }
-        ]
+    try {
+      const { status: existingStatus } = await Permissions.getAsync(
+        Permissions.LOCATION
       );
-    } else if (Platform.OS !== "ios" && existingStatus === "denied") {
-      Alert.alert(
-        "Permission Denied",
-        "To enable location, tap Open Settings, then tap on Pinner, then tap on Permissions, and finally tap on Allow only while using the app.",
-        [
-          {
-            text: "Cancel",
-            style: "cancel",
-            onPress: () => {
-              this.setState({ mapLoading: false, mapModalOpen: false });
-            }
-          },
-          {
-            text: "Open Settings",
-            onPress: () => {
-              IntentLauncher.startActivityAsync(
-                IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS
-              ),
+      let finalStatus = existingStatus;
+      if (Platform.OS === "ios" && existingStatus === "denied") {
+        Alert.alert(
+          "Permission Denied",
+          "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
+          [
+            {
+              text: "Cancel",
+              style: "cancel",
+              onPress: () => {
                 this.setState({ mapLoading: false, mapModalOpen: false });
+              }
+            },
+            {
+              text: "Open Settings",
+              onPress: () => {
+                Linking.openURL("app-settings:"),
+                  this.setState({ mapLoading: false, mapModalOpen: false });
+              }
             }
-          }
-        ]
-      );
-    } else if (existingStatus !== "granted") {
-      const { status } = await Permissions.askAsync(Permissions.LOCATION);
-      finalStatus = status;
-    } else if (finalStatus !== "granted") {
-      return;
-    } else if (finalStatus === "granted") {
-      this.setState({ mapLoading: true, mapModalOpen: true }),
-        navigator.geolocation.getCurrentPosition(
-          this.handleGeoSuccess,
-          this.handleGeoError
+          ]
         );
-    } else {
-      return;
+      } else if (Platform.OS !== "ios" && existingStatus === "denied") {
+        Alert.alert(
+          "Permission Denied",
+          "To enable location, tap Open Settings, then tap on Pinner, then tap on Permissions, and finally tap on Allow only while using the app.",
+          [
+            {
+              text: "Cancel",
+              style: "cancel",
+              onPress: () => {
+                this.setState({ mapLoading: false, mapModalOpen: false });
+              }
+            },
+            {
+              text: "Open Settings",
+              onPress: () => {
+                IntentLauncher.startActivityAsync(
+                  IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS
+                ),
+                  this.setState({ mapLoading: false, mapModalOpen: false });
+              }
+            }
+          ]
+        );
+      } else if (existingStatus !== "granted") {
+        const { status } = await Permissions.askAsync(Permissions.LOCATION);
+        finalStatus = status;
+      } else if (finalStatus !== "granted") {
+        return;
+      } else if (finalStatus === "granted") {
+        this.setState({ mapLoading: true, mapModalOpen: true }),
+          navigator.geolocation.getCurrentPosition(
+            this.handleGeoSuccess,
+            this.handleGeoError
+          );
+      } else {
+        return;
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
   public handleGeoSuccess = (position: Position) => {
@@ -595,7 +599,7 @@ class ChatContainer extends React.Component<IProps, IState> {
       console.log(e);
     }
   };
-  handleGeoError = () => {
+  public handleGeoError = () => {
     console.log("No location");
   };
   public render() {

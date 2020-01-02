@@ -21,8 +21,7 @@ import {
   RECOMMEND_LOCATIONS,
   REQUEST_COFFEE
 } from "./RequestCoffeeQueries";
-import { useLocation } from "../../../context/LocationContext";
-import { ME, DELETE_COFFEE } from "../../../sharedQueries";
+import { ME, DELETE_COFFEE, REPORT_LOCATION } from "../../../sharedQueries";
 import {
   Me,
   RecommendUsers,
@@ -33,7 +32,9 @@ import {
   RequestCoffeeVariables,
   DeleteCoffee,
   DeleteCoffeeVariables,
-  GetTripCities
+  GetTripCities,
+  ReportLocation,
+  ReportLocationVariables
 } from "../../../types/api";
 import Modal from "react-native-modal";
 import { useTheme } from "../../../context/ThemeContext";
@@ -44,6 +45,9 @@ import Accordion from "react-native-collapsible/Accordion";
 import CollapsibleAccordion from "../../../components/CollapsibleAccordion";
 import { GET_TRIP_CITIES } from "./RequestCoffeeQueries";
 import { countries } from "../../../../countryData";
+import { AsyncStorage } from "react-native";
+import { useReverseGeoCode } from "../../../hooks/useReverseGeoCode";
+import { useReversePlaceId } from "../../../hooks/useReversePlaceId";
 
 const AccordionTitleContainer = styled.View`
   flex-direction: row;
@@ -123,11 +127,11 @@ const SmallEmptyContainer = styled.View`
 
 export default ({ navigation }) => {
   const { me, loading: meLoading } = useMe();
-  const location = useLocation();
   const isDarkMode = useTheme();
   const [nationalityModalOpen, setNationalityModalOpen] = useState<boolean>(
     false
   );
+  const [currentCityId, setCurrentCityId] = useState<string>("");
   const [activeSections, setActiveSections] = useState<any>([0, 1, 2, 3, 4]);
   const [residenceModalOpen, setResidenceModalOpen] = useState<boolean>(false);
   const [nationalityCode, setNationalityCode] = useState<any>("");
@@ -187,8 +191,8 @@ export default ({ navigation }) => {
               variables: {
                 target: "everyone",
                 currentCityId:
-                  location.currentCityId && location.currentCityId.length !== 0
-                    ? location.currentCityId
+                  currentCityId && currentCityId.length !== 0
+                    ? currentCityId
                     : me.user.profile.currentCity.cityId
               }
             });
@@ -207,9 +211,8 @@ export default ({ navigation }) => {
                 variables: {
                   target: "nationality",
                   currentCityId:
-                    location.currentCityId &&
-                    location.currentCityId.length !== 0
-                      ? location.currentCityId
+                    currentCityId && currentCityId.length !== 0
+                      ? currentCityId
                       : me.user.profile.currentCity.cityId,
                   countryCode: me.user.profile.nationality.countryCode
                 }
@@ -232,9 +235,8 @@ export default ({ navigation }) => {
                 variables: {
                   target: "residence",
                   currentCityId:
-                    location.currentCityId &&
-                    location.currentCityId.length !== 0
-                      ? location.currentCityId
+                    currentCityId && currentCityId.length !== 0
+                      ? currentCityId
                       : me.user.profile.currentCity.cityId,
                   countryCode: me.user.profile.residence.countryCode
                 }
@@ -257,11 +259,10 @@ export default ({ navigation }) => {
                 variables: {
                   target: "gender",
                   currentCityId:
-                    location.currentCityId &&
-                    location.currentCityId.length !== 0
-                      ? location.currentCityId
+                    currentCityId && currentCityId.length !== 0
+                      ? currentCityId
                       : me.user.profile.currentCity.cityId,
-                  countryCode: me.user.profile.gender
+                  gender: me.user.profile.gender
                 }
               });
               if (requestCoffee.ok) {
@@ -308,8 +309,8 @@ export default ({ navigation }) => {
               variables: {
                 target: "gender",
                 currentCityId:
-                  location.currentCityId && location.currentCityId.length !== 0
-                    ? location.currentCityId
+                  currentCityId && currentCityId.length !== 0
+                    ? currentCityId
                     : me.user.profile.currentCity.cityId,
                 gender: "MALE"
               }
@@ -328,8 +329,8 @@ export default ({ navigation }) => {
               variables: {
                 target: "gender",
                 currentCityId:
-                  location.currentCityId && location.currentCityId.length !== 0
-                    ? location.currentCityId
+                  currentCityId && currentCityId.length !== 0
+                    ? currentCityId
                     : me.user.profile.currentCity.cityId,
                 gender: "FEMALE"
               }
@@ -348,8 +349,8 @@ export default ({ navigation }) => {
               variables: {
                 target: "gender",
                 currentCityId:
-                  location.currentCityId && location.currentCityId.length !== 0
-                    ? location.currentCityId
+                  currentCityId && currentCityId.length !== 0
+                    ? currentCityId
                     : me.user.profile.currentCity.cityId,
                 gender: "OTHER"
               }
@@ -392,6 +393,10 @@ export default ({ navigation }) => {
   );
   ////////////////////////////
   ///////// Mutation /////////
+  const [reportLocationFn, { loading: reportLocationLoading }] = useMutation<
+    ReportLocation,
+    ReportLocationVariables
+  >(REPORT_LOCATION);
   const [requestCoffeeFn, { loading: requestCoffeeLoading }] = useMutation<
     RequestCoffee,
     RequestCoffeeVariables
@@ -525,8 +530,8 @@ export default ({ navigation }) => {
         variables: {
           target: "nationality",
           currentCityId:
-            location.currentCityId && location.currentCityId.length !== 0
-              ? location.currentCityId
+            currentCityId && currentCityId.length !== 0
+              ? currentCityId
               : me.user.profile.currentCity.cityId,
           countryCode: country.cca2
         }
@@ -547,8 +552,8 @@ export default ({ navigation }) => {
         variables: {
           target: "residence",
           currentCityId:
-            location.currentCityId && location.currentCityId.length !== 0
-              ? location.currentCityId
+            currentCityId && currentCityId.length !== 0
+              ? currentCityId
               : me.user.profile.currentCity.cityId,
           countryCode: country.cca2
         }
@@ -592,47 +597,93 @@ export default ({ navigation }) => {
     setActiveSections(activeSections.includes(undefined) ? [] : activeSections);
   };
   const askPermission = async () => {
-    const { status: existingStatus } = await Permissions.getAsync(
-      Permissions.LOCATION
-    );
-    let finalStatus = existingStatus;
-    console.log("existingStatus", existingStatus);
-    if (Platform.OS === "ios" && existingStatus === "denied") {
-      Alert.alert(
-        "Permission Denied",
-        "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
-        [
-          { text: "Cancel", style: "cancel" },
-          {
-            text: "Open Settings",
-            onPress: () => {
-              Linking.openURL("app-settings:");
-            }
-          }
-        ]
+    try {
+      const { status: existingStatus } = await Permissions.getAsync(
+        Permissions.LOCATION
       );
-    } else if (Platform.OS !== "ios" && existingStatus === "denied") {
-      Alert.alert(
-        "Permission Denied",
-        "To enable location, tap Open Settings, then tap on Pinner, then tap on Permissions, and finally tap on Allow only while using the app.",
-        [
-          { text: "Cancel", style: "cancel" },
-          {
-            text: "Open Settings",
-            onPress: () => {
-              IntentLauncher.startActivityAsync(
-                IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS
-              );
+      let finalStatus = existingStatus;
+      if (Platform.OS === "ios" && existingStatus === "denied") {
+        Alert.alert(
+          "Permission Denied",
+          "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
+          [
+            { text: "Cancel", style: "cancel" },
+            {
+              text: "Open Settings",
+              onPress: () => {
+                Linking.openURL("app-settings:");
+              }
             }
-          }
-        ]
-      );
-    } else if (existingStatus !== "granted") {
-      const { status } = await Permissions.askAsync(Permissions.LOCATION);
-      finalStatus = status;
-    } else if (finalStatus !== "granted") {
-      return;
+          ]
+        );
+      } else if (Platform.OS !== "ios" && existingStatus === "denied") {
+        Alert.alert(
+          "Permission Denied",
+          "To enable location, tap Open Settings, then tap on Pinner, then tap on Permissions, and finally tap on Allow only while using the app.",
+          [
+            { text: "Cancel", style: "cancel" },
+            {
+              text: "Open Settings",
+              onPress: () => {
+                IntentLauncher.startActivityAsync(
+                  IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS
+                );
+              }
+            }
+          ]
+        );
+      } else if (existingStatus !== "granted") {
+        const { status } = await Permissions.askAsync(Permissions.LOCATION);
+        finalStatus = status;
+      } else if (finalStatus !== "granted") {
+        return;
+      } else if (finalStatus === "granted") {
+        navigator.geolocation.getCurrentPosition(
+          handleGeoSuccess,
+          handleGeoError
+        );
+      } else {
+        return;
+      }
+    } catch (e) {
+      console.log(e);
     }
+  };
+  const handleGeoSuccess = (position: Position) => {
+    const {
+      coords: { latitude, longitude }
+    } = position;
+    getAddress(latitude, longitude);
+  };
+  const getAddress = async (latitude: number, longitude: number) => {
+    try {
+      const address = await useReverseGeoCode(latitude, longitude);
+      if (address) {
+        const cityInfo = await useReversePlaceId(
+          address.storableLocation.cityId
+        );
+        setCurrentCityId(address.storableLocation.cityId);
+        await reportLocationFn({
+          variables: {
+            currentLat: cityInfo.storableLocation.latitude,
+            currentLng: cityInfo.storableLocation.longitude,
+            currentCityId: address.storableLocation.cityId,
+            currentCityName: address.storableLocation.cityName,
+            currentCountryCode: address.storableLocation.countryCode
+          }
+        });
+        await AsyncStorage.setItem("cityId", address.storableLocation.cityId);
+        await AsyncStorage.setItem(
+          "countryCode",
+          address.storableLocation.countryCode
+        );
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const handleGeoError = () => {
+    console.log("No location");
   };
   if (
     recommendUserLoading ||

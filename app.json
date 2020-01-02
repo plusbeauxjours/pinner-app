@@ -9,7 +9,7 @@
       "ios",
       "android"
     ],
-    "version": "1.0.8",
+    "version": "1.0.9",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -33,9 +33,6 @@
       },
       "config": {
         "googleMapsApiKey": "AIzaSyDv66JZo6YNvVnnQu_x65TK_ik2EF_vCcQ"
-      },
-      "splash": {
-        "backgroundColor": "#ffffff"
       },
       "usesAppleSignIn": true
     },
@@ -63,9 +60,6 @@
         "googleMaps": {
           "apiKey": "AIzaSyDv66JZo6YNvVnnQu_x65TK_ik2EF_vCcQ"
         }
-      },
-      "splash": {
-        "backgroundColor": "#ffffff"
       }
     },
     "notification": {

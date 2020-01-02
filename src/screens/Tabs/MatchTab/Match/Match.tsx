@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { RefreshControl } from "react-native";
+import Constants from "expo-constants";
+import {
+  RefreshControl,
+  Platform,
+  Alert,
+  Linking,
+  AsyncStorage
+} from "react-native";
 import { MARK_AS_READ_MATCH } from "./MatchQueries";
 import { SwipeListView } from "react-native-swipe-list-view";
+import * as IntentLauncher from "expo-intent-launcher";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import Toast from "react-native-root-toast";
 import { useQuery, useMutation } from "react-apollo-hooks";
@@ -10,10 +18,14 @@ import * as Permissions from "expo-permissions";
 import { Notifications } from "expo";
 import { GET_MATCHES } from "./MatchQueries";
 import { GET_BLOCkED_USER } from "../../UserProfileTab/BlockedUsers/BlockedUsersQueries";
-import { useMe } from "../../../../context/MeContext";
 import { UNMATCH } from "../../../../components/CoffeeBtn/CoffeeBtnQueries";
 import { chat_leave, fb_db } from "../../../../../Fire";
-import { REGISTER_PUSH, ADD_BLOCK_USER } from "../../../../sharedQueries";
+import {
+  REGISTER_PUSH,
+  ADD_BLOCK_USER,
+  ME,
+  REPORT_LOCATION
+} from "../../../../sharedQueries";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
 import { GET_USER } from "../../UserProfileTab/UserProfile/UserProfileQueries";
@@ -34,6 +46,13 @@ import {
 } from "../../../../types/api";
 import constants from "../../../../../constants";
 import { useTheme } from "../../../../context/ThemeContext";
+import {
+  Me,
+  ReportLocation,
+  ReportLocationVariables
+} from "../../../../types/api";
+import { useReverseGeoCode } from "../../../../hooks/useReverseGeoCode";
+import { useReversePlaceId } from "../../../../hooks/useReversePlaceId";
 
 const TextContainer = styled.View`
   margin-top: 15px;
@@ -97,7 +116,10 @@ const TouchableBackRow = styled.View`
   background-color: ${props => props.theme.bgColor};
 `;
 export default ({ navigation }) => {
-  const { me, loading: meLoading } = useMe();
+  const {
+    data: { me = null },
+    loading: meLoading
+  } = useQuery<Me>(ME);
   const isDarkMode = useTheme();
   const [refreshing, setRefreshing] = useState(false);
   const [addBlockUserFn, { loading: addBlockUserLoading }] = useMutation<
@@ -164,23 +186,169 @@ export default ({ navigation }) => {
     RegisterPushVariables
   >(REGISTER_PUSH);
   const askPermission = async () => {
-    const { status: existingStatus } = await Permissions.getAsync(
-      Permissions.NOTIFICATIONS
-    );
-    let finalStatus = existingStatus;
-    if (existingStatus !== "granted") {
-      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-      finalStatus = status;
+    try {
+      const { status: existingLocationStatus } = await Permissions.getAsync(
+        Permissions.LOCATION
+      );
+      let finalLocationStatus = existingLocationStatus;
+      if (Platform.OS === "ios" && existingLocationStatus === "denied") {
+        Alert.alert(
+          "Permission Denied",
+          "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
+          [
+            {
+              text: "Cancel",
+              style: "cancel"
+            },
+            {
+              text: "Open Settings",
+              onPress: () => {
+                Linking.openURL("app-settings:");
+              }
+            }
+          ]
+        );
+      } else if (Platform.OS !== "ios" && existingLocationStatus === "denied") {
+        Alert.alert(
+          "Permission Denied",
+          "To enable location, tap Open Settings, then tap on Pinner, then tap on Permissions, and finally tap on Allow only while using the app.",
+          [
+            {
+              text: "Cancel",
+              style: "cancel"
+            },
+            {
+              text: "Open Settings",
+              onPress: () => {
+                IntentLauncher.startActivityAsync(
+                  IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS
+                );
+              }
+            }
+          ]
+        );
+      } else if (existingLocationStatus !== "granted") {
+        const { status } = await Permissions.askAsync(Permissions.LOCATION);
+        finalLocationStatus = status;
+      } else if (finalLocationStatus !== "granted") {
+        return;
+      } else if (finalLocationStatus === "granted") {
+        navigator.geolocation.getCurrentPosition(
+          handleGeoSuccess,
+          handleGeoError
+        );
+      } else {
+        return;
+      }
+    } catch (e) {
+      console.log(e);
     }
-    if (finalStatus !== "granted") {
-      return;
-    }
-    let pushToken = await Notifications.getExpoPushTokenAsync();
-    const { data: serverData } = await registerPushFn({
-      variables: { pushToken }
-    });
-  };
+    try {
+      const { status: existingNotificationStatus } = await Permissions.getAsync(
+        Permissions.NOTIFICATIONS
+      );
+      let finalNotificationStatus = existingNotificationStatus;
+      if (Platform.OS === "ios" && existingNotificationStatus === "denied") {
+        Alert.alert(
+          "Permission Denied",
+          "To enable notification, tap Open Settings, then tap on Notifications, and finally tap on Allow Notifications.",
+          [
+            {
+              text: "Cancel",
+              style: "cancel"
+            },
+            {
+              text: "Open Settings",
+              onPress: () => {
+                Linking.openURL("app-settings:");
+              }
+            }
+          ]
+        );
+      } else if (
+        Platform.OS !== "ios" &&
+        existingNotificationStatus === "denied"
+      ) {
+        Alert.alert(
+          "Permission Denied",
+          "To enable notification, tap Open Settings, then tap on Notifications, and finally tap on Show notifications.",
+          [
+            {
+              text: "Cancel",
+              style: "cancel"
+            },
+            {
+              text: "Open Settings",
+              onPress: () => {
+                const pkg = Constants.manifest.releaseChannel
+                  ? Constants.manifest.android.package
+                  : "host.exp.exponent";
+                IntentLauncher.startActivityAsync(
+                  IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                  { data: "package:" + pkg }
+                );
+              }
+            }
+          ]
+        );
+      } else if (existingNotificationStatus !== "granted") {
+        const { status } = await Permissions.askAsync(
+          Permissions.NOTIFICATIONS
+        );
+        finalNotificationStatus = status;
+      } else if (finalNotificationStatus !== "granted") {
+        return;
+      } else {
+        return;
+      }
 
+      let pushToken = await Notifications.getExpoPushTokenAsync();
+      const { data: serverData } = await registerPushFn({
+        variables: { pushToken }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const handleGeoSuccess = (position: Position) => {
+    const {
+      coords: { latitude, longitude }
+    } = position;
+    getAddress(latitude, longitude);
+  };
+  const getAddress = async (latitude: number, longitude: number) => {
+    try {
+      const address = await useReverseGeoCode(latitude, longitude);
+      if (address) {
+        const cityInfo = await useReversePlaceId(
+          address.storableLocation.cityId
+        );
+        await reportLocationFn({
+          variables: {
+            currentLat: cityInfo.storableLocation.latitude,
+            currentLng: cityInfo.storableLocation.longitude,
+            currentCityId: address.storableLocation.cityId,
+            currentCityName: address.storableLocation.cityName,
+            currentCountryCode: address.storableLocation.countryCode
+          }
+        });
+        await AsyncStorage.setItem("cityId", address.storableLocation.cityId);
+        await AsyncStorage.setItem(
+          "countryCode",
+          address.storableLocation.countryCode
+        );
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const handleGeoError = () => {
+    console.log("No location");
+  };
+  const [reportLocationFn, { loading: reportLocationLoading }] = useMutation<
+    ReportLocation,
+    ReportLocationVariables
+  >(REPORT_LOCATION);
   const [MarkAsReadMatchFn, { loading: MarkAsReadMatchLoading }] = useMutation<
     MarkAsReadMatch,
     MarkAsReadMatchVariables
@@ -405,7 +573,9 @@ export default ({ navigation }) => {
                               targetUuid: data.item.isHost
                                 ? data.item.guest.profile.uuid
                                 : data.item.host.profile.uuid,
-                              isDarkMode: isDarkMode
+                              isDarkMode: isDarkMode,
+                              latitude: me.user.profile.currentCity.latitude,
+                              longitude: me.user.profile.currentCity.longitude
                             });
                         }}
                       >

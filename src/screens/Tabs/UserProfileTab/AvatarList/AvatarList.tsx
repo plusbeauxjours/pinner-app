@@ -201,7 +201,7 @@ export default ({ navigation }) => {
             }
           }
         )
-      : Alert.alert("Options", "please tab an option.", [
+      : Alert.alert("Options", "Please tap an option.", [
           {
             text: "Cancel",
             style: "cancel"

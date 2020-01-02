@@ -1,5 +1,6 @@
 import React from "react";
 import uuid from "uuid/v4";
+import Constants from "expo-constants";
 import styled from "styled-components";
 import { withNavigation } from "react-navigation";
 import * as IntentLauncher from "expo-intent-launcher";
@@ -203,14 +204,18 @@ export default withNavigation(({ navigation }) => {
     } else if (Platform.OS !== "ios" && status === "denied") {
       Alert.alert(
         "Permission Denied",
-        "To enable photo library, tap Open Settings, then tap on Photos, and finally tap on Read and Write.",
+        "To enable photo library, tap Open Settings, then tap on Permissions, then tap on Storage which is on Deniedand, and finally tap on Allow.",
         [
           { text: "Cancel", style: "cancel" },
           {
             text: "Open Settings",
-            onPress: async () => {
-              await IntentLauncher.startActivityAsync(
-                IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS
+            onPress: () => {
+              const pkg = Constants.manifest.releaseChannel
+                ? Constants.manifest.android.package
+                : "host.exp.exponent";
+              IntentLauncher.startActivityAsync(
+                IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                { data: "package:" + pkg }
               );
             }
           }
