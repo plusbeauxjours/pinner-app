@@ -12,8 +12,8 @@ import {
   BackHandler,
   View,
   Text,
-  Platform,
   Alert,
+  Platform,
   Linking
 } from "react-native";
 import { BACKEND_URL } from "../../../../../constants";
@@ -28,7 +28,12 @@ import {
 } from "../../../../../Fire";
 import * as moment from "moment-timezone";
 import Toast from "react-native-root-toast";
-import { Image } from "react-native";
+import { Image, AsyncStorage } from "react-native";
+import { useReverseGeoCode } from "../../../../hooks/useReverseGeoCode";
+import { useReversePlaceId } from "../../../../hooks/useReversePlaceId";
+import { REPORT_LOCATION } from "../../../../sharedQueries";
+import { Mutation } from "react-apollo";
+import { ReportLocation, ReportLocationVariables } from "../../../../types/api";
 
 interface IProps {
   navigation: NavigationScreenProp<{
@@ -59,16 +64,19 @@ interface IState {
   imageUrl: string;
   mapModalOpen: boolean;
   snsModalOpen: boolean;
-  loading: boolean;
   messages: any;
   resolution: "full" | "high" | "low";
   loadingEarlier: boolean;
   overlayVisible: boolean;
   dbref: any;
   imageLoading: boolean;
+  region: any;
+  mapLoading: boolean;
+  isDarkMode: boolean;
 }
 
 class ChatContainer extends React.Component<IProps, IState> {
+  public reportLocationFn: any;
   constructor(props) {
     super(props);
     console.ignoredYellowBox = ["Setting a timer"];
@@ -90,7 +98,6 @@ class ChatContainer extends React.Component<IProps, IState> {
       imageUrl: "",
       mapModalOpen: false,
       snsModalOpen: false,
-      loading: false,
       messages: [],
       resolution: "high",
       loadingEarlier: false,
@@ -99,7 +106,15 @@ class ChatContainer extends React.Component<IProps, IState> {
         .database()
         .ref("messages")
         .child(this.props.navigation.getParam("chatId")),
-      imageLoading: false
+      imageLoading: false,
+      region: {
+        latitude: 22.1,
+        longitude: 127.2,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01
+      },
+      mapLoading: false,
+      isDarkMode: this.props.navigation.getParam("isDarkMode")
     };
   }
   public toast = (message: string) => {
@@ -112,7 +127,9 @@ class ChatContainer extends React.Component<IProps, IState> {
       delay: 0
     });
   };
-
+  public onRegionChangeComplete = region => {
+    this.setState({ region });
+  };
   public onSend = (messages = []) => {
     let msg = messages[0];
     if (msg) {
@@ -129,10 +146,6 @@ class ChatContainer extends React.Component<IProps, IState> {
 
   public closeSnsModal = () => {
     this.setState({ snsModalOpen: false });
-  };
-
-  public openSnsModal = () => {
-    this.setState({ snsModalOpen: true });
   };
 
   public onSendSnsId = (snsId: string, snsIdPlatform: string) => {
@@ -154,7 +167,7 @@ class ChatContainer extends React.Component<IProps, IState> {
     messages.push(messageSnsId);
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
-      mapModalOpen: false
+      snsModalOpen: false
     }));
     chat_send(this.state.chatId, messageSnsId).catch(e => console.log(e));
   };
@@ -185,62 +198,8 @@ class ChatContainer extends React.Component<IProps, IState> {
   public renderCustomView = props => {
     return <CustomView {...props} />;
   };
-  public askPermission = async () => {
-    const { status: existingStatus } = await Permissions.getAsync(
-      Permissions.LOCATION
-    );
-    let finalStatus = existingStatus;
-    if (Platform.OS === "ios" && existingStatus === "denied") {
-      Alert.alert(
-        "Permission Denied",
-        "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
-        [
-          {
-            text: "Cancel",
-            style: "cancel",
-            onPress: () => {
-              this.closeMapModal();
-            }
-          },
-          {
-            text: "Open Settings",
-            onPress: () => {
-              Linking.openURL("app-settings:");
-            }
-          }
-        ]
-      );
-    } else if (Platform.OS !== "ios" && existingStatus === "denied") {
-      Alert.alert(
-        "Permission Denied",
-        "To enable location, tap Open Settings, then tap on Pinner, then tap on Permissions, and finally tap on Allow only while using the app.",
-        [
-          {
-            text: "Cancel",
-            style: "cancel",
-            onPress: () => {
-              this.closeMapModal();
-            }
-          },
-          {
-            text: "Open Settings",
-            onPress: () => {
-              IntentLauncher.startActivityAsync(
-                IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS
-              );
-            }
-          }
-        ]
-      );
-    } else if (existingStatus !== "granted") {
-      const { status } = await Permissions.askAsync(Permissions.LOCATION);
-      finalStatus = status;
-    } else if (finalStatus !== "granted") {
-      return;
-    }
-  };
   public renderAvatar = () => {
-    const { targetUuid } = this.state;
+    const { targetUuid, isDarkMode } = this.state;
     const randomAvatar = {
       0: require(`../../../../Images/thumbnails/earth6.png`),
       1: require(`../../../../Images/thumbnails/earth1.png`),
@@ -265,7 +224,7 @@ class ChatContainer extends React.Component<IProps, IState> {
             }
           >
             <ProgressiveImage
-              tint={"light"}
+              tint={isDarkMode ? "dark" : "light"}
               style={{
                 width: 36,
                 height: 36,
@@ -316,7 +275,7 @@ class ChatContainer extends React.Component<IProps, IState> {
           justifyContent: "center"
         }}
         onPress={() => {
-          this.askPermission(), this.setState({ mapModalOpen: true });
+          this.askPermission();
         }}
       >
         <View
@@ -531,32 +490,151 @@ class ChatContainer extends React.Component<IProps, IState> {
       return;
     }
   };
+  public askPermission = async () => {
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.LOCATION
+    );
+    let finalStatus = existingStatus;
+    if (Platform.OS === "ios" && existingStatus === "denied") {
+      Alert.alert(
+        "Permission Denied",
+        "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
+            onPress: () => {
+              this.setState({ mapLoading: false, mapModalOpen: false });
+            }
+          },
+          {
+            text: "Open Settings",
+            onPress: () => {
+              Linking.openURL("app-settings:"),
+                this.setState({ mapLoading: false, mapModalOpen: false });
+            }
+          }
+        ]
+      );
+    } else if (Platform.OS !== "ios" && existingStatus === "denied") {
+      Alert.alert(
+        "Permission Denied",
+        "To enable location, tap Open Settings, then tap on Pinner, then tap on Permissions, and finally tap on Allow only while using the app.",
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
+            onPress: () => {
+              this.setState({ mapLoading: false, mapModalOpen: false });
+            }
+          },
+          {
+            text: "Open Settings",
+            onPress: () => {
+              IntentLauncher.startActivityAsync(
+                IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS
+              ),
+                this.setState({ mapLoading: false, mapModalOpen: false });
+            }
+          }
+        ]
+      );
+    } else if (existingStatus !== "granted") {
+      const { status } = await Permissions.askAsync(Permissions.LOCATION);
+      finalStatus = status;
+    } else if (finalStatus !== "granted") {
+      return;
+    } else if (finalStatus === "granted") {
+      this.setState({ mapLoading: true, mapModalOpen: true }),
+        navigator.geolocation.getCurrentPosition(
+          this.handleGeoSuccess,
+          this.handleGeoError
+        );
+    } else {
+      return;
+    }
+  };
+  public handleGeoSuccess = (position: Position) => {
+    const {
+      coords: { latitude, longitude }
+    } = position;
+    this.setState({
+      region: {
+        latitude,
+        longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01
+      },
+      mapLoading: false
+    });
+    this.getAddress(latitude, longitude);
+  };
+  public getAddress = async (latitude: number, longitude: number) => {
+    try {
+      const address = await useReverseGeoCode(latitude, longitude);
+      if (address) {
+        const cityInfo = await useReversePlaceId(
+          address.storableLocation.cityId
+        );
+        await this.reportLocationFn({
+          variables: {
+            currentLat: cityInfo.storableLocation.latitude,
+            currentLng: cityInfo.storableLocation.longitude,
+            currentCityId: address.storableLocation.cityId,
+            currentCityName: address.storableLocation.cityName,
+            currentCountryCode: address.storableLocation.countryCode
+          }
+        });
+        await AsyncStorage.setItem("cityId", address.storableLocation.cityId);
+        await AsyncStorage.setItem(
+          "countryCode",
+          address.storableLocation.countryCode
+        );
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  handleGeoError = () => {
+    console.log("No location");
+  };
   public render() {
     const {
-      loading,
       mapModalOpen,
       snsModalOpen,
       messages,
-      userId
+      userId,
+      region,
+      mapLoading
     } = this.state;
     return (
-      <ChatPresenter
-        userId={userId}
-        snsModalOpen={snsModalOpen}
-        mapModalOpen={mapModalOpen}
-        loading={loading}
-        messages={messages}
-        onSend={this.onSend}
-        onSendSnsId={this.onSendSnsId}
-        onSendLocation={this.onSendLocation}
-        renderCustomView={this.renderCustomView}
-        renderActions={this.renderActions}
-        closeMapModal={this.closeMapModal}
-        messageFooter={this.messageFooter}
-        renderAvatar={this.renderAvatar}
-        closeSnsModal={this.closeSnsModal}
-        openSnsModal={this.openSnsModal}
-      />
+      <Mutation<ReportLocation, ReportLocationVariables>
+        mutation={REPORT_LOCATION}
+      >
+        {reportLocationFn => {
+          this.reportLocationFn = reportLocationFn;
+          return (
+            <ChatPresenter
+              userId={userId}
+              snsModalOpen={snsModalOpen}
+              mapModalOpen={mapModalOpen}
+              messages={messages}
+              onSend={this.onSend}
+              onSendSnsId={this.onSendSnsId}
+              onSendLocation={this.onSendLocation}
+              renderCustomView={this.renderCustomView}
+              renderActions={this.renderActions}
+              closeMapModal={this.closeMapModal}
+              messageFooter={this.messageFooter}
+              renderAvatar={this.renderAvatar}
+              closeSnsModal={this.closeSnsModal}
+              region={region}
+              onRegionChangeComplete={this.onRegionChangeComplete}
+              mapLoading={mapLoading}
+            />
+          );
+        }}
+      </Mutation>
     );
   }
 }

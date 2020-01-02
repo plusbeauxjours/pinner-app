@@ -405,8 +405,7 @@ export default ({ navigation }) => {
                               targetUuid: data.item.isHost
                                 ? data.item.guest.profile.uuid
                                 : data.item.host.profile.uuid,
-                              latitude: me.user.profile.currentCity.latitude,
-                              longitude: me.user.profile.currentCity.longitude
+                              isDarkMode: isDarkMode
                             });
                         }}
                       >
