@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Modal from "react-native-modal";
 import constants from "../../../../constants";
 import { useMutation } from "react-apollo-hooks";
+import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import * as IntentLauncher from "expo-intent-launcher";
 import {
@@ -96,7 +97,6 @@ const Title = styled.Text`
   font-weight: 300;
   font-size: 23px;
   top: -25px;
-  font-family: "Georgia";
   color: #3897f0;
 `;
 const Touchable = styled.TouchableOpacity``;
@@ -172,7 +172,7 @@ export default ({ navigation }) => {
   //     toast("Please write a email address");
   //   }
   // };
-  const handleGeoSuccess = (position: Position) => {
+  const handleGeoSuccess = position => {
     const {
       coords: { latitude, longitude }
     } = position;
@@ -201,10 +201,6 @@ export default ({ navigation }) => {
     } finally {
       setLoading(false);
     }
-  };
-  const handleGeoError = () => {
-    setLoading(false);
-    console.log("No location");
   };
   const [
     startPhoneVerificationFn,
@@ -291,61 +287,59 @@ export default ({ navigation }) => {
     }
   };
   const askPermission = async () => {
-    try{
-    const { status: existingStatus } = await Permissions.getAsync(
-      Permissions.LOCATION
-    );
-    let finalStatus = existingStatus;
-    if (Platform.OS === "ios" && existingStatus === "denied") {
-      Alert.alert(
-        "Permission Denied",
-        "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
-        [
-          {
-            text: "Cancel",
-            style: "cancel"
-          },
-          {
-            text: "Open Settings",
-            onPress: () => {
-              Linking.openURL("app-settings:"), setLoading(false);
+    try {
+      const { status: existingStatus } = await Permissions.getAsync(
+        Permissions.LOCATION
+      );
+      let finalStatus = existingStatus;
+      if (Platform.OS === "ios" && existingStatus === "denied") {
+        Alert.alert(
+          "Permission Denied",
+          "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
+          [
+            {
+              text: "Cancel",
+              style: "cancel"
+            },
+            {
+              text: "Open Settings",
+              onPress: () => {
+                Linking.openURL("app-settings:"), setLoading(false);
+              }
             }
-          }
-        ]
-      );
-    } else if (Platform.OS !== "ios" && existingStatus === "denied") {
-      Alert.alert(
-        "Permission Denied",
-        "To enable location, tap Open Settings, then tap on Pinner, then tap on Permissions, and finally tap on Allow only while using the app.",
-        [
-          { text: "Cancel", style: "cancel" },
-          {
-            text: "Open Settings",
-            onPress: () => {
-              IntentLauncher.startActivityAsync(
-                IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS
-              ),
-                setLoading(false);
+          ]
+        );
+      } else if (Platform.OS !== "ios" && existingStatus === "denied") {
+        Alert.alert(
+          "Permission Denied",
+          "To enable location, tap Open Settings, then tap on Pinner, then tap on Permissions, and finally tap on Allow only while using the app.",
+          [
+            { text: "Cancel", style: "cancel" },
+            {
+              text: "Open Settings",
+              onPress: () => {
+                IntentLauncher.startActivityAsync(
+                  IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS
+                ),
+                  setLoading(false);
+              }
             }
-          }
-        ]
-      );
-    } else if (existingStatus !== "granted") {
-      const { status } = await Permissions.askAsync(Permissions.LOCATION);
-      finalStatus = status;
-    } else if (finalStatus !== "granted") {
-      return;
-    } else if (finalStatus === "granted") {
-      navigator.geolocation.getCurrentPosition(
-        handleGeoSuccess,
-        handleGeoError
-      );
-    } else {
-      return;
+          ]
+        );
+      } else if (existingStatus !== "granted") {
+        const { status } = await Permissions.askAsync(Permissions.LOCATION);
+        finalStatus = status;
+      } else if (finalStatus !== "granted") {
+        return;
+      } else if (finalStatus === "granted") {
+        const position = await Location.getCurrentPositionAsync({});
+        handleGeoSuccess(position);
+      } else {
+        return;
+      }
+    } catch (e) {
+      console.log(e);
     }
-  }catch(e){
-    console.log(e)
-  }
   };
   useEffect(() => {
     askPermission();

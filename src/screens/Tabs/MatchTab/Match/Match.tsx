@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { MARK_AS_READ_MATCH } from "./MatchQueries";
 import { SwipeListView } from "react-native-swipe-list-view";
+import * as Location from "expo-location";
 import * as IntentLauncher from "expo-intent-launcher";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import Toast from "react-native-root-toast";
@@ -116,10 +117,8 @@ const TouchableBackRow = styled.View`
   background-color: ${props => props.theme.bgColor};
 `;
 export default ({ navigation }) => {
-  const {
-    data: { me = null },
-    loading: meLoading
-  } = useQuery<Me>(ME);
+  const { data, loading: meLoading } = useQuery<Me>(ME);
+  const me = data ? data.me : null;
   const isDarkMode = useTheme();
   const [refreshing, setRefreshing] = useState(false);
   const [addBlockUserFn, { loading: addBlockUserLoading }] = useMutation<
@@ -233,10 +232,8 @@ export default ({ navigation }) => {
       } else if (finalLocationStatus !== "granted") {
         return;
       } else if (finalLocationStatus === "granted") {
-        navigator.geolocation.getCurrentPosition(
-          handleGeoSuccess,
-          handleGeoError
-        );
+        const position = await Location.getCurrentPositionAsync({});
+        handleGeoSuccess(position);
       } else {
         return;
       }
@@ -310,7 +307,7 @@ export default ({ navigation }) => {
       console.log(e);
     }
   };
-  const handleGeoSuccess = (position: Position) => {
+  const handleGeoSuccess = position => {
     const {
       coords: { latitude, longitude }
     } = position;
@@ -341,9 +338,6 @@ export default ({ navigation }) => {
     } catch (e) {
       console.log(e);
     }
-  };
-  const handleGeoError = () => {
-    console.log("No location");
   };
   const [reportLocationFn, { loading: reportLocationLoading }] = useMutation<
     ReportLocation,

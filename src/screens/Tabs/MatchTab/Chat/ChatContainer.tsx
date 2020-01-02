@@ -3,6 +3,7 @@ import { GiftedChat } from "react-native-gifted-chat";
 import * as Permissions from "expo-permissions";
 import * as IntentLauncher from "expo-intent-launcher";
 import { withNavigation, NavigationScreenProp } from "react-navigation";
+import * as Location from "expo-location";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import firebase from "firebase";
 import CustomView from "./CustomView";
@@ -546,11 +547,9 @@ class ChatContainer extends React.Component<IProps, IState> {
       } else if (finalStatus !== "granted") {
         return;
       } else if (finalStatus === "granted") {
-        this.setState({ mapLoading: true, mapModalOpen: true }),
-          navigator.geolocation.getCurrentPosition(
-            this.handleGeoSuccess,
-            this.handleGeoError
-          );
+        this.setState({ mapLoading: true, mapModalOpen: true });
+        const position = await Location.getCurrentPositionAsync({});
+        this.handleGeoSuccess(position);
       } else {
         return;
       }
@@ -558,7 +557,7 @@ class ChatContainer extends React.Component<IProps, IState> {
       console.log(e);
     }
   };
-  public handleGeoSuccess = (position: Position) => {
+  public handleGeoSuccess = position => {
     const {
       coords: { latitude, longitude }
     } = position;
@@ -598,9 +597,6 @@ class ChatContainer extends React.Component<IProps, IState> {
     } catch (e) {
       console.log(e);
     }
-  };
-  public handleGeoError = () => {
-    console.log("No location");
   };
   public render() {
     const {

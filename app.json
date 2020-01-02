@@ -5,10 +5,7 @@
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "scheme": "pinner.plusbeauxjours",
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "version": "1.0.9",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -20,9 +17,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "pinner.plusbeauxjours",
@@ -37,7 +32,7 @@
       "usesAppleSignIn": true
     },
     "android": {
-      "versionCode": 4,
+      "versionCode": 5,
       "package": "pinner.plusbeauxjours",
       "permissions": [
         "ACCESS_COARSE_LOCATION",
@@ -45,7 +40,6 @@
         "READ_EXTERNAL_STORAGE",
         "ACCESS_NOTIFICATION_POLICY",
         "com.anddoes.launcher.permission.UPDATE_COUNT",
-        "com.android.launcher.permission.INSTALL_SHORTCUT",
         "com.google.android.c2dm.permission.RECEIVE",
         "com.google.android.gms.permission.ACTIVITY_RECOGNITION",
         "com.google.android.providers.gsf.permission.READ_GSERVICES",

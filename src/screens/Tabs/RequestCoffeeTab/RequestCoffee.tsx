@@ -3,6 +3,7 @@ import styled from "styled-components";
 import * as Permissions from "expo-permissions";
 import * as IntentLauncher from "expo-intent-launcher";
 import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
+import * as Location from "expo-location";
 import {
   RefreshControl,
   Platform,
@@ -638,10 +639,8 @@ export default ({ navigation }) => {
       } else if (finalStatus !== "granted") {
         return;
       } else if (finalStatus === "granted") {
-        navigator.geolocation.getCurrentPosition(
-          handleGeoSuccess,
-          handleGeoError
-        );
+        const position = await Location.getCurrentPositionAsync({});
+        handleGeoSuccess(position);
       } else {
         return;
       }
@@ -649,7 +648,7 @@ export default ({ navigation }) => {
       console.log(e);
     }
   };
-  const handleGeoSuccess = (position: Position) => {
+  const handleGeoSuccess = position => {
     const {
       coords: { latitude, longitude }
     } = position;
@@ -681,9 +680,6 @@ export default ({ navigation }) => {
     } catch (e) {
       console.log(e);
     }
-  };
-  const handleGeoError = () => {
-    console.log("No location");
   };
   if (
     recommendUserLoading ||
