@@ -4,6 +4,7 @@ import * as Permissions from "expo-permissions";
 import * as IntentLauncher from "expo-intent-launcher";
 import { withNavigation, NavigationScreenProp } from "react-navigation";
 import * as Location from "expo-location";
+import Constants from "expo-constants";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import firebase from "firebase";
 import CustomView from "./CustomView";
@@ -492,69 +493,62 @@ class ChatContainer extends React.Component<IProps, IState> {
     }
   };
   public askPermission = async () => {
-    try {
-      const { status: existingStatus } = await Permissions.getAsync(
-        Permissions.LOCATION
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+    console.log(status);
+    if (Platform.OS === "ios" && status === "denied") {
+      Alert.alert(
+        "Permission Denied",
+        "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
+            onPress: () => {
+              this.setState({ mapLoading: false, mapModalOpen: false });
+            }
+          },
+          {
+            text: "Open Settings",
+            onPress: () => {
+              Linking.openURL("app-settings:"),
+                this.setState({ mapLoading: false, mapModalOpen: false });
+            }
+          }
+        ]
       );
-      let finalStatus = existingStatus;
-      if (Platform.OS === "ios" && existingStatus === "denied") {
-        Alert.alert(
-          "Permission Denied",
-          "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
-          [
-            {
-              text: "Cancel",
-              style: "cancel",
-              onPress: () => {
-                this.setState({ mapLoading: false, mapModalOpen: false });
-              }
-            },
-            {
-              text: "Open Settings",
-              onPress: () => {
-                Linking.openURL("app-settings:"),
-                  this.setState({ mapLoading: false, mapModalOpen: false });
-              }
+    } else if (Platform.OS !== "ios" && status === "denied") {
+      Alert.alert(
+        "Permission Denied",
+        "To enable location, tap Open Settings, then tap on Permissions, then tap on Location, and finally tap on Allow only while using the app.",
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
+            onPress: () => {
+              this.setState({ mapLoading: false, mapModalOpen: false });
             }
-          ]
-        );
-      } else if (Platform.OS !== "ios" && existingStatus === "denied") {
-        Alert.alert(
-          "Permission Denied",
-          "To enable location, tap Open Settings, then tap on Pinner, then tap on Permissions, and finally tap on Allow only while using the app.",
-          [
-            {
-              text: "Cancel",
-              style: "cancel",
-              onPress: () => {
+          },
+          {
+            text: "Open Settings",
+            onPress: () => {
+              const pkg = Constants.manifest.releaseChannel
+                ? Constants.manifest.android.package
+                : "host.exp.exponent";
+              IntentLauncher.startActivityAsync(
+                IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                { data: "package:" + pkg }
+              ),
                 this.setState({ mapLoading: false, mapModalOpen: false });
-              }
-            },
-            {
-              text: "Open Settings",
-              onPress: () => {
-                IntentLauncher.startActivityAsync(
-                  IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS
-                ),
-                  this.setState({ mapLoading: false, mapModalOpen: false });
-              }
             }
-          ]
-        );
-      } else if (existingStatus !== "granted") {
-        const { status } = await Permissions.askAsync(Permissions.LOCATION);
-        finalStatus = status;
-      } else if (finalStatus !== "granted") {
-        return;
-      } else if (finalStatus === "granted") {
-        this.setState({ mapLoading: true, mapModalOpen: true });
-        const position = await Location.getCurrentPositionAsync({});
-        this.handleGeoSuccess(position);
-      } else {
-        return;
-      }
-    } catch (e) {
-      console.log(e);
+          }
+        ]
+      );
+    } else if (status === "granted") {
+      this.setState({ mapLoading: true, mapModalOpen: true });
+      const position = await Location.getCurrentPositionAsync({timeout: 5000});
+      this.handleGeoSuccess(position);
+    } else {
+      return;
     }
   };
   public handleGeoSuccess = position => {

@@ -40,6 +40,7 @@
         "READ_EXTERNAL_STORAGE",
         "ACCESS_NOTIFICATION_POLICY",
         "com.anddoes.launcher.permission.UPDATE_COUNT",
+        "com.android.launcher.permission.INSTALL_SHORTCUT",
         "com.google.android.c2dm.permission.RECEIVE",
         "com.google.android.gms.permission.ACTIVITY_RECOGNITION",
         "com.google.android.providers.gsf.permission.READ_GSERVICES",

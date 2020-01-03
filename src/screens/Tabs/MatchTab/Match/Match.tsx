@@ -185,126 +185,109 @@ export default ({ navigation }) => {
     RegisterPushVariables
   >(REGISTER_PUSH);
   const askPermission = async () => {
-    try {
-      const { status: existingLocationStatus } = await Permissions.getAsync(
-        Permissions.LOCATION
+    const { status: locationStatus } = await Permissions.askAsync(
+      Permissions.LOCATION
+    );
+    console.log("locationStatus", locationStatus);
+    if (Platform.OS === "ios" && locationStatus === "denied") {
+      Alert.alert(
+        "Permission Denied",
+        "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
+        [
+          {
+            text: "Cancel",
+            style: "cancel"
+          },
+          {
+            text: "Open Settings",
+            onPress: () => {
+              Linking.openURL("app-settings:");
+            }
+          }
+        ]
       );
-      let finalLocationStatus = existingLocationStatus;
-      if (Platform.OS === "ios" && existingLocationStatus === "denied") {
-        Alert.alert(
-          "Permission Denied",
-          "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
-          [
-            {
-              text: "Cancel",
-              style: "cancel"
-            },
-            {
-              text: "Open Settings",
-              onPress: () => {
-                Linking.openURL("app-settings:");
-              }
+    } else if (Platform.OS !== "ios" && locationStatus === "denied") {
+      Alert.alert(
+        "Permission Denied",
+        "To enable location, tap Open Settings, then tap on Permissions, then tap on Location, and finally tap on Allow only while using the app.",
+        [
+          {
+            text: "Cancel",
+            style: "cancel"
+          },
+          {
+            text: "Open Settings",
+            onPress: () => {
+              const pkg = Constants.manifest.releaseChannel
+                ? Constants.manifest.android.package
+                : "host.exp.exponent";
+              IntentLauncher.startActivityAsync(
+                IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                { data: "package:" + pkg }
+              );
             }
-          ]
-        );
-      } else if (Platform.OS !== "ios" && existingLocationStatus === "denied") {
-        Alert.alert(
-          "Permission Denied",
-          "To enable location, tap Open Settings, then tap on Pinner, then tap on Permissions, and finally tap on Allow only while using the app.",
-          [
-            {
-              text: "Cancel",
-              style: "cancel"
-            },
-            {
-              text: "Open Settings",
-              onPress: () => {
-                IntentLauncher.startActivityAsync(
-                  IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS
-                );
-              }
-            }
-          ]
-        );
-      } else if (existingLocationStatus !== "granted") {
-        const { status } = await Permissions.askAsync(Permissions.LOCATION);
-        finalLocationStatus = status;
-      } else if (finalLocationStatus !== "granted") {
-        return;
-      } else if (finalLocationStatus === "granted") {
-        const position = await Location.getCurrentPositionAsync({});
-        handleGeoSuccess(position);
-      } else {
-        return;
-      }
-    } catch (e) {
-      console.log(e);
+          }
+        ]
+      );
+    } else if (locationStatus === "granted") {
+      const position = await Location.getCurrentPositionAsync({
+        timeout: 5000
+      });
+      handleGeoSuccess(position);
+    } else {
+      return;
     }
-    try {
-      const { status: existingNotificationStatus } = await Permissions.getAsync(
-        Permissions.NOTIFICATIONS
+    const { status: notificationStatus } = await Permissions.askAsync(
+      Permissions.NOTIFICATIONS
+    );
+    console.log("notificationStatus", notificationStatus);
+    if (Platform.OS === "ios" && notificationStatus === "denied") {
+      Alert.alert(
+        "Permission Denied",
+        "To enable notification, tap Open Settings, then tap on Notifications, and finally tap on Allow Notifications.",
+        [
+          {
+            text: "Cancel",
+            style: "cancel"
+          },
+          {
+            text: "Open Settings",
+            onPress: () => {
+              Linking.openURL("app-settings:");
+            }
+          }
+        ]
       );
-      let finalNotificationStatus = existingNotificationStatus;
-      if (Platform.OS === "ios" && existingNotificationStatus === "denied") {
-        Alert.alert(
-          "Permission Denied",
-          "To enable notification, tap Open Settings, then tap on Notifications, and finally tap on Allow Notifications.",
-          [
-            {
-              text: "Cancel",
-              style: "cancel"
-            },
-            {
-              text: "Open Settings",
-              onPress: () => {
-                Linking.openURL("app-settings:");
-              }
+    } else if (Platform.OS !== "ios" && notificationStatus === "denied") {
+      Alert.alert(
+        "Permission Denied",
+        "To enable notification, tap Open Settings, then tap on Notifications, and finally tap on Show notifications.",
+        [
+          {
+            text: "Cancel",
+            style: "cancel"
+          },
+          {
+            text: "Open Settings",
+            onPress: () => {
+              const pkg = Constants.manifest.releaseChannel
+                ? Constants.manifest.android.package
+                : "host.exp.exponent";
+              IntentLauncher.startActivityAsync(
+                IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                { data: "package:" + pkg }
+              );
             }
-          ]
-        );
-      } else if (
-        Platform.OS !== "ios" &&
-        existingNotificationStatus === "denied"
-      ) {
-        Alert.alert(
-          "Permission Denied",
-          "To enable notification, tap Open Settings, then tap on Notifications, and finally tap on Show notifications.",
-          [
-            {
-              text: "Cancel",
-              style: "cancel"
-            },
-            {
-              text: "Open Settings",
-              onPress: () => {
-                const pkg = Constants.manifest.releaseChannel
-                  ? Constants.manifest.android.package
-                  : "host.exp.exponent";
-                IntentLauncher.startActivityAsync(
-                  IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
-                  { data: "package:" + pkg }
-                );
-              }
-            }
-          ]
-        );
-      } else if (existingNotificationStatus !== "granted") {
-        const { status } = await Permissions.askAsync(
-          Permissions.NOTIFICATIONS
-        );
-        finalNotificationStatus = status;
-      } else if (finalNotificationStatus !== "granted") {
-        return;
-      } else {
-        return;
-      }
-
+          }
+        ]
+      );
+    } else if (notificationStatus === "granted") {
       let pushToken = await Notifications.getExpoPushTokenAsync();
       const { data: serverData } = await registerPushFn({
         variables: { pushToken }
       });
-    } catch (e) {
-      console.log(e);
+    } else {
+      return;
     }
   };
   const handleGeoSuccess = position => {

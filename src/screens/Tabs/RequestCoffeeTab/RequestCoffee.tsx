@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import * as Permissions from "expo-permissions";
+import Constants from "expo-constants";
 import * as IntentLauncher from "expo-intent-launcher";
 import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
 import * as Location from "expo-location";
@@ -598,54 +599,48 @@ export default ({ navigation }) => {
     setActiveSections(activeSections.includes(undefined) ? [] : activeSections);
   };
   const askPermission = async () => {
-    try {
-      const { status: existingStatus } = await Permissions.getAsync(
-        Permissions.LOCATION
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (Platform.OS === "ios" && status === "denied") {
+      Alert.alert(
+        "Permission Denied",
+        "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
+        [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "Open Settings",
+            onPress: () => {
+              Linking.openURL("app-settings:");
+            }
+          }
+        ]
       );
-      let finalStatus = existingStatus;
-      if (Platform.OS === "ios" && existingStatus === "denied") {
-        Alert.alert(
-          "Permission Denied",
-          "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
-          [
-            { text: "Cancel", style: "cancel" },
-            {
-              text: "Open Settings",
-              onPress: () => {
-                Linking.openURL("app-settings:");
-              }
+    } else if (Platform.OS !== "ios" && status === "denied") {
+      Alert.alert(
+        "Permission Denied",
+        "To enable location, tap Open Settings, then tap on Permissions, then tap on Location, and finally tap on Allow only while using the app.",
+        [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "Open Settings",
+            onPress: () => {
+              const pkg = Constants.manifest.releaseChannel
+                ? Constants.manifest.android.package
+                : "host.exp.exponent";
+              IntentLauncher.startActivityAsync(
+                IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                { data: "package:" + pkg }
+              );
             }
-          ]
-        );
-      } else if (Platform.OS !== "ios" && existingStatus === "denied") {
-        Alert.alert(
-          "Permission Denied",
-          "To enable location, tap Open Settings, then tap on Pinner, then tap on Permissions, and finally tap on Allow only while using the app.",
-          [
-            { text: "Cancel", style: "cancel" },
-            {
-              text: "Open Settings",
-              onPress: () => {
-                IntentLauncher.startActivityAsync(
-                  IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS
-                );
-              }
-            }
-          ]
-        );
-      } else if (existingStatus !== "granted") {
-        const { status } = await Permissions.askAsync(Permissions.LOCATION);
-        finalStatus = status;
-      } else if (finalStatus !== "granted") {
-        return;
-      } else if (finalStatus === "granted") {
-        const position = await Location.getCurrentPositionAsync({});
-        handleGeoSuccess(position);
-      } else {
-        return;
-      }
-    } catch (e) {
-      console.log(e);
+          }
+        ]
+      );
+    } else if (status === "granted") {
+      const position = await Location.getCurrentPositionAsync({
+        timeout: 5000
+      });
+      handleGeoSuccess(position);
+    } else {
+      return;
     }
   };
   const handleGeoSuccess = position => {
