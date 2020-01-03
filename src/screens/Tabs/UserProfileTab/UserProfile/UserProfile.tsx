@@ -83,7 +83,8 @@ const Text = styled.Text`
   color: ${props => props.theme.color};
 `;
 const BioText = styled(Text)`
-  margin-bottom: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 `;
 const Bold = styled.Text`
   font-size: 11px;
@@ -93,12 +94,12 @@ const Item = styled.View`
   flex-direction: column;
   align-items: center;
   width: ${constants.width / 4 - 2.5};
-  height: 70px;
+  height: 50px;
 `;
 const ItemContainer = styled.View`
   flex-wrap: wrap;
   flex-direction: row;
-  margin-bottom: 10px;
+  margin-bottom: 25px;
 `;
 const UserNameContainer = styled.View`
   flex-direction: row;
@@ -293,12 +294,12 @@ export default ({ navigation }) => {
         cancelButtonIndex: 1,
         showSeparators: true,
         title: "Are you sure to delete trip?",
-       containerStyle: {
+        containerStyle: {
           backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-        marginBottom: 10
+          marginBottom: 10
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
@@ -333,12 +334,12 @@ export default ({ navigation }) => {
         cancelButtonIndex: 4,
         title: `Choose a reason for reporting this account. We won't tell ${user.username} who reported them.`,
         showSeparators: true,
-       containerStyle: {
+        containerStyle: {
           backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-        marginBottom: 10
+          marginBottom: 10
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
@@ -370,12 +371,12 @@ export default ({ navigation }) => {
         cancelButtonIndex: 1,
         showSeparators: true,
         title: `Are you sure to report ${user.username}?`,
-       containerStyle: {
+        containerStyle: {
           backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-        marginBottom: 10
+          marginBottom: 10
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {

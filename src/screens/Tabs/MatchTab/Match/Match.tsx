@@ -593,8 +593,7 @@ export default ({ navigation }) => {
           ) : (
             <TextContainer>
               <Text>
-                You don't have any matches. Please swipe to right to find
-                someone.
+                You don't have any matches. Please tab PIN to find someone.
               </Text>
             </TextContainer>
           )}

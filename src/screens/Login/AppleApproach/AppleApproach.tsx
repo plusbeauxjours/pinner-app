@@ -59,28 +59,24 @@ export default ({ cityId, countryCode }) => {
           AppleAuthentication.AppleAuthenticationScope.EMAIL
         ]
       });
-      if (credential.hasOwnProperty("user")) {
-        try {
-          const {
-            data: { appleConnect }
-          } = await appleConnectFn({
-            variables: {
-              firstName: credential.fullName.givenName,
-              lastName: credential.fullName.familyName,
-              email: credential.email,
-              cityId,
-              countryCode,
-              appleId: credential.user
-            }
-          });
-          await logIn(appleConnect);
-          await toast(`Welcome!`);
-          await setLoading(false);
-        } catch ({ message }) {
-          console.log(`Apple Login Error: ${message}`);
-          setLoading(false);
-        }
-      } else {
+      try {
+        const {
+          data: { appleConnect }
+        } = await appleConnectFn({
+          variables: {
+            firstName: credential.fullName.givenName,
+            lastName: credential.fullName.familyName,
+            email: credential.email,
+            cityId,
+            countryCode,
+            appleId: credential.user
+          }
+        });
+        await logIn(appleConnect);
+        await toast(`Welcome!`);
+        await setLoading(false);
+      } catch ({ message }) {
+        console.log(`Apple Login Error: ${message}`);
         setLoading(false);
       }
     } catch ({ message }) {
