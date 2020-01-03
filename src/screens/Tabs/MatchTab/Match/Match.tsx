@@ -188,59 +188,62 @@ export default ({ navigation }) => {
     const { status: locationStatus } = await Permissions.askAsync(
       Permissions.LOCATION
     );
-    console.log("locationStatus", locationStatus);
-    if (Platform.OS === "ios" && locationStatus === "denied") {
-      Alert.alert(
-        "Permission Denied",
-        "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
-        [
-          {
-            text: "Cancel",
-            style: "cancel"
-          },
-          {
-            text: "Open Settings",
-            onPress: () => {
-              Linking.openURL("app-settings:");
+    const { locationServicesEnabled } = await Location.getProviderStatusAsync();
+    if (locationServicesEnabled) {
+      if (Platform.OS === "ios" && locationStatus === "denied") {
+        Alert.alert(
+          "Permission Denied",
+          "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
+          [
+            {
+              text: "Cancel",
+              style: "cancel"
+            },
+            {
+              text: "Open Settings",
+              onPress: () => {
+                Linking.openURL("app-settings:");
+              }
             }
-          }
-        ]
-      );
-    } else if (Platform.OS !== "ios" && locationStatus === "denied") {
-      Alert.alert(
-        "Permission Denied",
-        "To enable location, tap Open Settings, then tap on Permissions, then tap on Location, and finally tap on Allow only while using the app.",
-        [
-          {
-            text: "Cancel",
-            style: "cancel"
-          },
-          {
-            text: "Open Settings",
-            onPress: () => {
-              const pkg = Constants.manifest.releaseChannel
-                ? Constants.manifest.android.package
-                : "host.exp.exponent";
-              IntentLauncher.startActivityAsync(
-                IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
-                { data: "package:" + pkg }
-              );
+          ]
+        );
+      } else if (Platform.OS !== "ios" && locationStatus === "denied") {
+        Alert.alert(
+          "Permission Denied",
+          "To enable location, tap Open Settings, then tap on Permissions, then tap on Location, and finally tap on Allow only while using the app.",
+          [
+            {
+              text: "Cancel",
+              style: "cancel"
+            },
+            {
+              text: "Open Settings",
+              onPress: () => {
+                const pkg = Constants.manifest.releaseChannel
+                  ? Constants.manifest.android.package
+                  : "host.exp.exponent";
+                IntentLauncher.startActivityAsync(
+                  IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                  { data: "package:" + pkg }
+                );
+              }
             }
-          }
-        ]
-      );
-    } else if (locationStatus === "granted") {
-      const position = await Location.getCurrentPositionAsync({
-        timeout: 5000
-      });
-      handleGeoSuccess(position);
+          ]
+        );
+      } else if (locationStatus === "granted") {
+        const position = await Location.getCurrentPositionAsync({
+          timeout: 5000
+        });
+        handleGeoSuccess(position);
+      } else {
+        return;
+      }
     } else {
-      return;
+      Alert.alert("Location permission required.");
     }
     const { status: notificationStatus } = await Permissions.askAsync(
       Permissions.NOTIFICATIONS
     );
-    console.log("notificationStatus", notificationStatus);
     if (Platform.OS === "ios" && notificationStatus === "denied") {
       Alert.alert(
         "Permission Denied",

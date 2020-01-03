@@ -494,61 +494,67 @@ class ChatContainer extends React.Component<IProps, IState> {
   };
   public askPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
-    console.log(status);
-    if (Platform.OS === "ios" && status === "denied") {
-      Alert.alert(
-        "Permission Denied",
-        "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
-        [
-          {
-            text: "Cancel",
-            style: "cancel",
-            onPress: () => {
-              this.setState({ mapLoading: false, mapModalOpen: false });
-            }
-          },
-          {
-            text: "Open Settings",
-            onPress: () => {
-              Linking.openURL("app-settings:"),
+    const { locationServicesEnabled } = await Location.getProviderStatusAsync();
+    if (locationServicesEnabled) {
+      if (Platform.OS === "ios" && status === "denied") {
+        Alert.alert(
+          "Permission Denied",
+          "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
+          [
+            {
+              text: "Cancel",
+              style: "cancel",
+              onPress: () => {
                 this.setState({ mapLoading: false, mapModalOpen: false });
+              }
+            },
+            {
+              text: "Open Settings",
+              onPress: () => {
+                Linking.openURL("app-settings:"),
+                  this.setState({ mapLoading: false, mapModalOpen: false });
+              }
             }
-          }
-        ]
-      );
-    } else if (Platform.OS !== "ios" && status === "denied") {
-      Alert.alert(
-        "Permission Denied",
-        "To enable location, tap Open Settings, then tap on Permissions, then tap on Location, and finally tap on Allow only while using the app.",
-        [
-          {
-            text: "Cancel",
-            style: "cancel",
-            onPress: () => {
-              this.setState({ mapLoading: false, mapModalOpen: false });
-            }
-          },
-          {
-            text: "Open Settings",
-            onPress: () => {
-              const pkg = Constants.manifest.releaseChannel
-                ? Constants.manifest.android.package
-                : "host.exp.exponent";
-              IntentLauncher.startActivityAsync(
-                IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
-                { data: "package:" + pkg }
-              ),
+          ]
+        );
+      } else if (Platform.OS !== "ios" && status === "denied") {
+        Alert.alert(
+          "Permission Denied",
+          "To enable location, tap Open Settings, then tap on Permissions, then tap on Location, and finally tap on Allow only while using the app.",
+          [
+            {
+              text: "Cancel",
+              style: "cancel",
+              onPress: () => {
                 this.setState({ mapLoading: false, mapModalOpen: false });
+              }
+            },
+            {
+              text: "Open Settings",
+              onPress: () => {
+                const pkg = Constants.manifest.releaseChannel
+                  ? Constants.manifest.android.package
+                  : "host.exp.exponent";
+                IntentLauncher.startActivityAsync(
+                  IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                  { data: "package:" + pkg }
+                ),
+                  this.setState({ mapLoading: false, mapModalOpen: false });
+              }
             }
-          }
-        ]
-      );
-    } else if (status === "granted") {
-      this.setState({ mapLoading: true, mapModalOpen: true });
-      const position = await Location.getCurrentPositionAsync({timeout: 5000});
-      this.handleGeoSuccess(position);
+          ]
+        );
+      } else if (status === "granted") {
+        this.setState({ mapLoading: true, mapModalOpen: true });
+        const position = await Location.getCurrentPositionAsync({
+          timeout: 5000
+        });
+        this.handleGeoSuccess(position);
+      } else {
+        return;
+      }
     } else {
-      return;
+      Alert.alert("Location permission required.");
     }
   };
   public handleGeoSuccess = position => {

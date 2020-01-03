@@ -5,7 +5,10 @@
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "scheme": "pinner.plusbeauxjours",
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "version": "1.0.9",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,7 +20,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "pinner.plusbeauxjours",
