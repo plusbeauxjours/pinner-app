@@ -223,7 +223,7 @@ export default withNavigation(({ navigation }) => {
       );
     }
   };
-  if (!meLoading) {
+  if (!meLoading && me) {
     return (
       <Touchable
         onPress={() => pickFromGallery()}

@@ -500,7 +500,7 @@ export default ({ navigation }) => {
   useEffect(() => {
     askPermission();
   }, []);
-  if (matchLoading || meLoading) {
+  if (matchLoading || meLoading || !me) {
     return (
       <LoaderContainer>
         <Loader />

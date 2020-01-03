@@ -166,7 +166,7 @@ const UserRow: React.FC<IProps> = ({
   const { me, loading: meLoading } = useMe();
   const [lastMessage, setLastMessage] = useState<string>("");
   const [hasUnreadMessage, setHasUnreadMessage] = useState<boolean>(false);
-  if (match && !meLoading) {
+  if (match && !meLoading && me) {
     get_last_chat_messages(match.id).then(message => {
       setLastMessage(message);
     });
