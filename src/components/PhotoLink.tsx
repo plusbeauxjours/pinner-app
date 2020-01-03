@@ -32,7 +32,7 @@ const Touchable = styled.TouchableOpacity`
 `;
 
 export default withNavigation(({ navigation }) => {
-  const { me } = useMe();
+  const { me, loading: meLoading } = useMe();
   const isDarkMode = useTheme();
   const [uploadAvatarFn, { loading: uploadAvatarLoading }] = useMutation<
     UploadAvatar,
@@ -223,13 +223,20 @@ export default withNavigation(({ navigation }) => {
       );
     }
   };
-  return (
-    <Touchable onPress={() => pickFromGallery()} disabled={uploadAvatarLoading}>
-      <AntDesign
-        name={"appstore-o"}
-        size={22}
-        color={isDarkMode ? "#EFEFEF" : "#161616"}
-      />
-    </Touchable>
-  );
+  if (!meLoading) {
+    return (
+      <Touchable
+        onPress={() => pickFromGallery()}
+        disabled={uploadAvatarLoading}
+      >
+        <AntDesign
+          name={"appstore-o"}
+          size={22}
+          color={isDarkMode ? "#EFEFEF" : "#161616"}
+        />
+      </Touchable>
+    );
+  } else {
+    return;
+  }
 });

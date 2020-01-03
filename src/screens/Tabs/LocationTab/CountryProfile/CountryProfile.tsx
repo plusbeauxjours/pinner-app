@@ -104,7 +104,7 @@ const NoPhotoContainer = styled.View`
   border: 0.5px solid #999;
 `;
 export default withNavigation(({ navigation }) => {
-  const { me } = useMe();
+  const { me, loading: meLoading } = useMe();
   const isDarkMode = useTheme();
   const [countryCode, setCountryCode] = useState<string>(
     navigation.getParam("countryCode") ||
@@ -120,12 +120,12 @@ export default withNavigation(({ navigation }) => {
         cancelButtonIndex: 3,
         title: `Choose a reason for reporting this country.`,
         showSeparators: true,
-       containerStyle: {
+        containerStyle: {
           backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-        marginBottom: 10
+          marginBottom: 10
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
@@ -165,12 +165,12 @@ export default withNavigation(({ navigation }) => {
         cancelButtonIndex: 1,
         showSeparators: true,
         title: `Are you sure to report this country?`,
-       containerStyle: {
+        containerStyle: {
           backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-        marginBottom: 10
+          marginBottom: 10
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
@@ -235,7 +235,7 @@ export default withNavigation(({ navigation }) => {
     }
     return chunks;
   };
-  if (profileLoading || countriesLoading) {
+  if (profileLoading || countriesLoading || meLoading) {
     return (
       <LoaderContainer>
         <Loader />

@@ -77,7 +77,7 @@ const IconContainer = styled.View`
 `;
 
 export default ({ navigation }) => {
-  const { me } = useMe();
+  const { me, loading: meLoading } = useMe();
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const {
     data: { getBlockedUser: { blockedUsers = null } = {} } = {},
@@ -134,7 +134,7 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
-  if (loading) {
+  if (loading || meLoading) {
     return (
       <LoaderContainer>
         <Loader />
@@ -144,7 +144,11 @@ export default ({ navigation }) => {
     return (
       <ScrollView
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={"#999"} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={"#999"}
+          />
         }
         showsVerticalScrollIndicator={false}
       >

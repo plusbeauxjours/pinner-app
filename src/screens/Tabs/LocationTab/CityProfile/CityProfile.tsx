@@ -119,7 +119,7 @@ const NoPhotoContainer = styled.View`
   border: 0.5px solid #999;
 `;
 export default withNavigation(({ navigation }) => {
-  const { me } = useMe();
+  const { me, loading: meLoading } = useMe();
   const isDarkMode = useTheme();
   const [cityId, setCityId] = useState<string>(
     navigation.getParam("cityId") || me.user.profile.currentCity.cityId
@@ -141,7 +141,7 @@ export default withNavigation(({ navigation }) => {
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-        marginBottom: 10
+          marginBottom: 10
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
@@ -181,12 +181,12 @@ export default withNavigation(({ navigation }) => {
         cancelButtonIndex: 1,
         showSeparators: true,
         title: `Are you sure to report this city?`,
-       containerStyle: {
+        containerStyle: {
           backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-        marginBottom: 10
+          marginBottom: 10
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
@@ -283,7 +283,8 @@ export default withNavigation(({ navigation }) => {
     profileLoading ||
     nearCitiesLoading ||
     samenameCitiesLoading ||
-    coffeeLoading
+    coffeeLoading ||
+    meLoading
   ) {
     return (
       <LoaderContainer>

@@ -220,7 +220,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   onRegionChangeComplete,
   mapLoading
 }) => {
-  const { me } = useMe();
+  const { me, loading: meLoading } = useMe();
   const isDarkMode = useTheme();
   const [snsAddMode, setSnsAddMode] = useState<boolean>(false);
   const [ready, setReady] = useState<boolean>(false);
@@ -749,72 +749,97 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
     sendVine,
     sendTumblr
   ]);
-  return (
-    <>
-      <Modal
-        style={{ margin: 0, justifyContent: "center" }}
-        isVisible={snsModalOpen}
-        backdropColor={
-          isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
-        }
-        onBackdropPress={() =>
-          snsAddMode ? setSnsAddMode(false) : closeSnsModal()
-        }
-        onBackButtonPress={() =>
-          Platform.OS !== "ios" && snsAddMode
-            ? setSnsAddMode(false)
-            : closeSnsModal()
-        }
-        onModalHide={() =>
-          snsAddMode ? setSnsAddMode(false) : closeSnsModal()
-        }
-        propagateSwipe={true}
-        scrollHorizontal={true}
-        backdropOpacity={0.9}
-        animationIn="fadeIn"
-        animationOut="fadeOut"
-        animationInTiming={200}
-        animationOutTiming={200}
-        backdropTransitionInTiming={200}
-        backdropTransitionOutTiming={200}
-      >
-        {!snsAddMode ? (
-          <>
-            <AddView>
-              <ScrollView
-                keyboardShouldPersistTaps={"always"}
-                keyboardDismissMode={
-                  Platform.OS === "ios" ? "interactive" : "on-drag"
-                }
-                contentContainerStyle={{ flexGrow: 1 }}
-                showsVerticalScrollIndicator={false}
-              >
-                <AddListContainer>
-                  {!me.user.profile.phoneNumber &&
-                    !me.user.profile.emailAddress &&
-                    snsList.length === 0 && (
-                      <TextContainer>
-                        <Text>No SNS yet...</Text>
-                      </TextContainer>
-                    )}
-                  {me.user.profile.countryPhoneNumber &&
-                    me.user.profile.phoneNumber && (
+  if (!meLoading) {
+    return (
+      <>
+        <Modal
+          style={{ margin: 0, justifyContent: "center" }}
+          isVisible={snsModalOpen}
+          backdropColor={
+            isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
+          }
+          onBackdropPress={() =>
+            snsAddMode ? setSnsAddMode(false) : closeSnsModal()
+          }
+          onBackButtonPress={() =>
+            Platform.OS !== "ios" && snsAddMode
+              ? setSnsAddMode(false)
+              : closeSnsModal()
+          }
+          onModalHide={() =>
+            snsAddMode ? setSnsAddMode(false) : closeSnsModal()
+          }
+          propagateSwipe={true}
+          scrollHorizontal={true}
+          backdropOpacity={0.9}
+          animationIn="fadeIn"
+          animationOut="fadeOut"
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropTransitionInTiming={200}
+          backdropTransitionOutTiming={200}
+        >
+          {!snsAddMode ? (
+            <>
+              <AddView>
+                <ScrollView
+                  keyboardShouldPersistTaps={"always"}
+                  keyboardDismissMode={
+                    Platform.OS === "ios" ? "interactive" : "on-drag"
+                  }
+                  contentContainerStyle={{ flexGrow: 1 }}
+                  showsVerticalScrollIndicator={false}
+                >
+                  <AddListContainer>
+                    {!me.user.profile.phoneNumber &&
+                      !me.user.profile.emailAddress &&
+                      snsList.length === 0 && (
+                        <TextContainer>
+                          <Text>No SNS yet...</Text>
+                        </TextContainer>
+                      )}
+                    {me.user.profile.countryPhoneNumber &&
+                      me.user.profile.phoneNumber && (
+                        <Item>
+                          <Image
+                            resizeMode={"contain"}
+                            source={require("../../../../../assets/phone_second.png")}
+                          />
+                          <SNSTextContainer>
+                            <SNSText>
+                              {me.user.profile.countryPhoneNumber}
+                              {me.user.profile.phoneNumber}
+                            </SNSText>
+                          </SNSTextContainer>
+                          <ItemTouchable
+                            onPress={() => {
+                              onSendSnsId(
+                                `${me.user.profile.countryPhoneNumber}${me.user.profile.phoneNumber}`,
+                                "PHONE_SECOND"
+                              ),
+                                closeSnsModal();
+                            }}
+                          >
+                            <EditItemView>
+                              <EditItemText>SEND</EditItemText>
+                            </EditItemView>
+                          </ItemTouchable>
+                        </Item>
+                      )}
+                    {me.user.profile.emailAddress && (
                       <Item>
                         <Image
                           resizeMode={"contain"}
-                          source={require("../../../../../assets/phone_second.png")}
+                          source={require("../../../../../assets/email_second.png")}
                         />
                         <SNSTextContainer>
-                          <SNSText>
-                            {me.user.profile.countryPhoneNumber}
-                            {me.user.profile.phoneNumber}
-                          </SNSText>
+                          <SNSText>{me.user.profile.emailAddress}</SNSText>
                         </SNSTextContainer>
                         <ItemTouchable
                           onPress={() => {
                             onSendSnsId(
-                              `${me.user.profile.countryPhoneNumber}${me.user.profile.phoneNumber}`,
-                              "PHONE_SECOND"
+                              `${me.user.profile.emailAddress}`,
+                              "EMAIL_SECOND"
                             ),
                               closeSnsModal();
                           }}
@@ -825,129 +850,127 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                         </ItemTouchable>
                       </Item>
                     )}
-                  {me.user.profile.emailAddress && (
-                    <Item>
-                      <Image
-                        resizeMode={"contain"}
-                        source={require("../../../../../assets/email_second.png")}
-                      />
-                      <SNSTextContainer>
-                        <SNSText>{me.user.profile.emailAddress}</SNSText>
-                      </SNSTextContainer>
-                      <ItemTouchable
-                        onPress={() => {
-                          onSendSnsId(
-                            `${me.user.profile.emailAddress}`,
-                            "EMAIL_SECOND"
-                          ),
-                            closeSnsModal();
-                        }}
-                      >
-                        <EditItemView>
-                          <EditItemText>SEND</EditItemText>
-                        </EditItemView>
-                      </ItemTouchable>
-                    </Item>
-                  )}
-                  <EmptyContainer />
-                  {snsList.map((snsItem, index) => {
-                    if (snsItem.meData && snsItem.meData.length > 0) {
-                      return (
+                    <EmptyContainer />
+                    {snsList.map((snsItem, index) => {
+                      if (snsItem.meData && snsItem.meData.length > 0) {
+                        return (
+                          <Item key={index}>
+                            <Image
+                              resizeMode={"contain"}
+                              source={snsItem.image}
+                            />
+                            <SNSTextContainer>
+                              <SNSText>{snsItem.meData}</SNSText>
+                            </SNSTextContainer>
+                            <ItemTouchable
+                              onPress={() => {
+                                onSendSnsId(
+                                  `${snsItem.meData}`,
+                                  `${snsItem.payload}`
+                                ),
+                                  closeSnsModal();
+                              }}
+                            >
+                              <EditItemView>
+                                <EditItemText>SEND</EditItemText>
+                              </EditItemView>
+                            </ItemTouchable>
+                          </Item>
+                        );
+                      } else {
+                        return null;
+                      }
+                    })}
+                  </AddListContainer>
+                </ScrollView>
+              </AddView>
+              <Footer>
+                <AddBackBtn>
+                  <AddBtn onPress={() => closeSnsModal()}>
+                    <AddText>BACK</AddText>
+                  </AddBtn>
+                </AddBackBtn>
+                <AddBackBtn>
+                  <AddBtn onPress={() => setSnsAddMode(true)}>
+                    <AddText>SNS</AddText>
+                  </AddBtn>
+                </AddBackBtn>
+              </Footer>
+            </>
+          ) : (
+            <>
+              <KeyboardAvoidingView
+                enabled
+                behavior={Platform.OS === "ios" ? "padding" : false}
+                style={{ marginBottom: 65 }}
+              >
+                <EditView>
+                  <ScrollView
+                    keyboardShouldPersistTaps={"always"}
+                    keyboardDismissMode={
+                      Platform.OS === "ios" ? "interactive" : "on-drag"
+                    }
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    showsVerticalScrollIndicator={false}
+                  >
+                    <AddListContainer>
+                      {snsList.map((snsItem, index) => (
                         <Item key={index}>
                           <Image
                             resizeMode={"contain"}
                             source={snsItem.image}
                           />
-                          <SNSTextContainer>
-                            <SNSText>{snsItem.meData}</SNSText>
-                          </SNSTextContainer>
-                          <ItemTouchable
-                            onPress={() => {
-                              onSendSnsId(
-                                `${snsItem.meData}`,
-                                `${snsItem.payload}`
-                              ),
-                                closeSnsModal();
+                          <TextInput
+                            style={{
+                              width: constants.width - 140,
+                              backgroundColor: "transparent",
+                              borderBottomWidth: 0.5,
+                              borderBottomColor: "#999",
+                              color: "#999",
+                              fontSize: 22,
+                              padding: 5,
+                              textAlign: "center"
                             }}
-                          >
-                            <EditItemView>
-                              <EditItemText>SEND</EditItemText>
-                            </EditItemView>
-                          </ItemTouchable>
-                        </Item>
-                      );
-                    } else {
-                      return null;
-                    }
-                  })}
-                </AddListContainer>
-              </ScrollView>
-            </AddView>
-            <Footer>
-              <AddBackBtn>
-                <AddBtn onPress={() => closeSnsModal()}>
-                  <AddText>BACK</AddText>
-                </AddBtn>
-              </AddBackBtn>
-              <AddBackBtn>
-                <AddBtn onPress={() => setSnsAddMode(true)}>
-                  <AddText>SNS</AddText>
-                </AddBtn>
-              </AddBackBtn>
-            </Footer>
-          </>
-        ) : (
-          <>
-            <KeyboardAvoidingView
-              enabled
-              behavior={Platform.OS === "ios" ? "padding" : false}
-              style={{ marginBottom: 65 }}
-            >
-              <EditView>
-                <ScrollView
-                  keyboardShouldPersistTaps={"always"}
-                  keyboardDismissMode={
-                    Platform.OS === "ios" ? "interactive" : "on-drag"
-                  }
-                  contentContainerStyle={{ flexGrow: 1 }}
-                  showsVerticalScrollIndicator={false}
-                >
-                  <AddListContainer>
-                    {snsList.map((snsItem, index) => (
-                      <Item key={index}>
-                        <Image resizeMode={"contain"} source={snsItem.image} />
-                        <TextInput
-                          style={{
-                            width: constants.width - 140,
-                            backgroundColor: "transparent",
-                            borderBottomWidth: 0.5,
-                            borderBottomColor: "#999",
-                            color: "#999",
-                            fontSize: 22,
-                            padding: 5,
-                            textAlign: "center"
-                          }}
-                          placeholder={snsItem.payload}
-                          placeholderTextColor={
-                            isDarkMode
-                              ? "rgba(55, 55, 55, 1)"
-                              : "rgba(207, 207, 207, 0.6)"
-                          }
-                          value={snsItem.value}
-                          returnKeyType="done"
-                          onChangeText={text =>
-                            onInputTextChange(text, snsItem.payload)
-                          }
-                          keyboardType={
-                            snsItem.payload === "PHONE"
-                              ? "phone-pad"
-                              : "email-address"
-                          }
-                          autoCorrect={false}
-                          autoCapitalize={"none"}
-                        />
-                        {snsItem.meData && snsItem.meData.length > 0 ? (
-                          snsItem.isChanged ? (
+                            placeholder={snsItem.payload}
+                            placeholderTextColor={
+                              isDarkMode
+                                ? "rgba(55, 55, 55, 1)"
+                                : "rgba(207, 207, 207, 0.6)"
+                            }
+                            value={snsItem.value}
+                            returnKeyType="done"
+                            onChangeText={text =>
+                              onInputTextChange(text, snsItem.payload)
+                            }
+                            keyboardType={
+                              snsItem.payload === "PHONE"
+                                ? "phone-pad"
+                                : "email-address"
+                            }
+                            autoCorrect={false}
+                            autoCapitalize={"none"}
+                          />
+                          {snsItem.meData && snsItem.meData.length > 0 ? (
+                            snsItem.isChanged ? (
+                              <ItemTouchable
+                                onPress={() =>
+                                  onPressSendSns(
+                                    snsItem.payload,
+                                    snsItem.value,
+                                    snsItem.setIsChanged
+                                  )
+                                }
+                              >
+                                <EditItemView>
+                                  <EditItemText>EDIT</EditItemText>
+                                </EditItemView>
+                              </ItemTouchable>
+                            ) : (
+                              <AddItemView>
+                                <AddItemText>EDIT</AddItemText>
+                              </AddItemView>
+                            )
+                          ) : snsItem.isChanged ? (
                             <ItemTouchable
                               onPress={() =>
                                 onPressSendSns(
@@ -958,155 +981,141 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
                               }
                             >
                               <EditItemView>
-                                <EditItemText>EDIT</EditItemText>
+                                <EditItemText>ADD</EditItemText>
                               </EditItemView>
                             </ItemTouchable>
                           ) : (
                             <AddItemView>
-                              <AddItemText>EDIT</AddItemText>
+                              <AddItemText>ADD</AddItemText>
                             </AddItemView>
-                          )
-                        ) : snsItem.isChanged ? (
-                          <ItemTouchable
-                            onPress={() =>
-                              onPressSendSns(
-                                snsItem.payload,
-                                snsItem.value,
-                                snsItem.setIsChanged
-                              )
-                            }
-                          >
-                            <EditItemView>
-                              <EditItemText>ADD</EditItemText>
-                            </EditItemView>
-                          </ItemTouchable>
-                        ) : (
-                          <AddItemView>
-                            <AddItemText>ADD</AddItemText>
-                          </AddItemView>
-                        )}
-                      </Item>
-                    ))}
-                  </AddListContainer>
-                </ScrollView>
-              </EditView>
-            </KeyboardAvoidingView>
-            <Footer>
-              <EditBackBtn>
-                <EditBtn onPress={() => setSnsAddMode(false)}>
-                  <AddText>DONE</AddText>
-                </EditBtn>
-              </EditBackBtn>
-            </Footer>
-          </>
-        )}
-      </Modal>
-      <MapModal visible={mapModalOpen} transparent={true}>
-        {mapLoading ? (
-          <LoadingContainer>
-            <Loader />
-          </LoadingContainer>
-        ) : (
-          <>
-            <MapView
-              provider={PROVIDER_GOOGLE}
-              style={{
-                borderRadius: 5,
-                height: constants.height
-              }}
-              initialRegion={region}
-              showsUserLocation={true}
-              showsMyLocationButton={false}
-              onMapReady={onMapReady}
-              loadingEnabled={true}
-              rotateEnabled={false}
-              onRegionChangeComplete={onRegionChangeComplete}
-              customMapStyle={
-                isDarkMode && isDarkMode === true ? darkSendMode : lightSendMode
-              }
-            />
-            <MarkerContainer pointerEvents="none">
-              <Ionicons
-                name={Platform.OS === "ios" ? "ios-pin" : "md-pin"}
-                size={40}
-                color={"#3897f0"}
-                pointerEvents="none"
-                containerStyle={{ marginBottom: 30 }}
+                          )}
+                        </Item>
+                      ))}
+                    </AddListContainer>
+                  </ScrollView>
+                </EditView>
+              </KeyboardAvoidingView>
+              <Footer>
+                <EditBackBtn>
+                  <EditBtn onPress={() => setSnsAddMode(false)}>
+                    <AddText>DONE</AddText>
+                  </EditBtn>
+                </EditBackBtn>
+              </Footer>
+            </>
+          )}
+        </Modal>
+        <MapModal visible={mapModalOpen} transparent={true}>
+          {mapLoading ? (
+            <LoadingContainer>
+              <Loader />
+            </LoadingContainer>
+          ) : (
+            <>
+              <MapView
+                provider={PROVIDER_GOOGLE}
+                style={{
+                  borderRadius: 5,
+                  height: constants.height
+                }}
+                initialRegion={region}
+                showsUserLocation={true}
+                showsMyLocationButton={false}
+                onMapReady={onMapReady}
+                loadingEnabled={true}
+                rotateEnabled={false}
+                onRegionChangeComplete={onRegionChangeComplete}
+                customMapStyle={
+                  isDarkMode && isDarkMode === true
+                    ? darkSendMode
+                    : lightSendMode
+                }
               />
-            </MarkerContainer>
-            <Footer>
-              <MapBackBtn>
-                <MapBtn onPress={() => closeMapModal()}>
-                  <MapText>BACK</MapText>
-                </MapBtn>
-              </MapBackBtn>
-              <MapBackBtn>
-                <MapBtn
-                  onPress={() =>
-                    onSendLocation(region.latitude, region.longitude)
-                  }
-                >
-                  <MapText>SEND</MapText>
-                </MapBtn>
-              </MapBackBtn>
-            </Footer>
-          </>
-        )}
-      </MapModal>
-      <ChatContainer>
-        {Platform.OS === "android" ? (
-          <SafeAreaView style={{ flex: 1 }}>
-            <GiftedChat
-              messages={messages}
-              onSend={messages => onSend(messages)}
-              user={{
-                _id: userId
-              }}
-              renderCustomView={renderCustomView}
-              renderActions={renderActions}
-              //@ts-ignore
-              renderTime={messageFooter}
-              renderAvatar={renderAvatar}
-              isAnimated
-              scrollToBottom
-              alwaysShowSend
-              submitOnReturn
-              placeholderTextColor={"#999"}
-              renderInputToolbar={renderInputToolbar}
-              renderSend={renderSend}
-              // keyboardShouldPersistTaps={"handled"}
-              minInputToolbarHeight={45}
-            />
-            <KeyboardSpacer />
-          </SafeAreaView>
-        ) : (
-          <SafeAreaView style={{ flex: 1 }}>
-            <GiftedChat
-              messages={messages}
-              onSend={messages => onSend(messages)}
-              user={{
-                _id: userId
-              }}
-              renderCustomView={renderCustomView}
-              renderActions={renderActions}
-              //@ts-ignore
-              renderTime={messageFooter}
-              renderAvatar={renderAvatar}
-              isAnimated
-              scrollToBottom
-              alwaysShowSend
-              submitOnReturn
-              placeholderTextColor={"#999"}
-              renderInputToolbar={renderInputToolbar}
-              renderSend={renderSend}
-              // keyboardShouldPersistTaps={"handled"}
-              minInputToolbarHeight={45}
-            />
-          </SafeAreaView>
-        )}
-      </ChatContainer>
-    </>
-  );
+              <MarkerContainer pointerEvents="none">
+                <Ionicons
+                  name={Platform.OS === "ios" ? "ios-pin" : "md-pin"}
+                  size={40}
+                  color={"#3897f0"}
+                  pointerEvents="none"
+                  containerStyle={{ marginBottom: 30 }}
+                />
+              </MarkerContainer>
+              <Footer>
+                <MapBackBtn>
+                  <MapBtn onPress={() => closeMapModal()}>
+                    <MapText>BACK</MapText>
+                  </MapBtn>
+                </MapBackBtn>
+                <MapBackBtn>
+                  <MapBtn
+                    onPress={() =>
+                      onSendLocation(region.latitude, region.longitude)
+                    }
+                  >
+                    <MapText>SEND</MapText>
+                  </MapBtn>
+                </MapBackBtn>
+              </Footer>
+            </>
+          )}
+        </MapModal>
+        <ChatContainer>
+          {Platform.OS === "android" ? (
+            <SafeAreaView style={{ flex: 1 }}>
+              <GiftedChat
+                messages={messages}
+                onSend={messages => onSend(messages)}
+                user={{
+                  _id: userId
+                }}
+                renderCustomView={renderCustomView}
+                renderActions={renderActions}
+                //@ts-ignore
+                renderTime={messageFooter}
+                renderAvatar={renderAvatar}
+                isAnimated
+                scrollToBottom
+                alwaysShowSend
+                submitOnReturn
+                placeholderTextColor={"#999"}
+                renderInputToolbar={renderInputToolbar}
+                renderSend={renderSend}
+                // keyboardShouldPersistTaps={"handled"}
+                minInputToolbarHeight={45}
+              />
+              <KeyboardSpacer />
+            </SafeAreaView>
+          ) : (
+            <SafeAreaView style={{ flex: 1 }}>
+              <GiftedChat
+                messages={messages}
+                onSend={messages => onSend(messages)}
+                user={{
+                  _id: userId
+                }}
+                renderCustomView={renderCustomView}
+                renderActions={renderActions}
+                //@ts-ignore
+                renderTime={messageFooter}
+                renderAvatar={renderAvatar}
+                isAnimated
+                scrollToBottom
+                alwaysShowSend
+                submitOnReturn
+                placeholderTextColor={"#999"}
+                renderInputToolbar={renderInputToolbar}
+                renderSend={renderSend}
+                // keyboardShouldPersistTaps={"handled"}
+                minInputToolbarHeight={45}
+              />
+            </SafeAreaView>
+          )}
+        </ChatContainer>
+      </>
+    );
+  } else {
+    return;
+  }
 };
 
 export default ChatPresenter;

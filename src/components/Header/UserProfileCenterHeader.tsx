@@ -4,8 +4,9 @@ import { useMe } from "../../context/MeContext";
 import PhotoLink from "../PhotoLink";
 
 export default withNavigation(({ navigation }) => {
-  const { me } = useMe();
+  const { me, loading: meLoading } = useMe();
   if (
+    !meLoading &&
     navigation.state.params &&
     navigation.state.params.uuid === me.user.profile.uuid &&
     navigation.state.routeName === "AvatarList"

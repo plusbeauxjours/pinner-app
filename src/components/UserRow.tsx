@@ -163,10 +163,10 @@ const UserRow: React.FC<IProps> = ({
     9: require(`../Images/thumbnails/earth9.png`)
   };
   const isDarkMode = useTheme();
-  const { me } = useMe();
+  const { me, loading: meLoading } = useMe();
   const [lastMessage, setLastMessage] = useState<string>("");
   const [hasUnreadMessage, setHasUnreadMessage] = useState<boolean>(false);
-  if (match) {
+  if (match && !meLoading) {
     get_last_chat_messages(match.id).then(message => {
       setLastMessage(message);
     });

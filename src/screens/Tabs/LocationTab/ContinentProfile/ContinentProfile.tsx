@@ -84,7 +84,7 @@ const NoPhotoContainer = styled.View`
   background-color: ${props => props.theme.bgColor};
 `;
 export default withNavigation(({ navigation }) => {
-  const { me } = useMe();
+  const { me, loading: meLoading } = useMe();
   const isDarkMode = useTheme();
   const [continentCode, setContinentCode] = useState<string>(
     navigation.getParam("continentCode") ||
@@ -101,12 +101,12 @@ export default withNavigation(({ navigation }) => {
         cancelButtonIndex: 3,
         title: `Choose a reason for reporting this continent.`,
         showSeparators: true,
-       containerStyle: {
+        containerStyle: {
           backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-        marginBottom: 10
+          marginBottom: 10
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
@@ -146,12 +146,12 @@ export default withNavigation(({ navigation }) => {
         cancelButtonIndex: 1,
         showSeparators: true,
         title: `Are you sure to report this continent?`,
-       containerStyle: {
+        containerStyle: {
           backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-        marginBottom: 10
+          marginBottom: 10
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
@@ -213,7 +213,7 @@ export default withNavigation(({ navigation }) => {
     }
     return chunks;
   };
-  if (profileLoading) {
+  if (profileLoading || meLoading) {
     return (
       <LoaderContainer>
         <Loader />

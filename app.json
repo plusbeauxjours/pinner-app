@@ -37,7 +37,7 @@
       "usesAppleSignIn": true
     },
     "android": {
-      "versionCode": 5,
+      "versionCode": 7,
       "package": "pinner.plusbeauxjours",
       "permissions": [
         "ACCESS_COARSE_LOCATION",
