@@ -113,7 +113,7 @@ export default function App() {
   useEffect(() => {
     preLoad();
   }, []);
-  return loaded && client && isLoggedIn !== null && isDarkMode !== null ? (
+  return loaded && client && isDarkMode !== null ? (
     <ApolloHooksProvider client={client}>
       <ApolloProvider client={client}>
         <ThemeProvider isDarkMode={isDarkMode}>
