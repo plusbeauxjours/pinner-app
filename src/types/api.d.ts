@@ -772,6 +772,7 @@ export interface NearCities {
 export interface NearCitiesVariables {
   cityId: string;
   page?: number | null;
+  payload?: string | null;
 }
 
 /* tslint:disable */
@@ -1956,6 +1957,7 @@ export interface EditProfile_editProfile_user_profile {
   __typename: "ProfileType";
   id: string;
   uuid: any | null;
+  pushToken: string | null;
   bio: string | null;
   gender: ProfileGender | null;
   avatarUrl: string | null;
@@ -2239,6 +2241,7 @@ export interface UserProfile_userProfile_user_profile {
   __typename: "ProfileType";
   id: string;
   uuid: any | null;
+  pushToken: string | null;
   bio: string | null;
   gender: ProfileGender | null;
   avatarUrl: string | null;
