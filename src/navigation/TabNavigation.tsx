@@ -23,6 +23,12 @@ const TabBarComponent = props => <BottomTabBar {...props} />;
 
 export default createBottomTabNavigator(
   {
+    RequestCoffee: {
+      screen: stackFactory(RequestNavigation),
+      navigationOptions: {
+        tabBarIcon: ({ focused }) => <NavIcon focused={focused} name={"pin"} />
+      }
+    },
     Match: {
       screen: stackFactory(MatchNavigation),
       navigationOptions: ({ navigation }) => {
@@ -51,12 +57,6 @@ export default createBottomTabNavigator(
             />
           )
         };
-      }
-    },
-    RequestCoffee: {
-      screen: stackFactory(RequestNavigation),
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => <NavIcon focused={focused} name={"pin"} />
       }
     },
     Location: {

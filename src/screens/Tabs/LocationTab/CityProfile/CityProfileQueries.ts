@@ -61,8 +61,8 @@ export const GET_SAMENAME_CITIES = gql`
 `;
 
 export const NEAR_CITIES = gql`
-  query NearCities($cityId: String!, $page: Int) {
-    nearCities(cityId: $cityId, page: $page) {
+  query NearCities($cityId: String!, $page: Int, $payload: String) {
+    nearCities(cityId: $cityId, page: $page, payload: $payload) {
       page
       hasNextPage
       cities {
