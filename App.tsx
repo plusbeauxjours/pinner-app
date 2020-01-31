@@ -32,7 +32,7 @@ export default function App() {
   const [isDarkMode, setDarkMode] = useState<boolean>(null);
 
   Sentry.init({
-    dsn: "YOUR DSN HERE",
+    dsn: "https://9ea37b5166e44d5fbbda4ee206f998a2@sentry.io/2113636",
     enableInExpoDevelopment: true,
     debug: true
   });
