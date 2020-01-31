@@ -1,5 +1,16 @@
 {
   "expo": {
+    "hooks": {
+      "postPublish": [{
+        "file": "sentry-expo/upload-sourcemaps",
+        "config": {
+          "organization": "plusbeauxjours-nn",
+          "project": "pinner-app",
+          "authToken": "327df1dd1f434e2f9dd920a97aeb11834909c43b23f84a0486f686e7fc8fe698",
+          "url": "https://9ea37b5166e44d5fbbda4ee206f998a2@sentry.io/2113636"
+        }
+      }]
+    },
     "name": "Pinner",
     "slug": "pinner-plusbeauxjours",
     "privacy": "public",

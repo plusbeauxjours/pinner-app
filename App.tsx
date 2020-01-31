@@ -23,12 +23,19 @@ import NavController from "./src/components/NavController";
 import { createUploadLink } from "apollo-upload-client";
 import { setContext } from "apollo-link-context";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
+import * as Sentry from "sentry-expo";
 
 export default function App() {
   const [client, setClient] = useState<any>(null);
   const [loaded, setLoaded] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(null);
   const [isDarkMode, setDarkMode] = useState<boolean>(null);
+
+  Sentry.init({
+    dsn: "YOUR DSN HERE",
+    enableInExpoDevelopment: true,
+    debug: true
+  });
   const preLoad = async () => {
     if (isDarkMode) {
       StatusBar.setBarStyle("light-content", true);
