@@ -37,7 +37,9 @@ export default function App() {
     enableInExpoDevelopment: true,
     debug: true
   });
-  Sentry.setRelease(Constants.manifest.revisionId);
+  Sentry.setRelease(
+    Constants.manifest.revisionId ? Constants.manifest.revisionId : ""
+  );
 
   const preLoad = async () => {
     if (isDarkMode) {
@@ -95,7 +97,8 @@ export default function App() {
         const token = await AsyncStorage.getItem("jwt");
         return {
           headers: {
-            authorization: `JWT ${token || ""}`
+            ...headers,
+            authorization: token ? `JWT ${token}` : ""
           }
         };
       });
