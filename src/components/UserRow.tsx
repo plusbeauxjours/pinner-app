@@ -405,7 +405,11 @@ const UserRow: React.FC<IProps> = ({
             </Touchable>
             <Touchable>
               <HeaderUserContainer>
-                <Bold>{city.cityName}</Bold>
+                <Bold>
+                  {city.cityName.length > 18
+                    ? city.cityName.substring(0, 18) + "..."
+                    : city.cityName}
+                </Bold>
                 <Location>{city.country.countryName}</Location>
               </HeaderUserContainer>
             </Touchable>

@@ -29,18 +29,19 @@ import Constants from "expo-constants";
 export default function App() {
   const [client, setClient] = useState<any>(null);
   const [loaded, setLoaded] = useState<boolean>(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(null);
-  const [isDarkMode, setDarkMode] = useState<boolean>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isDarkMode, setDarkMode] = useState<boolean>(true);
 
-  Sentry.init({
-    dsn: "https://9ea37b5166e44d5fbbda4ee206f998a2@sentry.io/2113636",
-    enableInExpoDevelopment: true,
-    debug: true
-  });
-  Sentry.setRelease(
-    Constants.manifest.revisionId ? Constants.manifest.revisionId : ""
-  );
-
+  const setSentry = () => {
+    Sentry.init({
+      dsn: "https://9ea37b5166e44d5fbbda4ee206f998a2@sentry.io/2113636",
+      enableInExpoDevelopment: true,
+      debug: true
+    });
+    Sentry.setRelease(
+      Constants.manifest.revisionId ? Constants.manifest.revisionId : ""
+    );
+  };
   const loadResourcesAsync = async () => {
     await Font.loadAsync({
       ...Ionicons.font,
@@ -83,13 +84,18 @@ export default function App() {
   const handleFinishLoading = () => {
     setLoaded(true);
   };
-
-  const makeClient = async () => {
-    if (isDarkMode) {
-      StatusBar.setBarStyle("light-content", true);
-    } else {
-      StatusBar.setBarStyle("dark-content", true);
+  const setStatusBar = () => {
+    try {
+      if (isDarkMode) {
+        StatusBar.setBarStyle("light-content", true);
+      } else {
+        StatusBar.setBarStyle("dark-content", true);
+      }
+    } catch (e) {
+      console.log(e);
     }
+  };
+  const makeClient = async () => {
     try {
       const cache = new InMemoryCache();
       // await AsyncStorage.clear();
@@ -117,26 +123,24 @@ export default function App() {
         cache,
         ...apolloClientOptions
       });
-      const isDarkMode = (await AsyncStorage.getItem("isDarkMode"))
-        ? (await AsyncStorage.getItem("isDarkMode")) === "true"
-        : true;
+      setClient(client);
       const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
-      if (isLoggedIn === null || isLoggedIn === "false") {
-        setIsLoggedIn(false);
-      } else {
+      if (isLoggedIn === "true") {
         setIsLoggedIn(true);
       }
-      setClient(client);
-      setDarkMode(isDarkMode);
+      const isDarkMode = await AsyncStorage.getItem("isDarkMode");
+      if (isDarkMode === "false") {
+        setDarkMode(false);
+      }
     } catch (e) {
       console.log(e);
     }
   };
 
   useEffect(() => {
-    makeClient();
+    setSentry(), makeClient(), setStatusBar();
   }, []);
-  return loaded && client && isDarkMode !== null ? (
+  return loaded && client ? (
     <ApolloHooksProvider client={client}>
       <ApolloProvider client={client}>
         <ThemeProvider isDarkMode={isDarkMode}>
