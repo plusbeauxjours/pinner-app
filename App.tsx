@@ -131,14 +131,18 @@ export default function App() {
       const isDarkMode = await AsyncStorage.getItem("isDarkMode");
       if (isDarkMode === "false") {
         setDarkMode(false);
+      } else {
+        setDarkMode(true);
       }
     } catch (e) {
       console.log(e);
     }
+    setSentry();
+    setStatusBar();
   };
 
   useEffect(() => {
-    setSentry(), makeClient(), setStatusBar();
+    makeClient();
   }, []);
   return loaded && client ? (
     <ApolloHooksProvider client={client}>
