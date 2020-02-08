@@ -28,8 +28,8 @@ import Constants from "expo-constants";
 
 export default function App() {
   const [client, setClient] = useState<any>(null);
-  const [loaded, setLoaded] = useState<boolean>(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoadingComplete, setLoadingComplete] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(null);
   const [isDarkMode, setDarkMode] = useState<boolean>(true);
 
   const setSentry = () => {
@@ -81,8 +81,8 @@ export default function App() {
   const handleLoadingError = error => {
     console.warn(error);
   };
-  const handleFinishLoading = () => {
-    setLoaded(true);
+  const handleFinishLoading = setLoadingComplete => {
+    setLoadingComplete(true);
   };
   const setStatusBar = () => {
     try {
@@ -127,9 +127,11 @@ export default function App() {
       const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
       if (isLoggedIn === "true") {
         setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
       }
       const isDarkMode = await AsyncStorage.getItem("isDarkMode");
-      if (isDarkMode === "false") {
+      if (isDarkMode === "false" || isDarkMode === null) {
         setDarkMode(false);
       } else {
         setDarkMode(true);
@@ -140,11 +142,19 @@ export default function App() {
     setSentry();
     setStatusBar();
   };
-
   useEffect(() => {
     makeClient();
   }, []);
-  return loaded && client ? (
+  if (!isLoadingComplete || !client) {
+    return (
+      <AppLoading
+        startAsync={loadResourcesAsync}
+        onError={handleLoadingError}
+        onFinish={() => handleFinishLoading(setLoadingComplete)}
+      />
+    );
+  }
+  return (
     <ApolloHooksProvider client={client}>
       <ApolloProvider client={client}>
         <ThemeProvider isDarkMode={isDarkMode}>
@@ -156,11 +166,5 @@ export default function App() {
         </ThemeProvider>
       </ApolloProvider>
     </ApolloHooksProvider>
-  ) : (
-    <AppLoading
-      startAsync={loadResourcesAsync}
-      onError={handleLoadingError}
-      onFinish={handleFinishLoading}
-    />
   );
 }
