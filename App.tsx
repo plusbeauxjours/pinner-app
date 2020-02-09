@@ -81,8 +81,16 @@ export default function App() {
   const handleLoadingError = error => {
     console.warn(error);
   };
-  const handleFinishLoading = setLoadingComplete => {
+  const handleFinishLoading = () => {
     setLoadingComplete(true);
+  };
+  const setIsDarkMode = async () => {
+    const isDarkMode = await AsyncStorage.getItem("isDarkMode");
+    if (isDarkMode === "false" || isDarkMode === null) {
+      setDarkMode(false);
+    } else {
+      setDarkMode(true);
+    }
   };
   const setStatusBar = () => {
     try {
@@ -130,41 +138,37 @@ export default function App() {
       } else {
         setIsLoggedIn(false);
       }
-      const isDarkMode = await AsyncStorage.getItem("isDarkMode");
-      if (isDarkMode === "false" || isDarkMode === null) {
-        setDarkMode(false);
-      } else {
-        setDarkMode(true);
-      }
     } catch (e) {
       console.log(e);
     }
-    setSentry();
-    setStatusBar();
   };
   useEffect(() => {
     makeClient();
+    setSentry();
+    setStatusBar();
+    setIsDarkMode();
   }, []);
-  if (!isLoadingComplete || !client) {
+  if (isLoadingComplete && client) {
+    return (
+      <ApolloHooksProvider client={client}>
+        <ApolloProvider client={client}>
+          <ThemeProvider isDarkMode={isDarkMode}>
+            <AuthProvider isLoggedIn={isLoggedIn} client={client}>
+              <ActionSheetProvider>
+                <NavController />
+              </ActionSheetProvider>
+            </AuthProvider>
+          </ThemeProvider>
+        </ApolloProvider>
+      </ApolloHooksProvider>
+    );
+  } else {
     return (
       <AppLoading
         startAsync={loadResourcesAsync}
         onError={handleLoadingError}
-        onFinish={() => handleFinishLoading(setLoadingComplete)}
+        onFinish={() => handleFinishLoading()}
       />
     );
   }
-  return (
-    <ApolloHooksProvider client={client}>
-      <ApolloProvider client={client}>
-        <ThemeProvider isDarkMode={isDarkMode}>
-          <AuthProvider isLoggedIn={isLoggedIn} client={client}>
-            <ActionSheetProvider>
-              <NavController />
-            </ActionSheetProvider>
-          </AuthProvider>
-        </ThemeProvider>
-      </ApolloProvider>
-    </ApolloHooksProvider>
-  );
 }
