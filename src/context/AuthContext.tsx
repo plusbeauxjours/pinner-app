@@ -1,7 +1,13 @@
 import React, { createContext, useContext, useState } from "react";
 import { AsyncStorage } from "react-native";
 
-export const AuthContext = createContext(null);
+interface IContextProps {
+  isLoggedIn: boolean;
+  logUserIn: (token: any) => Promise<void>;
+  logUserOut: () => Promise<void>;
+}
+
+export const AuthContext = createContext({} as IContextProps);
 
 export const AuthProvider = ({
   isLoggedIn: isLoggedInProp,
@@ -9,10 +15,11 @@ export const AuthProvider = ({
   client
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(isLoggedInProp);
+
   const logUserIn = async (token: any) => {
     try {
-      await AsyncStorage.setItem("isLoggedIn", "true");
       await AsyncStorage.setItem("jwt", token.token);
+      await AsyncStorage.setItem("isLoggedIn", "true");
       await setIsLoggedIn(true);
     } catch (e) {
       console.log(e);
@@ -42,7 +49,7 @@ export const useIsLoggedIn = () => {
   return isLoggedIn;
 };
 export const useLogIn = () => {
-  const { logUserIn, isLoggedIn } = useContext(AuthContext);
+  const { logUserIn } = useContext(AuthContext);
   return logUserIn;
 };
 export const useLogOut = () => {

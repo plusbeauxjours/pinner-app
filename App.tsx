@@ -29,7 +29,7 @@ import Constants from "expo-constants";
 export default function App() {
   const [client, setClient] = useState<any>(null);
   const [isLoadingComplete, setLoadingComplete] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isDarkMode, setDarkMode] = useState<boolean>(true);
 
   const setSentry = () => {
@@ -41,48 +41,6 @@ export default function App() {
     Sentry.setRelease(
       Constants.manifest.revisionId ? Constants.manifest.revisionId : ""
     );
-  };
-  const loadResourcesAsync = async () => {
-    await Font.loadAsync({
-      ...Ionicons.font,
-      ...AntDesign.font,
-      ...FontAwesome.font,
-      ...SimpleLineIcons.font["arrow-up"],
-      ...SimpleLineIcons.font["arrow-down"],
-      ...Entypo.font["pin"]
-    }),
-      await Asset.loadAsync([
-        require("./assets/splash.png"),
-        require("./assets/logo.png"),
-        require("./assets/phone_second.png"),
-        require("./assets/email_second.png"),
-        require("./assets/instagram.png"),
-        require("./assets/phone.png"),
-        require("./assets/email.png"),
-        require("./assets/kakao.png"),
-        require("./assets/facebook.png"),
-        require("./assets/youtube.png"),
-        require("./assets/twitter.png"),
-        require("./assets/telegram.png"),
-        require("./assets/snapchat.png"),
-        require("./assets/line.png"),
-        require("./assets/wechat.png"),
-        require("./assets/kik.png"),
-        require("./assets/vk.png"),
-        require("./assets/whatsapp.png"),
-        require("./assets/behance.png"),
-        require("./assets/linkedin.png"),
-        require("./assets/pinterest.png"),
-        require("./assets/vine.png"),
-        require("./assets/tumblr.png"),
-        require("./assets/tumblr.png")
-      ]);
-  };
-  const handleLoadingError = error => {
-    console.warn(error);
-  };
-  const handleFinishLoading = () => {
-    setLoadingComplete(true);
   };
   const setIsDarkMode = async () => {
     const isDarkMode = await AsyncStorage.getItem("isDarkMode");
@@ -128,19 +86,60 @@ export default function App() {
       });
       const client = new ApolloClient({
         link: authLink.concat(httpLink),
-        cache,
-        ...apolloClientOptions
+        cache
       });
-      setClient(client);
       const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
-      if (isLoggedIn === "true") {
-        setIsLoggedIn(true);
-      } else {
+      if (isLoggedIn === null || isLoggedIn === "false") {
         setIsLoggedIn(false);
+      } else {
+        setIsLoggedIn(true);
       }
+      setClient(client);
     } catch (e) {
       console.log(e);
     }
+  };
+  const loadResourcesAsync = async () => {
+    await Font.loadAsync({
+      ...Ionicons.font,
+      ...AntDesign.font,
+      ...FontAwesome.font,
+      ...SimpleLineIcons.font["arrow-up"],
+      ...SimpleLineIcons.font["arrow-down"],
+      ...Entypo.font["pin"]
+    }),
+      await Asset.loadAsync([
+        require("./assets/splash.png"),
+        require("./assets/logo.png"),
+        require("./assets/phone_second.png"),
+        require("./assets/email_second.png"),
+        require("./assets/instagram.png"),
+        require("./assets/phone.png"),
+        require("./assets/email.png"),
+        require("./assets/kakao.png"),
+        require("./assets/facebook.png"),
+        require("./assets/youtube.png"),
+        require("./assets/twitter.png"),
+        require("./assets/telegram.png"),
+        require("./assets/snapchat.png"),
+        require("./assets/line.png"),
+        require("./assets/wechat.png"),
+        require("./assets/kik.png"),
+        require("./assets/vk.png"),
+        require("./assets/whatsapp.png"),
+        require("./assets/behance.png"),
+        require("./assets/linkedin.png"),
+        require("./assets/pinterest.png"),
+        require("./assets/vine.png"),
+        require("./assets/tumblr.png"),
+        require("./assets/tumblr.png")
+      ]);
+  };
+  const handleLoadingError = error => {
+    console.warn(error);
+  };
+  const handleFinishLoading = () => {
+    setLoadingComplete(true);
   };
   useEffect(() => {
     makeClient();
@@ -148,7 +147,7 @@ export default function App() {
     setStatusBar();
     setIsDarkMode();
   }, []);
-  if (isLoadingComplete && client) {
+  if (isLoadingComplete && client && isLoggedIn !== null) {
     return (
       <ApolloHooksProvider client={client}>
         <ApolloProvider client={client}>
