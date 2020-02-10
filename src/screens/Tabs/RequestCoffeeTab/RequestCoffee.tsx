@@ -616,7 +616,7 @@ export default ({ navigation }) => {
             }
           ]
         );
-      } else if (Platform.OS !== "ios" && status === "denied") {
+      } else if (Platform.OS === "android" && status === "denied") {
         Alert.alert(
           "Permission Denied",
           "To enable location, tap Open Settings, then tap on Permissions, then tap on Location, and finally tap on Allow only while using the app.",
@@ -671,11 +671,11 @@ export default ({ navigation }) => {
             currentCountryCode: address.storableLocation.countryCode
           }
         });
-        await AsyncStorage.setItem("cityId", address.storableLocation.cityId);
-        await AsyncStorage.setItem(
-          "countryCode",
-          address.storableLocation.countryCode
-        );
+        // await AsyncStorage.setItem("cityId", address.storableLocation.cityId);
+        // await AsyncStorage.setItem(
+        //   "countryCode",
+        //   address.storableLocation.countryCode
+        // );
       }
     } catch (e) {
       console.log(e);
@@ -706,7 +706,7 @@ export default ({ navigation }) => {
           }
           onBackdropPress={() => setNationalityModalOpen(false)}
           onBackButtonPress={() =>
-            Platform.OS !== "ios" && setNationalityModalOpen(false)
+            Platform.OS === "android" && setNationalityModalOpen(false)
           }
           propagateSwipe={true}
           scrollHorizontal={true}
@@ -743,7 +743,7 @@ export default ({ navigation }) => {
           }
           onBackdropPress={() => setResidenceModalOpen(false)}
           onBackButtonPress={() =>
-            Platform.OS !== "ios" && setResidenceModalOpen(false)
+            Platform.OS === "android" && setResidenceModalOpen(false)
           }
           propagateSwipe={true}
           scrollHorizontal={true}

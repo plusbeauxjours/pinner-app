@@ -207,7 +207,7 @@ export default ({ navigation }) => {
             }
           ]
         );
-      } else if (Platform.OS !== "ios" && locationStatus === "denied") {
+      } else if (Platform.OS === "android" && locationStatus === "denied") {
         Alert.alert(
           "Permission Denied",
           "To enable location, tap Open Settings, then tap on Permissions, then tap on Location, and finally tap on Allow only while using the app.",
@@ -261,7 +261,7 @@ export default ({ navigation }) => {
           }
         ]
       );
-    } else if (Platform.OS !== "ios" && notificationStatus === "denied") {
+    } else if (Platform.OS === "android" && notificationStatus === "denied") {
       Alert.alert(
         "Permission Denied",
         "To enable notification, tap Open Settings, then tap on Notifications, and finally tap on Show notifications.",
@@ -315,11 +315,11 @@ export default ({ navigation }) => {
             currentCountryCode: address.storableLocation.countryCode
           }
         });
-        await AsyncStorage.setItem("cityId", address.storableLocation.cityId);
-        await AsyncStorage.setItem(
-          "countryCode",
-          address.storableLocation.countryCode
-        );
+        // await AsyncStorage.setItem("cityId", address.storableLocation.cityId);
+        // await AsyncStorage.setItem(
+        //   "countryCode",
+        //   address.storableLocation.countryCode
+        // );
       }
     } catch (e) {
       console.log(e);

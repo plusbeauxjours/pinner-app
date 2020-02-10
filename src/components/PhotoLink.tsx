@@ -201,7 +201,7 @@ export default withNavigation(({ navigation }) => {
           }
         ]
       );
-    } else if (Platform.OS !== "ios" && status === "denied") {
+    } else if (Platform.OS === "android" && status === "denied") {
       Alert.alert(
         "Permission Denied",
         "To enable photo library, tap Open Settings, then tap on Permissions, then tap on Storage which is on Deniedand, and finally tap on Allow.",

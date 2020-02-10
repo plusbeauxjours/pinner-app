@@ -517,7 +517,7 @@ class ChatContainer extends React.Component<IProps, IState> {
             }
           ]
         );
-      } else if (Platform.OS !== "ios" && status === "denied") {
+      } else if (Platform.OS === "android" && status === "denied") {
         Alert.alert(
           "Permission Denied",
           "To enable location, tap Open Settings, then tap on Permissions, then tap on Location, and finally tap on Allow only while using the app.",
@@ -588,11 +588,11 @@ class ChatContainer extends React.Component<IProps, IState> {
             currentCountryCode: address.storableLocation.countryCode
           }
         });
-        await AsyncStorage.setItem("cityId", address.storableLocation.cityId);
-        await AsyncStorage.setItem(
-          "countryCode",
-          address.storableLocation.countryCode
-        );
+        // await AsyncStorage.setItem("cityId", address.storableLocation.cityId);
+        // await AsyncStorage.setItem(
+        //   "countryCode",
+        //   address.storableLocation.countryCode
+        // );
       }
     } catch (e) {
       console.log(e);

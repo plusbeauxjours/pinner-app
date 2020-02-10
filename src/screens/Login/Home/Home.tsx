@@ -291,48 +291,48 @@ export default ({ navigation }) => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
     const { locationServicesEnabled } = await Location.getProviderStatusAsync();
     if (locationServicesEnabled) {
-      if (Platform.OS === "ios" && status === "denied") {
-        Alert.alert(
-          "Permission Denied",
-          "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
-          [
-            {
-              text: "Cancel",
-              style: "cancel"
-            },
-            {
-              text: "Open Settings",
-              onPress: () => {
-                Linking.openURL("app-settings:"), setLoading(false);
+      if (status === "denied") {
+        if (Platform.OS === "ios") {
+          Alert.alert(
+            "Permission Denied",
+            "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
+            [
+              {
+                text: "Cancel",
+                style: "cancel"
+              },
+              {
+                text: "Open Settings",
+                onPress: () => {
+                  Linking.openURL("app-settings:"), setLoading(false);
+                }
               }
-            }
-          ]
-        );
-      } else if (Platform.OS !== "ios" && status === "denied") {
-        Alert.alert(
-          "Permission Denied",
-          "To enable location, tap Open Settings, then tap on Permissions, then tap on Location, and finally tap on Allow only while using the app.",
-          [
-            { text: "Cancel", style: "cancel" },
-            {
-              text: "Open Settings",
-              onPress: () => {
-                const pkg = Constants.manifest.releaseChannel
-                  ? Constants.manifest.android.package
-                  : "host.exp.exponent";
-                IntentLauncher.startActivityAsync(
-                  IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
-                  { data: "package:" + pkg }
-                ),
-                  setLoading(false);
+            ]
+          );
+        } else if (Platform.OS === "android") {
+          Alert.alert(
+            "Permission Denied",
+            "To enable location, tap Open Settings, then tap on Permissions, then tap on Location, and finally tap on Allow only while using the app.",
+            [
+              { text: "Cancel", style: "cancel" },
+              {
+                text: "Open Settings",
+                onPress: () => {
+                  const pkg = Constants.manifest.releaseChannel
+                    ? Constants.manifest.android.package
+                    : "host.exp.exponent";
+                  IntentLauncher.startActivityAsync(
+                    IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    { data: "package:" + pkg }
+                  ),
+                    setLoading(false);
+                }
               }
-            }
-          ]
-        );
+            ]
+          );
+        }
       } else if (status === "granted") {
-        const position = await Location.getCurrentPositionAsync({
-          timeout: 5000
-        });
+        const position = await Location.getCurrentPositionAsync();
         handleGeoSuccess(position);
       } else {
         return;
@@ -352,7 +352,7 @@ export default ({ navigation }) => {
         backdropColor={isDarkMode ? "#161616" : "#EFEFEF"}
         onBackdropPress={() => setApproachModalOpen(false)}
         onBackButtonPress={() =>
-          Platform.OS !== "ios" && setApproachModalOpen(false)
+          Platform.OS === "android" && setApproachModalOpen(false)
         }
         onModalHide={() => {
           setVerificationKey(""), setModalMode("phoneApproach");

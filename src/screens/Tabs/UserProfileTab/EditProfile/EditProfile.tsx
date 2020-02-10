@@ -705,7 +705,7 @@ export default ({ navigation }) => {
           backdropColor={theme ? "#161616" : "#EFEFEF"}
           onBackdropPress={() => closeEditPhoneModalOpen()}
           onBackButtonPress={() =>
-            Platform.OS !== "ios" && closeEditPhoneModalOpen()
+            Platform.OS === "android" && closeEditPhoneModalOpen()
           }
           propagateSwipe={true}
           scrollHorizontal={true}
@@ -810,7 +810,7 @@ export default ({ navigation }) => {
           backdropColor={theme ? "#161616" : "#EFEFEF"}
           onBackdropPress={() => closeDeleteModalOpen()}
           onBackButtonPress={() =>
-            Platform.OS !== "ios" && closeDeleteModalOpen()
+            Platform.OS === "android" && closeDeleteModalOpen()
           }
           propagateSwipe={true}
           scrollHorizontal={true}
@@ -860,7 +860,7 @@ export default ({ navigation }) => {
           backdropColor={theme ? "#161616" : "#EFEFEF"}
           onBackdropPress={() => closeEditEmailModalOpen()}
           onBackButtonPress={() =>
-            Platform.OS !== "ios" && closeEditEmailModalOpen()
+            Platform.OS === "android" && closeEditEmailModalOpen()
           }
           propagateSwipe={true}
           scrollHorizontal={true}

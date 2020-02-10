@@ -301,7 +301,7 @@ export default withNavigation(({ navigation }) => {
             isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
           }
           onBackdropPress={() => setModalOpen(false)}
-          onBackButtonPress={() => Platform.OS !== "ios" && setModalOpen(false)}
+          onBackButtonPress={() => Platform.OS === "android" && setModalOpen(false)}
           propagateSwipe={true}
           scrollHorizontal={true}
           backdropOpacity={0.9}

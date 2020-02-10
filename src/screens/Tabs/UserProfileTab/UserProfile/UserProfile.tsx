@@ -715,7 +715,7 @@ export default ({ navigation }) => {
           }
           onBackdropPress={() => setAvatarModalOpen(false)}
           onBackButtonPress={() =>
-            Platform.OS !== "ios" && setAvatarModalOpen(false)
+            Platform.OS === "android" && setAvatarModalOpen(false)
           }
           propagateSwipe={true}
           scrollHorizontal={true}
@@ -763,7 +763,7 @@ export default ({ navigation }) => {
           onBackButtonPress={() => {
             setSearch(""),
               setIsCalendarMode(false),
-              Platform.OS !== "ios" && setAddTripModalOpen(false);
+              Platform.OS === "android" && setAddTripModalOpen(false);
           }}
           onModalHide={() => {
             setSearch(""), setIsCalendarMode(false), setAddTripModalOpen(false);
@@ -973,7 +973,7 @@ export default ({ navigation }) => {
           onBackButtonPress={() => {
             setSearch(""),
               setIsCalendarMode(false),
-              Platform.OS !== "ios" && setEditTripModalOpen(false);
+              Platform.OS === "android" && setEditTripModalOpen(false);
           }}
           onModalHide={() => {
             setSearch(""),
@@ -1181,7 +1181,7 @@ export default ({ navigation }) => {
           }
           onBackdropPress={() => setCoffeeModalOpen(false)}
           onBackButtonPress={() =>
-            Platform.OS !== "ios" && setCoffeeModalOpen(false)
+            Platform.OS === "android" && setCoffeeModalOpen(false)
           }
           propagateSwipe={true}
           scrollHorizontal={true}

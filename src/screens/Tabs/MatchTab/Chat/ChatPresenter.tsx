@@ -762,7 +762,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
             snsAddMode ? setSnsAddMode(false) : closeSnsModal()
           }
           onBackButtonPress={() =>
-            Platform.OS !== "ios" && snsAddMode
+            Platform.OS === "android" && snsAddMode
               ? setSnsAddMode(false)
               : closeSnsModal()
           }

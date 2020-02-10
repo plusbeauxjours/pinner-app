@@ -147,7 +147,7 @@ const Search = ({ navigation }) => {
           isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
         }
         onBackdropPress={() => setModalOpen(false)}
-        onBackButtonPress={() => Platform.OS !== "ios" && setModalOpen(false)}
+        onBackButtonPress={() => Platform.OS === "android" && setModalOpen(false)}
         onModalHide={() => setSearch("")}
         propagateSwipe={true}
         scrollHorizontal={true}

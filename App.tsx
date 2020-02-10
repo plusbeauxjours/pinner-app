@@ -42,14 +42,6 @@ export default function App() {
       Constants.manifest.revisionId ? Constants.manifest.revisionId : ""
     );
   };
-  const setIsDarkMode = async () => {
-    const isDarkMode = await AsyncStorage.getItem("isDarkMode");
-    if (isDarkMode === "false" || isDarkMode === null) {
-      setDarkMode(false);
-    } else {
-      setDarkMode(true);
-    }
-  };
   const setStatusBar = () => {
     try {
       if (isDarkMode) {
@@ -72,10 +64,9 @@ export default function App() {
       const API_SERVER = "https://pinner-backend.herokuapp.com/graphql";
       // const API_SERVER = "http://localhost:8000/graphql";
       const httpLink = createUploadLink({
-        uri: API_SERVER,
-        fetch
+        uri: API_SERVER as string
       });
-      const authLink = setContext(async (_, { headers }) => {
+      const authLink = setContext(async (_: any, { headers }: any) => {
         const token = await AsyncStorage.getItem("jwt");
         return {
           headers: {
@@ -86,13 +77,20 @@ export default function App() {
       });
       const client = new ApolloClient({
         link: authLink.concat(httpLink),
-        cache
+        cache,
+        ...apolloClientOptions
       });
       const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
       if (isLoggedIn === null || isLoggedIn === "false") {
         setIsLoggedIn(false);
       } else {
         setIsLoggedIn(true);
+      }
+      const isDarkMode = await AsyncStorage.getItem("isDarkMode");
+      if (isDarkMode === null || isDarkMode === "false") {
+        setDarkMode(false);
+      } else {
+        setDarkMode(true);
       }
       setClient(client);
     } catch (e) {
@@ -107,33 +105,33 @@ export default function App() {
       ...SimpleLineIcons.font["arrow-up"],
       ...SimpleLineIcons.font["arrow-down"],
       ...Entypo.font["pin"]
-    }),
-      await Asset.loadAsync([
-        require("./assets/splash.png"),
-        require("./assets/logo.png"),
-        require("./assets/phone_second.png"),
-        require("./assets/email_second.png"),
-        require("./assets/instagram.png"),
-        require("./assets/phone.png"),
-        require("./assets/email.png"),
-        require("./assets/kakao.png"),
-        require("./assets/facebook.png"),
-        require("./assets/youtube.png"),
-        require("./assets/twitter.png"),
-        require("./assets/telegram.png"),
-        require("./assets/snapchat.png"),
-        require("./assets/line.png"),
-        require("./assets/wechat.png"),
-        require("./assets/kik.png"),
-        require("./assets/vk.png"),
-        require("./assets/whatsapp.png"),
-        require("./assets/behance.png"),
-        require("./assets/linkedin.png"),
-        require("./assets/pinterest.png"),
-        require("./assets/vine.png"),
-        require("./assets/tumblr.png"),
-        require("./assets/tumblr.png")
-      ]);
+    });
+    await Asset.loadAsync([
+      require("./assets/splash.png"),
+      require("./assets/logo.png"),
+      require("./assets/phone_second.png"),
+      require("./assets/email_second.png"),
+      require("./assets/instagram.png"),
+      require("./assets/phone.png"),
+      require("./assets/email.png"),
+      require("./assets/kakao.png"),
+      require("./assets/facebook.png"),
+      require("./assets/youtube.png"),
+      require("./assets/twitter.png"),
+      require("./assets/telegram.png"),
+      require("./assets/snapchat.png"),
+      require("./assets/line.png"),
+      require("./assets/wechat.png"),
+      require("./assets/kik.png"),
+      require("./assets/vk.png"),
+      require("./assets/whatsapp.png"),
+      require("./assets/behance.png"),
+      require("./assets/linkedin.png"),
+      require("./assets/pinterest.png"),
+      require("./assets/vine.png"),
+      require("./assets/tumblr.png"),
+      require("./assets/tumblr.png")
+    ]);
   };
   const handleLoadingError = error => {
     console.warn(error);
@@ -145,19 +143,18 @@ export default function App() {
     makeClient();
     setSentry();
     setStatusBar();
-    setIsDarkMode();
   }, []);
-  if (isLoadingComplete && client && isLoggedIn !== null) {
+  if (isLoadingComplete && client !== null) {
     return (
       <ApolloHooksProvider client={client}>
         <ApolloProvider client={client}>
-          <ThemeProvider isDarkMode={isDarkMode}>
-            <AuthProvider isLoggedIn={isLoggedIn} client={client}>
+          <AuthProvider isLoggedIn={isLoggedIn} client={client}>
+            <ThemeProvider isDarkMode={isDarkMode}>
               <ActionSheetProvider>
                 <NavController />
               </ActionSheetProvider>
-            </AuthProvider>
-          </ThemeProvider>
+            </ThemeProvider>
+          </AuthProvider>
         </ApolloProvider>
       </ApolloHooksProvider>
     );

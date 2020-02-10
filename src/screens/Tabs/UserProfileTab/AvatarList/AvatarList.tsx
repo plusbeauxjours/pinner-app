@@ -309,7 +309,7 @@ export default ({ navigation }) => {
                 closeModal();
               }}
               onBackButtonPress={async () => {
-                Platform.OS !== "ios" &&
+                Platform.OS === "android" &&
                   (await ScreenOrientation.lockAsync(
                     ScreenOrientation.OrientationLock.PORTRAIT_UP
                   ));
