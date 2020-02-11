@@ -155,7 +155,7 @@ interface IProps {
 }
 export default ({ navigation }) => {
   const logIn = useLogIn();
-  const { me, laoding: meLoading } = useMe();
+  const { me, loading: meLoading } = useMe();
   const logOut = useLogOut();
   const isDarkMode = useTheme();
   const { theme, toggleTheme } = useTheme();

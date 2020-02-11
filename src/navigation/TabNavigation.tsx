@@ -8,6 +8,7 @@ import LocationNavigation from "./LocationNavigation";
 import UserProfileNavigation from "./UserProfileNavigation";
 import RequestNavigation from "./RequestNavigation";
 import { useTheme } from "../context/ThemeContext";
+import Test from "../screens/Tabs/UserProfileTab/Test/index";
 
 const stackFactory = initialRoute =>
   createStackNavigator({
@@ -23,6 +24,7 @@ const TabBarComponent = props => <BottomTabBar {...props} />;
 
 export default createBottomTabNavigator(
   {
+    Test,
     Match: {
       screen: stackFactory(MatchNavigation),
       navigationOptions: ({ navigation }) => {
