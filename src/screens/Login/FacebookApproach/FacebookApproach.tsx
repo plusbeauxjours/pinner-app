@@ -83,7 +83,7 @@ export default ({ cityId, countryCode }) => {
         });
         await logIn(facebookConnect);
         await toast(`Welcome ${first_name}!`);
-        await setLoading(false);
+        setLoading(false);
       } else {
         // type === 'cancel'
         setLoading(false);
