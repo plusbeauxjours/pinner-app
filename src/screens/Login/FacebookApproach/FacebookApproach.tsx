@@ -83,14 +83,9 @@ export default ({ cityId, countryCode }) => {
         });
         await logIn(facebookConnect);
         await toast(`Welcome ${first_name}!`);
-        setLoading(false);
-      } else {
-        // type === 'cancel'
-        setLoading(false);
       }
     } catch ({ message }) {
       console.log(`Facebook Login Error: ${message}`);
-      setLoading(false);
     } finally {
       setLoading(false);
     }

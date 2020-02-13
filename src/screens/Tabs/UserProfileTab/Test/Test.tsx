@@ -17,17 +17,18 @@ const View = styled.View`
 const Text = styled.Text``;
 
 export default ({ navigation }) => {
-  const [getDarkMode, setGetDarkMode] = useState(null);
-  const [getToken, setGetToken] = useState(null);
-  const [getIsLoggedIn, setGetIsLoggedIn] = useState(null);
-  const nani = async () => {
-    const getDarkMode = await AsyncStorage.getItem("isDarkMode");
-    setGetDarkMode(getDarkMode);
-    const getToken = await AsyncStorage.getItem("jwt");
-    setGetToken(getToken);
-    const getIsLoggedIn = await AsyncStorage.getItem("isLoggedIn");
-    setGetIsLoggedIn(getIsLoggedIn);
-  };
+  // const [getDarkMode, setGetDarkMode] = useState(null);
+  // const [getToken, setGetToken] = useState(null);
+  // const [getIsLoggedIn, setGetIsLoggedIn] = useState(null);
+  // const nani = async () => {
+  //   const getDarkMode = await AsyncStorage.getItem("isDarkMode");
+  //   setGetDarkMode(getDarkMode);
+  //   const getToken = await AsyncStorage.getItem("jwt");
+  //   setGetToken(getToken);
+  //   const getIsLoggedIn = await AsyncStorage.getItem("isLoggedIn");
+  //   setGetIsLoggedIn(getIsLoggedIn);
+  // };
+
   // const askPermission = async () => {
   //   const { status: locationStatus } = await Permissions.askAsync(
   //     Permissions.LOCATION
@@ -90,15 +91,15 @@ export default ({ navigation }) => {
   // useEffect(() => {
   //   askPermission();
   // }, []);
-  useEffect(() => {
-    nani();
-  }, []);
-  console.log(getDarkMode);
-  console.log(getToken);
-  console.log(getIsLoggedIn);
+  // useEffect(() => {
+  //   nani();
+  // }, []);
+  // console.log(getDarkMode);
+  // console.log(getToken);
+  // console.log(getIsLoggedIn);
   return (
     <View>
-      <Text>
+      {/* <Text>
         {getDarkMode
           ? `getDarkMode${getDarkMode}`
           : "getDarkMode NOOOONONONONNOONO"}
@@ -110,7 +111,7 @@ export default ({ navigation }) => {
         {getIsLoggedIn
           ? `getIsLoggedIn${getIsLoggedIn}`
           : "getIsLoggedIn NOOOONONONONNOONO"}
-      </Text>
+      </Text> */}
       <Text>hahiahaihi</Text>
     </View>
   );
