@@ -29,7 +29,7 @@ import Constants from "expo-constants";
 export default function App() {
   const [client, setClient] = useState<any>(null);
   const [isLoadingComplete, setLoadingComplete] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(null);
   const [isDarkMode, setDarkMode] = useState<boolean>(true);
 
   const setSentry = () => {
@@ -144,7 +144,7 @@ export default function App() {
     setSentry();
     setStatusBar();
   }, []);
-  if (isLoadingComplete && client !== null) {
+  if (isLoadingComplete && client !== null && isLoggedIn !== null) {
     return (
       <ApolloHooksProvider client={client}>
         <ApolloProvider client={client}>

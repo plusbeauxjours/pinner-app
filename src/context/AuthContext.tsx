@@ -14,7 +14,9 @@ export const AuthProvider = ({
   children,
   client
 }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(isLoggedInProp);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
+    isLoggedInProp || false
+  );
 
   const logUserIn = async (token: any) => {
     try {

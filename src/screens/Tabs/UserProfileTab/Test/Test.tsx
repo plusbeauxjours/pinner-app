@@ -112,7 +112,7 @@ export default ({ navigation }) => {
           ? `getIsLoggedIn${getIsLoggedIn}`
           : "getIsLoggedIn NOOOONONONONNOONO"}
       </Text> */}
-      <Text>hahiahaihi</Text>
+      <Text>TEST0542</Text>
     </View>
   );
 };
