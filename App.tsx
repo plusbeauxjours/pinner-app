@@ -10,7 +10,7 @@ import {
 import * as Font from "expo-font";
 import { Asset } from "expo-asset";
 import { persistCache } from "apollo-cache-persist";
-import { ApolloClient } from "apollo-boost";
+import { ApolloClient } from "apollo-client";
 import apolloClientOptions from "./apollo";
 import { InMemoryCache } from "apollo-cache-inmemory";
 
@@ -56,6 +56,14 @@ export default function App() {
   const makeClient = async () => {
     try {
       const cache = new InMemoryCache();
+      // cache.writeData({
+      //   data: {
+      //     jwt: "",
+      //     isLoggedIn: "",
+      //     isDarkMode: "",
+      //     cityId: ""
+      //   }
+      // });
       // await AsyncStorage.clear();
       await persistCache({
         cache,
@@ -63,10 +71,10 @@ export default function App() {
       });
       const API_SERVER = "https://pinner-backend.herokuapp.com/graphql";
       // const API_SERVER = "http://localhost:8000/graphql";
-      const httpLink = createUploadLink({
+      let httpLink = createUploadLink({
         uri: API_SERVER as string
       });
-      const authLink = setContext(async (_: any, { headers }: any) => {
+      let authLink = setContext(async (_: any, { headers }: any) => {
         const token = await AsyncStorage.getItem("jwt");
         return {
           headers: {

@@ -1,16 +1,14 @@
 {
   "expo": {
     "hooks": {
-      "postPublish": [
-        {
-          "file": "sentry-expo/upload-sourcemaps",
-          "config": {
-            "organization": "plusbeauxjours-nn",
-            "project": "pinner-app",
-            "authToken": "327df1dd1f434e2f9dd920a97aeb11834909c43b23f84a0486f686e7fc8fe698"
-          }
+      "postPublish": [{
+        "file": "sentry-expo/upload-sourcemaps",
+        "config": {
+          "organization": "plusbeauxjours-nn",
+          "project": "pinner-app",
+          "authToken": "327df1dd1f434e2f9dd920a97aeb11834909c43b23f84a0486f686e7fc8fe698"
         }
-      ]
+      }]
     },
     "name": "Pinner",
     "slug": "pinner-plusbeauxjours",
@@ -21,7 +19,7 @@
       "ios",
       "android"
     ],
-    "version": "1.0.10",
+    "version": "1.0.11",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -49,7 +47,7 @@
       "usesAppleSignIn": true
     },
     "android": {
-      "versionCode": 8,
+      "versionCode": 9,
       "package": "pinner.plusbeauxjours",
       "permissions": [
         "ACCESS_COARSE_LOCATION",
