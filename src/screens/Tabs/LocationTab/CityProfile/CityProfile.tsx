@@ -46,6 +46,8 @@ const Container = styled.View`
   padding: 0 15px 0 15px;
 `;
 
+const MapContainer = styled.View``;
+
 const Text = styled.Text`
   color: ${props => props.theme.color};
 `;
@@ -301,7 +303,9 @@ export default withNavigation(({ navigation }) => {
             isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
           }
           onBackdropPress={() => setModalOpen(false)}
-          onBackButtonPress={() => Platform.OS === "android" && setModalOpen(false)}
+          onBackButtonPress={() =>
+            Platform.OS === "android" && setModalOpen(false)
+          }
           propagateSwipe={true}
           scrollHorizontal={true}
           backdropOpacity={0.9}
@@ -332,7 +336,7 @@ export default withNavigation(({ navigation }) => {
             {city && (
               <View>
                 {mapOpen ? (
-                  <Touchable>
+                  <MapContainer>
                     <MapView
                       provider={PROVIDER_GOOGLE}
                       style={{
@@ -352,7 +356,7 @@ export default withNavigation(({ navigation }) => {
                         isDarkMode && isDarkMode === true ? darkMode : lightMode
                       }
                     />
-                  </Touchable>
+                  </MapContainer>
                 ) : (
                   <Touchable onPress={() => setMapOpen(true)}>
                     {city.cityPhoto ? (
