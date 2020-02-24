@@ -520,9 +520,9 @@ export default withNavigation(({ navigation }) => {
             {coffees && coffees.length !== 0 && (
               <Item>
                 {coffees.length === 1 ? (
-                  <Title>PINNER NOW</Title>
+                  <Title>PIN NOW</Title>
                 ) : (
-                  <Title>PINNERS NOW</Title>
+                  <Title>PINS NOW</Title>
                 )}
                 <UserContainer>
                   <Swiper
@@ -569,9 +569,9 @@ export default withNavigation(({ navigation }) => {
             {usersBefore && usersBefore.length !== 0 && (
               <Item>
                 {usersBefore.length === 1 ? (
-                  <Title>USER BEFORE</Title>
+                  <Title>USER who is in {city.cityName}, BEFORE</Title>
                 ) : (
-                  <Title>USERS BEFORE</Title>
+                  <Title>USERS who is in {city.cityName}, BEFORE</Title>
                 )}
                 <UserContainer>
                   <Swiper
@@ -623,9 +623,9 @@ export default withNavigation(({ navigation }) => {
             {usersNow && usersNow.length !== 0 && (
               <Item>
                 {usersNow.length === 1 ? (
-                  <Title>USER NOW</Title>
+                  <Title>USER who is in {city.cityName}, NOW</Title>
                 ) : (
-                  <Title>USERS NOW</Title>
+                  <Title>USERS who is in {city.cityName}, NOW</Title>
                 )}
                 {usersNow.map((user: any, index: any) => (
                   <Touchable

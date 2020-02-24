@@ -58,3 +58,43 @@ export const GET_COUNTRIES = gql`
   }
   ${COUNTRY_FRAGMENT}
 `;
+
+export const GET_RESIDENCE_USERS = gql`
+  query GetResidenceUsers($countryCode: String!) {
+    getResidenceUsers(countryCode: $countryCode) {
+      users {
+        id
+        uuid
+        username
+        avatarUrl
+        appAvatarUrl
+        currentCity {
+          cityName
+          country {
+            countryName
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_NATIONALITY_USERS = gql`
+  query GetNationalityUsers($countryCode: String!) {
+    getNationalityUsers(countryCode: $countryCode) {
+      users {
+        id
+        uuid
+        username
+        avatarUrl
+        appAvatarUrl
+        currentCity {
+          cityName
+          country {
+            countryName
+          }
+        }
+      }
+    }
+  }
+`;
