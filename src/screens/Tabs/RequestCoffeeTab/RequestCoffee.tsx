@@ -69,29 +69,9 @@ const AccordionTitle = styled.Text`
   font-size: 8px;
   color: ${props => props.theme.color};
 `;
-const Container = styled.View`
-  flex: 1;
-  background-color: ${props => props.theme.bgColor};
-  padding: 0 15px 0 15px;
-`;
+
 const CoffeeContainer = styled.View``;
-const UserContainer = styled.View``;
-const UserColumn = styled.View``;
-const Item = styled.View`
-  flex: 1;
-  margin-bottom: 25px;
-`;
-const Title = styled.Text`
-  font-weight: 500;
-  margin-left: 5px;
-  font-size: 18px;
-  margin-bottom: 5px;
-  color: ${props => props.theme.color};
-`;
-const Touchable = styled.TouchableOpacity``;
-const ScrollView = styled.ScrollView`
-  background-color: ${props => props.theme.bgColor};
-`;
+
 const LoaderContainer = styled.View`
   flex: 1;
   background-color: ${props => props.theme.bgColor};
@@ -119,12 +99,6 @@ const CoffeeSubmitContainer = styled.View`
 const CoffeeSubmitBtn = styled.TouchableOpacity`
   justify-content: center;
   padding: 0 5px 5px 5px;
-`;
-const EmptyContainer = styled.View`
-  margin-bottom: 30px;
-`;
-const SmallEmptyContainer = styled.View`
-  margin-bottom: 15px;
 `;
 
 export default ({ navigation }) => {
@@ -447,30 +421,6 @@ export default ({ navigation }) => {
     );
   };
 
-  ///////// Query /////////
-  const {
-    data: { getTripCities: { coffeeId = null, trip = null } = {} } = {},
-    loading: tripLoading,
-    refetch: tripRefetch
-  } = useQuery<GetTripCities>(GET_TRIP_CITIES);
-  const {
-    data: { recommendUsers: { users: recommendUsers = null } = {} } = {},
-    loading: recommendUserLoading,
-    refetch: recommendUserRefetch
-  } = useQuery<RecommendUsers, RecommendUsersVariables>(RECOMMEND_USERS, {
-    fetchPolicy: "no-cache"
-  });
-  const {
-    data: {
-      recommendLocations: { cities: recommendLocations = null } = {}
-    } = {},
-    loading: recommendLocationLoading,
-    refetch: recommendLocationRefetch
-  } = useQuery<RecommendLocations, RecommendLocationsVariables>(
-    RECOMMEND_LOCATIONS,
-    { fetchPolicy: "no-cache" }
-  );
-  ////////////////////////////
   ///////// Mutation /////////
   const [reportLocationFn, { loading: reportLocationLoading }] = useMutation<
     ReportLocation,
@@ -574,33 +524,7 @@ export default ({ navigation }) => {
       delay: 0
     });
   };
-  const sortByDate = (a, b) => {
-    let date1 = new Date(a.startDate);
-    let date2 = new Date(b.startDate);
-    return date1 < date2 ? 1 : date2 < date1 ? -1 : 0;
-  };
 
-  const onRefresh = async () => {
-    try {
-      setRefreshing(true);
-      await recommendUserRefetch();
-      await recommendLocationRefetch();
-      await tripRefetch();
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setRefreshing(false);
-    }
-  };
-  const chunk = arr => {
-    let chunks = [],
-      i = 0,
-      n = arr.length;
-    while (i < n) {
-      chunks.push(arr.slice(i, (i += 3)));
-    }
-    return chunks;
-  };
   const onSelectNationality = async (country: any) => {
     try {
       const {
@@ -667,36 +591,7 @@ export default ({ navigation }) => {
       console.log(e);
     }
   };
-  const renderHeader = (section, _, isActive) => {
-    if (section.city.hasCoffee) {
-      return (
-        <AccordionTitleContainer>
-          <AccordionTitle>
-            {section.city.cityName}
-            {section.city.country.countryEmoji}
-          </AccordionTitle>
-          <AccordionIcon>
-            <SimpleLineIcons
-              size={10}
-              color={"#999"}
-              name={isActive ? "arrow-up" : "arrow-down"}
-            />
-          </AccordionIcon>
-        </AccordionTitleContainer>
-      );
-    }
-  };
-  const renderContent = section => (
-    <CoffeeContainer>
-      <CollapsibleAccordion
-        cityId={section.city.cityId}
-        refreshing={refreshing}
-      />
-    </CoffeeContainer>
-  );
-  const onChange = (activeSections: any) => {
-    setActiveSections(activeSections.includes(undefined) ? [] : activeSections);
-  };
+
   const askPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
     const { locationServicesEnabled } = await Location.getProviderStatusAsync();
@@ -780,12 +675,7 @@ export default ({ navigation }) => {
       console.log(e);
     }
   };
-  if (
-    recommendUserLoading ||
-    recommendLocationLoading ||
-    meLoading ||
-    tripLoading
-  ) {
+  if (meLoading) {
     return (
       <LoaderContainer>
         <Loader />
@@ -868,130 +758,7 @@ export default ({ navigation }) => {
             }}
           />
         </Modal>
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              tintColor={"#999"}
-            />
-          }
-          showsVerticalScrollIndicator={false}
-        >
-          <Container>
-            {trip.filter(r => r.city.hasCoffee).length !== 0 ? (
-              <>
-                <Accordion
-                  sections={trip.filter(r => r.city.hasCoffee).sort(sortByDate)}
-                  expandMultiple={true}
-                  activeSections={activeSections}
-                  renderHeader={renderHeader}
-                  renderContent={renderContent}
-                  onChange={onChange}
-                  touchableComponent={TouchableOpacity}
-                />
-                <EmptyContainer />
-              </>
-            ) : (
-              <SmallEmptyContainer />
-            )}
-            {recommendUsers && recommendUsers.length !== 0 && (
-              <Item>
-                <Title>RECOMMEND USERS</Title>
-                <UserContainer>
-                  <Swiper
-                    style={{ height: recommendUsers.length < 3 ? 90 : 135 }}
-                    paginationStyle={{ bottom: -15 }}
-                    loop={false}
-                    index={0}
-                    dotColor={isDarkMode ? "#424242" : "#DADADA"}
-                    activeDotStyle={{
-                      backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",
-                      width: 10,
-                      height: 10,
-                      borderRadius: 5,
-                      marginLeft: 3,
-                      marginRight: 3,
-                      marginTop: 3,
-                      marginBottom: 3
-                    }}
-                  >
-                    {chunk(recommendUsers).map((users, index) => {
-                      return (
-                        <UserColumn key={index}>
-                          {users.map((user: any, index: any) => {
-                            return (
-                              <Touchable
-                                key={index}
-                                onPress={() =>
-                                  navigation.push("UserProfile", {
-                                    uuid: user.uuid,
-                                    isSelf: user.isSelf
-                                  })
-                                }
-                              >
-                                <UserRow user={user} type={"user"} />
-                              </Touchable>
-                            );
-                          })}
-                        </UserColumn>
-                      );
-                    })}
-                  </Swiper>
-                </UserContainer>
-              </Item>
-            )}
-            {recommendLocations && recommendLocations.length !== 0 && (
-              <Item>
-                <Title>RECOMMEND LOCATIONS</Title>
-                <UserContainer>
-                  <Swiper
-                    style={{ height: recommendLocations.length < 3 ? 90 : 135 }}
-                    paginationStyle={{ bottom: -15 }}
-                    loop={false}
-                    index={0}
-                    dotColor={isDarkMode ? "#424242" : "#DADADA"}
-                    activeDotStyle={{
-                      backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",
-                      width: 10,
-                      height: 10,
-                      borderRadius: 5,
-                      marginLeft: 3,
-                      marginRight: 3,
-                      marginTop: 3,
-                      marginBottom: 3
-                    }}
-                  >
-                    {chunk(recommendLocations).map((locations, index) => {
-                      return (
-                        <UserColumn key={index}>
-                          {locations.map((city: any, index: any) => {
-                            return (
-                              <Touchable
-                                key={index}
-                                onPress={() =>
-                                  navigation.push("CityProfileTabs", {
-                                    cityId: city.cityId,
-                                    countryCode: city.country.countryCode,
-                                    continentCode: countryData.find(
-                                      i => i.code === city.country.countryCode
-                                    ).continent
-                                  })
-                                }
-                              >
-                                <UserRow city={city} type={"nearCity"} />
-                              </Touchable>
-                            );
-                          })}
-                        </UserColumn>
-                      );
-                    })}
-                  </Swiper>
-                </UserContainer>
-              </Item>
-            )}
-          </Container>
-        </ScrollView>
+
         <Footer>
           {coffeeId ? (
             <CoffeeSubmitBtn

@@ -1,35 +1,5 @@
 import gql from "graphql-tag";
-import {
-  PROFILE_FRAGMENT,
-  COUNTRY_FRAGMENT,
-  CITY_FRAGMENT
-} from "../../../fragmentQueries";
-
-export const RECOMMEND_USERS = gql`
-  query RecommendUsers($page: Int) {
-    recommendUsers(page: $page) {
-      page
-      hasNextPage
-      users {
-        ...ProfileParts
-      }
-    }
-  }
-  ${PROFILE_FRAGMENT}
-`;
-
-export const RECOMMEND_LOCATIONS = gql`
-  query RecommendLocations($page: Int) {
-    recommendLocations(page: $page) {
-      page
-      hasNextPage
-      cities {
-        ...CityParts
-      }
-    }
-  }
-  ${CITY_FRAGMENT}
-`;
+import { COUNTRY_FRAGMENT } from "../../../fragmentQueries";
 
 export const REQUEST_COFFEE = gql`
   mutation RequestCoffee(
@@ -68,24 +38,4 @@ export const REQUEST_COFFEE = gql`
     }
   }
   ${COUNTRY_FRAGMENT}
-`;
-
-export const GET_TRIP_CITIES = gql`
-  query GetTripCities {
-    getTripCities {
-      coffeeId
-      trip {
-        id
-        startDate
-        city {
-          hasCoffee
-          cityId
-          cityName
-          country {
-            countryEmoji
-          }
-        }
-      }
-    }
-  }
 `;
