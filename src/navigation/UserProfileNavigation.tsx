@@ -22,6 +22,7 @@ import BlockedUsers from "../screens/Tabs/UserProfileTab/BlockedUsers";
 import constants from "../../constants";
 import UsersNationality from "../screens/Tabs/LocationTab/UsersNationality";
 import UsersResidence from "../screens/Tabs/LocationTab/UsersResidence";
+import UsersBefore from "../screens/Tabs/LocationTab/UsersBefore";
 
 export const CountryProfileTabs = createMaterialTopTabNavigator(
   {
@@ -178,6 +179,12 @@ export default createStackNavigator({
   },
   UsersResidence: {
     screen: UsersResidence,
+    navigationOptions: {
+      header: props => <BackCustomHeader />
+    }
+  },
+  UsersBefore: {
+    screen: UsersBefore,
     navigationOptions: {
       header: props => <BackCustomHeader />
     }

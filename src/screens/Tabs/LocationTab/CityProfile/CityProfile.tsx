@@ -584,7 +584,18 @@ export default withNavigation(({ navigation }) => {
                 ) : (
                   <TitleContainer>
                     <Title>USERS who are in {city.cityName}, BEFORE</Title>
-                    {usersBefore.length > 15 && <More>More</More>}
+                    {usersBefore.length > 15 && (
+                      <Touchable
+                        onPress={() =>
+                          navigation.push("UsersBefore", {
+                            cityId: city.cityId,
+                            payload: "APP"
+                          })
+                        }
+                      >
+                        <More>More</More>
+                      </Touchable>
+                    )}
                   </TitleContainer>
                 )}
                 <UserContainer>

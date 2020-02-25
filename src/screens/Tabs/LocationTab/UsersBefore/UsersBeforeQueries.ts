@@ -1,15 +1,29 @@
 import gql from "graphql-tag";
-import { CITY_FRAGMENT } from "../../../../fragmentQueries";
 
-export const FREQUENT_VISITS = gql`
-  query FrequentVisits($uuid: String!, $page: Int) {
-    frequentVisits(uuid: $uuid, page: $page) {
-      cities {
-        count
-        diff
-        ...CityParts
+export const CITY_USERS_BEFORE = gql`
+  query CityUsersBefore($cityId: String!, $payload: String) {
+    cityUsersBefore(cityId: $cityId, payload: $payload) {
+      page
+      hasNextPage
+      usersBefore {
+        naturalTime
+        actor {
+          profile {
+            id
+            uuid
+            username
+            avatarUrl
+            appAvatarUrl
+            isSelf
+            currentCity {
+              cityName
+              country {
+                countryName
+              }
+            }
+          }
+        }
       }
     }
   }
-  ${CITY_FRAGMENT}
 `;

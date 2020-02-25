@@ -951,94 +951,6 @@ export interface GetCountriesVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: GetResidenceUsers
-// ====================================================
-
-export interface GetResidenceUsers_getResidenceUsers_users_currentCity_country {
-  __typename: "CountryType";
-  countryName: string | null;
-}
-
-export interface GetResidenceUsers_getResidenceUsers_users_currentCity {
-  __typename: "CityType";
-  cityName: string | null;
-  country: GetResidenceUsers_getResidenceUsers_users_currentCity_country;
-}
-
-export interface GetResidenceUsers_getResidenceUsers_users {
-  __typename: "ProfileType";
-  id: string;
-  uuid: any | null;
-  username: string | null;
-  avatarUrl: string | null;
-  appAvatarUrl: string | null;
-  isSelf: boolean | null;
-  currentCity: GetResidenceUsers_getResidenceUsers_users_currentCity | null;
-}
-
-export interface GetResidenceUsers_getResidenceUsers {
-  __typename: "GetUserListResponse";
-  users: (GetResidenceUsers_getResidenceUsers_users | null)[] | null;
-}
-
-export interface GetResidenceUsers {
-  getResidenceUsers: GetResidenceUsers_getResidenceUsers;
-}
-
-export interface GetResidenceUsersVariables {
-  countryCode: string;
-  payload?: string | null;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL query operation: GetNationalityUsers
-// ====================================================
-
-export interface GetNationalityUsers_getNationalityUsers_users_currentCity_country {
-  __typename: "CountryType";
-  countryName: string | null;
-}
-
-export interface GetNationalityUsers_getNationalityUsers_users_currentCity {
-  __typename: "CityType";
-  cityName: string | null;
-  country: GetNationalityUsers_getNationalityUsers_users_currentCity_country;
-}
-
-export interface GetNationalityUsers_getNationalityUsers_users {
-  __typename: "ProfileType";
-  id: string;
-  uuid: any | null;
-  username: string | null;
-  avatarUrl: string | null;
-  appAvatarUrl: string | null;
-  isSelf: boolean | null;
-  currentCity: GetNationalityUsers_getNationalityUsers_users_currentCity | null;
-}
-
-export interface GetNationalityUsers_getNationalityUsers {
-  __typename: "GetUserListResponse";
-  users: (GetNationalityUsers_getNationalityUsers_users | null)[] | null;
-}
-
-export interface GetNationalityUsers {
-  getNationalityUsers: GetNationalityUsers_getNationalityUsers;
-}
-
-export interface GetNationalityUsersVariables {
-  countryCode: string;
-  payload?: string | null;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
 // GraphQL query operation: TripProfile
 // ====================================================
 
@@ -1149,6 +1061,151 @@ export interface TripProfileVariables {
   cityId: string;
   startDate: any;
   endDate: any;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: CityUsersBefore
+// ====================================================
+
+export interface CityUsersBefore_cityUsersBefore_usersBefore_actor_profile_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface CityUsersBefore_cityUsersBefore_usersBefore_actor_profile_currentCity {
+  __typename: "CityType";
+  cityName: string | null;
+  country: CityUsersBefore_cityUsersBefore_usersBefore_actor_profile_currentCity_country;
+}
+
+export interface CityUsersBefore_cityUsersBefore_usersBefore_actor_profile {
+  __typename: "ProfileType";
+  id: string;
+  uuid: any | null;
+  username: string | null;
+  avatarUrl: string | null;
+  appAvatarUrl: string | null;
+  isSelf: boolean | null;
+  currentCity: CityUsersBefore_cityUsersBefore_usersBefore_actor_profile_currentCity | null;
+}
+
+export interface CityUsersBefore_cityUsersBefore_usersBefore_actor {
+  __typename: "UserType";
+  profile: CityUsersBefore_cityUsersBefore_usersBefore_actor_profile | null;
+}
+
+export interface CityUsersBefore_cityUsersBefore_usersBefore {
+  __typename: "MoveNotificationType";
+  naturalTime: string | null;
+  actor: CityUsersBefore_cityUsersBefore_usersBefore_actor;
+}
+
+export interface CityUsersBefore_cityUsersBefore {
+  __typename: "usersBeforeResponse";
+  page: number | null;
+  hasNextPage: boolean | null;
+  usersBefore: (CityUsersBefore_cityUsersBefore_usersBefore | null)[] | null;
+}
+
+export interface CityUsersBefore {
+  cityUsersBefore: CityUsersBefore_cityUsersBefore;
+}
+
+export interface CityUsersBeforeVariables {
+  cityId: string;
+  payload?: string | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GetNationalityUsers
+// ====================================================
+
+export interface GetNationalityUsers_getNationalityUsers_users_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface GetNationalityUsers_getNationalityUsers_users_currentCity {
+  __typename: "CityType";
+  cityName: string | null;
+  country: GetNationalityUsers_getNationalityUsers_users_currentCity_country;
+}
+
+export interface GetNationalityUsers_getNationalityUsers_users {
+  __typename: "ProfileType";
+  id: string;
+  uuid: any | null;
+  username: string | null;
+  avatarUrl: string | null;
+  appAvatarUrl: string | null;
+  isSelf: boolean | null;
+  currentCity: GetNationalityUsers_getNationalityUsers_users_currentCity | null;
+}
+
+export interface GetNationalityUsers_getNationalityUsers {
+  __typename: "GetUserListResponse";
+  users: (GetNationalityUsers_getNationalityUsers_users | null)[] | null;
+}
+
+export interface GetNationalityUsers {
+  getNationalityUsers: GetNationalityUsers_getNationalityUsers;
+}
+
+export interface GetNationalityUsersVariables {
+  countryCode: string;
+  payload?: string | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GetResidenceUsers
+// ====================================================
+
+export interface GetResidenceUsers_getResidenceUsers_users_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface GetResidenceUsers_getResidenceUsers_users_currentCity {
+  __typename: "CityType";
+  cityName: string | null;
+  country: GetResidenceUsers_getResidenceUsers_users_currentCity_country;
+}
+
+export interface GetResidenceUsers_getResidenceUsers_users {
+  __typename: "ProfileType";
+  id: string;
+  uuid: any | null;
+  username: string | null;
+  avatarUrl: string | null;
+  appAvatarUrl: string | null;
+  isSelf: boolean | null;
+  currentCity: GetResidenceUsers_getResidenceUsers_users_currentCity | null;
+}
+
+export interface GetResidenceUsers_getResidenceUsers {
+  __typename: "GetUserListResponse";
+  users: (GetResidenceUsers_getResidenceUsers_users | null)[] | null;
+}
+
+export interface GetResidenceUsers {
+  getResidenceUsers: GetResidenceUsers_getResidenceUsers;
+}
+
+export interface GetResidenceUsersVariables {
+  countryCode: string;
+  payload?: string | null;
 }
 
 /* tslint:disable */
