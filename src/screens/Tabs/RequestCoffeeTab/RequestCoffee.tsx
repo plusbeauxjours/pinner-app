@@ -46,7 +46,7 @@ import constants from "../../../../constants";
 import Accordion from "react-native-collapsible/Accordion";
 import CollapsibleAccordion from "../../../components/CollapsibleAccordion";
 import { GET_TRIP_CITIES } from "./RequestCoffeeQueries";
-import { countries } from "../../../../countryData";
+import { countries as countryData } from "../../../../countryData";
 import { useReverseGeoCode } from "../../../hooks/useReverseGeoCode";
 import { useReversePlaceId } from "../../../hooks/useReversePlaceId";
 import axios from "axios";
@@ -362,6 +362,12 @@ export default ({ navigation }) => {
               }
             });
             if (requestCoffee.ok) {
+              const usersNow = [];
+              requestCoffee.profiles.map((profile: any) => {
+                if (!profile.isSelf) {
+                  usersNow.push(profile.pushToken);
+                }
+              });
               toast("Requested");
               return axios.post("https://exp.host/--/api/v2/push/send", {
                 to: usersNow,
@@ -387,6 +393,12 @@ export default ({ navigation }) => {
               }
             });
             if (requestCoffee.ok) {
+              const usersNow = [];
+              requestCoffee.profiles.map((profile: any) => {
+                if (!profile.isSelf) {
+                  usersNow.push(profile.pushToken);
+                }
+              });
               toast("Requested");
               return axios.post("https://exp.host/--/api/v2/push/send", {
                 to: usersNow,
@@ -412,6 +424,12 @@ export default ({ navigation }) => {
               }
             });
             if (requestCoffee.ok) {
+              const usersNow = [];
+              requestCoffee.profiles.map((profile: any) => {
+                if (!profile.isSelf) {
+                  usersNow.push(profile.pushToken);
+                }
+              });
               toast("Requested");
               return axios.post("https://exp.host/--/api/v2/push/send", {
                 to: usersNow,
@@ -598,6 +616,12 @@ export default ({ navigation }) => {
         }
       });
       if (requestCoffee.ok) {
+        const usersNow = [];
+        requestCoffee.profiles.map((profile: any) => {
+          if (!profile.isSelf) {
+            usersNow.push(profile.pushToken);
+          }
+        });
         toast("Requested");
         return axios.post("https://exp.host/--/api/v2/push/send", {
           to: usersNow,
@@ -625,6 +649,12 @@ export default ({ navigation }) => {
         }
       });
       if (requestCoffee.ok) {
+        const usersNow = [];
+        requestCoffee.profiles.map((profile: any) => {
+          if (!profile.isSelf) {
+            usersNow.push(profile.pushToken);
+          }
+        });
         toast("Requested");
         return axios.post("https://exp.host/--/api/v2/push/send", {
           to: usersNow,
@@ -943,7 +973,7 @@ export default ({ navigation }) => {
                                   navigation.push("CityProfileTabs", {
                                     cityId: city.cityId,
                                     countryCode: city.country.countryCode,
-                                    continentCode: countries.find(
+                                    continentCode: countryData.find(
                                       i => i.code === city.country.countryCode
                                     ).continent
                                   })

@@ -549,9 +549,15 @@ export default ({ navigation }) => {
       } = await addTripFn();
       setTripMarkedDates({});
       if (addTrip.ok) {
-        calculateDistanceFn();
-        tripRefetch();
-        toast("Trip added");
+        await calculateDistanceFn();
+        await tripRefetch();
+        await toast("Trip added");
+        navigation.push("CityProfileTabs", {
+          cityId: addTrip.moveNotification.city.cityId,
+          countryCode: addTrip.moveNotification.city.country.countryCode,
+          continentCode:
+            addTrip.moveNotification.city.country.continent.continentCode
+        });
       }
     } catch (e) {
       toast("Overlapping dates! Please check your trip dates.");
@@ -567,9 +573,15 @@ export default ({ navigation }) => {
       } = await editTripFn();
       setTripMarkedDates({});
       if (editTrip.ok) {
-        calculateDistanceFn();
-        tripRefetch();
-        toast("Trip edited");
+        await calculateDistanceFn();
+        await tripRefetch();
+        await toast("Trip edited");
+        navigation.push("CityProfileTabs", {
+          cityId: editTrip.moveNotification.city.cityId,
+          countryCode: editTrip.moveNotification.city.country.countryCode,
+          continentCode:
+            editTrip.moveNotification.city.country.continent.continentCode
+        });
       }
     } catch (e) {
       toast("Overlapping dates! Please check your trip dates.");

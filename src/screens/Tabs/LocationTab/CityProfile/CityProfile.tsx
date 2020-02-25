@@ -424,6 +424,55 @@ export default withNavigation(({ navigation }) => {
                 </LocationInfoContainer>
               </View>
             )}
+            {coffees && coffees.length !== 0 && (
+              <Item>
+                {coffees.length === 1 ? (
+                  <Title>PIN NOW</Title>
+                ) : (
+                  <Title>PINS NOW</Title>
+                )}
+                <UserContainer>
+                  <Swiper
+                    style={{ height: coffees.length < 3 ? 90 : 135 }}
+                    paginationStyle={{ bottom: -15 }}
+                    loop={false}
+                    index={0}
+                    dotColor={isDarkMode ? "#424242" : "#DADADA"}
+                    activeDotStyle={{
+                      backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",
+                      width: 10,
+                      height: 10,
+                      borderRadius: 5,
+                      marginLeft: 3,
+                      marginRight: 3,
+                      marginTop: 3,
+                      marginBottom: 3
+                    }}
+                  >
+                    {chunk(coffees).map((coffeeColumn, index: any) => {
+                      return (
+                        <UserColumn key={index}>
+                          {coffeeColumn.map((coffee: any, index: any) => {
+                            return (
+                              <Touchable
+                                key={index}
+                                onPress={() => onPress(coffee.uuid)}
+                              >
+                                <UserRow
+                                  key={coffee.id}
+                                  coffee={coffee}
+                                  type={"coffee"}
+                                />
+                              </Touchable>
+                            );
+                          })}
+                        </UserColumn>
+                      );
+                    })}
+                  </Swiper>
+                </UserContainer>
+              </Item>
+            )}
             {nearCities && nearCities.length !== 0 && (
               <Item>
                 <Title>NEAR CITIES</Title>
@@ -516,55 +565,6 @@ export default withNavigation(({ navigation }) => {
                                 }}
                               >
                                 <UserRow city={city} type={"nearCity"} />
-                              </Touchable>
-                            );
-                          })}
-                        </UserColumn>
-                      );
-                    })}
-                  </Swiper>
-                </UserContainer>
-              </Item>
-            )}
-            {coffees && coffees.length !== 0 && (
-              <Item>
-                {coffees.length === 1 ? (
-                  <Title>PIN NOW</Title>
-                ) : (
-                  <Title>PINS NOW</Title>
-                )}
-                <UserContainer>
-                  <Swiper
-                    style={{ height: coffees.length < 3 ? 90 : 135 }}
-                    paginationStyle={{ bottom: -15 }}
-                    loop={false}
-                    index={0}
-                    dotColor={isDarkMode ? "#424242" : "#DADADA"}
-                    activeDotStyle={{
-                      backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",
-                      width: 10,
-                      height: 10,
-                      borderRadius: 5,
-                      marginLeft: 3,
-                      marginRight: 3,
-                      marginTop: 3,
-                      marginBottom: 3
-                    }}
-                  >
-                    {chunk(coffees).map((coffeeColumn, index: any) => {
-                      return (
-                        <UserColumn key={index}>
-                          {coffeeColumn.map((coffee: any, index: any) => {
-                            return (
-                              <Touchable
-                                key={index}
-                                onPress={() => onPress(coffee.uuid)}
-                              >
-                                <UserRow
-                                  key={coffee.id}
-                                  coffee={coffee}
-                                  type={"coffee"}
-                                />
                               </Touchable>
                             );
                           })}
