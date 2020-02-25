@@ -229,7 +229,7 @@ export default withNavigation(({ navigation }) => {
     loading: profileLoading,
     refetch: profileRefetch
   } = useQuery<CityProfile, CityProfileVariables>(CITY_PROFILE, {
-    variables: { cityId, page: 1 }
+    variables: { cityId, page: 1, payload: "BOX" }
   });
   const {
     data: { nearCities: { cities: nearCities = null } = {} } = {},
@@ -571,7 +571,7 @@ export default withNavigation(({ navigation }) => {
                 {usersBefore.length === 1 ? (
                   <Title>USER who is in {city.cityName}, BEFORE</Title>
                 ) : (
-                  <Title>USERS who is in {city.cityName}, BEFORE</Title>
+                  <Title>USERS who are in {city.cityName}, BEFORE</Title>
                 )}
                 <UserContainer>
                   <Swiper
@@ -625,7 +625,7 @@ export default withNavigation(({ navigation }) => {
                 {usersNow.length === 1 ? (
                   <Title>USER who is in {city.cityName}, NOW</Title>
                 ) : (
-                  <Title>USERS who is in {city.cityName}, NOW</Title>
+                  <Title>USERS who are in {city.cityName}, NOW</Title>
                 )}
                 {usersNow.map((user: any, index: any) => (
                   <Touchable

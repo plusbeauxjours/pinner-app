@@ -15,7 +15,12 @@ import {
   SlackReportLocations,
   SlackReportLocationsVariables
 } from "../../../../types/api";
-import { COUNTRY_PROFILE, GET_COUNTRIES } from "./CountryProfileQueries";
+import {
+  COUNTRY_PROFILE,
+  GET_COUNTRIES,
+  GET_RESIDENCE_USERS,
+  GET_NATIONALITY_USERS
+} from "./CountryProfileQueries";
 import constants from "../../../../../constants";
 import { countries as countryData } from "../../../../../countryData";
 import { useTheme } from "../../../../context/ThemeContext";
@@ -26,6 +31,12 @@ import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { withNavigation } from "react-navigation";
 import { useMe } from "../../../../context/MeContext";
+import {
+  GetResidenceUsers,
+  GetResidenceUsersVariables,
+  GetNationalityUsers,
+  GetNationalityUsersVariables
+} from "../../../../types/api";
 
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -63,13 +74,24 @@ const Item = styled.View`
   flex: 1;
   margin-bottom: 25px;
 `;
+const TitleContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
 const Title = styled.Text`
   font-weight: 500;
   margin-left: 5px;
   font-size: 18px;
   margin-bottom: 5px;
-  text-transform: uppercase;
   color: ${props => props.theme.color};
+`;
+const CountryTitle = styled(Title)`
+  text-transform: uppercase;
+`;
+const More = styled.Text`
+  margin-left: 20px;
+  color: ${props => props.theme.greyColor};
 `;
 const Touchable = styled.TouchableOpacity``;
 
@@ -217,11 +239,33 @@ export default withNavigation(({ navigation }) => {
   } = useQuery<GetCountries, GetCountriesVariables>(GET_COUNTRIES, {
     variables: { countryCode }
   });
+  const {
+    data: { getResidenceUsers: { users: residenceUsers = null } = {} } = {},
+    loading: getResidenceUsersLoading,
+    refetch: getResidenceUsersRefetch
+  } = useQuery<GetResidenceUsers, GetResidenceUsersVariables>(
+    GET_RESIDENCE_USERS,
+    {
+      variables: { countryCode, payload: "BOX" }
+    }
+  );
+  const {
+    data: { getNationalityUsers: { users: nationalityUsers = null } = {} } = {},
+    loading: getNationalityUsersLoading,
+    refetch: getNationalityUsersRefetch
+  } = useQuery<GetNationalityUsers, GetNationalityUsersVariables>(
+    GET_NATIONALITY_USERS,
+    {
+      variables: { countryCode, payload: "BOX" }
+    }
+  );
   const onRefresh = async () => {
     try {
       setRefreshing(true);
       await profileRefetch();
       await countriesRefetch();
+      await getResidenceUsersRefetch();
+      await getNationalityUsersRefetch();
     } catch (e) {
       console.log(e);
     } finally {
@@ -323,9 +367,139 @@ export default withNavigation(({ navigation }) => {
               ) : null}
             </View>
           )}
+          {getResidenceUsersLoading && (
+            <LoaderContainer>
+              <Loader />
+            </LoaderContainer>
+          )}
+          {residenceUsers && residenceUsers.length !== 0 && (
+            <Item>
+              {residenceUsers.length === 1 ? (
+                <TitleContainer>
+                  <Title>USER who is living in {country.countryName}</Title>
+                  <More>More</More>
+                </TitleContainer>
+              ) : (
+                <TitleContainer>
+                  <Title>USERS who are living in {country.countryName}</Title>
+                  <More>More</More>
+                </TitleContainer>
+              )}
+              <UserContainer>
+                <Swiper
+                  style={{ height: residenceUsers.length < 3 ? 90 : 135 }}
+                  paginationStyle={{ bottom: -15 }}
+                  loop={false}
+                  index={0}
+                  dotColor={isDarkMode ? "#424242" : "#DADADA"}
+                  activeDotStyle={{
+                    backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",
+                    width: 10,
+                    height: 10,
+                    borderRadius: 5,
+                    marginLeft: 3,
+                    marginRight: 3,
+                    marginTop: 3,
+                    marginBottom: 3
+                  }}
+                >
+                  {chunk(residenceUsers).map((users, index: any) => {
+                    return (
+                      <UserColumn key={index}>
+                        {users.map((user: any, index: any) => {
+                          return (
+                            <Touchable
+                              key={index}
+                              onPress={() =>
+                                navigation.push("UserProfile", {
+                                  uuid: user.uuid,
+                                  isSelf: user.isSelf
+                                })
+                              }
+                            >
+                              <UserRow
+                                user={user}
+                                naturalTime={user.naturalTime}
+                                type={"userBefore"}
+                              />
+                            </Touchable>
+                          );
+                        })}
+                      </UserColumn>
+                    );
+                  })}
+                </Swiper>
+              </UserContainer>
+            </Item>
+          )}
+          {getNationalityUsersLoading && (
+            <LoaderContainer>
+              <Loader />
+            </LoaderContainer>
+          )}
+          {nationalityUsers && nationalityUsers.length !== 0 && (
+            <Item>
+              {nationalityUsers.length === 1 ? (
+                <TitleContainer>
+                  <Title>USER who is from {country.countryName}</Title>
+                  <More>More</More>
+                </TitleContainer>
+              ) : (
+                <TitleContainer>
+                  <Title>USERS who are from {country.countryName}</Title>
+                  <More>More</More>
+                </TitleContainer>
+              )}
+              <UserContainer>
+                <Swiper
+                  style={{ height: nationalityUsers.length < 3 ? 90 : 135 }}
+                  paginationStyle={{ bottom: -15 }}
+                  loop={false}
+                  index={0}
+                  dotColor={isDarkMode ? "#424242" : "#DADADA"}
+                  activeDotStyle={{
+                    backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",
+                    width: 10,
+                    height: 10,
+                    borderRadius: 5,
+                    marginLeft: 3,
+                    marginRight: 3,
+                    marginTop: 3,
+                    marginBottom: 3
+                  }}
+                >
+                  {chunk(nationalityUsers).map((users, index: any) => {
+                    return (
+                      <UserColumn key={index}>
+                        {users.map((user: any, index: any) => {
+                          return (
+                            <Touchable
+                              key={index}
+                              onPress={() =>
+                                navigation.push("UserProfile", {
+                                  uuid: user.uuid,
+                                  isSelf: user.isSelf
+                                })
+                              }
+                            >
+                              <UserRow
+                                user={user}
+                                naturalTime={user.naturalTime}
+                                type={"userBefore"}
+                              />
+                            </Touchable>
+                          );
+                        })}
+                      </UserColumn>
+                    );
+                  })}
+                </Swiper>
+              </UserContainer>
+            </Item>
+          )}
           {countries && countries.length !== 0 && (
             <Item>
-              <Title>{country.continent.continentName}</Title>
+              <CountryTitle>{country.continent.continentName}</CountryTitle>
               <UserContainer>
                 <Swiper
                   style={{ height: 135 }}

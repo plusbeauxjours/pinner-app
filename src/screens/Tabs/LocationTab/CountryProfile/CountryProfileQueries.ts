@@ -60,14 +60,15 @@ export const GET_COUNTRIES = gql`
 `;
 
 export const GET_RESIDENCE_USERS = gql`
-  query GetResidenceUsers($countryCode: String!) {
-    getResidenceUsers(countryCode: $countryCode) {
+  query GetResidenceUsers($countryCode: String!, $payload: String) {
+    getResidenceUsers(countryCode: $countryCode, payload: $payload) {
       users {
         id
         uuid
         username
         avatarUrl
         appAvatarUrl
+        isSelf
         currentCity {
           cityName
           country {
@@ -80,14 +81,15 @@ export const GET_RESIDENCE_USERS = gql`
 `;
 
 export const GET_NATIONALITY_USERS = gql`
-  query GetNationalityUsers($countryCode: String!) {
-    getNationalityUsers(countryCode: $countryCode) {
+  query GetNationalityUsers($countryCode: String!, $payload: String) {
+    getNationalityUsers(countryCode: $countryCode, payload: $payload) {
       users {
         id
         uuid
         username
         avatarUrl
         appAvatarUrl
+        isSelf
         currentCity {
           cityName
           country {

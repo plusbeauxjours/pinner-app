@@ -685,6 +685,7 @@ export interface CityProfile {
 export interface CityProfileVariables {
   page?: number | null;
   cityId: string;
+  payload?: string | null;
 }
 
 /* tslint:disable */
@@ -971,6 +972,7 @@ export interface GetResidenceUsers_getResidenceUsers_users {
   username: string | null;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
+  isSelf: boolean | null;
   currentCity: GetResidenceUsers_getResidenceUsers_users_currentCity | null;
 }
 
@@ -985,6 +987,7 @@ export interface GetResidenceUsers {
 
 export interface GetResidenceUsersVariables {
   countryCode: string;
+  payload?: string | null;
 }
 
 /* tslint:disable */
@@ -1013,6 +1016,7 @@ export interface GetNationalityUsers_getNationalityUsers_users {
   username: string | null;
   avatarUrl: string | null;
   appAvatarUrl: string | null;
+  isSelf: boolean | null;
   currentCity: GetNationalityUsers_getNationalityUsers_users_currentCity | null;
 }
 
@@ -1027,6 +1031,7 @@ export interface GetNationalityUsers {
 
 export interface GetNationalityUsersVariables {
   countryCode: string;
+  payload?: string | null;
 }
 
 /* tslint:disable */

@@ -271,6 +271,16 @@
                 "defaultValue": null
               },
               {
+                "name": "payload",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
                 "name": "page",
                 "description": null,
                 "type": {
@@ -353,6 +363,16 @@
                 "defaultValue": null
               },
               {
+                "name": "payload",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
                 "name": "page",
                 "description": null,
                 "type": {
@@ -421,6 +441,16 @@
             "description": null,
             "args": [
               {
+                "name": "payload",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
+              {
                 "name": "countryCode",
                 "description": null,
                 "type": {
@@ -451,6 +481,16 @@
             "name": "getResidenceUsers",
             "description": null,
             "args": [
+              {
+                "name": "payload",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null
+              },
               {
                 "name": "countryCode",
                 "description": null,

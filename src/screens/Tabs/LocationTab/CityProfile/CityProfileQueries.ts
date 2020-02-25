@@ -6,8 +6,8 @@ import {
 } from "../../../../fragmentQueries";
 
 export const CITY_PROFILE = gql`
-  query CityProfile($page: Int, $cityId: String!) {
-    cityProfile(page: $page, cityId: $cityId) {
+  query CityProfile($page: Int, $cityId: String!, $payload: String) {
+    cityProfile(page: $page, cityId: $cityId, payload: $payload) {
       count
       usersNow {
         ...ProfileParts
