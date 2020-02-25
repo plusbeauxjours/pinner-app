@@ -47,9 +47,9 @@ import Accordion from "react-native-collapsible/Accordion";
 import CollapsibleAccordion from "../../../components/CollapsibleAccordion";
 import { GET_TRIP_CITIES } from "./RequestCoffeeQueries";
 import { countries } from "../../../../countryData";
-import { AsyncStorage } from "react-native";
 import { useReverseGeoCode } from "../../../hooks/useReverseGeoCode";
 import { useReversePlaceId } from "../../../hooks/useReversePlaceId";
+import axios from "axios";
 
 const AccordionTitleContainer = styled.View`
   flex-direction: row;
@@ -199,7 +199,18 @@ export default ({ navigation }) => {
               }
             });
             if (requestCoffee.ok) {
-              toast("Requested");
+              const usersNow = [];
+              requestCoffee.profiles.map((profile: any) => {
+                if (!profile.isSelf) {
+                  usersNow.push(profile.pushToken);
+                }
+              });
+              console.log(usersNow);
+              return axios.post("https://exp.host/--/api/v2/push/send", {
+                to: usersNow,
+                title: "New pin",
+                body: `${me.user.username}: New pin from ${me.user.profile.currentCity.cityName}`
+              });
             }
           } catch (e) {
             console.log(e);

@@ -45,6 +45,10 @@ export const REQUEST_COFFEE = gql`
       target: $target
     ) {
       ok
+      profiles {
+        isSelf
+        pushToken
+      }
       coffee {
         id
         host {
