@@ -15,12 +15,7 @@ import {
   SlackReportLocations,
   SlackReportLocationsVariables
 } from "../../../../types/api";
-import {
-  COUNTRY_PROFILE,
-  GET_COUNTRIES,
-  GET_RESIDENCE_USERS,
-  GET_NATIONALITY_USERS
-} from "./CountryProfileQueries";
+import { COUNTRY_PROFILE, GET_COUNTRIES } from "./CountryProfileQueries";
 import constants from "../../../../../constants";
 import { countries as countryData } from "../../../../../countryData";
 import { useTheme } from "../../../../context/ThemeContext";
@@ -31,6 +26,8 @@ import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { withNavigation } from "react-navigation";
 import { useMe } from "../../../../context/MeContext";
+import { GET_RESIDENCE_USERS } from "../UsersResidence/UsersResidenceQueries";
+import { GET_NATIONALITY_USERS } from "../UsersNationality/UsersNationalityQueries";
 import {
   GetResidenceUsers,
   GetResidenceUsersVariables,
@@ -377,12 +374,21 @@ export default withNavigation(({ navigation }) => {
               {residenceUsers.length === 1 ? (
                 <TitleContainer>
                   <Title>USER who is living in {country.countryName}</Title>
-                  <More>More</More>
                 </TitleContainer>
               ) : (
                 <TitleContainer>
                   <Title>USERS who are living in {country.countryName}</Title>
-                  <More>More</More>
+                  {residenceUsers.length > 15 && (
+                    <Touchable
+                      onPress={() =>
+                        navigation.push("UsersResidence", {
+                          countryCode: country.countryCode
+                        })
+                      }
+                    >
+                      <More>More</More>
+                    </Touchable>
+                  )}
                 </TitleContainer>
               )}
               <UserContainer>
@@ -442,12 +448,21 @@ export default withNavigation(({ navigation }) => {
               {nationalityUsers.length === 1 ? (
                 <TitleContainer>
                   <Title>USER who is from {country.countryName}</Title>
-                  <More>More</More>
                 </TitleContainer>
               ) : (
                 <TitleContainer>
                   <Title>USERS who are from {country.countryName}</Title>
-                  <More>More</More>
+                  {nationalityUsers.length > 15 && (
+                    <Touchable
+                      onPress={() =>
+                        navigation.push("UsersNationality", {
+                          countryCode: country.countryCode
+                        })
+                      }
+                    >
+                      <More>More</More>
+                    </Touchable>
+                  )}
                 </TitleContainer>
               )}
               <UserContainer>

@@ -20,6 +20,8 @@ import LocationCenterHeader from "../components/Header/LocationCenterHeader";
 import UserProfileLeftHeader from "../components/Header/UserProfileLeftHeader";
 import BlockedUsers from "../screens/Tabs/UserProfileTab/BlockedUsers";
 import constants from "../../constants";
+import UsersNationality from "../screens/Tabs/LocationTab/UsersNationality";
+import UsersResidence from "../screens/Tabs/LocationTab/UsersResidence";
 
 export const CountryProfileTabs = createMaterialTopTabNavigator(
   {
@@ -164,6 +166,18 @@ export default createStackNavigator({
   },
   EditProfile: {
     screen: EditProfile,
+    navigationOptions: {
+      header: props => <BackCustomHeader />
+    }
+  },
+  UsersNationality: {
+    screen: UsersNationality,
+    navigationOptions: {
+      header: props => <BackCustomHeader />
+    }
+  },
+  UsersResidence: {
+    screen: UsersResidence,
     navigationOptions: {
       header: props => <BackCustomHeader />
     }

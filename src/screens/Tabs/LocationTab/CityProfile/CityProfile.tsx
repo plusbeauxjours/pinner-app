@@ -77,6 +77,15 @@ const Title = styled.Text`
   margin-bottom: 5px;
   color: ${props => props.theme.color};
 `;
+const TitleContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+const More = styled.Text`
+  margin-left: 20px;
+  color: ${props => props.theme.greyColor};
+`;
 const Touchable = styled.TouchableOpacity``;
 const ScrollView = styled.ScrollView`
   background-color: ${props => props.theme.bgColor};
@@ -569,9 +578,14 @@ export default withNavigation(({ navigation }) => {
             {usersBefore && usersBefore.length !== 0 && (
               <Item>
                 {usersBefore.length === 1 ? (
-                  <Title>USER who is in {city.cityName}, BEFORE</Title>
+                  <TitleContainer>
+                    <Title>USER who is in {city.cityName}, BEFORE</Title>
+                  </TitleContainer>
                 ) : (
-                  <Title>USERS who are in {city.cityName}, BEFORE</Title>
+                  <TitleContainer>
+                    <Title>USERS who are in {city.cityName}, BEFORE</Title>
+                    {usersBefore.length > 15 && <More>More</More>}
+                  </TitleContainer>
                 )}
                 <UserContainer>
                   <Swiper
