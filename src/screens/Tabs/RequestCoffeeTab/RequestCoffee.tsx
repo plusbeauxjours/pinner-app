@@ -205,7 +205,7 @@ export default ({ navigation }) => {
                   usersNow.push(profile.pushToken);
                 }
               });
-              console.log(usersNow);
+              toast("Requested");
               return axios.post("https://exp.host/--/api/v2/push/send", {
                 to: usersNow,
                 title: "New pin",
@@ -231,7 +231,18 @@ export default ({ navigation }) => {
                 }
               });
               if (requestCoffee.ok) {
+                const usersNow = [];
+                requestCoffee.profiles.map((profile: any) => {
+                  if (!profile.isSelf) {
+                    usersNow.push(profile.pushToken);
+                  }
+                });
                 toast("Requested");
+                return axios.post("https://exp.host/--/api/v2/push/send", {
+                  to: usersNow,
+                  title: "New pin",
+                  body: `${me.user.username}: New pin from ${me.user.profile.currentCity.cityName}`
+                });
               }
             } catch (e) {
               console.log(e);
@@ -255,7 +266,18 @@ export default ({ navigation }) => {
                 }
               });
               if (requestCoffee.ok) {
+                const usersNow = [];
+                requestCoffee.profiles.map((profile: any) => {
+                  if (!profile.isSelf) {
+                    usersNow.push(profile.pushToken);
+                  }
+                });
                 toast("Requested");
+                return axios.post("https://exp.host/--/api/v2/push/send", {
+                  to: usersNow,
+                  title: "New pin",
+                  body: `${me.user.username}: New pin from ${me.user.profile.currentCity.cityName}`
+                });
               }
             } catch (e) {
               console.log(e);
@@ -279,7 +301,18 @@ export default ({ navigation }) => {
                 }
               });
               if (requestCoffee.ok) {
+                const usersNow = [];
+                requestCoffee.profiles.map((profile: any) => {
+                  if (!profile.isSelf) {
+                    usersNow.push(profile.pushToken);
+                  }
+                });
                 toast("Requested");
+                return axios.post("https://exp.host/--/api/v2/push/send", {
+                  to: usersNow,
+                  title: "New pin",
+                  body: `${me.user.username}: New pin from ${me.user.profile.currentCity.cityName}`
+                });
               }
             } catch (e) {
               console.log(e);
@@ -330,6 +363,11 @@ export default ({ navigation }) => {
             });
             if (requestCoffee.ok) {
               toast("Requested");
+              return axios.post("https://exp.host/--/api/v2/push/send", {
+                to: usersNow,
+                title: "New pin",
+                body: `${me.user.username}: New pin from ${me.user.profile.currentCity.cityName}`
+              });
             }
           } catch (e) {
             console.log(e);
@@ -350,6 +388,11 @@ export default ({ navigation }) => {
             });
             if (requestCoffee.ok) {
               toast("Requested");
+              return axios.post("https://exp.host/--/api/v2/push/send", {
+                to: usersNow,
+                title: "New pin",
+                body: `${me.user.username}: New pin from ${me.user.profile.currentCity.cityName}`
+              });
             }
           } catch (e) {
             console.log(e);
@@ -370,6 +413,11 @@ export default ({ navigation }) => {
             });
             if (requestCoffee.ok) {
               toast("Requested");
+              return axios.post("https://exp.host/--/api/v2/push/send", {
+                to: usersNow,
+                title: "New pin",
+                body: `${me.user.username}: New pin from ${me.user.profile.currentCity.cityName}`
+              });
             }
           } catch (e) {
             console.log(e);
@@ -551,6 +599,11 @@ export default ({ navigation }) => {
       });
       if (requestCoffee.ok) {
         toast("Requested");
+        return axios.post("https://exp.host/--/api/v2/push/send", {
+          to: usersNow,
+          title: "New pin",
+          body: `${me.user.username}: New pin from ${me.user.profile.currentCity.cityName}`
+        });
       }
       setNationalityModalOpen(false);
     } catch (e) {
@@ -573,6 +626,11 @@ export default ({ navigation }) => {
       });
       if (requestCoffee.ok) {
         toast("Requested");
+        return axios.post("https://exp.host/--/api/v2/push/send", {
+          to: usersNow,
+          title: "New pin",
+          body: `${me.user.username}: New pin from ${me.user.profile.currentCity.cityName}`
+        });
       }
       setResidenceModalOpen(false);
     } catch (e) {
