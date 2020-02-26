@@ -29,7 +29,7 @@ export interface ToggleLikeCity_toggleLikeCity {
 
 export interface ToggleLikeCity {
   /**
-   * Like a City 
+   * Like a City
    */
   toggleLikeCity: ToggleLikeCity_toggleLikeCity;
 }
@@ -693,6 +693,23 @@ export interface CityProfileVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: GetMyCoffee
+// ====================================================
+
+export interface GetMyCoffee_getMyCoffee {
+  __typename: "GetMyCoffeeResponse";
+  coffeeId: string | null;
+}
+
+export interface GetMyCoffee {
+  getMyCoffee: GetMyCoffee_getMyCoffee;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: GetSamenameCities
 // ====================================================
 
@@ -774,6 +791,92 @@ export interface NearCitiesVariables {
   cityId: string;
   page?: number | null;
   payload?: string | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: RequestCoffee
+// ====================================================
+
+export interface RequestCoffee_requestCoffee_profiles {
+  __typename: "TokenType";
+  isSelf: boolean | null;
+  pushToken: string | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host_profile_residence_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host_profile_residence {
+  __typename: "CountryType";
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryPhoto: string | null;
+  countryThumbnail: string | null;
+  cityCount: number | null;
+  continent: RequestCoffee_requestCoffee_coffee_host_profile_residence_continent | null;
+  countryEmoji: string | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host_profile_nationality_continent {
+  __typename: "ContinentType";
+  continentCode: string | null;
+  continentName: string | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host_profile_nationality {
+  __typename: "CountryType";
+  id: string;
+  countryName: string | null;
+  countryCode: string | null;
+  countryPhoto: string | null;
+  countryThumbnail: string | null;
+  cityCount: number | null;
+  continent: RequestCoffee_requestCoffee_coffee_host_profile_nationality_continent | null;
+  countryEmoji: string | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host_profile {
+  __typename: "ProfileType";
+  gender: ProfileGender | null;
+  residence: RequestCoffee_requestCoffee_coffee_host_profile_residence | null;
+  nationality: RequestCoffee_requestCoffee_coffee_host_profile_nationality | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee_host {
+  __typename: "UserType";
+  profile: RequestCoffee_requestCoffee_coffee_host_profile | null;
+}
+
+export interface RequestCoffee_requestCoffee_coffee {
+  __typename: "CoffeeType";
+  id: string;
+  host: RequestCoffee_requestCoffee_coffee_host;
+}
+
+export interface RequestCoffee_requestCoffee {
+  __typename: "RequestCoffeeResponse";
+  ok: boolean | null;
+  profiles: (RequestCoffee_requestCoffee_profiles | null)[] | null;
+  coffee: RequestCoffee_requestCoffee_coffee | null;
+}
+
+export interface RequestCoffee {
+  requestCoffee: RequestCoffee_requestCoffee;
+}
+
+export interface RequestCoffeeVariables {
+  countryCode?: string | null;
+  gender?: string | null;
+  currentCityId: string;
+  target?: string | null;
 }
 
 /* tslint:disable */
@@ -1588,212 +1691,6 @@ export interface CompleteEmailVerification {
 export interface CompleteEmailVerificationVariables {
   key: string;
   cityId: string;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL query operation: RecommendUsers
-// ====================================================
-
-export interface RecommendUsers_recommendUsers_users_currentCity_country {
-  __typename: "CountryType";
-  countryName: string | null;
-}
-
-export interface RecommendUsers_recommendUsers_users_currentCity {
-  __typename: "CityType";
-  cityName: string | null;
-  country: RecommendUsers_recommendUsers_users_currentCity_country;
-}
-
-export interface RecommendUsers_recommendUsers_users {
-  __typename: "ProfileType";
-  id: string;
-  uuid: any | null;
-  username: string | null;
-  avatarUrl: string | null;
-  appAvatarUrl: string | null;
-  isSelf: boolean | null;
-  currentCity: RecommendUsers_recommendUsers_users_currentCity | null;
-}
-
-export interface RecommendUsers_recommendUsers {
-  __typename: "RecommendUsersResponse";
-  page: number | null;
-  hasNextPage: boolean | null;
-  users: (RecommendUsers_recommendUsers_users | null)[] | null;
-}
-
-export interface RecommendUsers {
-  recommendUsers: RecommendUsers_recommendUsers;
-}
-
-export interface RecommendUsersVariables {
-  page?: number | null;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL query operation: RecommendLocations
-// ====================================================
-
-export interface RecommendLocations_recommendLocations_cities_country {
-  __typename: "CountryType";
-  countryName: string | null;
-  countryCode: string | null;
-}
-
-export interface RecommendLocations_recommendLocations_cities {
-  __typename: "CityType";
-  id: string;
-  latitude: number | null;
-  longitude: number | null;
-  cityName: string | null;
-  cityId: string | null;
-  cityPhoto: string | null;
-  cityThumbnail: string | null;
-  distance: number | null;
-  country: RecommendLocations_recommendLocations_cities_country;
-  likeCount: number | null;
-  isLiked: boolean | null;
-}
-
-export interface RecommendLocations_recommendLocations {
-  __typename: "RecommendLocationsResponse";
-  page: number | null;
-  hasNextPage: boolean | null;
-  cities: (RecommendLocations_recommendLocations_cities | null)[] | null;
-}
-
-export interface RecommendLocations {
-  recommendLocations: RecommendLocations_recommendLocations;
-}
-
-export interface RecommendLocationsVariables {
-  page?: number | null;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL mutation operation: RequestCoffee
-// ====================================================
-
-export interface RequestCoffee_requestCoffee_coffee_host_profile_residence_continent {
-  __typename: "ContinentType";
-  continentCode: string | null;
-  continentName: string | null;
-}
-
-export interface RequestCoffee_requestCoffee_coffee_host_profile_residence {
-  __typename: "CountryType";
-  id: string;
-  countryName: string | null;
-  countryCode: string | null;
-  countryPhoto: string | null;
-  countryThumbnail: string | null;
-  cityCount: number | null;
-  continent: RequestCoffee_requestCoffee_coffee_host_profile_residence_continent | null;
-  countryEmoji: string | null;
-}
-
-export interface RequestCoffee_requestCoffee_coffee_host_profile_nationality_continent {
-  __typename: "ContinentType";
-  continentCode: string | null;
-  continentName: string | null;
-}
-
-export interface RequestCoffee_requestCoffee_coffee_host_profile_nationality {
-  __typename: "CountryType";
-  id: string;
-  countryName: string | null;
-  countryCode: string | null;
-  countryPhoto: string | null;
-  countryThumbnail: string | null;
-  cityCount: number | null;
-  continent: RequestCoffee_requestCoffee_coffee_host_profile_nationality_continent | null;
-  countryEmoji: string | null;
-}
-
-export interface RequestCoffee_requestCoffee_coffee_host_profile {
-  __typename: "ProfileType";
-  gender: ProfileGender | null;
-  residence: RequestCoffee_requestCoffee_coffee_host_profile_residence | null;
-  nationality: RequestCoffee_requestCoffee_coffee_host_profile_nationality | null;
-}
-
-export interface RequestCoffee_requestCoffee_coffee_host {
-  __typename: "UserType";
-  profile: RequestCoffee_requestCoffee_coffee_host_profile | null;
-}
-
-export interface RequestCoffee_requestCoffee_coffee {
-  __typename: "CoffeeType";
-  id: string;
-  host: RequestCoffee_requestCoffee_coffee_host;
-}
-
-export interface RequestCoffee_requestCoffee {
-  __typename: "RequestCoffeeResponse";
-  ok: boolean | null;
-  coffee: RequestCoffee_requestCoffee_coffee | null;
-}
-
-export interface RequestCoffee {
-  requestCoffee: RequestCoffee_requestCoffee;
-}
-
-export interface RequestCoffeeVariables {
-  countryCode?: string | null;
-  gender?: string | null;
-  currentCityId: string;
-  target?: string | null;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL query operation: GetTripCities
-// ====================================================
-
-export interface GetTripCities_getTripCities_trip_city_country {
-  __typename: "CountryType";
-  countryEmoji: string | null;
-}
-
-export interface GetTripCities_getTripCities_trip_city {
-  __typename: "CityType";
-  hasCoffee: boolean | null;
-  cityId: string | null;
-  cityName: string | null;
-  country: GetTripCities_getTripCities_trip_city_country;
-}
-
-export interface GetTripCities_getTripCities_trip {
-  __typename: "MoveNotificationType";
-  id: string;
-  startDate: any | null;
-  city: GetTripCities_getTripCities_trip_city | null;
-}
-
-export interface GetTripCities_getTripCities {
-  __typename: "TripCitiesResponse";
-  coffeeId: string | null;
-  trip: (GetTripCities_getTripCities_trip | null)[] | null;
-}
-
-export interface GetTripCities {
-  getTripCities: GetTripCities_getTripCities;
 }
 
 /* tslint:disable */
@@ -3429,7 +3326,7 @@ export enum CoffeeTarget {
   EVERYONE = "EVERYONE",
   GENDER = "GENDER",
   NATIONALITY = "NATIONALITY",
-  RESIDENCE = "RESIDENCE",
+  RESIDENCE = "RESIDENCE"
 }
 
 /**
@@ -3438,7 +3335,7 @@ export enum CoffeeTarget {
 export enum ProfileGender {
   FEMALE = "FEMALE",
   MALE = "MALE",
-  OTHER = "OTHER",
+  OTHER = "OTHER"
 }
 
 //==============================================================

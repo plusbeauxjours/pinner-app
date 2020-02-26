@@ -6,7 +6,6 @@ import NavIcon from "../components/NavIcon";
 import MatchNavigation from "./MatchNavigation";
 import LocationNavigation from "./LocationNavigation";
 import UserProfileNavigation from "./UserProfileNavigation";
-import RequestNavigation from "./RequestNavigation";
 import { useTheme } from "../context/ThemeContext";
 
 const stackFactory = initialRoute =>
@@ -51,12 +50,6 @@ export default createBottomTabNavigator(
             />
           )
         };
-      }
-    },
-    RequestCoffee: {
-      screen: stackFactory(RequestNavigation),
-      navigationOptions: {
-        tabBarIcon: ({ focused }) => <NavIcon focused={focused} name={"pin"} />
       }
     },
     Location: {

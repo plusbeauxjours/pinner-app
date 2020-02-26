@@ -1,22 +1,36 @@
 import React, { useState } from "react";
-import { RefreshControl, Platform } from "react-native";
+import { RefreshControl, Platform, Alert, Linking } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
+import Constants from "expo-constants";
+import * as Location from "expo-location";
+import * as Permissions from "expo-permissions";
+import * as IntentLauncher from "expo-intent-launcher";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
 import {
+  Me,
   CityProfile,
   CityProfileVariables,
   GetSamenameCities,
   GetSamenameCitiesVariables,
   SlackReportLocations,
-  SlackReportLocationsVariables
+  SlackReportLocationsVariables,
+  ReportLocation,
+  ReportLocationVariables,
+  RequestCoffee,
+  RequestCoffeeVariables,
+  DeleteCoffee,
+  DeleteCoffeeVariables,
+  GetMyCoffee
 } from "../../../../types/api";
 import {
   CITY_PROFILE,
   GET_SAMENAME_CITIES,
-  NEAR_CITIES
+  NEAR_CITIES,
+  REQUEST_COFFEE,
+  GET_MY_COFFEE
 } from "./CityProfileQueries";
 import Swiper from "react-native-swiper";
 import {
@@ -25,7 +39,14 @@ import {
   GetCoffees,
   GetCoffeesVariables
 } from "../../../../types/api";
-import { SLACK_REPORT_LOCATIONS, GET_COFFEES } from "../../../../sharedQueries";
+import {
+  SLACK_REPORT_LOCATIONS,
+  GET_COFFEES,
+  DELETE_COFFEE,
+  REPORT_LOCATION,
+  ME
+} from "../../../../sharedQueries";
+import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
 import CityLikeBtn from "../../../../components/CityLikeBtn";
 import constants from "../../../../../constants";
 import { darkMode, lightMode } from "../../../../styles/mapStyles";
@@ -40,6 +61,9 @@ import CoffeeDetail from "../../../CoffeeDetail";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import { withNavigation } from "react-navigation";
 import { useMe } from "../../../../context/MeContext";
+import axios from "axios";
+import { useReverseGeoCode } from "../../../../hooks/useReverseGeoCode";
+import { useReversePlaceId } from "../../../../hooks/useReversePlaceId";
 
 const Container = styled.View`
   background-color: ${props => props.theme.bgColor};
@@ -129,6 +153,29 @@ const NoPhotoContainer = styled.View`
   border-radius: 3;
   border: 0.5px solid #999;
 `;
+const CoffeeText = styled.Text`
+  font-size: 16px;
+  font-weight: 500;
+  color: ${props => props.theme.color};
+`;
+const Footer = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  background-color: ${props => props.theme.bgColor};
+`;
+const CoffeeSubmitContainer = styled.View`
+  width: ${constants.width - 40};
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  border: 0.5px solid #999;
+  border-radius: 5px;
+`;
+const CoffeeSubmitBtn = styled.TouchableOpacity`
+  justify-content: center;
+  padding: 0 5px 5px 5px;
+`;
+
 export default withNavigation(({ navigation }) => {
   const { me, loading: meLoading } = useMe();
   const isDarkMode = useTheme();
@@ -140,6 +187,493 @@ export default withNavigation(({ navigation }) => {
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [mapOpen, setMapOpen] = useState<boolean>(false);
   const { showActionSheetWithOptions } = useActionSheet();
+
+  // 2020/02/25
+  // Footer from REQUEST screen
+  const [nationalityModalOpen, setNationalityModalOpen] = useState<boolean>(
+    false
+  );
+  const [nationalityCode, setNationalityCode] = useState<any>("");
+  const [residenceModalOpen, setResidenceModalOpen] = useState<boolean>(false);
+  const [residenceCode, setResidenceCode] = useState<any>("");
+  const toast = (message: string) => {
+    Toast.show(message, {
+      duration: 1000,
+      position: Toast.positions.CENTER,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      delay: 0
+    });
+  };
+  const onSelectNationality = async (country: any) => {
+    try {
+      const {
+        data: { requestCoffee }
+      } = await requestCoffeeFn({
+        variables: {
+          target: "nationality",
+          currentCityId: cityId,
+          countryCode: country.cca2
+        }
+      });
+      if (requestCoffee.ok) {
+        const usersNow = [];
+        requestCoffee.profiles.map((profile: any) => {
+          if (!profile.isSelf) {
+            usersNow.push(profile.pushToken);
+          }
+        });
+        toast("Requested");
+        return axios.post("https://exp.host/--/api/v2/push/send", {
+          to: usersNow,
+          title: "New pin",
+          body: `${me.user.username}: New pin from ${me.user.profile.currentCity.cityName}`
+        });
+      }
+      setNationalityModalOpen(false);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const onSelectrRsidence = async (country: any) => {
+    try {
+      const {
+        data: { requestCoffee }
+      } = await requestCoffeeFn({
+        variables: {
+          target: "residence",
+          currentCityId: cityId,
+          countryCode: country.cca2
+        }
+      });
+      if (requestCoffee.ok) {
+        const usersNow = [];
+        requestCoffee.profiles.map((profile: any) => {
+          if (!profile.isSelf) {
+            usersNow.push(profile.pushToken);
+          }
+        });
+        toast("Requested");
+        return axios.post("https://exp.host/--/api/v2/push/send", {
+          to: usersNow,
+          title: "New pin",
+          body: `${me.user.username}: New pin from ${me.user.profile.currentCity.cityName}`
+        });
+      }
+      setResidenceModalOpen(false);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const requestCoffee = () => {
+    showActionSheetWithOptions(
+      {
+        options: [
+          "Everyone",
+          me.user.profile.nationality
+            ? `Nationality: ${me.user.profile.nationality.countryName} ${me.user.profile.nationality.countryEmoji}`
+            : "Nationality",
+          me.user.profile.residence
+            ? `Residence: ${me.user.profile.residence.countryName} ${me.user.profile.residence.countryEmoji}`
+            : "Residence",
+          me.user.profile.gender
+            ? (() => {
+                switch (me.user.profile.gender) {
+                  case "MALE":
+                    return "Gender: Male";
+                  case "FEMALE":
+                    return "Gender: Female";
+                  case "OTHER":
+                    return "Gender: Other";
+                  default:
+                    return null;
+                }
+              })()
+            : "Gender",
+          "Cancel"
+        ],
+        cancelButtonIndex: 4,
+        title: `Choose a target.`,
+        showSeparators: true,
+        containerStyle: {
+          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
+          borderRadius: 10,
+          width: constants.width - 30,
+          marginLeft: 15,
+          marginBottom: 10
+        },
+        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
+        titleTextStyle: {
+          color: isDarkMode ? "#EFEFEF" : "#161616",
+          fontWeight: "400"
+        },
+        separatorStyle: { opacity: 0.5 }
+      },
+      async buttonIndex => {
+        if (buttonIndex === 0) {
+          try {
+            const {
+              data: { requestCoffee }
+            } = await requestCoffeeFn({
+              variables: {
+                target: "everyone",
+                currentCityId: cityId
+              }
+            });
+            if (requestCoffee.ok) {
+              const usersNow = [];
+              requestCoffee.profiles.map((profile: any) => {
+                if (!profile.isSelf) {
+                  usersNow.push(profile.pushToken);
+                }
+              });
+              toast("Requested");
+              return axios.post("https://exp.host/--/api/v2/push/send", {
+                to: usersNow,
+                title: "New pin",
+                body: `${me.user.username}: New pin from ${me.user.profile.currentCity.cityName}`
+              });
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        } else if (buttonIndex === 1) {
+          if (me.user.profile.nationality) {
+            try {
+              const {
+                data: { requestCoffee }
+              } = await requestCoffeeFn({
+                variables: {
+                  target: "nationality",
+                  currentCityId: cityId,
+                  countryCode: me.user.profile.nationality.countryCode
+                }
+              });
+              if (requestCoffee.ok) {
+                const usersNow = [];
+                requestCoffee.profiles.map((profile: any) => {
+                  if (!profile.isSelf) {
+                    usersNow.push(profile.pushToken);
+                  }
+                });
+                toast("Requested");
+                return axios.post("https://exp.host/--/api/v2/push/send", {
+                  to: usersNow,
+                  title: "New pin",
+                  body: `${me.user.username}: New pin from ${me.user.profile.currentCity.cityName}`
+                });
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          } else {
+            setNationalityModalOpen(true);
+          }
+        } else if (buttonIndex === 2) {
+          if (me.user.profile.residence) {
+            try {
+              const {
+                data: { requestCoffee }
+              } = await requestCoffeeFn({
+                variables: {
+                  target: "residence",
+                  currentCityId: cityId,
+                  countryCode: me.user.profile.residence.countryCode
+                }
+              });
+              if (requestCoffee.ok) {
+                const usersNow = [];
+                requestCoffee.profiles.map((profile: any) => {
+                  if (!profile.isSelf) {
+                    usersNow.push(profile.pushToken);
+                  }
+                });
+                toast("Requested");
+                return axios.post("https://exp.host/--/api/v2/push/send", {
+                  to: usersNow,
+                  title: "New pin",
+                  body: `${me.user.username}: New pin from ${me.user.profile.currentCity.cityName}`
+                });
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          } else {
+            setResidenceModalOpen(true);
+          }
+        } else if (buttonIndex === 3) {
+          if (me.user.profile.gender) {
+            try {
+              const {
+                data: { requestCoffee }
+              } = await requestCoffeeFn({
+                variables: {
+                  target: "gender",
+                  currentCityId: cityId,
+                  gender: me.user.profile.gender
+                }
+              });
+              if (requestCoffee.ok) {
+                const usersNow = [];
+                requestCoffee.profiles.map((profile: any) => {
+                  if (!profile.isSelf) {
+                    usersNow.push(profile.pushToken);
+                  }
+                });
+                toast("Requested");
+                return axios.post("https://exp.host/--/api/v2/push/send", {
+                  to: usersNow,
+                  title: "New pin",
+                  body: `${me.user.username}: New pin from ${me.user.profile.currentCity.cityName}`
+                });
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          } else {
+            onOpenGenderActionSheet();
+          }
+        } else {
+          null;
+        }
+      }
+    );
+  };
+  const onOpenGenderActionSheet = () => {
+    showActionSheetWithOptions(
+      {
+        options: ["Male", "Female", "Other", "Cancel"],
+        cancelButtonIndex: 3,
+        showSeparators: true,
+        containerStyle: {
+          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
+          borderRadius: 10,
+          width: constants.width - 30,
+          marginLeft: 15,
+          marginBottom: 10
+        },
+        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
+        titleTextStyle: {
+          color: isDarkMode ? "#EFEFEF" : "#161616",
+          fontWeight: "400"
+        },
+        separatorStyle: { opacity: 0.5 }
+      },
+      async buttonIndex => {
+        if (buttonIndex === 0) {
+          try {
+            const {
+              data: { requestCoffee }
+            } = await requestCoffeeFn({
+              variables: {
+                target: "gender",
+                currentCityId: cityId,
+                gender: "MALE"
+              }
+            });
+            if (requestCoffee.ok) {
+              const usersNow = [];
+              requestCoffee.profiles.map((profile: any) => {
+                if (!profile.isSelf) {
+                  usersNow.push(profile.pushToken);
+                }
+              });
+              toast("Requested");
+              return axios.post("https://exp.host/--/api/v2/push/send", {
+                to: usersNow,
+                title: "New pin",
+                body: `${me.user.username}: New pin from ${me.user.profile.currentCity.cityName}`
+              });
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        } else if (buttonIndex === 1) {
+          try {
+            const {
+              data: { requestCoffee }
+            } = await requestCoffeeFn({
+              variables: {
+                target: "gender",
+                currentCityId: cityId,
+                gender: "FEMALE"
+              }
+            });
+            if (requestCoffee.ok) {
+              const usersNow = [];
+              requestCoffee.profiles.map((profile: any) => {
+                if (!profile.isSelf) {
+                  usersNow.push(profile.pushToken);
+                }
+              });
+              toast("Requested");
+              return axios.post("https://exp.host/--/api/v2/push/send", {
+                to: usersNow,
+                title: "New pin",
+                body: `${me.user.username}: New pin from ${me.user.profile.currentCity.cityName}`
+              });
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        } else if (buttonIndex === 2) {
+          try {
+            const {
+              data: { requestCoffee }
+            } = await requestCoffeeFn({
+              variables: {
+                target: "gender",
+                currentCityId: cityId,
+                gender: "OTHER"
+              }
+            });
+            if (requestCoffee.ok) {
+              const usersNow = [];
+              requestCoffee.profiles.map((profile: any) => {
+                if (!profile.isSelf) {
+                  usersNow.push(profile.pushToken);
+                }
+              });
+              toast("Requested");
+              return axios.post("https://exp.host/--/api/v2/push/send", {
+                to: usersNow,
+                title: "New pin",
+                body: `${me.user.username}: New pin from ${me.user.profile.currentCity.cityName}`
+              });
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        } else {
+          null;
+        }
+      }
+    );
+  };
+  const cancelCoffee = myCoffeeId => {
+    showActionSheetWithOptions(
+      {
+        options: ["Yes", "No"],
+        destructiveButtonIndex: 0,
+        cancelButtonIndex: 1,
+        showSeparators: true,
+        title: "Are you sure to cancel?",
+        containerStyle: {
+          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
+          borderRadius: 10,
+          width: constants.width - 30,
+          marginLeft: 15,
+          marginBottom: 10
+        },
+        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
+        titleTextStyle: {
+          color: isDarkMode ? "#EFEFEF" : "#161616",
+          fontWeight: "400"
+        },
+        separatorStyle: { opacity: 0.5 }
+      },
+      async buttonIndex => {
+        if (buttonIndex === 0) {
+          try {
+            const {
+              data: { deleteCoffee }
+            } = await deleteCoffeeFn({
+              variables: { coffeeId: myCoffeeId }
+            });
+            if (deleteCoffee.ok) {
+              toast("Canceled");
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      }
+    );
+  };
+  const askPermission = async () => {
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+    const { locationServicesEnabled } = await Location.getProviderStatusAsync();
+    if (locationServicesEnabled) {
+      if (Platform.OS === "ios" && status === "denied") {
+        Alert.alert(
+          "Permission Denied",
+          "To enable location, tap Open Settings, then tap on Location, and finally tap on While Using the App.",
+          [
+            { text: "Cancel", style: "cancel" },
+            {
+              text: "Open Settings",
+              onPress: () => {
+                Linking.openURL("app-settings:");
+              }
+            }
+          ]
+        );
+      } else if (Platform.OS === "android" && status === "denied") {
+        Alert.alert(
+          "Permission Denied",
+          "To enable location, tap Open Settings, then tap on Permissions, then tap on Location, and finally tap on Allow only while using the app.",
+          [
+            { text: "Cancel", style: "cancel" },
+            {
+              text: "Open Settings",
+              onPress: () => {
+                const pkg = Constants.manifest.releaseChannel
+                  ? Constants.manifest.android.package
+                  : "host.exp.exponent";
+                IntentLauncher.startActivityAsync(
+                  IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                  { data: "package:" + pkg }
+                );
+              }
+            }
+          ]
+        );
+      } else if (status === "granted") {
+        const position = await Location.getCurrentPositionAsync({
+          timeout: 5000
+        });
+        handleGeoSuccess(position);
+      } else {
+        return;
+      }
+    } else {
+      Alert.alert("Location permission required.");
+    }
+  };
+  const handleGeoSuccess = position => {
+    const {
+      coords: { latitude, longitude }
+    } = position;
+    getAddress(latitude, longitude);
+  };
+  const getAddress = async (latitude: number, longitude: number) => {
+    try {
+      const address = await useReverseGeoCode(latitude, longitude);
+      if (address) {
+        const cityInfo = await useReversePlaceId(
+          address.storableLocation.cityId
+        );
+        setCityId(address.storableLocation.cityId);
+        await reportLocationFn({
+          variables: {
+            currentLat: cityInfo.storableLocation.latitude,
+            currentLng: cityInfo.storableLocation.longitude,
+            currentCityId: address.storableLocation.cityId,
+            currentCityName: address.storableLocation.cityName,
+            currentCountryCode: address.storableLocation.countryCode
+          }
+        });
+        // await AsyncStorage.setItem("cityId", address.storableLocation.cityId);
+        // await AsyncStorage.setItem(
+        //   "countryCode",
+        //   address.storableLocation.countryCode
+        // );
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const selectReportLocation = () => {
     showActionSheetWithOptions(
       {
@@ -220,6 +754,79 @@ export default withNavigation(({ navigation }) => {
       }
     );
   };
+  // 2020/02/25
+  // Footer from REQUEST screen
+  const {
+    data: { nearCities: { cities: nearCities = null } = {} } = {},
+    loading: nearCitiesLoading,
+    refetch: nearCitiesRefetch
+  } = useQuery<NearCities, NearCitiesVariables>(NEAR_CITIES, {
+    variables: { cityId }
+  });
+  const [reportLocationFn, { loading: reportLocationLoading }] = useMutation<
+    ReportLocation,
+    ReportLocationVariables
+  >(REPORT_LOCATION);
+  const [requestCoffeeFn, { loading: requestCoffeeLoading }] = useMutation<
+    RequestCoffee,
+    RequestCoffeeVariables
+  >(REQUEST_COFFEE, {
+    refetchQueries: [
+      {
+        query: GET_COFFEES,
+        variables: { location: "city", cityId }
+      },
+      { query: GET_MY_COFFEE }
+    ],
+    update(cache, { data: { requestCoffee } }) {
+      try {
+        const meData = cache.readQuery<Me>({
+          query: ME
+        });
+        if (meData) {
+          if (
+            !meData.me.user.profile.nationality &&
+            requestCoffee.coffee.host.profile.nationality
+          ) {
+            meData.me.user.profile.nationality =
+              requestCoffee.coffee.host.profile.nationality;
+          }
+          if (
+            !meData.me.user.profile.residence &&
+            requestCoffee.coffee.host.profile.residence
+          ) {
+            meData.me.user.profile.residence =
+              requestCoffee.coffee.host.profile.residence;
+          }
+          if (
+            !meData.me.user.profile.gender &&
+            requestCoffee.coffee.host.profile.gender
+          ) {
+            meData.me.user.profile.gender =
+              requestCoffee.coffee.host.profile.gender;
+          }
+          cache.writeQuery({
+            query: ME,
+            data: meData
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  });
+  const [deleteCoffeeFn, { loading: deleteCoffeeLoading }] = useMutation<
+    DeleteCoffee,
+    DeleteCoffeeVariables
+  >(DELETE_COFFEE, {
+    refetchQueries: [
+      {
+        query: GET_COFFEES,
+        variables: { location: "city", cityId }
+      },
+      { query: GET_MY_COFFEE }
+    ]
+  });
   const [
     slackReportLocationsFn,
     { loading: slackReportLocationsLoading }
@@ -241,10 +848,18 @@ export default withNavigation(({ navigation }) => {
     variables: { cityId, page: 1, payload: "BOX" }
   });
   const {
-    data: { nearCities: { cities: nearCities = null } = {} } = {},
-    loading: nearCitiesLoading,
-    refetch: nearCitiesRefetch
-  } = useQuery<NearCities, NearCitiesVariables>(NEAR_CITIES, {
+    data: { getCoffees: { coffees = null } = {} } = {},
+    loading: coffeeLoading,
+    refetch: coffeeRefetch
+  } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
+    variables: { location: "city", cityId },
+    fetchPolicy: "no-cache"
+  });
+  const {
+    data: { getMyCoffee: { coffeeId: myCoffeeId = null } = {} } = {},
+    loading: getMyCoffeeLoading,
+    refetch: getMyCoffeeRefetch
+  } = useQuery<GetMyCoffee>(GET_MY_COFFEE, {
     variables: { cityId }
   });
   const {
@@ -255,14 +870,7 @@ export default withNavigation(({ navigation }) => {
     GET_SAMENAME_CITIES,
     { variables: { cityId } }
   );
-  const {
-    data: { getCoffees: { coffees = null } = {} } = {},
-    loading: coffeeLoading,
-    refetch: coffeeRefetch
-  } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
-    variables: { location: "city", cityId },
-    fetchPolicy: "no-cache"
-  });
+
   const onRefresh = async () => {
     try {
       setRefreshing(true);
@@ -270,6 +878,7 @@ export default withNavigation(({ navigation }) => {
       await nearCitiesRefetch();
       await samenameCitiesRefetch();
       await coffeeRefetch();
+      await getMyCoffeeRefetch();
     } catch (e) {
       console.log(e);
     } finally {
@@ -305,6 +914,80 @@ export default withNavigation(({ navigation }) => {
   } else {
     return (
       <>
+        <Modal
+          style={{
+            margin: 0,
+            alignItems: "flex-start"
+          }}
+          isVisible={nationalityModalOpen}
+          backdropColor={
+            isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
+          }
+          onBackdropPress={() => setNationalityModalOpen(false)}
+          onBackButtonPress={() =>
+            Platform.OS === "android" && setNationalityModalOpen(false)
+          }
+          propagateSwipe={true}
+          scrollHorizontal={true}
+          backdropOpacity={0.9}
+          animationIn="fadeIn"
+          animationOut="fadeOut"
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropTransitionInTiming={200}
+          backdropTransitionOutTiming={200}
+        >
+          <CountryPicker
+            theme={isDarkMode && DARK_THEME}
+            countryCode={nationalityCode}
+            withFilter={true}
+            withFlag={true}
+            withAlphaFilter={true}
+            withEmoji={true}
+            onSelect={onSelectNationality}
+            withModal={false}
+            onClose={() => {
+              setNationalityCode(""), setNationalityModalOpen(false);
+            }}
+          />
+        </Modal>
+        <Modal
+          style={{
+            margin: 0,
+            alignItems: "flex-start"
+          }}
+          isVisible={residenceModalOpen}
+          backdropColor={
+            isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
+          }
+          onBackdropPress={() => setResidenceModalOpen(false)}
+          onBackButtonPress={() =>
+            Platform.OS === "android" && setResidenceModalOpen(false)
+          }
+          propagateSwipe={true}
+          scrollHorizontal={true}
+          backdropOpacity={0.9}
+          animationIn="fadeIn"
+          animationOut="fadeOut"
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropTransitionInTiming={200}
+          backdropTransitionOutTiming={200}
+        >
+          <CountryPicker
+            theme={isDarkMode && DARK_THEME}
+            countryCode={residenceCode}
+            withFilter={true}
+            withFlag={true}
+            withAlphaFilter={true}
+            withEmoji={true}
+            onSelect={onSelectrRsidence}
+            withModal={false}
+            onClose={() => {
+              setResidenceCode(""), setResidenceModalOpen(false);
+            }}
+          />
+        </Modal>
         <Modal
           style={{ margin: 0, alignItems: "flex-start" }}
           isVisible={modalOpen}
@@ -669,6 +1352,31 @@ export default withNavigation(({ navigation }) => {
             )}
           </Container>
         </ScrollView>
+        {cityId === me.user.profile.currentCity.cityId && (
+          <Footer>
+            {myCoffeeId ? (
+              <CoffeeSubmitBtn
+                disabled={deleteCoffeeLoading}
+                onPress={() => cancelCoffee(myCoffeeId)}
+              >
+                <CoffeeSubmitContainer>
+                  <CoffeeText>CANCEL PIN</CoffeeText>
+                </CoffeeSubmitContainer>
+              </CoffeeSubmitBtn>
+            ) : (
+              <CoffeeSubmitBtn
+                disabled={requestCoffeeLoading}
+                onPress={() => {
+                  askPermission(), requestCoffee();
+                }}
+              >
+                <CoffeeSubmitContainer>
+                  <CoffeeText>PIN</CoffeeText>
+                </CoffeeSubmitContainer>
+              </CoffeeSubmitBtn>
+            )}
+          </Footer>
+        )}
       </>
     );
   }
