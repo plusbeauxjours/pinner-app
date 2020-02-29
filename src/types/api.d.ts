@@ -807,28 +807,6 @@ export interface RequestCoffee_requestCoffee_profiles {
   pushToken: string | null;
 }
 
-export interface RequestCoffee_requestCoffee_coffee_city_country {
-  __typename: "CountryType";
-  countryName: string | null;
-}
-
-export interface RequestCoffee_requestCoffee_coffee_city {
-  __typename: "CityType";
-  cityName: string | null;
-  country: RequestCoffee_requestCoffee_coffee_city_country;
-}
-
-export interface RequestCoffee_requestCoffee_coffee_host_profile_currentCity_country {
-  __typename: "CountryType";
-  countryName: string | null;
-}
-
-export interface RequestCoffee_requestCoffee_coffee_host_profile_currentCity {
-  __typename: "CityType";
-  cityName: string | null;
-  country: RequestCoffee_requestCoffee_coffee_host_profile_currentCity_country;
-}
-
 export interface RequestCoffee_requestCoffee_coffee_host_profile_residence_continent {
   __typename: "ContinentType";
   continentCode: string | null;
@@ -867,35 +845,20 @@ export interface RequestCoffee_requestCoffee_coffee_host_profile_nationality {
 
 export interface RequestCoffee_requestCoffee_coffee_host_profile {
   __typename: "ProfileType";
-  uuid: any | null;
   gender: ProfileGender | null;
-  appAvatarUrl: string | null;
-  isSelf: boolean | null;
-  currentCity: RequestCoffee_requestCoffee_coffee_host_profile_currentCity | null;
   residence: RequestCoffee_requestCoffee_coffee_host_profile_residence | null;
   nationality: RequestCoffee_requestCoffee_coffee_host_profile_nationality | null;
 }
 
 export interface RequestCoffee_requestCoffee_coffee_host {
   __typename: "UserType";
-  id: string;
-  /**
-   * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
-   */
-  username: string;
   profile: RequestCoffee_requestCoffee_coffee_host_profile | null;
 }
 
 export interface RequestCoffee_requestCoffee_coffee {
   __typename: "CoffeeType";
   id: string;
-  uuid: any | null;
-  city: RequestCoffee_requestCoffee_coffee_city;
   host: RequestCoffee_requestCoffee_coffee_host;
-  status: string | null;
-  naturalTime: string | null;
-  target: CoffeeTarget;
-  createdAt: any;
 }
 
 export interface RequestCoffee_requestCoffee {

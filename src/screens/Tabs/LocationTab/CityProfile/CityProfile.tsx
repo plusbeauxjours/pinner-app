@@ -224,7 +224,8 @@ export default withNavigation(({ navigation }) => {
             usersNow.push(profile.pushToken);
           }
         });
-        toast("Requested");
+        await coffeeRefetch();
+        toast("PIN Requested");
         return axios.post("https://exp.host/--/api/v2/push/send", {
           to: usersNow,
           title: "New pin",
@@ -254,7 +255,8 @@ export default withNavigation(({ navigation }) => {
             usersNow.push(profile.pushToken);
           }
         });
-        toast("Requested");
+        await coffeeRefetch();
+        toast("PIN Requested");
         return axios.post("https://exp.host/--/api/v2/push/send", {
           to: usersNow,
           title: "New pin",
@@ -328,7 +330,8 @@ export default withNavigation(({ navigation }) => {
                   usersNow.push(profile.pushToken);
                 }
               });
-              toast("Requested");
+              await coffeeRefetch();
+              toast("PIN Requested");
               return axios.post("https://exp.host/--/api/v2/push/send", {
                 to: usersNow,
                 title: "New pin",
@@ -357,7 +360,8 @@ export default withNavigation(({ navigation }) => {
                     usersNow.push(profile.pushToken);
                   }
                 });
-                toast("Requested");
+                await coffeeRefetch();
+                toast("PIN Requested");
                 return axios.post("https://exp.host/--/api/v2/push/send", {
                   to: usersNow,
                   title: "New pin",
@@ -389,7 +393,8 @@ export default withNavigation(({ navigation }) => {
                     usersNow.push(profile.pushToken);
                   }
                 });
-                toast("Requested");
+                await coffeeRefetch();
+                toast("PIN Requested");
                 return axios.post("https://exp.host/--/api/v2/push/send", {
                   to: usersNow,
                   title: "New pin",
@@ -421,7 +426,8 @@ export default withNavigation(({ navigation }) => {
                     usersNow.push(profile.pushToken);
                   }
                 });
-                toast("Requested");
+                await coffeeRefetch();
+                toast("PIN Requested");
                 return axios.post("https://exp.host/--/api/v2/push/send", {
                   to: usersNow,
                   title: "New pin",
@@ -479,7 +485,8 @@ export default withNavigation(({ navigation }) => {
                   usersNow.push(profile.pushToken);
                 }
               });
-              toast("Requested");
+              await coffeeRefetch();
+              toast("PIN Requested");
               return axios.post("https://exp.host/--/api/v2/push/send", {
                 to: usersNow,
                 title: "New pin",
@@ -507,7 +514,8 @@ export default withNavigation(({ navigation }) => {
                   usersNow.push(profile.pushToken);
                 }
               });
-              toast("Requested");
+              await coffeeRefetch();
+              toast("PIN Requested");
               return axios.post("https://exp.host/--/api/v2/push/send", {
                 to: usersNow,
                 title: "New pin",
@@ -535,7 +543,8 @@ export default withNavigation(({ navigation }) => {
                   usersNow.push(profile.pushToken);
                 }
               });
-              toast("Requested");
+              await coffeeRefetch();
+              toast("PIN Requested");
               return axios.post("https://exp.host/--/api/v2/push/send", {
                 to: usersNow,
                 title: "New pin",
@@ -582,7 +591,8 @@ export default withNavigation(({ navigation }) => {
               variables: { coffeeId: myCoffeeId }
             });
             if (deleteCoffee.ok) {
-              toast("Canceled");
+              await coffeeRefetch();
+              toast("PIN Canceled");
             }
           } catch (e) {
             console.log(e);
@@ -749,7 +759,7 @@ export default withNavigation(({ navigation }) => {
               payload
             }
           });
-          toast("Reported");
+          toast("PIN Reported");
         }
       }
     );
@@ -1164,7 +1174,6 @@ export default withNavigation(({ navigation }) => {
                     style={{ height: nearCities.length < 3 ? 90 : 135 }}
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
-                    index={0}
                     dotColor={isDarkMode ? "#424242" : "#DADADA"}
                     activeDotStyle={{
                       backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",
@@ -1366,8 +1375,10 @@ export default withNavigation(({ navigation }) => {
             ) : (
               <CoffeeSubmitBtn
                 disabled={requestCoffeeLoading}
-                onPress={() => {
-                  askPermission(), requestCoffee();
+                onPress={async () => {
+                  await getMyCoffeeRefetch(),
+                    await askPermission(),
+                    await requestCoffee();
                 }}
               >
                 <CoffeeSubmitContainer>
