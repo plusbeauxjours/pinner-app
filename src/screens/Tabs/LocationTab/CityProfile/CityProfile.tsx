@@ -220,7 +220,7 @@ export default withNavigation(({ navigation }) => {
       if (requestCoffee.ok) {
         const usersNow = [];
         requestCoffee.profiles.map((profile: any) => {
-          if (!profile.isSelf) {
+          if (!profile.isSelf && profile.pushToken !== null) {
             usersNow.push(profile.pushToken);
           }
         });
@@ -251,7 +251,7 @@ export default withNavigation(({ navigation }) => {
       if (requestCoffee.ok) {
         const usersNow = [];
         requestCoffee.profiles.map((profile: any) => {
-          if (!profile.isSelf) {
+          if (!profile.isSelf && profile.pushToken !== null) {
             usersNow.push(profile.pushToken);
           }
         });
@@ -326,7 +326,7 @@ export default withNavigation(({ navigation }) => {
             if (requestCoffee.ok) {
               const usersNow = [];
               requestCoffee.profiles.map((profile: any) => {
-                if (!profile.isSelf) {
+                if (!profile.isSelf && profile.pushToken !== null) {
                   usersNow.push(profile.pushToken);
                 }
               });
@@ -356,7 +356,7 @@ export default withNavigation(({ navigation }) => {
               if (requestCoffee.ok) {
                 const usersNow = [];
                 requestCoffee.profiles.map((profile: any) => {
-                  if (!profile.isSelf) {
+                  if (!profile.isSelf && profile.pushToken !== null) {
                     usersNow.push(profile.pushToken);
                   }
                 });
@@ -389,7 +389,7 @@ export default withNavigation(({ navigation }) => {
               if (requestCoffee.ok) {
                 const usersNow = [];
                 requestCoffee.profiles.map((profile: any) => {
-                  if (!profile.isSelf) {
+                  if (!profile.isSelf && profile.pushToken !== null) {
                     usersNow.push(profile.pushToken);
                   }
                 });
@@ -422,7 +422,7 @@ export default withNavigation(({ navigation }) => {
               if (requestCoffee.ok) {
                 const usersNow = [];
                 requestCoffee.profiles.map((profile: any) => {
-                  if (!profile.isSelf) {
+                  if (!profile.isSelf && profile.pushToken !== null) {
                     usersNow.push(profile.pushToken);
                   }
                 });
@@ -481,7 +481,7 @@ export default withNavigation(({ navigation }) => {
             if (requestCoffee.ok) {
               const usersNow = [];
               requestCoffee.profiles.map((profile: any) => {
-                if (!profile.isSelf) {
+                if (!profile.isSelf && profile.pushToken !== null) {
                   usersNow.push(profile.pushToken);
                 }
               });
@@ -510,7 +510,7 @@ export default withNavigation(({ navigation }) => {
             if (requestCoffee.ok) {
               const usersNow = [];
               requestCoffee.profiles.map((profile: any) => {
-                if (!profile.isSelf) {
+                if (!profile.isSelf && profile.pushToken !== null) {
                   usersNow.push(profile.pushToken);
                 }
               });
@@ -539,7 +539,7 @@ export default withNavigation(({ navigation }) => {
             if (requestCoffee.ok) {
               const usersNow = [];
               requestCoffee.profiles.map((profile: any) => {
-                if (!profile.isSelf) {
+                if (!profile.isSelf && profile.pushToken !== null) {
                   usersNow.push(profile.pushToken);
                 }
               });
@@ -1174,6 +1174,7 @@ export default withNavigation(({ navigation }) => {
                     style={{ height: nearCities.length < 3 ? 90 : 135 }}
                     paginationStyle={{ bottom: -15 }}
                     loop={false}
+                    index={0}
                     dotColor={isDarkMode ? "#424242" : "#DADADA"}
                     activeDotStyle={{
                       backgroundColor: isDarkMode ? "#EFEFEF" : "#161616",
