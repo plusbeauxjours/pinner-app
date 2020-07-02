@@ -11,7 +11,7 @@ import { useMe } from "../context/MeContext";
 import {
   get_last_chat_messages,
   fb_db,
-  get_last_chat_status
+  get_last_chat_status,
 } from "../../Fire";
 
 const Container = styled.View`
@@ -37,11 +37,11 @@ const MatchHeaderUserContainer = styled.View`
 `;
 const Bold = styled.Text`
   font-weight: 500;
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 const Location = styled.Text`
   font-size: 11px;
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 const Header = styled.View`
   flex: 2;
@@ -53,17 +53,17 @@ const SmallText = styled.Text`
   text-align: center;
 `;
 const IconContainer = styled.View`
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
   position: absolute;
   left: 0;
   top: 0;
 `;
 const Text = styled.Text`
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 const GreyText = styled(Text)`
   margin-left: 15px;
-  color: ${props => props.theme.greyColor};
+  color: ${(props) => props.theme.greyColor};
 `;
 const Items = styled.View`
   flex: 1;
@@ -111,7 +111,7 @@ const CenterLine = styled.View`
   height: 9px;
 `;
 const LastMessageText = styled(Text)`
-  color: ${props => props.theme.greyColor};
+  color: ${(props) => props.theme.greyColor};
 `;
 const View = styled.View`
   justify-content: center;
@@ -129,7 +129,6 @@ interface IProps {
   trip?: any;
   country?: any;
   continent?: any;
-  coffee?: any;
   match?: any;
   count?: number;
   diff?: number;
@@ -143,12 +142,11 @@ const UserRow: React.FC<IProps> = ({
   trip,
   country,
   continent,
-  coffee,
   match,
   count,
   diff,
   naturalTime,
-  type
+  type,
 }) => {
   const randomAvatar = {
     0: require(`../Images/thumbnails/earth6.png`),
@@ -160,17 +158,17 @@ const UserRow: React.FC<IProps> = ({
     6: require(`../Images/thumbnails/earth6.png`),
     7: require(`../Images/thumbnails/earth7.png`),
     8: require(`../Images/thumbnails/earth8.png`),
-    9: require(`../Images/thumbnails/earth9.png`)
+    9: require(`../Images/thumbnails/earth9.png`),
   };
   const isDarkMode = useTheme();
   const { me, loading: meLoading } = useMe();
   const [lastMessage, setLastMessage] = useState<string>("");
   const [hasUnreadMessage, setHasUnreadMessage] = useState<boolean>(false);
   if (match && !meLoading && me) {
-    get_last_chat_messages(match.id).then(message => {
+    get_last_chat_messages(match.id).then((message) => {
       setLastMessage(message);
     });
-    get_last_chat_status(match.id, me.user.profile.uuid).then(status => {
+    get_last_chat_status(match.id, me.user.uuid).then((status) => {
       if (status === true) {
         setHasUnreadMessage(false);
       } else if (status === false) {
@@ -182,16 +180,16 @@ const UserRow: React.FC<IProps> = ({
     fb_db.ref
       .child("chats")
       .child(match.id)
-      .on("child_changed", child => {
+      .on("child_changed", (child) => {
         if (child.val()) {
           setLastMessage(child.val()["lastMessage"]);
           if (
-            child.val()["lastSender"] !== me.user.profile.uuid &&
+            child.val()["lastSender"] !== me.user.uuid &&
             child.val()["status"] === true
           ) {
             setHasUnreadMessage(false);
           } else if (
-            child.val()["lastSender"] !== me.user.profile.uuid &&
+            child.val()["lastSender"] !== me.user.uuid &&
             child.val()["status"] === false
           ) {
             setHasUnreadMessage(true);
@@ -214,10 +212,10 @@ const UserRow: React.FC<IProps> = ({
                     style={{
                       height: 36,
                       width: 36,
-                      borderRadius: 18
+                      borderRadius: 18,
                     }}
                     preview={{
-                      uri: `${BACKEND_URL}/media/${user.appAvatarUrl}`
+                      uri: `${BACKEND_URL}/media/${user.appAvatarUrl}`,
                     }}
                     uri={`${BACKEND_URL}/media/${user.appAvatarUrl}`}
                   />
@@ -226,7 +224,7 @@ const UserRow: React.FC<IProps> = ({
                     style={{
                       height: 36,
                       width: 36,
-                      borderRadius: 18
+                      borderRadius: 18,
                     }}
                     source={randomAvatar[Math.round(Math.random() * 9)]}
                   />
@@ -257,10 +255,10 @@ const UserRow: React.FC<IProps> = ({
                     style={{
                       height: 36,
                       width: 36,
-                      borderRadius: 18
+                      borderRadius: 18,
                     }}
                     preview={{
-                      uri: `${BACKEND_URL}/media/${user.appAvatarUrl}`
+                      uri: `${BACKEND_URL}/media/${user.appAvatarUrl}`,
                     }}
                     uri={`${BACKEND_URL}/media/${user.appAvatarUrl}`}
                   />
@@ -269,7 +267,7 @@ const UserRow: React.FC<IProps> = ({
                     style={{
                       height: 36,
                       width: 36,
-                      borderRadius: 18
+                      borderRadius: 18,
                     }}
                     source={randomAvatar[Math.round(Math.random() * 9)]}
                   />
@@ -300,7 +298,7 @@ const UserRow: React.FC<IProps> = ({
                   style={{ height: 40, width: 40, borderRadius: 5 }}
                   preview={
                     trip.city.cityThumbnail && {
-                      uri: trip.city.cityThumbnail
+                      uri: trip.city.cityThumbnail,
                     }
                   }
                   uri={trip.city.cityThumbnail && trip.city.cityThumbnail}
@@ -356,7 +354,7 @@ const UserRow: React.FC<IProps> = ({
                   style={{ height: 40, width: 40, borderRadius: 5 }}
                   preview={
                     city.cityThumbnail && {
-                      uri: city.cityThumbnail
+                      uri: city.cityThumbnail,
                     }
                   }
                   uri={city.cityThumbnail && city.cityThumbnail}
@@ -392,7 +390,7 @@ const UserRow: React.FC<IProps> = ({
                   style={{ height: 40, width: 40, borderRadius: 5 }}
                   preview={
                     city.cityThumbnail && {
-                      uri: city.cityThumbnail
+                      uri: city.cityThumbnail,
                     }
                   }
                   uri={city.cityThumbnail && city.cityThumbnail}
@@ -435,7 +433,7 @@ const UserRow: React.FC<IProps> = ({
                   style={{ height: 40, width: 40, borderRadius: 5 }}
                   preview={
                     city.cityThumbnail && {
-                      uri: city.cityThumbnail
+                      uri: city.cityThumbnail,
                     }
                   }
                   uri={city.cityThumbnail && city.cityThumbnail}
@@ -486,7 +484,7 @@ const UserRow: React.FC<IProps> = ({
                   style={{ height: 40, width: 40, borderRadius: 5 }}
                   preview={
                     country.countryThumbnail && {
-                      uri: country.countryThumbnail
+                      uri: country.countryThumbnail,
                     }
                   }
                   uri={country.countryThumbnail && country.countryThumbnail}
@@ -520,7 +518,7 @@ const UserRow: React.FC<IProps> = ({
                   style={{ height: 40, width: 40, borderRadius: 5 }}
                   preview={
                     country.countryThumbnail && {
-                      uri: country.countryThumbnail
+                      uri: country.countryThumbnail,
                     }
                   }
                   uri={country.countryThumbnail && country.countryThumbnail}
@@ -571,7 +569,7 @@ const UserRow: React.FC<IProps> = ({
                   style={{ height: 40, width: 40, borderRadius: 5 }}
                   preview={
                     continent.continentThumbnail && {
-                      uri: continent.continentThumbnail
+                      uri: continent.continentThumbnail,
                     }
                   }
                   uri={
@@ -607,7 +605,7 @@ const UserRow: React.FC<IProps> = ({
                   style={{ height: 40, width: 40, borderRadius: 5 }}
                   preview={
                     continent.continentThumbnail && {
-                      uri: continent.continentThumbnail
+                      uri: continent.continentThumbnail,
                     }
                   }
                   uri={
@@ -648,84 +646,6 @@ const UserRow: React.FC<IProps> = ({
           </Items>
         </Container>
       );
-    case "coffee":
-      return (
-        <Container>
-          <Header>
-            <Touchable>
-              <ImageContainer>
-                {coffee.host.profile.appAvatarUrl ? (
-                  <ProgressiveImage
-                    tint={isDarkMode ? "dark" : "light"}
-                    style={{
-                      height: 36,
-                      width: 36,
-                      borderRadius: 18
-                    }}
-                    preview={{
-                      uri: `${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`
-                    }}
-                    uri={`${BACKEND_URL}/media/${coffee.host.profile.appAvatarUrl}`}
-                  />
-                ) : (
-                  <Image
-                    style={{
-                      height: 36,
-                      width: 36,
-                      borderRadius: 18
-                    }}
-                    source={randomAvatar[Math.round(Math.random() * 9)]}
-                  />
-                )}
-              </ImageContainer>
-            </Touchable>
-            <Touchable>
-              <HeaderUserContainer>
-                <Bold>{coffee.host.username}</Bold>
-                <Location>
-                  {coffee.city.cityName}, {coffee.city.country.countryName}
-                </Location>
-              </HeaderUserContainer>
-            </Touchable>
-          </Header>
-        </Container>
-      );
-    case "userProfileCoffee":
-      return (
-        <Container>
-          <Header>
-            <Touchable>
-              {coffee.city.cityThumbnail ? (
-                <ProgressiveImage
-                  tint={isDarkMode ? "dark" : "light"}
-                  style={{ height: 40, width: 40, borderRadius: 5 }}
-                  preview={
-                    coffee.city.cityThumbnail && {
-                      uri: coffee.city.cityThumbnail
-                    }
-                  }
-                  uri={coffee.city.cityThumbnail && coffee.city.cityThumbnail}
-                />
-              ) : (
-                <View>
-                  <SmallText>NO PHOTO</SmallText>
-                </View>
-              )}
-            </Touchable>
-            <Touchable>
-              <HeaderUserContainer>
-                <Bold>
-                  {coffee.city.cityName}
-                  <SmallText>
-                    &nbsp; | {coffee.target} | {coffee.naturalTime}
-                  </SmallText>
-                </Bold>
-                <Location>{coffee.city.country.countryName}</Location>
-              </HeaderUserContainer>
-            </Touchable>
-          </Header>
-        </Container>
-      );
     case "match":
       return (
         <>
@@ -733,25 +653,25 @@ const UserRow: React.FC<IProps> = ({
             <Container>
               <Header>
                 <ImageContainer>
-                  {match.guest.profile.appAvatarUrl ? (
+                  {match.guest.appAvatarUrl ? (
                     <ProgressiveImage
                       tint={isDarkMode ? "dark" : "light"}
                       style={{
                         height: 36,
                         width: 36,
-                        borderRadius: 18
+                        borderRadius: 18,
                       }}
                       preview={{
-                        uri: `${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`
+                        uri: `${BACKEND_URL}/media/${match.guest.appAvatarUrl}`,
                       }}
-                      uri={`${BACKEND_URL}/media/${match.guest.profile.appAvatarUrl}`}
+                      uri={`${BACKEND_URL}/media/${match.guest.appAvatarUrl}`}
                     />
                   ) : (
                     <Image
                       style={{
                         height: 36,
                         width: 36,
-                        borderRadius: 18
+                        borderRadius: 18,
                       }}
                       source={randomAvatar[Math.round(Math.random() * 9)]}
                     />
@@ -786,25 +706,25 @@ const UserRow: React.FC<IProps> = ({
             <Container>
               <Header>
                 <ImageContainer>
-                  {match.host.profile.appAvatarUrl ? (
+                  {match.host.appAvatarUrl ? (
                     <ProgressiveImage
                       tint={isDarkMode ? "dark" : "light"}
                       style={{
                         height: 36,
                         width: 36,
-                        borderRadius: 18
+                        borderRadius: 18,
                       }}
                       preview={{
-                        uri: `${BACKEND_URL}/media/${match.host.profile.appAvatarUrl}`
+                        uri: `${BACKEND_URL}/media/${match.host.appAvatarUrl}`,
                       }}
-                      uri={`${BACKEND_URL}/media/${match.host.profile.appAvatarUrl}`}
+                      uri={`${BACKEND_URL}/media/${match.host.appAvatarUrl}`}
                     />
                   ) : (
                     <Image
                       style={{
                         height: 36,
                         width: 36,
-                        borderRadius: 18
+                        borderRadius: 18,
                       }}
                       source={randomAvatar[Math.round(Math.random() * 9)]}
                     />

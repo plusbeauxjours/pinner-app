@@ -9,7 +9,6 @@ export const GET_USER = gql`
         username
         firstName
         lastName
-        profile {
           id
           uuid
           pushToken
@@ -37,7 +36,6 @@ export const GET_USER = gql`
           photoCount
           postCount
           tripCount
-          coffeeCount
           cityCount
           countryCount
           continentCount
@@ -58,7 +56,6 @@ export const GET_USER = gql`
             country {
               countryName
               countryCode
-            }
           }
         }
       }

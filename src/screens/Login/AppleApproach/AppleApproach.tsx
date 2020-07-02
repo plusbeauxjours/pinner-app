@@ -48,7 +48,7 @@ export default ({ cityId, countryCode }) => {
       shadow: true,
       animation: true,
       hideOnPress: true,
-      delay: 0
+      delay: 0,
     });
   };
   const appleLogin = async () => {
@@ -56,12 +56,12 @@ export default ({ cityId, countryCode }) => {
       const credential = await AppleAuthentication.signInAsync({
         requestedScopes: [
           AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-          AppleAuthentication.AppleAuthenticationScope.EMAIL
-        ]
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
       });
       try {
         const {
-          data: { appleConnect }
+          data: { appleConnect },
         } = await appleConnectFn({
           variables: {
             firstName: credential.fullName.givenName,
@@ -69,8 +69,8 @@ export default ({ cityId, countryCode }) => {
             email: credential.email,
             cityId,
             countryCode,
-            appleId: credential.user
-          }
+            appleId: credential.user,
+          },
         });
         await logIn(appleConnect);
         await toast(`Welcome!`);

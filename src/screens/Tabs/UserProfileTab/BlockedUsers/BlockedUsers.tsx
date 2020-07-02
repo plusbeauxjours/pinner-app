@@ -4,7 +4,7 @@ import { RefreshControl } from "react-native";
 import {
   GetBlockedUser,
   UserProfile,
-  UserProfileVariables
+  UserProfileVariables,
 } from "../../../../types/api";
 import { useQuery } from "react-apollo-hooks";
 import { SwipeListView } from "react-native-swipe-list-view";
@@ -17,10 +17,10 @@ import { GET_USER } from "../UserProfile/UserProfileQueries";
 import { useMe } from "../../../../context/MeContext";
 import {
   DeleteBlockUser,
-  DeleteBlockUserVariables
+  DeleteBlockUserVariables,
 } from "../../../../types/api";
 const Container = styled.View`
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
   padding: 0 15px 0 15px;
 `;
 const TextContainer = styled.View`
@@ -29,15 +29,15 @@ const TextContainer = styled.View`
   align-items: center;
 `;
 const Text = styled.Text`
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
   font-size: 8px;
   margin-left: 5px;
 `;
 const TouchableRow = styled.TouchableOpacity`
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 const TouchableBackRow = styled.View`
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 const SmallText = styled.Text`
   color: #999;
@@ -57,11 +57,11 @@ const BackLeftBtn = styled.TouchableOpacity`
   justify-content: center;
 `;
 const ScrollView = styled.ScrollView`
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 const LoaderContainer = styled.View`
   flex: 1;
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
   justify-content: center;
   align-items: center;
 `;
@@ -82,7 +82,7 @@ export default ({ navigation }) => {
   const {
     data: { getBlockedUser: { blockedUsers = null } = {} } = {},
     loading,
-    refetch
+    refetch,
   } = useQuery<GetBlockedUser>(GET_BLOCkED_USER);
   const [deleteBlockUserFn, { loading: deleteBlockUserLoading }] = useMutation<
     DeleteBlockUser,
@@ -91,15 +91,15 @@ export default ({ navigation }) => {
     update(cache, { data: { deleteBlockUser } }) {
       try {
         const blockedUserData = cache.readQuery<GetBlockedUser>({
-          query: GET_BLOCkED_USER
+          query: GET_BLOCkED_USER,
         });
         if (blockedUserData) {
           blockedUserData.getBlockedUser.blockedUsers = blockedUserData.getBlockedUser.blockedUsers.filter(
-            i => i.uuid !== deleteBlockUser.uuid
+            (i) => i.uuid !== deleteBlockUser.uuid
           );
           cache.writeQuery({
             query: GET_BLOCkED_USER,
-            data: blockedUserData
+            data: blockedUserData,
           });
         }
       } catch (e) {
@@ -108,21 +108,21 @@ export default ({ navigation }) => {
       try {
         const userData = cache.readQuery<UserProfile, UserProfileVariables>({
           query: GET_USER,
-          variables: { uuid: me.user.profile.uuid }
+          variables: { uuid: me.user.uuid },
         });
         if (userData) {
-          userData.userProfile.user.profile.blockedUserCount =
-            userData.userProfile.user.profile.blockedUserCount - 1;
+          userData.userProfile.user.blockedUserCount =
+            userData.userProfile.user.blockedUserCount - 1;
           cache.writeQuery({
             query: GET_USER,
-            variables: { uuid: me.user.profile.uuid },
-            data: userData
+            variables: { uuid: me.user.uuid },
+            data: userData,
           });
         }
       } catch (e) {
         console.log(e);
       }
-    }
+    },
   });
   const onRefresh = async () => {
     try {
@@ -159,13 +159,13 @@ export default ({ navigation }) => {
               closeOnRowBeginSwipe={true}
               data={blockedUsers}
               previewOpenValue={1000}
-              renderItem={data => (
+              renderItem={(data) => (
                 <TouchableBackRow key={data.item.id}>
                   <TouchableRow
                     onPress={() =>
                       navigation.push("UserProfile", {
-                        uuid: data.item.profile.uuid,
-                        isSelf: data.item.profile.isSelf
+                        uuid: data.item.uuid,
+                        isSelf: data.item.isSelf,
                       })
                     }
                   >
@@ -173,7 +173,7 @@ export default ({ navigation }) => {
                   </TouchableRow>
                 </TouchableBackRow>
               )}
-              renderHiddenItem={data => (
+              renderHiddenItem={(data) => (
                 <RowBack>
                   <BackLeftBtn
                     disabled={deleteBlockUserLoading}
@@ -188,7 +188,7 @@ export default ({ navigation }) => {
                 </RowBack>
               )}
               leftOpenValue={45}
-              keyExtractor={item => item.id}
+              keyExtractor={(item) => item.id}
             />
           ) : (
             <TextContainer>

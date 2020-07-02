@@ -13,7 +13,7 @@ import {
   GetCountries,
   GetCountriesVariables,
   SlackReportLocations,
-  SlackReportLocationsVariables
+  SlackReportLocationsVariables,
 } from "../../../../types/api";
 import { COUNTRY_PROFILE, GET_COUNTRIES } from "./CountryProfileQueries";
 import constants from "../../../../../constants";
@@ -32,27 +32,27 @@ import {
   GetResidenceUsers,
   GetResidenceUsersVariables,
   GetNationalityUsers,
-  GetNationalityUsersVariables
+  GetNationalityUsersVariables,
 } from "../../../../types/api";
 
 const Container = styled.View`
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
   padding: 0 15px 0 15px;
 `;
 
 const MapContainer = styled.View``;
 
 const Text = styled.Text`
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 const Bold = styled.Text`
   font-weight: 500;
   font-size: 34px;
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 const Flag = styled.Text`
   font-size: 24px;
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 const View = styled.View`
   justify-content: center;
@@ -81,23 +81,23 @@ const Title = styled.Text`
   margin-left: 5px;
   font-size: 18px;
   margin-bottom: 5px;
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 const CountryTitle = styled(Title)`
   text-transform: uppercase;
 `;
 const More = styled.Text`
   margin-left: 20px;
-  color: ${props => props.theme.greyColor};
+  color: ${(props) => props.theme.greyColor};
 `;
 const Touchable = styled.TouchableOpacity``;
 
 const ScrollView = styled.ScrollView`
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 const LoaderContainer = styled.View`
   flex: 1;
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
   justify-content: center;
   align-items: center;
 `;
@@ -118,7 +118,7 @@ const LocationNameContainer = styled.View`
 const NoPhotoContainer = styled.View`
   justify-content: center;
   align-items: center;
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
   height: ${constants.width - 30};
   width: ${constants.width - 30};
   border-radius: 3;
@@ -129,7 +129,7 @@ export default withNavigation(({ navigation }) => {
   const isDarkMode = useTheme();
   const [countryCode, setCountryCode] = useState<string>(
     navigation.getParam("countryCode") ||
-      me.user.profile.currentCity.country.countryCode
+      me.user.currentCity.country.countryCode
   );
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [mapOpen, setMapOpen] = useState<boolean>(false);
@@ -146,16 +146,16 @@ export default withNavigation(({ navigation }) => {
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-          marginBottom: 10
+          marginBottom: 10,
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
           color: isDarkMode ? "#EFEFEF" : "#161616",
-          fontWeight: "400"
+          fontWeight: "400",
         },
-        separatorStyle: { opacity: 0.5 }
+        separatorStyle: { opacity: 0.5 },
       },
-      async buttonIndex => {
+      async (buttonIndex) => {
         if (buttonIndex === 0) {
           reportLocation("PHOTO");
         } else if (buttonIndex === 1) {
@@ -176,7 +176,7 @@ export default withNavigation(({ navigation }) => {
         shadow: true,
         animation: true,
         hideOnPress: true,
-        delay: 0
+        delay: 0,
       });
     };
     showActionSheetWithOptions(
@@ -191,23 +191,23 @@ export default withNavigation(({ navigation }) => {
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-          marginBottom: 10
+          marginBottom: 10,
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
           color: isDarkMode ? "#EFEFEF" : "#161616",
-          fontWeight: "400"
+          fontWeight: "400",
         },
-        separatorStyle: { opacity: 0.5 }
+        separatorStyle: { opacity: 0.5 },
       },
-      buttonIndex => {
+      (buttonIndex) => {
         if (buttonIndex === 0) {
           slackReportLocationsFn({
             variables: {
               targetLocationId: countryCode,
               targetLocationType: "country",
-              payload
-            }
+              payload,
+            },
           });
           toast("Reported");
         }
@@ -216,44 +216,44 @@ export default withNavigation(({ navigation }) => {
   };
   const [
     slackReportLocationsFn,
-    { loading: slackReportLocationsLoading }
+    { loading: slackReportLocationsLoading },
   ] = useMutation<SlackReportLocations, SlackReportLocationsVariables>(
     SLACK_REPORT_LOCATIONS
   );
   const {
     data: {
-      countryProfile: { count = null, country = null, cities = null } = {}
+      countryProfile: { count = null, country = null, cities = null } = {},
     } = {},
     loading: profileLoading,
-    refetch: profileRefetch
+    refetch: profileRefetch,
   } = useQuery<CountryProfile, CountryProfileVariables>(COUNTRY_PROFILE, {
-    variables: { countryCode, page: 1 }
+    variables: { countryCode, page: 1 },
   });
   const {
     data: { getCountries: { countries = null } = {} } = {},
     loading: countriesLoading,
-    refetch: countriesRefetch
+    refetch: countriesRefetch,
   } = useQuery<GetCountries, GetCountriesVariables>(GET_COUNTRIES, {
-    variables: { countryCode }
+    variables: { countryCode },
   });
   const {
     data: { getResidenceUsers: { users: residenceUsers = null } = {} } = {},
     loading: getResidenceUsersLoading,
-    refetch: getResidenceUsersRefetch
+    refetch: getResidenceUsersRefetch,
   } = useQuery<GetResidenceUsers, GetResidenceUsersVariables>(
     GET_RESIDENCE_USERS,
     {
-      variables: { countryCode, payload: "BOX" }
+      variables: { countryCode, payload: "BOX" },
     }
   );
   const {
     data: { getNationalityUsers: { users: nationalityUsers = null } = {} } = {},
     loading: getNationalityUsersLoading,
-    refetch: getNationalityUsersRefetch
+    refetch: getNationalityUsersRefetch,
   } = useQuery<GetNationalityUsers, GetNationalityUsersVariables>(
     GET_NATIONALITY_USERS,
     {
-      variables: { countryCode, payload: "BOX" }
+      variables: { countryCode, payload: "BOX" },
     }
   );
   const onRefresh = async () => {
@@ -269,7 +269,7 @@ export default withNavigation(({ navigation }) => {
       setRefreshing(false);
     }
   };
-  const chunk = arr => {
+  const chunk = (arr) => {
     let chunks = [],
       i = 0,
       n = arr.length;
@@ -306,13 +306,13 @@ export default withNavigation(({ navigation }) => {
                     style={{
                       height: constants.width - 30,
                       width: constants.width - 30,
-                      borderRadius: 3
+                      borderRadius: 3,
                     }}
                     initialRegion={{
                       latitude: country.latitude,
                       longitude: country.longitude,
                       latitudeDelta: 10,
-                      longitudeDelta: 10
+                      longitudeDelta: 10,
                     }}
                     rotateEnabled={false}
                     customMapStyle={
@@ -328,10 +328,10 @@ export default withNavigation(({ navigation }) => {
                       style={{
                         height: constants.width - 30,
                         width: constants.width - 30,
-                        borderRadius: 3
+                        borderRadius: 3,
                       }}
                       preview={{
-                        uri: country.countryPhoto
+                        uri: country.countryPhoto,
                       }}
                       uri={country.countryPhoto}
                     />
@@ -382,7 +382,7 @@ export default withNavigation(({ navigation }) => {
                     <Touchable
                       onPress={() =>
                         navigation.push("UsersResidence", {
-                          countryCode: country.countryCode
+                          countryCode: country.countryCode,
                         })
                       }
                     >
@@ -406,7 +406,7 @@ export default withNavigation(({ navigation }) => {
                     marginLeft: 3,
                     marginRight: 3,
                     marginTop: 3,
-                    marginBottom: 3
+                    marginBottom: 3,
                   }}
                 >
                   {chunk(residenceUsers).map((users, index: any) => {
@@ -419,7 +419,7 @@ export default withNavigation(({ navigation }) => {
                               onPress={() =>
                                 navigation.push("UserProfile", {
                                   uuid: user.uuid,
-                                  isSelf: user.isSelf
+                                  isSelf: user.isSelf,
                                 })
                               }
                             >
@@ -456,7 +456,7 @@ export default withNavigation(({ navigation }) => {
                     <Touchable
                       onPress={() =>
                         navigation.push("UsersNationality", {
-                          countryCode: country.countryCode
+                          countryCode: country.countryCode,
                         })
                       }
                     >
@@ -480,7 +480,7 @@ export default withNavigation(({ navigation }) => {
                     marginLeft: 3,
                     marginRight: 3,
                     marginTop: 3,
-                    marginBottom: 3
+                    marginBottom: 3,
                   }}
                 >
                   {chunk(nationalityUsers).map((users, index: any) => {
@@ -493,7 +493,7 @@ export default withNavigation(({ navigation }) => {
                               onPress={() =>
                                 navigation.push("UserProfile", {
                                   uuid: user.uuid,
-                                  isSelf: user.isSelf
+                                  isSelf: user.isSelf,
                                 })
                               }
                             >
@@ -530,7 +530,7 @@ export default withNavigation(({ navigation }) => {
                     marginLeft: 3,
                     marginRight: 3,
                     marginTop: 3,
-                    marginBottom: 3
+                    marginBottom: 3,
                   }}
                 >
                   {chunk(countries).map((countryItem, index) => {
@@ -543,7 +543,7 @@ export default withNavigation(({ navigation }) => {
                               onPress={() =>
                                 navigation.push("CountryProfileTabs", {
                                   countryCode: country.countryCode,
-                                  continentCode: country.continentCode
+                                  continentCode: country.continentCode,
                                 })
                               }
                             >
@@ -572,8 +572,8 @@ export default withNavigation(({ navigation }) => {
                       cityId: city.cityId,
                       countryCode: city.country.countryCode,
                       continentCode: countryData.find(
-                        i => i.code === city.country.countryCode
-                      ).continent
+                        (i) => i.code === city.country.countryCode
+                      ).continent,
                     })
                   }
                 >

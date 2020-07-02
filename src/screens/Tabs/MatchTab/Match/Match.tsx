@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Constants from "expo-constants";
-import {
-  RefreshControl,
-  Platform,
-  Alert,
-  Linking,
-  AsyncStorage
-} from "react-native";
+import { RefreshControl, Platform, Alert, Linking } from "react-native";
 import { MARK_AS_READ_MATCH } from "./MatchQueries";
 import { SwipeListView } from "react-native-swipe-list-view";
 import * as Location from "expo-location";
@@ -19,13 +13,12 @@ import * as Permissions from "expo-permissions";
 import { Notifications } from "expo";
 import { GET_MATCHES } from "./MatchQueries";
 import { GET_BLOCkED_USER } from "../../UserProfileTab/BlockedUsers/BlockedUsersQueries";
-import { UNMATCH } from "../../../../components/CoffeeBtn/CoffeeBtnQueries";
 import { chat_leave, fb_db } from "../../../../../Fire";
 import {
   REGISTER_PUSH,
   ADD_BLOCK_USER,
   ME,
-  REPORT_LOCATION
+  REPORT_LOCATION,
 } from "../../../../sharedQueries";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
@@ -43,17 +36,18 @@ import {
   AddBlockUserVariables,
   GetBlockedUser,
   UserProfile,
-  UserProfileVariables
+  UserProfileVariables,
 } from "../../../../types/api";
 import constants from "../../../../../constants";
 import { useTheme } from "../../../../context/ThemeContext";
 import {
   Me,
   ReportLocation,
-  ReportLocationVariables
+  ReportLocationVariables,
 } from "../../../../types/api";
 import { useReverseGeoCode } from "../../../../hooks/useReverseGeoCode";
 import { useReversePlaceId } from "../../../../hooks/useReversePlaceId";
+import { UNMATCH } from "../../../../sharedQueries";
 
 const TextContainer = styled.View`
   margin-top: 15px;
@@ -61,12 +55,12 @@ const TextContainer = styled.View`
   align-items: center;
 `;
 const Container = styled.View`
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
   padding: 0 10px 0 10px;
 `;
 const Touchable = styled.TouchableOpacity``;
 const Text = styled.Text`
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
   font-size: 8px;
   margin-left: 5px;
 `;
@@ -78,11 +72,11 @@ const Item = styled.View`
   margin-bottom: 25px;
 `;
 const ScrollView = styled.ScrollView`
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 const LoaderContainer = styled.View`
   flex: 1;
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
   justify-content: center;
   align-items: center;
 `;
@@ -114,7 +108,7 @@ const IconContainer = styled.View`
   padding: 2px;
 `;
 const TouchableBackRow = styled.View`
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 export default ({ navigation }) => {
   const { data, loading: meLoading } = useQuery<Me>(ME);
@@ -128,18 +122,18 @@ export default ({ navigation }) => {
     update(cache, { data: { addBlockUser } }) {
       try {
         const matchData = cache.readQuery<GetMatches, GetMatchesVariables>({
-          query: GET_MATCHES
+          query: GET_MATCHES,
         });
         if (matchData) {
           matchData.getMatches.matches = matchData.getMatches.matches.filter(
-            i =>
+            (i) =>
               i.isHost
-                ? i.guest.profile.uuid !== addBlockUser.blockedUser.uuid
-                : i.host.profile.uuid !== addBlockUser.blockedUser.uuid
+                ? i.guest.uuid !== addBlockUser.blockedUser.uuid
+                : i.host.uuid !== addBlockUser.blockedUser.uuid
           );
           cache.writeQuery({
             query: GET_MATCHES,
-            data: matchData
+            data: matchData,
           });
         }
       } catch (e) {
@@ -147,7 +141,7 @@ export default ({ navigation }) => {
       }
       try {
         const blockedUserData = cache.readQuery<GetBlockedUser>({
-          query: GET_BLOCkED_USER
+          query: GET_BLOCkED_USER,
         });
         if (blockedUserData) {
           blockedUserData.getBlockedUser.blockedUsers.unshift(
@@ -155,7 +149,7 @@ export default ({ navigation }) => {
           );
           cache.writeQuery({
             query: GET_BLOCkED_USER,
-            data: blockedUserData
+            data: blockedUserData,
           });
         }
       } catch (e) {
@@ -164,21 +158,21 @@ export default ({ navigation }) => {
       try {
         const userData = cache.readQuery<UserProfile, UserProfileVariables>({
           query: GET_USER,
-          variables: { uuid: me.user.profile.uuid }
+          variables: { uuid: me.user.uuid },
         });
         if (userData) {
-          userData.userProfile.user.profile.blockedUserCount =
-            userData.userProfile.user.profile.blockedUserCount + 1;
+          userData.userProfile.user.blockedUserCount =
+            userData.userProfile.user.blockedUserCount + 1;
           cache.writeQuery({
             query: GET_USER,
-            variables: { uuid: me.user.profile.uuid },
-            data: userData
+            variables: { uuid: me.user.uuid },
+            data: userData,
           });
         }
       } catch (e) {
         console.log(e);
       }
-    }
+    },
   });
   const [registerPushFn, { loading: registerPushLoading }] = useMutation<
     RegisterPush,
@@ -197,14 +191,14 @@ export default ({ navigation }) => {
           [
             {
               text: "Cancel",
-              style: "cancel"
+              style: "cancel",
             },
             {
               text: "Open Settings",
               onPress: () => {
                 Linking.openURL("app-settings:");
-              }
-            }
+              },
+            },
           ]
         );
       } else if (Platform.OS === "android" && locationStatus === "denied") {
@@ -214,7 +208,7 @@ export default ({ navigation }) => {
           [
             {
               text: "Cancel",
-              style: "cancel"
+              style: "cancel",
             },
             {
               text: "Open Settings",
@@ -226,13 +220,13 @@ export default ({ navigation }) => {
                   IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
                   { data: "package:" + pkg }
                 );
-              }
-            }
+              },
+            },
           ]
         );
       } else if (locationStatus === "granted") {
         const position = await Location.getCurrentPositionAsync({
-          timeout: 5000
+          timeout: 5000,
         });
         handleGeoSuccess(position);
       } else {
@@ -251,14 +245,14 @@ export default ({ navigation }) => {
         [
           {
             text: "Cancel",
-            style: "cancel"
+            style: "cancel",
           },
           {
             text: "Open Settings",
             onPress: () => {
               Linking.openURL("app-settings:");
-            }
-          }
+            },
+          },
         ]
       );
     } else if (Platform.OS === "android" && notificationStatus === "denied") {
@@ -268,7 +262,7 @@ export default ({ navigation }) => {
         [
           {
             text: "Cancel",
-            style: "cancel"
+            style: "cancel",
           },
           {
             text: "Open Settings",
@@ -280,22 +274,22 @@ export default ({ navigation }) => {
                 IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
                 { data: "package:" + pkg }
               );
-            }
-          }
+            },
+          },
         ]
       );
     } else if (notificationStatus === "granted") {
       let pushToken = await Notifications.getExpoPushTokenAsync();
       const { data: serverData } = await registerPushFn({
-        variables: { pushToken }
+        variables: { pushToken },
       });
     } else {
       return;
     }
   };
-  const handleGeoSuccess = position => {
+  const handleGeoSuccess = (position) => {
     const {
-      coords: { latitude, longitude }
+      coords: { latitude, longitude },
     } = position;
     getAddress(latitude, longitude);
   };
@@ -312,8 +306,8 @@ export default ({ navigation }) => {
             currentLng: cityInfo.storableLocation.longitude,
             currentCityId: address.storableLocation.cityId,
             currentCityName: address.storableLocation.cityName,
-            currentCountryCode: address.storableLocation.countryCode
-          }
+            currentCountryCode: address.storableLocation.countryCode,
+          },
         });
         // await AsyncStorage.setItem("cityId", address.storableLocation.cityId);
         // await AsyncStorage.setItem(
@@ -336,30 +330,30 @@ export default ({ navigation }) => {
     update(cache, { data: { markAsReadMatch } }) {
       try {
         const matchData = cache.readQuery<GetMatches, GetMatchesVariables>({
-          query: GET_MATCHES
+          query: GET_MATCHES,
         });
         if (matchData) {
           matchData.getMatches.matches.find(
-            i => i.id === markAsReadMatch.matchId
+            (i) => i.id === markAsReadMatch.matchId
           ).isReadByHost = markAsReadMatch.isReadByHost;
           matchData.getMatches.matches.find(
-            i => i.id === markAsReadMatch.matchId
+            (i) => i.id === markAsReadMatch.matchId
           ).isReadByGuest = markAsReadMatch.isReadByGuest;
           cache.writeQuery({
             query: GET_MATCHES,
-            data: matchData
+            data: matchData,
           });
         }
       } catch (e) {
         console.log(e);
       }
-    }
+    },
   });
 
   const {
     data: { getMatches: { matches = null } = {} } = {},
     loading: matchLoading,
-    refetch: matchRefetch
+    refetch: matchRefetch,
   } = useQuery<GetMatches, GetMatchesVariables>(GET_MATCHES);
 
   const [unMatchFn, { loading: unMatchLoading }] = useMutation<
@@ -369,21 +363,21 @@ export default ({ navigation }) => {
     update(cache, { data: { unMatch } }) {
       try {
         const matchData = cache.readQuery<GetMatches, GetMatchesVariables>({
-          query: GET_MATCHES
+          query: GET_MATCHES,
         });
         if (matchData) {
           matchData.getMatches.matches = matchData.getMatches.matches.filter(
-            i => parseInt(i.id, 10) !== unMatch.matchId
+            (i) => parseInt(i.id, 10) !== unMatch.matchId
           );
           cache.writeQuery({
             query: GET_MATCHES,
-            data: matchData
+            data: matchData,
           });
         }
       } catch (e) {
         console.log(e);
       }
-    }
+    },
   });
   const onRefresh = async () => {
     try {
@@ -402,7 +396,7 @@ export default ({ navigation }) => {
       shadow: true,
       animation: true,
       hideOnPress: true,
-      delay: 0
+      delay: 0,
     });
   };
   const { showActionSheetWithOptions } = useActionSheet();
@@ -419,25 +413,25 @@ export default ({ navigation }) => {
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-          marginBottom: 10
+          marginBottom: 10,
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
           color: isDarkMode ? "#EFEFEF" : "#161616",
-          fontWeight: "400"
+          fontWeight: "400",
         },
-        separatorStyle: { opacity: 0.5 }
+        separatorStyle: { opacity: 0.5 },
       },
-      async buttonIndex => {
+      async (buttonIndex) => {
         if (buttonIndex === 0) {
           try {
             const {
-              data: { unMatch }
+              data: { unMatch },
             } = await unMatchFn({
-              variables: { matchId: parseInt(matchId, 10) }
+              variables: { matchId: parseInt(matchId, 10) },
             });
             if (unMatch.ok) {
-              chat_leave(matchId, me.user.profile.uuid, me.user.username);
+              chat_leave(matchId, me.user.uuid, me.user.username);
               toast("unmatched");
             }
           } catch (e) {
@@ -460,25 +454,25 @@ export default ({ navigation }) => {
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-          marginBottom: 10
+          marginBottom: 10,
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
           color: isDarkMode ? "#EFEFEF" : "#161616",
-          fontWeight: "400"
+          fontWeight: "400",
         },
-        separatorStyle: { opacity: 0.5 }
+        separatorStyle: { opacity: 0.5 },
       },
-      async buttonIndex => {
+      async (buttonIndex) => {
         if (buttonIndex === 0) {
           try {
             const {
-              data: { addBlockUser }
+              data: { addBlockUser },
             } = await addBlockUserFn({
-              variables: { uuid }
+              variables: { uuid },
             });
             if (addBlockUser.ok) {
-              chat_leave(matchId, me.user.profile.uuid, me.user.username);
+              chat_leave(matchId, me.user.uuid, me.user.username);
               toast("blocked user");
             }
           } catch (e) {
@@ -488,7 +482,7 @@ export default ({ navigation }) => {
       }
     );
   };
-  fb_db.ref.child("chats").on("child_added", child => {
+  fb_db.ref.child("chats").on("child_added", (child) => {
     if (child.val()) {
       if (child.val()["lastSender"] === "system") {
         matchRefetch();
@@ -527,35 +521,35 @@ export default ({ navigation }) => {
                   closeOnRowBeginSwipe={true}
                   data={matches}
                   previewOpenValue={1000}
-                  renderItem={data => (
+                  renderItem={(data) => (
                     <TouchableBackRow key={data.index}>
                       <Touchable
                         disabled={unMatchLoading || addBlockUserLoading}
                         onPress={() => {
                           MarkAsReadMatchFn({
-                            variables: { matchId: parseInt(data.item.id, 10) }
+                            variables: { matchId: parseInt(data.item.id, 10) },
                           }),
                             navigation.navigate("Chat", {
                               chatId: data.item.id,
-                              userId: me.user.profile.uuid,
+                              userId: me.user.uuid,
                               receiverId: data.item.isHost
-                                ? data.item.guest.profile.uuid
-                                : data.item.host.profile.uuid,
+                                ? data.item.guest.uuid
+                                : data.item.host.uuid,
                               receiverAvatar: data.item.isHost
-                                ? data.item.guest.profile.appAvatarUrl
-                                : data.item.host.profile.appAvatarUrl,
+                                ? data.item.guest.appAvatarUrl
+                                : data.item.host.appAvatarUrl,
                               receiverPushToken: data.item.isHost
-                                ? data.item.guest.profile.pushToken
-                                : data.item.host.profile.pushToken,
-                              uuid: me.user.profile.uuid,
+                                ? data.item.guest.pushToken
+                                : data.item.host.pushToken,
+                              uuid: me.user.uuid,
                               userName: me.user.username,
-                              userUrl: me.user.profile.appAvatarUrl,
+                              userUrl: me.user.appAvatarUrl,
                               targetUuid: data.item.isHost
-                                ? data.item.guest.profile.uuid
-                                : data.item.host.profile.uuid,
+                                ? data.item.guest.uuid
+                                : data.item.host.uuid,
                               isDarkMode: isDarkMode,
-                              latitude: me.user.profile.currentCity.latitude,
-                              longitude: me.user.profile.currentCity.longitude
+                              latitude: me.user.currentCity.latitude,
+                              longitude: me.user.currentCity.longitude,
                             });
                         }}
                       >
@@ -563,7 +557,7 @@ export default ({ navigation }) => {
                       </Touchable>
                     </TouchableBackRow>
                   )}
-                  renderHiddenItem={data => (
+                  renderHiddenItem={(data) => (
                     <RowBack>
                       <BackLeftBtn
                         disabled={unMatchLoading}
@@ -576,7 +570,7 @@ export default ({ navigation }) => {
                       <BackLeftBtn
                         disabled={addBlockUserLoading}
                         onPress={() =>
-                          blockedUser(data.item.host.profile.uuid, data.item.id)
+                          blockedUser(data.item.host.uuid, data.item.id)
                         }
                       >
                         <IconContainer>
@@ -586,7 +580,7 @@ export default ({ navigation }) => {
                     </RowBack>
                   )}
                   leftOpenValue={91}
-                  keyExtractor={item => item.id}
+                  keyExtractor={(item) => item.id}
                 />
               </UserContainer>
             </Item>

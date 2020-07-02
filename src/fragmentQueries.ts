@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 export const PROFILE_FRAGMENT = gql`
-  fragment ProfileParts on ProfileType {
+  fragment ProfileParts on UserType {
     id
     uuid
     username
@@ -65,58 +65,13 @@ export const CONTINENT_FRAGMENT = gql`
   }
 `;
 
-export const COFFEE_FRAGMENT = gql`
-  fragment CoffeeParts on CoffeeType {
-    id
-    uuid
-    city {
-      cityId
-      cityName
-      cityThumbnail
-      country {
-        countryName
-        countryCode
-        countryEmoji
-      }
-    }
-    host {
-      id
-      username
-      profile {
-        uuid
-        avatarUrl
-        appAvatarUrl
-        isSelf
-        residence {
-          countryCode
-          countryName
-          countryEmoji
-        }
-        nationality {
-          countryCode
-          countryName
-          countryEmoji
-        }
-        currentCity {
-          cityName
-          country {
-            countryName
-          }
-        }
-      }
-    }
-    status
-    naturalTime
-    target
-    createdAt
-    matchCount
-  }
-`;
-
 export const MATCH_FRAGMENT = gql`
   fragment MatchParts on MatchType {
     id
     naturalTime
+    isHost
+    isGuest
+    isMatching
     city {
       cityId
       cityName
@@ -127,48 +82,31 @@ export const MATCH_FRAGMENT = gql`
     }
     host {
       username
-      profile {
-        id
-        uuid
-        pushToken
-        avatarUrl
-        appAvatarUrl
-        isSelf
-        currentCity {
-          cityName
-          country {
-            countryName
-          }
+      id
+      uuid
+      pushToken
+      avatarUrl
+      appAvatarUrl
+      isSelf
+      currentCity {
+        cityName
+        country {
+          countryName
         }
       }
     }
     guest {
       username
-      profile {
-        id
-        uuid
-        pushToken
-        avatarUrl
-        appAvatarUrl
-        isSelf
-        currentCity {
-          cityName
-          country {
-            countryName
-          }
-        }
-      }
-    }
-    coffee {
       id
       uuid
-      target
-      city {
-        cityId
+      pushToken
+      avatarUrl
+      appAvatarUrl
+      isSelf
+      currentCity {
         cityName
         country {
           countryName
-          countryEmoji
         }
       }
     }

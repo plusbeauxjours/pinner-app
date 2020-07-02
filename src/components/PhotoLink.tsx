@@ -15,7 +15,7 @@ import {
   GetAvatars,
   GetAvatarsVariables,
   UserProfile,
-  UserProfileVariables
+  UserProfileVariables,
 } from "../types/api";
 import { UPLOAD_AVATAR, ME } from "../sharedQueries";
 import { useMutation } from "react-apollo";
@@ -42,20 +42,20 @@ export default withNavigation(({ navigation }) => {
       try {
         const data = cache.readQuery<GetAvatars, GetAvatarsVariables>({
           query: GET_AVATARS,
-          variables: { uuid: me.user.profile.uuid }
+          variables: { uuid: me.user.uuid },
         });
         if (data) {
           data.getAvatars.avatars.unshift(uploadAvatar.avatar);
           data.getAvatars.avatars.find(
-            i => i.uuid === uploadAvatar.preAvatarUUID
+            (i) => i.uuid === uploadAvatar.preAvatarUUID
           ).isMain = false;
           data.getAvatars.avatars.find(
-            i => i.uuid === uploadAvatar.newAvatarUUID
+            (i) => i.uuid === uploadAvatar.newAvatarUUID
           ).isMain = true;
           cache.writeQuery({
             query: GET_AVATARS,
-            variables: { uuid: me.user.profile.uuid },
-            data
+            variables: { uuid: me.user.uuid },
+            data,
           });
         }
       } catch (e) {
@@ -64,15 +64,14 @@ export default withNavigation(({ navigation }) => {
       try {
         const data = cache.readQuery<UserProfile, UserProfileVariables>({
           query: GET_USER,
-          variables: { uuid: me.user.profile.uuid }
+          variables: { uuid: me.user.uuid },
         });
         if (data) {
-          data.userProfile.user.profile.avatarUrl =
-            uploadAvatar.avatar.thumbnail;
+          data.userProfile.user.avatarUrl = uploadAvatar.avatar.thumbnail;
           cache.writeQuery({
             query: GET_USER,
-            variables: { uuid: me.user.profile.uuid },
-            data
+            variables: { uuid: me.user.uuid },
+            data,
           });
         }
       } catch (e) {
@@ -80,19 +79,19 @@ export default withNavigation(({ navigation }) => {
       }
       try {
         const data = cache.readQuery<Me>({
-          query: ME
+          query: ME,
         });
         if (data) {
-          data.me.user.profile.avatarUrl = uploadAvatar.avatar.thumbnail;
+          data.me.user.avatarUrl = uploadAvatar.avatar.thumbnail;
           cache.writeQuery({
             query: ME,
-            data
+            data,
           });
         }
       } catch (e) {
         console.log(e);
       }
-    }
+    },
   });
   const toast = (message: string) => {
     Toast.show(message, {
@@ -101,7 +100,7 @@ export default withNavigation(({ navigation }) => {
       shadow: true,
       animation: true,
       hideOnPress: true,
-      delay: 0
+      delay: 0,
     });
   };
   const image_resize = async (
@@ -113,11 +112,11 @@ export default withNavigation(({ navigation }) => {
       let manipResult;
       if (orig_width / 960 >= orig_height / 960) {
         manipResult = await ImageManipulator.manipulateAsync(uri, [
-          { resize: { width: 960 } }
+          { resize: { width: 960 } },
         ]);
       } else {
         manipResult = await ImageManipulator.manipulateAsync(uri, [
-          { resize: { height: 960 } }
+          { resize: { height: 960 } },
         ]);
       }
       return manipResult.uri;
@@ -133,7 +132,7 @@ export default withNavigation(({ navigation }) => {
           mediaTypes: ImagePicker.MediaTypeOptions.All,
           allowsEditing: true,
           aspect: [1, 1],
-          quality: 1
+          quality: 1,
         });
         if (result.cancelled !== true) {
           const resized_uri = await image_resize(
@@ -170,11 +169,11 @@ export default withNavigation(({ navigation }) => {
           const file = new ReactNativeFile({
             uri: resized_uri,
             type,
-            name
+            name,
           });
           try {
             const {
-              data: { uploadAvatar }
+              data: { uploadAvatar },
             } = await uploadAvatarFn({ variables: { file } });
             if (uploadAvatar.ok) {
               toast("Uploaded");
@@ -197,8 +196,8 @@ export default withNavigation(({ navigation }) => {
             text: "Open Settings",
             onPress: () => {
               Linking.openURL("app-settings:");
-            }
-          }
+            },
+          },
         ]
       );
     } else if (Platform.OS === "android" && status === "denied") {
@@ -217,8 +216,8 @@ export default withNavigation(({ navigation }) => {
                 IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
                 { data: "package:" + pkg }
               );
-            }
-          }
+            },
+          },
         ]
       );
     }

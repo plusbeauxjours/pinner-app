@@ -15,7 +15,7 @@ import {
   MarkAsMain,
   MarkAsMainVariables,
   UserProfile,
-  UserProfileVariables
+  UserProfileVariables,
 } from "../../../../types/api";
 import Loader from "../../../../components/Loader";
 import constants, { BACKEND_URL } from "../../../../../constants";
@@ -33,20 +33,20 @@ const TextContainer = styled.View`
   align-items: center;
 `;
 const Text = styled.Text`
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
   font-size: 8px;
   margin-left: 5px;
 `;
 const Touchable = styled.TouchableOpacity``;
 const Container = styled.View`
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 const ScrollView = styled.ScrollView`
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 const LoaderContainer = styled.View`
   flex: 1;
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
   justify-content: center;
   align-items: center;
 `;
@@ -57,10 +57,10 @@ export default ({ navigation }) => {
   const { showActionSheetWithOptions } = useActionSheet();
   const uuid = navigation.getParam("uuid")
     ? navigation.getParam("uuid")
-    : me.user.profile.uuid;
+    : me.user.uuid;
   const isSelf = navigation.getParam("isSelf")
     ? navigation.getParam("isSelf")
-    : me.user.profile.uuid === navigation.getParam("uuid") ||
+    : me.user.uuid === navigation.getParam("uuid") ||
       !navigation.getParam("uuid");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -68,9 +68,9 @@ export default ({ navigation }) => {
   const {
     data: { getAvatars: { avatars = null } = {} } = {},
     loading: avatarLoading,
-    refetch: avatarRefetch
+    refetch: avatarRefetch,
   } = useQuery<GetAvatars, GetAvatarsVariables>(GET_AVATARS, {
-    variables: { uuid }
+    variables: { uuid },
   });
   const [deleteAvatarFn, { loading: deleteAvatarLoading }] = useMutation<
     DeleteAvatar,
@@ -80,22 +80,22 @@ export default ({ navigation }) => {
       try {
         const data = cache.readQuery<GetAvatars, GetAvatarsVariables>({
           query: GET_AVATARS,
-          variables: { uuid }
+          variables: { uuid },
         });
         if (data) {
           data.getAvatars.avatars = data.getAvatars.avatars.filter(
-            i => i.uuid !== deleteAvatar.uuid
+            (i) => i.uuid !== deleteAvatar.uuid
           );
           cache.writeQuery({
             query: GET_AVATARS,
             variables: { uuid },
-            data
+            data,
           });
         }
       } catch (e) {
         console.log(e);
       }
-    }
+    },
   });
   const [markAsMainFn, { loading: markAsMainLoading }] = useMutation<
     MarkAsMain,
@@ -105,14 +105,14 @@ export default ({ navigation }) => {
       try {
         const data = cache.readQuery<UserProfile, UserProfileVariables>({
           query: GET_USER,
-          variables: { uuid }
+          variables: { uuid },
         });
         if (data) {
-          data.userProfile.user.profile.avatarUrl = markAsMain.avatar.thumbnail;
+          data.userProfile.user.avatarUrl = markAsMain.avatar.thumbnail;
           cache.writeQuery({
             query: GET_USER,
             variables: { uuid },
-            data
+            data,
           });
         }
       } catch (e) {
@@ -120,13 +120,13 @@ export default ({ navigation }) => {
       }
       try {
         const data = cache.readQuery<Me>({
-          query: ME
+          query: ME,
         });
         if (data) {
-          data.me.user.profile.avatarUrl = markAsMain.avatar.thumbnail;
+          data.me.user.avatarUrl = markAsMain.avatar.thumbnail;
           cache.writeQuery({
             query: ME,
-            data
+            data,
           });
         }
       } catch (e) {
@@ -135,25 +135,25 @@ export default ({ navigation }) => {
       try {
         const data = cache.readQuery<GetAvatars, GetAvatarsVariables>({
           query: GET_AVATARS,
-          variables: { uuid }
+          variables: { uuid },
         });
         if (data) {
           data.getAvatars.avatars.find(
-            i => i.uuid === markAsMain.preAvatarUUID
+            (i) => i.uuid === markAsMain.preAvatarUUID
           ).isMain = false;
           data.getAvatars.avatars.find(
-            i => i.uuid === markAsMain.newAvatarUUID
+            (i) => i.uuid === markAsMain.newAvatarUUID
           ).isMain = true;
           cache.writeQuery({
             query: GET_AVATARS,
             variables: { uuid },
-            data
+            data,
           });
         }
       } catch (e) {
         console.log(e);
       }
-    }
+    },
   });
   const openModal = async (item: any) => {
     await setAvatar(item);
@@ -183,9 +183,9 @@ export default ({ navigation }) => {
           {
             options: ["Change main photo", "Delete photo", "Cancel"],
             showSeparators: true,
-            cancelButtonIndex: 2
+            cancelButtonIndex: 2,
           },
-          buttonIndex => {
+          (buttonIndex) => {
             if (
               buttonIndex === 0 &&
               !deleteAvatarLoading &&
@@ -204,7 +204,7 @@ export default ({ navigation }) => {
       : Alert.alert("Options", "Please tap an option.", [
           {
             text: "Cancel",
-            style: "cancel"
+            style: "cancel",
           },
           {
             text: "Change main photo",
@@ -214,14 +214,14 @@ export default ({ navigation }) => {
                 markAsMainFn({ variables: { uuid: avatar.uuid } });
               setModalOpen(false);
               toast("Main photo changed");
-            }
+            },
           },
           {
             text: "Delete photo",
             onPress: () => {
               onConfirmPress();
-            }
-          }
+            },
+          },
         ]);
   };
   const onConfirmPress = () => {
@@ -231,9 +231,9 @@ export default ({ navigation }) => {
             options: ["Yes", "No"],
             destructiveButtonIndex: 0,
             showSeparators: true,
-            cancelButtonIndex: 1
+            cancelButtonIndex: 1,
           },
-          buttonIndex => {
+          (buttonIndex) => {
             if (
               buttonIndex === 0 &&
               !deleteAvatarLoading &&
@@ -252,7 +252,7 @@ export default ({ navigation }) => {
           [
             {
               text: "No",
-              style: "cancel"
+              style: "cancel",
             },
             {
               text: "Yes",
@@ -261,8 +261,8 @@ export default ({ navigation }) => {
                   !markAsMainLoading &&
                   deleteAvatar(avatar.uuid);
                 toast("Photo deleted");
-              }
-            }
+              },
+            },
           ]
         );
   };
@@ -273,7 +273,7 @@ export default ({ navigation }) => {
       shadow: true,
       animation: true,
       hideOnPress: true,
-      delay: 0
+      delay: 0,
     });
   };
   if (avatarLoading || meLoading) {
@@ -349,10 +349,10 @@ export default ({ navigation }) => {
                     width: constants.width,
                     padding: 0,
                     margin: 0,
-                    position: "absolute"
+                    position: "absolute",
                   }}
                   preview={{
-                    uri: `${BACKEND_URL}/media/${avatar.thumbnail}`
+                    uri: `${BACKEND_URL}/media/${avatar.thumbnail}`,
                   }}
                   uri={`${BACKEND_URL}/media/${avatar.image}`}
                 />
@@ -364,7 +364,7 @@ export default ({ navigation }) => {
                 renderItem={({ item }) => (
                   <Container
                     style={{
-                      margin: 0.5
+                      margin: 0.5,
                     }}
                   >
                     <Touchable
@@ -379,10 +379,10 @@ export default ({ navigation }) => {
                           style={{
                             height: constants.width / 3 - 1,
                             width: constants.width / 3 - 1,
-                            borderRadius: constants.width / 3 / 2
+                            borderRadius: constants.width / 3 / 2,
                           }}
                           preview={{
-                            uri: `${BACKEND_URL}/media/${item.thumbnail}`
+                            uri: `${BACKEND_URL}/media/${item.thumbnail}`,
                           }}
                           uri={`${BACKEND_URL}/media/${item.thumbnail}`}
                         />
@@ -391,10 +391,10 @@ export default ({ navigation }) => {
                           tint={isDarkMode ? "dark" : "light"}
                           style={{
                             height: constants.width / 3 - 1,
-                            width: constants.width / 3 - 1
+                            width: constants.width / 3 - 1,
                           }}
                           preview={{
-                            uri: `${BACKEND_URL}/media/${item.thumbnail}`
+                            uri: `${BACKEND_URL}/media/${item.thumbnail}`,
                           }}
                           uri={`${BACKEND_URL}/media/${item.thumbnail}`}
                         />
@@ -403,7 +403,7 @@ export default ({ navigation }) => {
                   </Container>
                 )}
                 numColumns={3}
-                keyExtractor={item => item.id}
+                keyExtractor={(item) => item.id}
               />
             </Container>
           </>

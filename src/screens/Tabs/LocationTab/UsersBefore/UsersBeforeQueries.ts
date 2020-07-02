@@ -8,18 +8,16 @@ export const CITY_USERS_BEFORE = gql`
       usersBefore {
         naturalTime
         actor {
-          profile {
-            id
-            uuid
-            username
-            avatarUrl
-            appAvatarUrl
-            isSelf
-            currentCity {
-              cityName
-              country {
-                countryName
-              }
+          id
+          uuid
+          username
+          avatarUrl
+          appAvatarUrl
+          isSelf
+          currentCity {
+            cityName
+            country {
+              countryName
             }
           }
         }

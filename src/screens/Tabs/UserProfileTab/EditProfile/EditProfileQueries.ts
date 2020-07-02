@@ -27,75 +27,72 @@ export const EDIT_PROFILE = gql`
         username
         firstName
         lastName
-        profile {
-          id
-          uuid
-          pushToken
-          bio
-          gender
-          avatarUrl
-          appAvatarUrl
-          website
-          distance
-          countryPhoneNumber
-          countryPhoneCode
-          phoneNumber
-          emailAddress
-          isVerifiedPhoneNumber
-          isVerifiedEmailAddress
-          nationality {
-            countryEmoji
-            ...CountryParts
-          }
-          residence {
-            countryEmoji
-            ...CountryParts
-          }
-          blockedUserCount
-          photoCount
-          postCount
-          tripCount
-          coffeeCount
-          cityCount
-          countryCount
-          continentCount
-          isSelf
-          isDarkMode
-          isHidePhotos
-          isHideTrips
-          isHideCities
-          isHideCountries
-          isHideContinents
-          isAutoLocationReport
-          sendInstagram
-          sendTwitter
-          sendYoutube
-          sendTelegram
-          sendPhone
-          sendEmail
-          sendKakao
-          sendFacebook
-          sendSnapchat
-          sendLine
-          sendWechat
-          sendKik
-          sendVk
-          sendWhatsapp
-          sendBehance
-          sendLinkedin
-          sendPinterest
-          sendVine
-          sendTumblr
-          currentCity {
-            latitude
-            longitude
-            cityName
-            cityId
-            cityPhoto
-            country {
-              countryName
-              countryCode
-            }
+        id
+        uuid
+        pushToken
+        bio
+        gender
+        avatarUrl
+        appAvatarUrl
+        website
+        distance
+        countryPhoneNumber
+        countryPhoneCode
+        phoneNumber
+        emailAddress
+        isVerifiedPhoneNumber
+        isVerifiedEmailAddress
+        nationality {
+          countryEmoji
+          ...CountryParts
+        }
+        residence {
+          countryEmoji
+          ...CountryParts
+        }
+        blockedUserCount
+        photoCount
+        postCount
+        tripCount
+        cityCount
+        countryCount
+        continentCount
+        isSelf
+        isDarkMode
+        isHidePhotos
+        isHideTrips
+        isHideCities
+        isHideCountries
+        isHideContinents
+        isAutoLocationReport
+        sendInstagram
+        sendTwitter
+        sendYoutube
+        sendTelegram
+        sendPhone
+        sendEmail
+        sendKakao
+        sendFacebook
+        sendSnapchat
+        sendLine
+        sendWechat
+        sendKik
+        sendVk
+        sendWhatsapp
+        sendBehance
+        sendLinkedin
+        sendPinterest
+        sendVine
+        sendTumblr
+        currentCity {
+          latitude
+          longitude
+          cityName
+          cityId
+          cityPhoto
+          country {
+            countryName
+            countryCode
           }
         }
       }
@@ -163,18 +160,16 @@ export const TOGGLE_SETTINGS = gql`
       user {
         id
         username
-        profile {
-          id
-          uuid
-          isSelf
-          isDarkMode
-          isHidePhotos
-          isHideTrips
-          isHideCities
-          isHideCountries
-          isHideContinents
-          isAutoLocationReport
-        }
+        id
+        uuid
+        isSelf
+        isDarkMode
+        isHidePhotos
+        isHideTrips
+        isHideCities
+        isHideCountries
+        isHideContinents
+        isAutoLocationReport
       }
     }
   }

@@ -5,7 +5,7 @@ import {
   Platform,
   TextInput,
   ScrollView,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
 } from "react-native";
 import constants from "../../../constants";
 import { Ionicons } from "@expo/vector-icons";
@@ -18,7 +18,7 @@ import {
   SearchTerms,
   SearchTermsVariables,
   CreateCity,
-  CreateCityVariables
+  CreateCityVariables,
 } from "../../types/api";
 import keys from "../../../keys";
 import useGoogleAutocomplete from "../../hooks/useGoogleAutocomplete";
@@ -28,7 +28,7 @@ import PhotoLink from "../PhotoLink";
 import { useMe } from "../../context/MeContext";
 
 const Text = styled.Text`
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
   font-size: 8px;
   margin-left: 5px;
 `;
@@ -60,12 +60,12 @@ const HeaderUserContainer = styled.View`
 
 const Bold = styled.Text`
   font-weight: 500;
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 
 const Location = styled.Text`
   font-size: 11px;
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 
 const Header = styled.View`
@@ -97,19 +97,19 @@ const Search = ({ navigation }) => {
     data: {
       searchUsers: { users = null } = {},
       searchCountries: { countries = null } = {},
-      searchContinents: { continents = null } = {}
+      searchContinents: { continents = null } = {},
     } = {},
-    loading
+    loading,
   } = useQuery<SearchTerms, SearchTermsVariables>(SEARCH, {
     variables: { search },
     skip: search === "",
-    fetchPolicy: "network-only"
+    fetchPolicy: "network-only",
   });
-  const onPress = async cityId => {
+  const onPress = async (cityId) => {
     let result;
     try {
       result = await createCityFn({
-        variables: { cityId }
+        variables: { cityId },
       });
       await setSearch("");
       await setModalOpen(false);
@@ -120,7 +120,7 @@ const Search = ({ navigation }) => {
       await navigation.push("CityProfileTabs", {
         cityId: result.data.createCity.cityId,
         countryCode: result.data.createCity.countryCode,
-        continentCode: result.data.createCity.continentCode
+        continentCode: result.data.createCity.continentCode,
       });
     }
   };
@@ -135,8 +135,8 @@ const Search = ({ navigation }) => {
     query: search,
     options: {
       types: "(cities)",
-      language: "en"
-    }
+      language: "en",
+    },
   });
   return (
     <>
@@ -176,7 +176,7 @@ const Search = ({ navigation }) => {
               position: "absolute",
               borderBottomWidth: 1,
               borderBottomColor: "#999",
-              color: isDarkMode && isDarkMode === true ? "white" : "black"
+              color: isDarkMode && isDarkMode === true ? "white" : "black",
             }}
             autoFocus={true}
             value={navigation.value}
@@ -196,7 +196,7 @@ const Search = ({ navigation }) => {
                 width: constants.width - 30,
                 marginTop: 249,
                 marginBottom: 25,
-                marginLeft: 30 / 2
+                marginLeft: 30 / 2,
               }}
               keyboardShouldPersistTaps="always"
               showsVerticalScrollIndicator={false}
@@ -214,19 +214,19 @@ const Search = ({ navigation }) => {
                       ) : (
                         <Text>USERS</Text>
                       )}
-                      {users.map(user => (
+                      {users.map((user) => (
                         <Touchable
-                          key={user.profile.id}
+                          key={user.id}
                           onPress={async () => {
                             await setSearch("");
                             await setModalOpen(false),
                               navigation.push("UserProfile", {
-                                uuid: user.profile.uuid,
-                                isSelf: user.profile.isSelf
+                                uuid: user.uuid,
+                                isSelf: user.isSelf,
                               });
                           }}
                         >
-                          <UserRow user={user.profile} type={"user"} />
+                          <UserRow user={user} type={"user"} />
                         </Touchable>
                       ))}
                     </>
@@ -240,7 +240,7 @@ const Search = ({ navigation }) => {
                         ) : (
                           <Text>CITIES</Text>
                         )}
-                        {results.predictions.map(prediction => (
+                        {results.predictions.map((prediction) => (
                           <Touchable
                             key={prediction.id}
                             onPress={() => onPress(prediction.place_id)}
@@ -278,7 +278,7 @@ const Search = ({ navigation }) => {
                       ) : (
                         <Text>COUNTRIES</Text>
                       )}
-                      {countries.map(country => (
+                      {countries.map((country) => (
                         <Touchable
                           key={country.id}
                           onPress={async () => {
@@ -286,7 +286,7 @@ const Search = ({ navigation }) => {
                             await setModalOpen(false),
                               navigation.push("CountryProfileTabs", {
                                 countryCode: country.countryCode,
-                                continentCode: country.continent.continentCode
+                                continentCode: country.continent.continentCode,
                               });
                           }}
                         >
@@ -302,14 +302,14 @@ const Search = ({ navigation }) => {
                       ) : (
                         <Text>CONTINENTS</Text>
                       )}
-                      {continents.map(continent => (
+                      {continents.map((continent) => (
                         <Touchable
                           key={continent.id}
                           onPress={async () => {
                             await setSearch("");
                             await setModalOpen(false),
                               navigation.push("ContinentProfile", {
-                                continentCode: continent.continentCode
+                                continentCode: continent.continentCode,
                               });
                           }}
                         >
@@ -325,7 +325,7 @@ const Search = ({ navigation }) => {
         </KeyboardAvoidingView>
       </Modal>
       {navigation.state.params &&
-      navigation.state.params.uuid === me.user.profile.uuid &&
+      navigation.state.params.uuid === me.user.uuid &&
       navigation.state.routeName === "AvatarList" ? (
         <PhotoLink />
       ) : (

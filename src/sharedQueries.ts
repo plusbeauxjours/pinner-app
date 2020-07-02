@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { COUNTRY_FRAGMENT } from "./fragmentQueries";
+import { COUNTRY_FRAGMENT, MATCH_FRAGMENT } from "./fragmentQueries";
 
 export const ME = gql`
   query Me {
@@ -9,75 +9,72 @@ export const ME = gql`
         username
         firstName
         lastName
-        profile {
-          id
-          uuid
-          pushToken
-          bio
-          gender
-          avatarUrl
-          appAvatarUrl
-          website
-          distance
-          countryPhoneNumber
-          countryPhoneCode
-          phoneNumber
-          emailAddress
-          isVerifiedPhoneNumber
-          isVerifiedEmailAddress
-          nationality {
-            countryEmoji
-            ...CountryParts
-          }
-          residence {
-            countryEmoji
-            ...CountryParts
-          }
-          blockedUserCount
-          photoCount
-          postCount
-          tripCount
-          coffeeCount
-          cityCount
-          countryCount
-          continentCount
-          isSelf
-          isDarkMode
-          isHidePhotos
-          isHideTrips
-          isHideCities
-          isHideCountries
-          isHideContinents
-          isAutoLocationReport
-          sendInstagram
-          sendTwitter
-          sendYoutube
-          sendTelegram
-          sendPhone
-          sendEmail
-          sendKakao
-          sendFacebook
-          sendSnapchat
-          sendLine
-          sendWechat
-          sendKik
-          sendVk
-          sendWhatsapp
-          sendBehance
-          sendLinkedin
-          sendPinterest
-          sendVine
-          sendTumblr
-          currentCity {
-            latitude
-            longitude
-            cityName
-            cityId
-            cityPhoto
-            country {
-              countryName
-              countryCode
-            }
+        id
+        uuid
+        pushToken
+        bio
+        gender
+        avatarUrl
+        appAvatarUrl
+        website
+        distance
+        countryPhoneNumber
+        countryPhoneCode
+        phoneNumber
+        emailAddress
+        isVerifiedPhoneNumber
+        isVerifiedEmailAddress
+        nationality {
+          countryEmoji
+          ...CountryParts
+        }
+        residence {
+          countryEmoji
+          ...CountryParts
+        }
+        blockedUserCount
+        photoCount
+        postCount
+        tripCount
+        cityCount
+        countryCount
+        continentCount
+        isSelf
+        isDarkMode
+        isHidePhotos
+        isHideTrips
+        isHideCities
+        isHideCountries
+        isHideContinents
+        isAutoLocationReport
+        sendInstagram
+        sendTwitter
+        sendYoutube
+        sendTelegram
+        sendPhone
+        sendEmail
+        sendKakao
+        sendFacebook
+        sendSnapchat
+        sendLine
+        sendWechat
+        sendKik
+        sendVk
+        sendWhatsapp
+        sendBehance
+        sendLinkedin
+        sendPinterest
+        sendVine
+        sendTumblr
+        currentCity {
+          latitude
+          longitude
+          cityName
+          cityId
+          cityPhoto
+          country {
+            countryName
+            countryCode
           }
         }
       }
@@ -118,65 +115,6 @@ export const REPORT_LOCATION = gql`
       currentCountryCode: $currentCountryCode
     ) {
       ok
-    }
-  }
-`;
-
-export const GET_COFFEES = gql`
-  query GetCoffees(
-    $cityId: String
-    $countryCode: String
-    $continentCode: String
-    $uuid: String
-    $location: String!
-  ) {
-    getCoffees(
-      cityId: $cityId
-      countryCode: $countryCode
-      continentCode: $continentCode
-      uuid: $uuid
-      location: $location
-    ) {
-      count
-      coffees {
-        id
-        uuid
-        city {
-          cityName
-          country {
-            countryName
-          }
-        }
-        host {
-          id
-          username
-          profile {
-            uuid
-            appAvatarUrl
-            isSelf
-            currentCity {
-              cityName
-              country {
-                countryName
-              }
-            }
-          }
-        }
-        status
-        naturalTime
-        target
-        createdAt
-      }
-    }
-  }
-`;
-
-export const DELETE_COFFEE = gql`
-  mutation DeleteCoffee($coffeeId: String!) {
-    deleteCoffee(coffeeId: $coffeeId) {
-      ok
-      coffeeId
-      uuid
     }
   }
 `;
@@ -234,6 +172,33 @@ export const DELETE_BLOCK_USER = gql`
     deleteBlockUser(uuid: $uuid) {
       ok
       uuid
+    }
+  }
+`;
+
+export const MATCH = gql`
+  mutation Match($cityId: String!, $hostUuid: String!, $guestUuid: String!) {
+    match(cityId: $cityId, hostUuid: $hostUuid, guestUuid: $guestUuid) {
+      ok
+      cityId
+      countryCode
+      continentCode
+      match {
+        ...MatchParts
+      }
+    }
+  }
+  ${MATCH_FRAGMENT}
+`;
+
+export const UNMATCH = gql`
+  mutation UnMatch($matchId: Int!) {
+    unMatch(matchId: $matchId) {
+      ok
+      matchId
+      cityId
+      countryCode
+      continentCode
     }
   }
 `;

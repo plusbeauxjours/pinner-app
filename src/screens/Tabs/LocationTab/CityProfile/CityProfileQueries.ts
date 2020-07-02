@@ -1,23 +1,38 @@
 import gql from "graphql-tag";
-import {
-  PROFILE_FRAGMENT,
-  CITY_FRAGMENT,
-  COUNTRY_FRAGMENT,
-  CONTINENT_FRAGMENT
-} from "../../../../fragmentQueries";
+import { CITY_FRAGMENT, CONTINENT_FRAGMENT } from "../../../../fragmentQueries";
 
 export const CITY_PROFILE = gql`
   query CityProfile($page: Int, $cityId: String!, $payload: String) {
     cityProfile(page: $page, cityId: $cityId, payload: $payload) {
       count
       usersNow {
-        ...ProfileParts
+        id
+        uuid
+        username
+        avatarUrl
+        appAvatarUrl
+        isSelf
+        currentCity {
+          cityName
+          country {
+            countryName
+          }
+        }
       }
       usersBefore {
         naturalTime
         actor {
-          profile {
-            ...ProfileParts
+          id
+          uuid
+          username
+          avatarUrl
+          appAvatarUrl
+          isSelf
+          currentCity {
+            cityName
+            country {
+              countryName
+            }
           }
         }
       }
@@ -46,16 +61,7 @@ export const CITY_PROFILE = gql`
       }
     }
   }
-  ${PROFILE_FRAGMENT}
   ${CONTINENT_FRAGMENT}
-`;
-
-export const GET_MY_COFFEE = gql`
-  query GetMyCoffee {
-    getMyCoffee {
-      coffeeId
-    }
-  }
 `;
 
 export const GET_SAMENAME_CITIES = gql`
@@ -80,43 +86,4 @@ export const NEAR_CITIES = gql`
     }
   }
   ${CITY_FRAGMENT}
-`;
-
-export const REQUEST_COFFEE = gql`
-  mutation RequestCoffee(
-    $countryCode: String
-    $gender: String
-    $currentCityId: String!
-    $target: String
-  ) {
-    requestCoffee(
-      countryCode: $countryCode
-      gender: $gender
-      currentCityId: $currentCityId
-      target: $target
-    ) {
-      ok
-      profiles {
-        isSelf
-        pushToken
-      }
-      coffee {
-        id
-        host {
-          profile {
-            gender
-            residence {
-              ...CountryParts
-              countryEmoji
-            }
-            nationality {
-              ...CountryParts
-              countryEmoji
-            }
-          }
-        }
-      }
-    }
-  }
-  ${COUNTRY_FRAGMENT}
 `;

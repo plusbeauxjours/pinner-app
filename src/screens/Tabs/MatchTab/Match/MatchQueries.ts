@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { MATCH_FRAGMENT } from "../../../../fragmentQueries";
+import { MATCH_FRAGMENT, COUNTRY_FRAGMENT } from "../../../../fragmentQueries";
 
 export const GET_MATCHES = gql`
   query GetMatches($page: Int) {
@@ -30,28 +30,27 @@ export const COMPLETE_EDIT_EMAIL_VERIFICATION = gql`
       token
       user {
         username
-        profile {
-          id
-          uuid
-          gender
-          residence {
-            countryEmoji
-            ...CountryParts
-          }
-          nationality {
-            countryEmoji
-            ...CountryParts
-          }
-          avatarUrl
-          appAvatarUrl
-          currentCity {
-            cityId
-            cityName
-          }
+        id
+        uuid
+        gender
+        residence {
+          countryEmoji
+          ...CountryParts
+        }
+        nationality {
+          countryEmoji
+          ...CountryParts
+        }
+        avatarUrl
+        appAvatarUrl
+        currentCity {
+          cityId
+          cityName
         }
       }
     }
   }
+  ${COUNTRY_FRAGMENT}
 `;
 
 export const COMPLETE_EMAIL_SIGN_IN = gql`
@@ -61,26 +60,25 @@ export const COMPLETE_EMAIL_SIGN_IN = gql`
       token
       user {
         username
-        profile {
-          id
-          uuid
-          gender
-          residence {
-            countryEmoji
-            ...CountryParts
-          }
-          nationality {
-            countryEmoji
-            ...CountryParts
-          }
-          avatarUrl
-          appAvatarUrl
-          currentCity {
-            cityId
-            cityName
-          }
+        id
+        uuid
+        gender
+        residence {
+          countryEmoji
+          ...CountryParts
+        }
+        nationality {
+          countryEmoji
+          ...CountryParts
+        }
+        avatarUrl
+        appAvatarUrl
+        currentCity {
+          cityId
+          cityName
         }
       }
     }
   }
+  ${COUNTRY_FRAGMENT}
 `;

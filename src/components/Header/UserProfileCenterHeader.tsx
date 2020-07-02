@@ -8,7 +8,7 @@ export default withNavigation(({ navigation }) => {
   if (
     !meLoading &&
     navigation.state.params &&
-    navigation.state.params.uuid === me.user.profile.uuid &&
+    navigation.state.params.uuid === me.user.uuid &&
     navigation.state.routeName === "AvatarList"
   ) {
     return <PhotoLink />;

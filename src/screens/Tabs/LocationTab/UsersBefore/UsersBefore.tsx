@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { RefreshControl } from "react-native";
 import {
   CityUsersBefore,
-  CityUsersBeforeVariables
+  CityUsersBeforeVariables,
 } from "../../../../types/api";
 import { useQuery } from "react-apollo-hooks";
 import { CITY_USERS_BEFORE } from "./UsersBeforeQueries";
@@ -14,16 +14,16 @@ const View = styled.View`
   justify-content: center;
   align-items: center;
   flex: 1;
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 
 const Touchable = styled.TouchableOpacity``;
 const ScrollView = styled.ScrollView`
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 const LoaderContainer = styled.View`
   flex: 1;
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
   justify-content: center;
   align-items: center;
 `;
@@ -34,9 +34,9 @@ export default ({ navigation }) => {
   const {
     data: { cityUsersBefore: { usersBefore: users = null } = {} } = {},
     loading,
-    refetch
+    refetch,
   } = useQuery<CityUsersBefore, CityUsersBeforeVariables>(CITY_USERS_BEFORE, {
-    variables: { cityId, payload: "APP" }
+    variables: { cityId, payload: "APP" },
   });
   const onRefresh = async () => {
     try {
@@ -75,11 +75,11 @@ export default ({ navigation }) => {
                 onPress={() =>
                   navigation.push("UserProfile", {
                     uuid: user.uuid,
-                    isSelf: user.isSelf
+                    isSelf: user.isSelf,
                   })
                 }
               >
-                <UserRow user={user.actor.profile} type={"user"} />
+                <UserRow user={user.actor} type={"user"} />
               </Touchable>
             ))}
         </View>

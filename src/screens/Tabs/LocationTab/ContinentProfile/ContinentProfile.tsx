@@ -10,7 +10,7 @@ import {
   SlackReportLocations,
   SlackReportLocationsVariables,
   ContinentProfile,
-  ContinentProfileVariables
+  ContinentProfileVariables,
 } from "../../../../types/api";
 import { SLACK_REPORT_LOCATIONS } from "../../../../sharedQueries";
 import { CONTINENT_PROFILE } from "./ContinentProfileQueries";
@@ -24,17 +24,17 @@ import { withNavigation } from "react-navigation";
 import { useMe } from "../../../../context/MeContext";
 
 const Container = styled.View`
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
   padding: 0 15px 0 15px;
 `;
 
 const Text = styled.Text`
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 const Bold = styled.Text`
   font-weight: 500;
   font-size: 34px;
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 
 const View = styled.View`
@@ -53,15 +53,15 @@ const Title = styled.Text`
   font-weight: 500;
   font-size: 18px;
   margin-bottom: 5px;
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 const Touchable = styled.TouchableOpacity``;
 const ScrollView = styled.ScrollView`
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 const LoaderContainer = styled.View`
   flex: 1;
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
   justify-content: center;
   align-items: center;
 `;
@@ -81,7 +81,7 @@ const LocationNameContainer = styled.View`
 const NoPhotoContainer = styled.View`
   justify-content: center;
   align-items: center;
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 export default withNavigation(({ navigation }) => {
   const { me, loading: meLoading } = useMe();
@@ -89,7 +89,7 @@ export default withNavigation(({ navigation }) => {
   const [continentCode, setContinentCode] = useState<string>(
     navigation.getParam("continentCode") ||
       countryData.find(
-        i => i.code === me.user.profile.currentCity.country.countryCode
+        (i) => i.code === me.user.currentCity.country.countryCode
       ).continent
   );
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -106,16 +106,16 @@ export default withNavigation(({ navigation }) => {
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-          marginBottom: 10
+          marginBottom: 10,
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
           color: isDarkMode ? "#EFEFEF" : "#161616",
-          fontWeight: "400"
+          fontWeight: "400",
         },
-        separatorStyle: { opacity: 0.5 }
+        separatorStyle: { opacity: 0.5 },
       },
-      async buttonIndex => {
+      async (buttonIndex) => {
         if (buttonIndex === 0) {
           reportLocation("PHOTO");
         } else if (buttonIndex === 1) {
@@ -136,7 +136,7 @@ export default withNavigation(({ navigation }) => {
         shadow: true,
         animation: true,
         hideOnPress: true,
-        delay: 0
+        delay: 0,
       });
     };
     showActionSheetWithOptions(
@@ -151,23 +151,23 @@ export default withNavigation(({ navigation }) => {
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-          marginBottom: 10
+          marginBottom: 10,
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
           color: isDarkMode ? "#EFEFEF" : "#161616",
-          fontWeight: "400"
+          fontWeight: "400",
         },
-        separatorStyle: { opacity: 0.5 }
+        separatorStyle: { opacity: 0.5 },
       },
-      buttonIndex => {
+      (buttonIndex) => {
         if (buttonIndex === 0) {
           slackReportLocationsFn({
             variables: {
               targetLocationId: continentCode,
               targetLocationType: "continent",
-              payload
-            }
+              payload,
+            },
           });
           toast("Reported");
         }
@@ -180,17 +180,17 @@ export default withNavigation(({ navigation }) => {
         count = null,
         continent = null,
         continents = null,
-        countries = null
-      } = {}
+        countries = null,
+      } = {},
     } = {},
     loading: profileLoading,
-    refetch: profileRefetch
+    refetch: profileRefetch,
   } = useQuery<ContinentProfile, ContinentProfileVariables>(CONTINENT_PROFILE, {
-    variables: { continentCode, page: 1 }
+    variables: { continentCode, page: 1 },
   });
   const [
     slackReportLocationsFn,
-    { loading: slackReportLocationsLoading }
+    { loading: slackReportLocationsLoading },
   ] = useMutation<SlackReportLocations, SlackReportLocationsVariables>(
     SLACK_REPORT_LOCATIONS
   );
@@ -204,7 +204,7 @@ export default withNavigation(({ navigation }) => {
       setRefreshing(false);
     }
   };
-  const chunk = arr => {
+  const chunk = (arr) => {
     let chunks = [],
       i = 0,
       n = arr.length;
@@ -240,10 +240,10 @@ export default withNavigation(({ navigation }) => {
                   style={{
                     height: constants.width - 30,
                     width: constants.width - 30,
-                    borderRadius: 3
+                    borderRadius: 3,
                   }}
                   preview={{
-                    uri: continent.continentPhoto
+                    uri: continent.continentPhoto,
                   }}
                   uri={continent.continentPhoto}
                 />
@@ -289,7 +289,7 @@ export default withNavigation(({ navigation }) => {
                     marginLeft: 3,
                     marginRight: 3,
                     marginTop: 3,
-                    marginBottom: 3
+                    marginBottom: 3,
                   }}
                 >
                   {chunk(continents).map((continentItem, index) => {
@@ -302,7 +302,7 @@ export default withNavigation(({ navigation }) => {
                               onPress={() => {
                                 if (continentCode !== continent.continentCode) {
                                   navigation.push("ContinentProfile", {
-                                    continentCode: continent.continentCode
+                                    continentCode: continent.continentCode,
                                   });
                                 }
                               }}
@@ -338,7 +338,7 @@ export default withNavigation(({ navigation }) => {
                     ) {
                       navigation.push("CountryProfileTabs", {
                         countryCode: country.countryCode,
-                        continentCode: country.continent.continentCode
+                        continentCode: country.continent.continentCode,
                       });
                     } else {
                       navigation.goBack(null);

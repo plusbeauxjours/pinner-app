@@ -5,7 +5,7 @@ import {
   AntDesign,
   FontAwesome,
   SimpleLineIcons,
-  Entypo
+  Entypo,
 } from "@expo/vector-icons";
 import * as Font from "expo-font";
 import { Asset } from "expo-asset";
@@ -36,7 +36,7 @@ export default function App() {
     Sentry.init({
       dsn: "https://9ea37b5166e44d5fbbda4ee206f998a2@sentry.io/2113636",
       enableInExpoDevelopment: true,
-      debug: true
+      debug: true,
     });
     Sentry.setRelease(
       Constants.manifest.revisionId ? Constants.manifest.revisionId : ""
@@ -64,29 +64,29 @@ export default function App() {
       //     cityId: ""
       //   }
       // });
-      // await AsyncStorage.clear();
+      await AsyncStorage.clear();
       await persistCache({
         cache,
-        storage: AsyncStorage
+        storage: AsyncStorage,
       });
-      const API_SERVER = "https://pinner-backend.herokuapp.com/graphql";
-      // const API_SERVER = "http://localhost:8000/graphql";
+      // const API_SERVER = "https://pinner-backend.herokuapp.com/graphql";
+      const API_SERVER = "http://localhost:8000/graphql/";
       let httpLink = createUploadLink({
-        uri: API_SERVER as string
+        uri: API_SERVER as string,
       });
       let authLink = setContext(async (_: any, { headers }: any) => {
         const token = await AsyncStorage.getItem("jwt");
         return {
           headers: {
             ...headers,
-            authorization: token ? `JWT ${token}` : ""
-          }
+            authorization: token ? `JWT ${token}` : "",
+          },
         };
       });
       const client = new ApolloClient({
         link: authLink.concat(httpLink),
         cache,
-        ...apolloClientOptions
+        ...apolloClientOptions,
       });
       const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
       if (isLoggedIn === null || isLoggedIn === "false") {
@@ -112,7 +112,7 @@ export default function App() {
       ...FontAwesome.font,
       ...SimpleLineIcons.font["arrow-up"],
       ...SimpleLineIcons.font["arrow-down"],
-      ...Entypo.font["pin"]
+      ...Entypo.font["pin"],
     });
     await Asset.loadAsync([
       require("./assets/splash.png"),
@@ -138,10 +138,10 @@ export default function App() {
       require("./assets/pinterest.png"),
       require("./assets/vine.png"),
       require("./assets/tumblr.png"),
-      require("./assets/tumblr.png")
+      require("./assets/tumblr.png"),
     ]);
   };
-  const handleLoadingError = error => {
+  const handleLoadingError = (error) => {
     console.warn(error);
   };
   const handleFinishLoading = () => {

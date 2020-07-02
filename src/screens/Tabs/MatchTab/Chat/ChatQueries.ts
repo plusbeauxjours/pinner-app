@@ -5,29 +5,27 @@ export const UPDATE_SNS = gql`
     updateSns(payload: $payload, username: $username) {
       ok
       user {
-        profile {
-          id
-          uuid
-          sendInstagram
-          sendTwitter
-          sendYoutube
-          sendTelegram
-          sendPhone
-          sendEmail
-          sendKakao
-          sendFacebook
-          sendSnapchat
-          sendLine
-          sendWechat
-          sendKik
-          sendVk
-          sendWhatsapp
-          sendBehance
-          sendLinkedin
-          sendPinterest
-          sendVine
-          sendTumblr
-        }
+        id
+        uuid
+        sendInstagram
+        sendTwitter
+        sendYoutube
+        sendTelegram
+        sendPhone
+        sendEmail
+        sendKakao
+        sendFacebook
+        sendSnapchat
+        sendLine
+        sendWechat
+        sendKik
+        sendVk
+        sendWhatsapp
+        sendBehance
+        sendLinkedin
+        sendPinterest
+        sendVine
+        sendTumblr
       }
     }
   }

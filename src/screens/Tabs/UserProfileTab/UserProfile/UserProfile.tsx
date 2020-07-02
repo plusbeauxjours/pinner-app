@@ -5,7 +5,7 @@ import {
   Platform,
   Image,
   KeyboardAvoidingView,
-  TextInput
+  TextInput,
 } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -30,12 +30,10 @@ import {
   CalculateDistance,
   SlackReportUsers,
   SlackReportUsersVariables,
-  GetCoffees,
-  GetCoffeesVariables,
   GetSameTrips,
   GetSameTripsVariables,
   CreateCity,
-  CreateCityVariables
+  CreateCityVariables,
 } from "../../../../types/api";
 import {
   GET_USER,
@@ -44,7 +42,7 @@ import {
   EDIT_TRIP,
   DELETE_TRIP,
   CALCULATE_DISTANCE,
-  SLACK_REPORT_USERS
+  SLACK_REPORT_USERS,
 } from "./UserProfileQueries";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
@@ -58,8 +56,6 @@ import useGoogleAutocomplete from "../../../../hooks/useGoogleAutocomplete";
 import keys from "../../../../../keys";
 import SearchCityPhoto from "../../../../components/SearchCityPhoto";
 import { countries } from "../../../../../countryData";
-import CoffeeDetail from "../../../CoffeeDetail/index";
-import { GET_COFFEES } from "../../../../sharedQueries";
 import ImageZoom from "react-native-image-pan-zoom";
 
 const View = styled.View``;
@@ -68,19 +64,19 @@ const Header = styled.View`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  background-color: ${props => props.theme.headerColor};
+  background-color: ${(props) => props.theme.headerColor};
   padding: 10px;
 `;
 const Body = styled.View`
   justify-content: center;
   align-items: center;
-  background-color: ${props => props.theme.bgColor};
-  color: ${props => props.theme.color};
+  background-color: ${(props) => props.theme.bgColor};
+  color: ${(props) => props.theme.color};
   padding: 5px;
 `;
 
 const Text = styled.Text`
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 const BioText = styled(Text)`
   margin-top: 10px;
@@ -88,7 +84,7 @@ const BioText = styled(Text)`
 `;
 const Bold = styled.Text`
   font-size: 11px;
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 const Item = styled.View`
   flex-direction: column;
@@ -121,10 +117,10 @@ const ImageTouchable = styled(Touchable)`
 const UserName = styled.Text`
   font-weight: 500;
   font-size: 28px;
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 const ScrollView = styled.ScrollView`
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 const SearchLoaderContainer = styled.View`
   flex: 1;
@@ -132,12 +128,12 @@ const SearchLoaderContainer = styled.View`
 `;
 const LoaderContainer = styled.View`
   flex: 1;
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
   justify-content: center;
   align-items: center;
 `;
 const EditText = styled.Text`
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
   font-size: 11px;
   font-weight: 100;
 `;
@@ -157,10 +153,10 @@ const IconContainer = styled.View`
   padding: 2px;
 `;
 const TouchableRow = styled.TouchableOpacity`
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 const TouchableBackRow = styled.View`
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 const SmallText = styled.Text`
   color: #999;
@@ -204,12 +200,12 @@ const TripSubmitBtn = styled.TouchableOpacity`
 
 const CityBold = styled.Text`
   font-weight: 500;
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 const TripText = styled.Text`
   font-size: 16px;
   font-weight: 500;
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 const SearchCityContainer = styled.View`
   padding: 15px;
@@ -233,7 +229,7 @@ const SearchHeaderUserContainer = styled.View`
 `;
 const Location = styled.Text`
   font-size: 11px;
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 const TripSmallText = styled(SmallText)`
   margin-left: 15px;
@@ -242,19 +238,17 @@ const TripSmallText = styled(SmallText)`
 const Footer = styled.View`
   flex-direction: row;
   justify-content: center;
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 export default ({ navigation }) => {
   const { me, loading: meLoading } = useMe();
   const isSelf = navigation.getParam("isSelf")
     ? navigation.getParam("isSelf")
-    : me.user.profile.uuid === navigation.getParam("uuid") ||
+    : me.user.uuid === navigation.getParam("uuid") ||
       !navigation.getParam("uuid");
   const isDarkMode = useTheme();
   const [search, setSearch] = useState<string>("");
-  const [coffeeId, setCoffeeId] = useState<string>("");
   const [moveNotificationId, setMoveNotificationId] = useState<string>();
-  const [coffeeModalOpen, setCoffeeModalOpen] = useState<boolean>(false);
   const [addTripModalOpen, setAddTripModalOpen] = useState<boolean>(false);
   const [editTripModalOpen, setEditTripModalOpen] = useState<boolean>(false);
   const [isCalendarMode, setIsCalendarMode] = useState<boolean>(false);
@@ -264,9 +258,7 @@ export default ({ navigation }) => {
   const [searchCountryName, setSearchCountryName] = useState<string>("");
   const [avatarModalOpen, setAvatarModalOpen] = useState<boolean>(false);
   const [uuid, setUuid] = useState<string>(
-    navigation.getParam("uuid")
-      ? navigation.getParam("uuid")
-      : me.user.profile.uuid
+    navigation.getParam("uuid") ? navigation.getParam("uuid") : me.user.uuid
   );
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [tripStartDate, setTripStartDate] = useState<moment.Moment>(null);
@@ -284,9 +276,9 @@ export default ({ navigation }) => {
     6: require(`../../../../Images/avatars/earth6.png`),
     7: require(`../../../../Images/avatars/earth7.png`),
     8: require(`../../../../Images/avatars/earth8.png`),
-    9: require(`../../../../Images/avatars/earth9.png`)
+    9: require(`../../../../Images/avatars/earth9.png`),
   };
-  const deleteTrip = id => {
+  const deleteTrip = (id) => {
     showActionSheetWithOptions(
       {
         options: ["Yes", "No"],
@@ -299,21 +291,21 @@ export default ({ navigation }) => {
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-          marginBottom: 10
+          marginBottom: 10,
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
           color: isDarkMode ? "#EFEFEF" : "#161616",
-          fontWeight: "400"
+          fontWeight: "400",
         },
-        separatorStyle: { opacity: 0.5 }
+        separatorStyle: { opacity: 0.5 },
       },
-      buttonIndex => {
+      (buttonIndex) => {
         if (buttonIndex === 0) {
           deleteTripFn({
             variables: {
-              moveNotificationId: parseInt(id, 10)
-            }
+              moveNotificationId: parseInt(id, 10),
+            },
           });
           calculateDistanceFn();
           toast("Trip deleted");
@@ -329,7 +321,7 @@ export default ({ navigation }) => {
           "Looks Like Spam",
           "Inappropriate Message",
           "Other",
-          "Cancel"
+          "Cancel",
         ],
         cancelButtonIndex: 4,
         title: `Choose a reason for reporting this account. We won't tell ${user.username} who reported them.`,
@@ -339,16 +331,16 @@ export default ({ navigation }) => {
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-          marginBottom: 10
+          marginBottom: 10,
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
           color: isDarkMode ? "#EFEFEF" : "#161616",
-          fontWeight: "400"
+          fontWeight: "400",
         },
-        separatorStyle: { opacity: 0.5 }
+        separatorStyle: { opacity: 0.5 },
       },
-      async buttonIndex => {
+      async (buttonIndex) => {
         if (buttonIndex === 0) {
           reportUser("PHOTO");
         } else if (buttonIndex === 1) {
@@ -363,7 +355,7 @@ export default ({ navigation }) => {
       }
     );
   };
-  const reportUser = payload => {
+  const reportUser = (payload) => {
     showActionSheetWithOptions(
       {
         options: ["Yes", "No"],
@@ -376,19 +368,19 @@ export default ({ navigation }) => {
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-          marginBottom: 10
+          marginBottom: 10,
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
           color: isDarkMode ? "#EFEFEF" : "#161616",
-          fontWeight: "400"
+          fontWeight: "400",
         },
-        separatorStyle: { opacity: 0.5 }
+        separatorStyle: { opacity: 0.5 },
       },
-      buttonIndex => {
+      (buttonIndex) => {
         if (buttonIndex === 0) {
           slackReportUsersFn({
-            variables: { targetUuid: uuid, payload }
+            variables: { targetUuid: uuid, payload },
           });
           toast("Reported");
         }
@@ -402,43 +394,32 @@ export default ({ navigation }) => {
       shadow: true,
       animation: true,
       hideOnPress: true,
-      delay: 0
+      delay: 0,
     });
   };
   const {
     data: { userProfile: { user = null } = {} } = {},
     loading: profileLoading,
-    refetch: profileRefetch
+    refetch: profileRefetch,
   } = useQuery<UserProfile, UserProfileVariables>(GET_USER, {
-    variables: { uuid }
+    variables: { uuid },
   });
   const {
     data: { getSameTrips: { cities = null } = {} } = {},
     loading: getSameTripsLoading,
-    refetch: getSameTripsRefetch
+    refetch: getSameTripsRefetch,
   } = useQuery<GetSameTrips, GetSameTripsVariables>(GET_SAME_TRIPS, {
     variables: {
-      uuid
+      uuid,
     },
-    skip: !navigation.getParam("uuid")
+    skip: !navigation.getParam("uuid"),
   });
   const {
     data: { getTrips: { trip = null } = {} } = {},
     loading: tripLoading,
-    refetch: tripRefetch
+    refetch: tripRefetch,
   } = useQuery<GetTrips, GetTripsVariables>(GET_TRIPS, {
-    variables: { uuid }
-  });
-  const {
-    data: { getCoffees: { coffees = null } = {} } = {},
-    loading: coffeeLoading,
-    refetch: coffeeRefetch
-  } = useQuery<GetCoffees, GetCoffeesVariables>(GET_COFFEES, {
-    variables: {
-      uuid,
-      location: "profile"
-    },
-    fetchPolicy: "no-cache"
+    variables: { uuid },
   });
   const [addTripFn, { loading: addTripLoading }] = useMutation<
     AddTrip,
@@ -447,8 +428,8 @@ export default ({ navigation }) => {
     variables: {
       cityId: searchCityId,
       startDate: moment(tripStartDate),
-      endDate: moment(tripEndDate)
-    }
+      endDate: moment(tripEndDate),
+    },
   });
   const [editTripFn, { loading: editTripLoading }] = useMutation<
     EditTrip,
@@ -458,8 +439,8 @@ export default ({ navigation }) => {
       moveNotificationId: parseInt(moveNotificationId, 10),
       cityId: searchCityId,
       startDate: moment(tripStartDate),
-      endDate: moment(tripEndDate)
-    }
+      endDate: moment(tripEndDate),
+    },
   });
   const [deleteTripFn, { loading: deleteTripLoading }] = useMutation<
     DeleteTrip,
@@ -469,30 +450,30 @@ export default ({ navigation }) => {
       try {
         const data = cache.readQuery<GetTrips, GetTripsVariables>({
           query: GET_TRIPS,
-          variables: { uuid }
+          variables: { uuid },
         });
         if (data) {
           data.getTrips.trip = data.getTrips.trip.filter(
-            i => parseInt(i.id, 10) !== deleteTrip.tripId
+            (i) => parseInt(i.id, 10) !== deleteTrip.tripId
           );
           cache.writeQuery({
             query: GET_TRIPS,
             variables: { uuid },
-            data
+            data,
           });
         }
       } catch (e) {
         console.log(e);
       }
-    }
+    },
   });
   const [
     calculateDistanceFn,
-    { loading: calculateDistanceLoading }
+    { loading: calculateDistanceLoading },
   ] = useMutation<CalculateDistance>(CALCULATE_DISTANCE);
   const [
     slackReportUsersFn,
-    { loading: slackReportUsersLoading }
+    { loading: slackReportUsersLoading },
   ] = useMutation<SlackReportUsers, SlackReportUsersVariables>(
     SLACK_REPORT_USERS
   );
@@ -504,7 +485,7 @@ export default ({ navigation }) => {
     let result;
     try {
       result = await createCityFn({
-        variables: { cityId }
+        variables: { cityId },
       });
       setIsCalendarMode(true);
       setSearchCityId(result.data.createCity.cityId);
@@ -523,8 +504,8 @@ export default ({ navigation }) => {
     query: search,
     options: {
       types: "(cities)",
-      language: "en"
-    }
+      language: "en",
+    },
   });
   const onRefresh = async () => {
     try {
@@ -532,7 +513,6 @@ export default ({ navigation }) => {
       await profileRefetch();
       await tripRefetch();
       await getSameTripsRefetch();
-      await coffeeRefetch();
     } catch (e) {
       console.log(e);
     } finally {
@@ -545,7 +525,7 @@ export default ({ navigation }) => {
     setAddTripModalOpen(false);
     try {
       const {
-        data: { addTrip }
+        data: { addTrip },
       } = await addTripFn();
       setTripMarkedDates({});
       if (addTrip.ok) {
@@ -556,7 +536,7 @@ export default ({ navigation }) => {
           cityId: addTrip.moveNotification.city.cityId,
           countryCode: addTrip.moveNotification.city.country.countryCode,
           continentCode:
-            addTrip.moveNotification.city.country.continent.continentCode
+            addTrip.moveNotification.city.country.continent.continentCode,
         });
       }
     } catch (e) {
@@ -569,7 +549,7 @@ export default ({ navigation }) => {
     setEditTripModalOpen(false);
     try {
       const {
-        data: { editTrip }
+        data: { editTrip },
       } = await editTripFn();
       setTripMarkedDates({});
       if (editTrip.ok) {
@@ -580,7 +560,7 @@ export default ({ navigation }) => {
           cityId: editTrip.moveNotification.city.cityId,
           countryCode: editTrip.moveNotification.city.country.countryCode,
           continentCode:
-            editTrip.moveNotification.city.country.continent.continentCode
+            editTrip.moveNotification.city.country.continent.continentCode,
         });
       }
     } catch (e) {
@@ -605,7 +585,7 @@ export default ({ navigation }) => {
         acc[nextDay] = {
           color: "#C75454",
           selected: true,
-          textColor: "white"
+          textColor: "white",
         };
         return acc;
       }, {});
@@ -614,13 +594,13 @@ export default ({ navigation }) => {
         [tripStartDate.toString()]: {
           color: "#C75454",
           startingDay: true,
-          textColor: "white"
+          textColor: "white",
         },
         [tripEndDate.toString()]: {
           color: "#C75454",
           endingDay: true,
-          textColor: "white"
-        }
+          textColor: "white",
+        },
       };
       setTripStartDate(tripStartDate);
       setTripEndDate(tripEndDate);
@@ -631,11 +611,7 @@ export default ({ navigation }) => {
       setTripEndDate(null);
     }
   };
-  const onPress = coffeeId => {
-    setCoffeeModalOpen(true);
-    setCoffeeId(coffeeId);
-  };
-  const onDayPress = day => {
+  const onDayPress = (day) => {
     if (
       !tripStartDate ||
       day.dateString < tripStartDate ||
@@ -647,8 +623,8 @@ export default ({ navigation }) => {
           color: "#C75454",
           endingDay: true,
           startingDay: true,
-          textColor: "white"
-        }
+          textColor: "white",
+        },
       };
       setTripStartDate(tripStartDate);
       setTripEndDate(null);
@@ -664,7 +640,7 @@ export default ({ navigation }) => {
           acc[nextDay] = {
             color: "#C75454",
             selected: true,
-            textColor: "white"
+            textColor: "white",
           };
           return acc;
         }, {});
@@ -673,13 +649,13 @@ export default ({ navigation }) => {
           [tripStartDate.toString()]: {
             color: "#C75454",
             startingDay: true,
-            textColor: "white"
+            textColor: "white",
           },
           [tripEndDate.toString()]: {
             color: "#C75454",
             endingDay: true,
-            textColor: "white"
-          }
+            textColor: "white",
+          },
         };
         setTripEndDate(tripEndDate);
         setTripMarkedDates(markedDates);
@@ -699,24 +675,17 @@ export default ({ navigation }) => {
   };
   useEffect(() =>
     setUuid(
-      navigation.getParam("uuid")
-        ? navigation.getParam("uuid")
-        : me.user.profile.uuid
+      navigation.getParam("uuid") ? navigation.getParam("uuid") : me.user.uuid
     )
   );
-  if (
-    profileLoading ||
-    tripLoading ||
-    coffeeLoading ||
-    getSameTripsLoading ||
-    meLoading
-  ) {
+  if (profileLoading || tripLoading || getSameTripsLoading || meLoading) {
     return (
       <LoaderContainer>
         <Loader />
       </LoaderContainer>
     );
   } else {
+    console.log(trip);
     return (
       <>
         <Modal
@@ -753,13 +722,13 @@ export default ({ navigation }) => {
                 width: constants.width,
                 padding: 0,
                 margin: 0,
-                position: "absolute"
+                position: "absolute",
               }}
               onSwipeDown={() => setAvatarModalOpen(false)}
               preview={{
-                uri: `${BACKEND_URL}/media/${user.profile.avatarUrl}`
+                uri: `${BACKEND_URL}/media/${user?.avatarUrl}`,
               }}
-              uri={`${BACKEND_URL}/media/${user.profile.avatarUrl}`}
+              uri={`${BACKEND_URL}/media/${user?.avatarUrl}`}
             />
           </ImageZoom>
         </Modal>
@@ -816,7 +785,7 @@ export default ({ navigation }) => {
                       isDarkMode && isDarkMode === true ? "white" : "black",
                     monthTextColor: "#00adf5",
                     textMonthFontWeight: "bold",
-                    selectedDayBackgroundColor: "#00adf5"
+                    selectedDayBackgroundColor: "#00adf5",
                   }}
                 />
               </View>
@@ -827,7 +796,8 @@ export default ({ navigation }) => {
                     <CityBold>{searchCityName}</CityBold>
                     <Location>
                       {searchCountryName
-                        ? countries.find(i => i.code === searchCountryCode).name
+                        ? countries.find((i) => i.code === searchCountryCode)
+                            .name
                         : searchCityName}
                     </Location>
                   </SearchHeaderUserContainer>
@@ -843,7 +813,7 @@ export default ({ navigation }) => {
                         width: constants.width,
                         paddingRight: 10,
                         paddingLeft: 10,
-                        marginBottom: 0
+                        marginBottom: 0,
                       }
                     : {
                         flexDirection: "row",
@@ -852,7 +822,7 @@ export default ({ navigation }) => {
                         width: constants.width,
                         paddingRight: 10,
                         paddingLeft: 10,
-                        marginBottom: 30
+                        marginBottom: 30,
                       }
                 }
               >
@@ -886,7 +856,7 @@ export default ({ navigation }) => {
                   position: "absolute",
                   borderBottomWidth: 1,
                   borderBottomColor: "#999",
-                  color: isDarkMode && isDarkMode === true ? "white" : "black"
+                  color: isDarkMode && isDarkMode === true ? "white" : "black",
                 }}
                 autoFocus={true}
                 value={search}
@@ -905,7 +875,7 @@ export default ({ navigation }) => {
                   style={{
                     marginTop: 249,
                     marginBottom: 25,
-                    backgroundColor: "transparent"
+                    backgroundColor: "transparent",
                   }}
                   keyboardShouldPersistTaps="always"
                   showsVerticalScrollIndicator={false}
@@ -925,7 +895,7 @@ export default ({ navigation }) => {
                             ) : (
                               <TripSmallText>CITIES</TripSmallText>
                             )}
-                            {results.predictions.map(prediction => (
+                            {results.predictions.map((prediction) => (
                               <Touchable
                                 key={prediction.id}
                                 onPress={() =>
@@ -1029,7 +999,7 @@ export default ({ navigation }) => {
                       isDarkMode && isDarkMode === true ? "white" : "black",
                     monthTextColor: "#00adf5",
                     textMonthFontWeight: "bold",
-                    selectedDayBackgroundColor: "#00adf5"
+                    selectedDayBackgroundColor: "#00adf5",
                   }}
                 />
               </View>
@@ -1040,7 +1010,8 @@ export default ({ navigation }) => {
                     <CityBold>{searchCityName}</CityBold>
                     <Location>
                       {searchCountryName
-                        ? countries.find(i => i.code === searchCountryCode).name
+                        ? countries.find((i) => i.code === searchCountryCode)
+                            .name
                         : searchCityName}
                     </Location>
                   </SearchHeaderUserContainer>
@@ -1056,7 +1027,7 @@ export default ({ navigation }) => {
                         width: constants.width,
                         paddingRight: 10,
                         paddingLeft: 10,
-                        marginBottom: 0
+                        marginBottom: 0,
                       }
                     : {
                         flexDirection: "row",
@@ -1065,7 +1036,7 @@ export default ({ navigation }) => {
                         width: constants.width,
                         paddingRight: 10,
                         paddingLeft: 10,
-                        marginBottom: 30
+                        marginBottom: 30,
                       }
                 }
               >
@@ -1102,7 +1073,7 @@ export default ({ navigation }) => {
                   position: "absolute",
                   borderBottomWidth: 1,
                   borderBottomColor: "#999",
-                  color: isDarkMode && isDarkMode === true ? "white" : "black"
+                  color: isDarkMode && isDarkMode === true ? "white" : "black",
                 }}
                 autoFocus={true}
                 value={search}
@@ -1121,7 +1092,7 @@ export default ({ navigation }) => {
                   style={{
                     marginTop: 237,
                     marginBottom: 25,
-                    backgroundColor: "transparent"
+                    backgroundColor: "transparent",
                   }}
                   keyboardShouldPersistTaps="always"
                   showsVerticalScrollIndicator={false}
@@ -1139,7 +1110,7 @@ export default ({ navigation }) => {
                             ) : (
                               <TripSmallText>CITIES</TripSmallText>
                             )}
-                            {results.predictions.map(prediction => (
+                            {results.predictions.map((prediction) => (
                               <Touchable
                                 key={prediction.id}
                                 onPress={() =>
@@ -1185,33 +1156,6 @@ export default ({ navigation }) => {
             </KeyboardAvoidingView>
           )}
         </Modal>
-        <Modal
-          style={{ margin: 0, alignItems: "flex-start" }}
-          isVisible={coffeeModalOpen}
-          backdropColor={
-            isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
-          }
-          onBackdropPress={() => setCoffeeModalOpen(false)}
-          onBackButtonPress={() =>
-            Platform.OS === "android" && setCoffeeModalOpen(false)
-          }
-          propagateSwipe={true}
-          scrollHorizontal={true}
-          backdropOpacity={0.9}
-          animationIn="fadeIn"
-          animationOut="fadeOut"
-          animationInTiming={200}
-          animationOutTiming={200}
-          backdropTransitionInTiming={200}
-          backdropTransitionOutTiming={200}
-        >
-          <CoffeeDetail
-            coffeeId={coffeeId}
-            setModalOpen={setCoffeeModalOpen}
-            isSelf={user.profile.isSelf}
-            isStaying={true}
-          />
-        </Modal>
         <ScrollView
           refreshControl={
             <RefreshControl
@@ -1224,17 +1168,17 @@ export default ({ navigation }) => {
         >
           <Header>
             <ImageTouchable
-              disabled={!user.profile.avatarUrl}
+              disabled={!user.avatarUrl}
               onPress={() => setAvatarModalOpen(true)}
             >
-              {user.profile.avatarUrl ? (
+              {user.avatarUrl ? (
                 <ProgressiveImage
                   tint={isDarkMode ? "dark" : "light"}
                   style={{ height: 150, width: 150, borderRadius: 75 }}
                   preview={{
-                    uri: `${BACKEND_URL}/media/${user.profile.avatarUrl}`
+                    uri: `${BACKEND_URL}/media/${user.avatarUrl}`,
                   }}
-                  uri={`${BACKEND_URL}/media/${user.profile.avatarUrl}`}
+                  uri={`${BACKEND_URL}/media/${user.avatarUrl}`}
                 />
               ) : (
                 <Image
@@ -1242,7 +1186,7 @@ export default ({ navigation }) => {
                   style={{
                     height: 150,
                     width: 150,
-                    borderRadius: 75
+                    borderRadius: 75,
                   }}
                   source={randomAvatar[imageNumber]}
                 />
@@ -1254,13 +1198,9 @@ export default ({ navigation }) => {
                   ? user.username.substring(0, 24) + "..."
                   : user.username}
               </UserName>
-              {user.profile.isSelf ? (
+              {user.isSelf ? (
                 <IconTouchable
-                  onPress={() =>
-                    navigation.navigate("EditProfile", {
-                      profile: user.profile
-                    })
-                  }
+                  onPress={() => navigation.navigate("EditProfile", { user })}
                 >
                   <Ionicons
                     name={
@@ -1285,7 +1225,7 @@ export default ({ navigation }) => {
                 {cities.length < 6 ? (
                   <EditText>
                     You guys have been to
-                    {cities.map(city => (
+                    {cities.map((city) => (
                       <EditText key={city.id}>
                         &nbsp;
                         {city.cityName}
@@ -1297,7 +1237,7 @@ export default ({ navigation }) => {
                 ) : (
                   <EditText>
                     You guys have been to
-                    {cities.slice(0, 5).map(city => (
+                    {cities.slice(0, 5).map((city) => (
                       <EditText key={city.id}>
                         &nbsp;
                         {city.cityName}
@@ -1311,41 +1251,41 @@ export default ({ navigation }) => {
             )}
           </Header>
           <Body>
-            <BioText>{user.profile.bio}</BioText>
+            <BioText>{user.bio}</BioText>
             <ItemContainer>
-              {user.profile.distance !== 0 && (
+              {user.distance !== 0 && (
                 <Item>
-                  <UserName>{formatDistance(user.profile.distance)}</UserName>
+                  <UserName>{formatDistance(user.distance)}</UserName>
                   <Bold>KM</Bold>
                 </Item>
               )}
-              {user.profile.isHidePhotos ? (
-                user.profile.isSelf ? (
+              {user.isHidePhotos ? (
+                user.isSelf ? (
                   <Touchable
                     onPress={() => navigation.push("AvatarList", { uuid })}
                   >
-                    {user.profile.photoCount === 1 ? (
+                    {user.photoCount === 1 ? (
                       <Item>
-                        <UserName>{user.profile.photoCount}</UserName>
+                        <UserName>{user.photoCount}</UserName>
                         <Bold>PHOTO🔒</Bold>
                       </Item>
                     ) : (
                       <Item>
-                        <UserName>{user.profile.photoCount}</UserName>
+                        <UserName>{user.photoCount}</UserName>
                         <Bold>PHOTOS🔒</Bold>
                       </Item>
                     )}
                   </Touchable>
                 ) : (
                   <>
-                    {user.profile.photoCount === 1 ? (
+                    {user.photoCount === 1 ? (
                       <Item>
-                        <UserName>{user.profile.photoCount}</UserName>
+                        <UserName>{user.photoCount}</UserName>
                         <Bold>PHOTO🔒</Bold>
                       </Item>
                     ) : (
                       <Item>
-                        <UserName>{user.profile.photoCount}</UserName>
+                        <UserName>{user.photoCount}</UserName>
                         <Bold>PHOTOS🔒</Bold>
                       </Item>
                     )}
@@ -1356,59 +1296,59 @@ export default ({ navigation }) => {
                   <Touchable
                     onPress={() => navigation.push("AvatarList", { uuid })}
                   >
-                    {user.profile.photoCount === 1 ? (
+                    {user.photoCount === 1 ? (
                       <Item>
-                        <UserName>{user.profile.photoCount}</UserName>
+                        <UserName>{user.photoCount}</UserName>
                         <Bold>PHOTO</Bold>
                       </Item>
                     ) : (
                       <Item>
-                        <UserName>{user.profile.photoCount}</UserName>
+                        <UserName>{user.photoCount}</UserName>
                         <Bold>PHOTOS</Bold>
                       </Item>
                     )}
                   </Touchable>
                 </>
               )}
-              {user.profile.isHideTrips ? (
+              {user.isHideTrips ? (
                 <>
-                  {user.profile.tripCount === 1 ? (
+                  {user.tripCount === 1 ? (
                     <Item>
-                      <UserName>{user.profile.tripCount}</UserName>
+                      <UserName>{user.tripCount}</UserName>
                       <Bold>TRIP🔒</Bold>
                     </Item>
                   ) : (
                     <Item>
-                      <UserName>{user.profile.tripCount}</UserName>
+                      <UserName>{user.tripCount}</UserName>
                       <Bold>TRIPS🔒</Bold>
                     </Item>
                   )}
                 </>
               ) : (
                 <>
-                  {user.profile.tripCount === 1 ? (
+                  {user.tripCount === 1 ? (
                     <Item>
-                      <UserName>{user.profile.tripCount}</UserName>
+                      <UserName>{user.tripCount}</UserName>
                       <Bold>TRIP</Bold>
                     </Item>
                   ) : (
                     <Item>
-                      <UserName>{user.profile.tripCount}</UserName>
+                      <UserName>{user.tripCount}</UserName>
                       <Bold>TRIPS</Bold>
                     </Item>
                   )}
                 </>
               )}
-              {user.profile.isHideCities ? (
+              {user.isHideCities ? (
                 <>
-                  {user.profile.cityCount === 1 ? (
+                  {user.cityCount === 1 ? (
                     <Item>
-                      <UserName>{user.profile.cityCount}</UserName>
+                      <UserName>{user.cityCount}</UserName>
                       <Bold>CITY🔒</Bold>
                     </Item>
                   ) : (
                     <Item>
-                      <UserName>{user.profile.cityCount}</UserName>
+                      <UserName>{user.cityCount}</UserName>
                       <Bold>CITIES🔒</Bold>
                     </Item>
                   )}
@@ -1418,30 +1358,30 @@ export default ({ navigation }) => {
                   <Touchable
                     onPress={() => navigation.push("Cities", { uuid })}
                   >
-                    {user.profile.cityCount === 1 ? (
+                    {user.cityCount === 1 ? (
                       <Item>
-                        <UserName>{user.profile.cityCount}</UserName>
+                        <UserName>{user.cityCount}</UserName>
                         <Bold>CITY</Bold>
                       </Item>
                     ) : (
                       <Item>
-                        <UserName>{user.profile.cityCount}</UserName>
+                        <UserName>{user.cityCount}</UserName>
                         <Bold>CITIES</Bold>
                       </Item>
                     )}
                   </Touchable>
                 </>
               )}
-              {user.profile.isHideCountries ? (
+              {user.isHideCountries ? (
                 <>
-                  {user.profile.countryCount === 1 ? (
+                  {user.countryCount === 1 ? (
                     <Item>
-                      <UserName>{user.profile.countryCount}</UserName>
+                      <UserName>{user.countryCount}</UserName>
                       <Bold>COUNTRY🔒</Bold>
                     </Item>
                   ) : (
                     <Item>
-                      <UserName>{user.profile.countryCount}</UserName>
+                      <UserName>{user.countryCount}</UserName>
                       <Bold>COUNTRIES🔒</Bold>
                     </Item>
                   )}
@@ -1451,30 +1391,30 @@ export default ({ navigation }) => {
                   <Touchable
                     onPress={() => navigation.push("Countries", { uuid })}
                   >
-                    {user.profile.countryCount === 1 ? (
+                    {user.countryCount === 1 ? (
                       <Item>
-                        <UserName>{user.profile.countryCount}</UserName>
+                        <UserName>{user.countryCount}</UserName>
                         <Bold>COUNTRY</Bold>
                       </Item>
                     ) : (
                       <Item>
-                        <UserName>{user.profile.countryCount}</UserName>
+                        <UserName>{user.countryCount}</UserName>
                         <Bold>COUNTRIES</Bold>
                       </Item>
                     )}
                   </Touchable>
                 </>
               )}
-              {user.profile.isHideContinents ? (
+              {user.isHideContinents ? (
                 <>
-                  {user.profile.continentCount === 1 ? (
+                  {user.continentCount === 1 ? (
                     <Item>
-                      <UserName>{user.profile.continentCount}</UserName>
+                      <UserName>{user.continentCount}</UserName>
                       <Bold>CONTINENT🔒</Bold>
                     </Item>
                   ) : (
                     <Item>
-                      <UserName>{user.profile.continentCount}</UserName>
+                      <UserName>{user.continentCount}</UserName>
                       <Bold>CONTINENTS🔒</Bold>
                     </Item>
                   )}
@@ -1484,24 +1424,24 @@ export default ({ navigation }) => {
                   <Touchable
                     onPress={() => navigation.push("Continents", { uuid })}
                   >
-                    {user.profile.continentCount === 1 ? (
+                    {user.continentCount === 1 ? (
                       <Item>
-                        <UserName>{user.profile.continentCount}</UserName>
+                        <UserName>{user.continentCount}</UserName>
                         <Bold>CONTINENT</Bold>
                       </Item>
                     ) : (
                       <Item>
-                        <UserName>{user.profile.continentCount}</UserName>
+                        <UserName>{user.continentCount}</UserName>
                         <Bold>CONTINENTS</Bold>
                       </Item>
                     )}
                   </Touchable>
                 </>
               )}
-              {user.profile.gender && (
+              {user.gender && (
                 <Item>
                   {(() => {
-                    switch (user.profile.gender) {
+                    switch (user.gender) {
                       case "MALE":
                         return <UserName>M</UserName>;
                       case "FEMALE":
@@ -1515,63 +1455,48 @@ export default ({ navigation }) => {
                   <Bold>GENDER</Bold>
                 </Item>
               )}
-              {user.profile.nationality && (
+              {user.nationality && (
                 <Touchable
                   onPress={() =>
                     navigation.push("CountryProfileTabs", {
-                      countryCode: user.profile.nationality.countryCode,
-                      continentCode:
-                        user.profile.nationality.continent.continentCode
+                      countryCode: user.nationality.countryCode,
+                      continentCode: user.nationality.continent.continentCode,
                     })
                   }
                 >
                   <Item>
-                    <UserName>{user.profile.nationality.countryEmoji}</UserName>
+                    <UserName>{user.nationality.countryEmoji}</UserName>
                     <Bold>NATIONALITY </Bold>
                   </Item>
                 </Touchable>
               )}
-              {user.profile.residence && (
+              {user.residence && (
                 <Touchable
                   onPress={() =>
                     navigation.push("CountryProfileTabs", {
-                      countryCode: user.profile.residence.countryCode,
-                      continentCode:
-                        user.profile.residence.continent.continentCode
+                      countryCode: user.residence.countryCode,
+                      continentCode: user.residence.continent.continentCode,
                     })
                   }
                 >
                   <Item>
-                    <UserName>{user.profile.residence.countryEmoji}</UserName>
+                    <UserName>{user.residence.countryEmoji}</UserName>
                     <Bold>RESIDENCE </Bold>
                   </Item>
                 </Touchable>
               )}
-              {user.profile.isSelf &&
-                coffees &&
-                coffees.map(coffee => (
-                  <Touchable
-                    key={coffee.uuid}
-                    onPress={() => onPress(coffee.uuid)}
-                  >
-                    <Item>
-                      <UserName>📍</UserName>
-                      <Bold>PIN</Bold>
-                    </Item>
-                  </Touchable>
-                ))}
-              {user.profile.isSelf &&
-                (user.profile.blockedUserCount === 1 ? (
+              {user.isSelf &&
+                (user.blockedUserCount === 1 ? (
                   <Touchable onPress={() => navigation.push("BlockedUsers")}>
                     <Item>
-                      <UserName>{user.profile.blockedUserCount}</UserName>
+                      <UserName>{user.blockedUserCount}</UserName>
                       <Bold>BLOCKED USER</Bold>
                     </Item>
                   </Touchable>
                 ) : (
                   <Touchable onPress={() => navigation.push("BlockedUsers")}>
                     <Item>
-                      <UserName>{user.profile.blockedUserCount}</UserName>
+                      <UserName>{user.blockedUserCount}</UserName>
                       <Bold>BLOCKED USERS</Bold>
                     </Item>
                   </Touchable>
@@ -1579,9 +1504,9 @@ export default ({ navigation }) => {
             </ItemContainer>
 
             {(() => {
-              switch (user.profile.isSelf) {
+              switch (user.isSelf) {
                 case false:
-                  return user.profile.isHideTrips ? (
+                  return user.isHideTrips ? (
                     <Bold>Trips are hideen by {user.username}</Bold>
                   ) : (
                     <>
@@ -1593,7 +1518,7 @@ export default ({ navigation }) => {
                               cityId: i.city.cityId,
                               countryCode: i.city.country.countryCode,
                               continentCode:
-                                i.city.country.continent.continentCode
+                                i.city.country.continent.continentCode,
                             })
                           }
                         >
@@ -1609,7 +1534,7 @@ export default ({ navigation }) => {
                       closeOnRowBeginSwipe={true}
                       data={trip}
                       previewOpenValue={1000}
-                      renderItem={data => (
+                      renderItem={(data) => (
                         <TouchableBackRow key={data.item.id}>
                           <TouchableRow
                             onPress={() =>
@@ -1617,7 +1542,8 @@ export default ({ navigation }) => {
                                 cityId: data.item.city.cityId,
                                 countryCode: data.item.city.country.countryCode,
                                 continentCode:
-                                  data.item.city.country.continent.continentCode
+                                  data.item.city.country.continent
+                                    .continentCode,
                               })
                             }
                           >
@@ -1625,7 +1551,7 @@ export default ({ navigation }) => {
                           </TouchableRow>
                         </TouchableBackRow>
                       )}
-                      renderHiddenItem={data => (
+                      renderHiddenItem={(data) => (
                         <RowBack>
                           <BackLeftBtn
                             onPress={() =>
@@ -1655,7 +1581,7 @@ export default ({ navigation }) => {
                         </RowBack>
                       )}
                       leftOpenValue={91}
-                      keyExtractor={item => item.id}
+                      keyExtractor={(item) => item.id}
                     />
                   );
               }
@@ -1663,7 +1589,7 @@ export default ({ navigation }) => {
           </Body>
         </ScrollView>
         <Footer>
-          {user.profile.isSelf && (
+          {user.isSelf && (
             <AddTripBtn onPress={() => setAddTripModalOpen(true)}>
               <AddTripContainer>
                 <TripText>ADD TRIP</TripText>

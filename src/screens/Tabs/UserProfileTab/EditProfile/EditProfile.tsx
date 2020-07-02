@@ -18,7 +18,7 @@ import {
   UserProfile,
   UserProfileVariables,
   StartEditEmailVerification,
-  StartEditEmailVerificationVariables
+  StartEditEmailVerificationVariables,
 } from "../../../../types/api";
 import {
   EDIT_PROFILE,
@@ -26,7 +26,7 @@ import {
   START_EDIT_PHONE_VERIFICATION,
   COMPLETE_EDIT_PHONE_VERIFICATION,
   START_EDIT_EMAIL_VERIFICATION,
-  TOGGLE_SETTINGS
+  TOGGLE_SETTINGS,
 } from "./EditProfileQueries";
 import { GET_USER } from "../UserProfile/UserProfileQueries";
 import { Platform, TextInput, ActivityIndicator } from "react-native";
@@ -44,7 +44,7 @@ const View = styled.View`
   justify-content: center;
   align-items: center;
   padding: 15px;
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 const EditModalContainer = styled.View`
   flex-direction: row;
@@ -55,13 +55,13 @@ const EditModalContainer = styled.View`
 const ToggleContainer = styled.View``;
 const ToggleText = styled.Text`
   height: 20px;
-  color: ${props => props.theme.color};
-  font-weight: ${props => (props.isChanged ? "300" : "100")};
+  color: ${(props) => props.theme.color};
+  font-weight: ${(props) => (props.isChanged ? "300" : "100")};
 `;
 const SubmitText = styled.Text<IProps>`
   height: 20px;
-  color: ${props => (props.isChanged ? "#d60000" : props.theme.color)};
-  font-weight: ${props => (props.isChanged ? "300" : "100")};
+  color: ${(props) => (props.isChanged ? "#d60000" : props.theme.color)};
+  font-weight: ${(props) => (props.isChanged ? "300" : "100")};
 `;
 const CountryView = styled.View`
   margin-top: 4px;
@@ -69,7 +69,7 @@ const CountryView = styled.View`
   flex-direction: column;
 `;
 const Text = styled.Text`
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 const Bigtext = styled(Text)`
   font-weight: 300;
@@ -80,7 +80,7 @@ const Bold = styled.Text`
   font-size: 20px;
   text-align: left;
   margin-top: 10px;
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 const ConfirmBold = styled(Bold)`
   text-align: center;
@@ -112,14 +112,14 @@ const ToggleIcon = styled.TouchableOpacity``;
 const Touchable = styled.TouchableOpacity``;
 const ExplainText = styled.Text<IProps>`
   font-size: 11px;
-  color: ${props => (props.isChanged ? "#d60000" : props.theme.color)};
-  font-weight: ${props => (props.isChanged ? "300" : "100")};
+  color: ${(props) => (props.isChanged ? "#d60000" : props.theme.color)};
+  font-weight: ${(props) => (props.isChanged ? "300" : "100")};
 `;
 const FlagExplainText = styled(ExplainText)`
   top: -5px;
 `;
 const ScrollView = styled.ScrollView`
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 const ButtonContainer = styled.View`
   justify-content: center;
@@ -144,7 +144,7 @@ const SubmitButtonContainer = styled.View`
 const SubmitButtonText = styled.Text`
   font-size: 16px;
   font-weight: 500;
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 const SubmitButton = styled.TouchableOpacity`
   justify-content: center;
@@ -160,59 +160,55 @@ export default ({ navigation }) => {
   const isDarkMode = useTheme();
   const { theme, toggleTheme } = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
-  const profile = navigation.getParam("profile");
+  const user = navigation.getParam("user");
   const [newUsername, setNewUsername] = useState<string>(me.user.username);
-  const [bio, setBio] = useState<string>(profile.bio);
-  const [gender, setGender] = useState<string>(profile.gender);
+  const [bio, setBio] = useState<string>(user.bio);
+  const [gender, setGender] = useState<string>(user.gender);
   const [firstName, setFirstName] = useState<string>(me.user.firstName);
   const [lastName, setLastName] = useState<string>(me.user.lastName);
   const [nationalityCode, setNationalityCode] = useState<any>(
-    profile.nationality
-      ? profile.nationality.countryCode
-      : profile.currentCity.country.countryCode
+    user.nationality
+      ? user.nationality.countryCode
+      : user.currentCity.country.countryCode
   );
   const [residenceCode, setResidenceCode] = useState<any>(
-    profile.residence
-      ? profile.residence.countryCode
-      : profile.currentCity.country.countryCode
+    user.residence
+      ? user.residence.countryCode
+      : user.currentCity.country.countryCode
   );
-  const [isHidePhotos, setIsHidePhotos] = useState<boolean>(
-    profile.isHidePhotos
-  );
-  const [isHideTrips, setIsHideTrips] = useState<boolean>(profile.isHideTrips);
-  const [isHideCities, setIsHideCities] = useState<boolean>(
-    profile.isHideCities
-  );
+  const [isHidePhotos, setIsHidePhotos] = useState<boolean>(user.isHidePhotos);
+  const [isHideTrips, setIsHideTrips] = useState<boolean>(user.isHideTrips);
+  const [isHideCities, setIsHideCities] = useState<boolean>(user.isHideCities);
   const [isHideCountries, setIsHideCountries] = useState<boolean>(
-    profile.isHideCountries
+    user.isHideCountries
   );
   const [isHideContinents, setIsHideContinents] = useState<boolean>(
-    profile.isHideContinents
+    user.isHideContinents
   );
   const [isAutoLocationReport, setIsAutoLocationReport] = useState<boolean>(
-    profile.isAutoLocationReport
+    user.isAutoLocationReport
   );
-  const phoneNumber = profile.phoneNumber;
-  const countryPhoneNumber = profile.countryPhoneNumber;
-  const countryPhoneCode = profile.countryPhoneCode;
+  const phoneNumber = user.phoneNumber;
+  const countryPhoneNumber = user.countryPhoneNumber;
+  const countryPhoneCode = user.countryPhoneCode;
   const [newPhoneNumber, setNewPhoneNumber] = useState<string>(
-    profile.phoneNumber || ""
+    user.phoneNumber || ""
   );
   const [newCountryPhoneNumber, setNewCountryPhoneNumber] = useState<string>(
-    profile.countryPhoneNumber
-      ? profile.countryPhoneNumber
-      : countries.find(i => i.code === profile.currentCity.country.countryCode)
+    user.countryPhoneNumber
+      ? user.countryPhoneNumber
+      : countries.find((i) => i.code === user.currentCity.country.countryCode)
           .phone
   );
   const [newCountryPhoneCode, setNewCountryPhoneCode] = useState<any>(
-    profile.countryPhoneCode
-      ? profile.countryPhoneCode
-      : profile.currentCity.country.countryCode
+    user.countryPhoneCode
+      ? user.countryPhoneCode
+      : user.currentCity.country.countryCode
   );
   const [editPhoneModalOpen, setEditPhoneModalOpen] = useState<boolean>(false);
   const [isEditPhoneMode, setIsEditPhoneMode] = useState<boolean>(true);
   const [verificationKey, setVerificationKey] = useState<string>("");
-  const emailAddress = profile.emailAddress;
+  const emailAddress = user.emailAddress;
   const [newEmailAddress, setNewEmailAddress] = useState<string>("");
   const [editEmailModalOpen, setEditEmailModalOpen] = useState<boolean>(false);
   const [isEditEmailMode, setIsEditEmailMode] = useState<boolean>(true);
@@ -236,18 +232,18 @@ export default ({ navigation }) => {
       firstName,
       lastName,
       nationalityCode,
-      residenceCode
+      residenceCode,
     },
     update(cache, { data: { editProfile } }) {
       try {
         const data = cache.readQuery<Me>({
-          query: ME
+          query: ME,
         });
         if (data) {
           data.me.user = editProfile.user;
           cache.writeQuery({
             query: ME,
-            data
+            data,
           });
         }
       } catch (e) {
@@ -256,20 +252,20 @@ export default ({ navigation }) => {
       try {
         const data = cache.readQuery<UserProfile, UserProfileVariables>({
           query: GET_USER,
-          variables: { uuid: profile.uuid }
+          variables: { uuid: user.uuid },
         });
         if (data) {
           data.userProfile.user = editProfile.user;
           cache.writeQuery({
             query: GET_USER,
-            variables: { uuid: profile.uuid },
-            data
+            variables: { uuid: user.uuid },
+            data,
           });
         }
       } catch (e) {
         console.log(e);
       }
-    }
+    },
   });
 
   const onPress = () => {
@@ -286,16 +282,16 @@ export default ({ navigation }) => {
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-          marginBottom: 10
+          marginBottom: 10,
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
           color: isDarkMode ? "#EFEFEF" : "#161616",
-          fontWeight: "400"
+          fontWeight: "400",
         },
-        separatorStyle: { opacity: 0.5 }
+        separatorStyle: { opacity: 0.5 },
       },
-      buttonIndex => {
+      (buttonIndex) => {
         if (buttonIndex === 0) {
           onSubmit();
           setSubmitModal(false);
@@ -320,16 +316,16 @@ export default ({ navigation }) => {
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-          marginBottom: 10
+          marginBottom: 10,
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
           color: isDarkMode ? "#EFEFEF" : "#161616",
-          fontWeight: "400"
+          fontWeight: "400",
         },
-        separatorStyle: { opacity: 0.5 }
+        separatorStyle: { opacity: 0.5 },
       },
-      buttonIndex => {
+      (buttonIndex) => {
         if (buttonIndex === 0) {
           logOut();
           setLogoutModal(false);
@@ -353,16 +349,16 @@ export default ({ navigation }) => {
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-          marginBottom: 10
+          marginBottom: 10,
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
           color: isDarkMode ? "#EFEFEF" : "#161616",
-          fontWeight: "400"
+          fontWeight: "400",
         },
-        separatorStyle: { opacity: 0.5 }
+        separatorStyle: { opacity: 0.5 },
       },
-      buttonIndex => {
+      (buttonIndex) => {
         if (buttonIndex === 0) {
           deleteProfileFn();
           logOut();
@@ -379,7 +375,7 @@ export default ({ navigation }) => {
   >(DELETE_PROFILE);
   const [
     startEditPhoneVerificationFn,
-    { loading: startEditPhoneVerificationLoading }
+    { loading: startEditPhoneVerificationLoading },
   ] = useMutation<
     StartEditPhoneVerification,
     StartEditPhoneVerificationVariables
@@ -388,12 +384,12 @@ export default ({ navigation }) => {
       countryPhoneNumber: newCountryPhoneNumber,
       phoneNumber: newPhoneNumber.startsWith("0")
         ? newPhoneNumber.substring(1)
-        : newPhoneNumber
-    }
+        : newPhoneNumber,
+    },
   });
   const [
     completeEditPhoneVerificationFn,
-    { loading: completeEditPhoneVerificationLoading }
+    { loading: completeEditPhoneVerificationLoading },
   ] = useMutation<
     CompleteEditPhoneVerification,
     CompleteEditPhoneVerificationVariables
@@ -404,44 +400,44 @@ export default ({ navigation }) => {
         ? newPhoneNumber.substring(1)
         : newPhoneNumber,
       countryPhoneNumber: newCountryPhoneNumber,
-      countryPhoneCode: newCountryPhoneCode
+      countryPhoneCode: newCountryPhoneCode,
     },
     update(cache, { data: { completeEditPhoneVerification } }) {
       try {
         const data = cache.readQuery<UserProfile, UserProfileVariables>({
           query: GET_USER,
-          variables: { uuid: profile.uuid }
+          variables: { uuid: user.uuid },
         });
         if (data) {
-          data.userProfile.user.profile.phoneNumber =
+          data.userProfile.user.phoneNumber =
             completeEditPhoneVerification.phoneNumber;
-          data.userProfile.user.profile.countryPhoneNumber =
+          data.userProfile.user.countryPhoneNumber =
             completeEditPhoneVerification.countryPhoneNumber;
-          data.userProfile.user.profile.countryPhoneCode =
+          data.userProfile.user.countryPhoneCode =
             completeEditPhoneVerification.countryPhoneCode;
-          data.userProfile.user.profile.isVerifiedPhoneNumber =
+          data.userProfile.user.isVerifiedPhoneNumber =
             completeEditPhoneVerification.isVerifiedPhoneNumber;
           cache.writeQuery({
             query: GET_USER,
-            variables: { uuid: profile.uuid },
-            data
+            variables: { uuid: user.uuid },
+            data,
           });
         }
       } catch (e) {
         console.log(e);
       }
-    }
+    },
   });
   const [
     startEditEmailVerificationFn,
-    { loading: startEditEmailVerificationLoading }
+    { loading: startEditEmailVerificationLoading },
   ] = useMutation<
     StartEditEmailVerification,
     StartEditEmailVerificationVariables
   >(START_EDIT_EMAIL_VERIFICATION, {
     variables: {
-      emailAddress: newEmailAddress
-    }
+      emailAddress: newEmailAddress,
+    },
   });
 
   const [toggleSettingsFn, { loading: toggleSettingsLoading }] = useMutation<
@@ -452,33 +448,29 @@ export default ({ navigation }) => {
       try {
         const data = cache.readQuery<UserProfile, UserProfileVariables>({
           query: GET_USER,
-          variables: { uuid: profile.uuid }
+          variables: { uuid: user.uuid },
         });
         if (data) {
-          data.userProfile.user.profile.isDarkMode =
-            toggleSettings.user.profile.isDarkMode;
-          data.userProfile.user.profile.isHidePhotos =
-            toggleSettings.user.profile.isHidePhotos;
-          data.userProfile.user.profile.isHideTrips =
-            toggleSettings.user.profile.isHideTrips;
-          data.userProfile.user.profile.isHideCities =
-            toggleSettings.user.profile.isHideCities;
-          data.userProfile.user.profile.isHideCountries =
-            toggleSettings.user.profile.isHideCountries;
-          data.userProfile.user.profile.isHideContinents =
-            toggleSettings.user.profile.isHideContinents;
-          data.userProfile.user.profile.isAutoLocationReport =
-            toggleSettings.user.profile.isAutoLocationReport;
+          data.userProfile.user.isDarkMode = toggleSettings.user.isDarkMode;
+          data.userProfile.user.isHidePhotos = toggleSettings.user.isHidePhotos;
+          data.userProfile.user.isHideTrips = toggleSettings.user.isHideTrips;
+          data.userProfile.user.isHideCities = toggleSettings.user.isHideCities;
+          data.userProfile.user.isHideCountries =
+            toggleSettings.user.isHideCountries;
+          data.userProfile.user.isHideContinents =
+            toggleSettings.user.isHideContinents;
+          data.userProfile.user.isAutoLocationReport =
+            toggleSettings.user.isAutoLocationReport;
           cache.writeQuery({
             query: GET_USER,
-            variables: { uuid: profile.uuid },
-            data
+            variables: { uuid: user.uuid },
+            data,
           });
         }
       } catch (e) {
         console.log(e);
       }
-    }
+    },
   });
   const toast = (message: string) => {
     Toast.show(message, {
@@ -487,7 +479,7 @@ export default ({ navigation }) => {
       shadow: true,
       animation: true,
       hideOnPress: true,
-      delay: 0
+      delay: 0,
     });
   };
   const onSelectNationality = (country: any) => {
@@ -498,7 +490,7 @@ export default ({ navigation }) => {
   };
   const onSelectrEditPhone = (country: any) => {
     setNewCountryPhoneNumber(
-      countries.find(i => i.code === country.cca2).phone
+      countries.find((i) => i.code === country.cca2).phone
     );
     setNewCountryPhoneCode(country.cca2);
   };
@@ -520,17 +512,19 @@ export default ({ navigation }) => {
   const onPressToggleIcon = async (payload: string) => {
     try {
       if (payload === "HIDE_PHOTOS") {
-        setIsHidePhotos(isHidePhotos => !isHidePhotos);
+        setIsHidePhotos((isHidePhotos) => !isHidePhotos);
       } else if (payload === "HIDE_TRIPS") {
-        setIsHideTrips(isHideTrips => !isHideTrips);
+        setIsHideTrips((isHideTrips) => !isHideTrips);
       } else if (payload === "HIDE_CITIES") {
-        setIsHideCities(isHideCities => !isHideCities);
+        setIsHideCities((isHideCities) => !isHideCities);
       } else if (payload === "HIDE_COUNTRIES") {
-        setIsHideCountries(isHideCountries => !isHideCountries);
+        setIsHideCountries((isHideCountries) => !isHideCountries);
       } else if (payload === "HIDE_CONTINENTS") {
-        setIsHideContinents(isHideContinents => !isHideContinents);
+        setIsHideContinents((isHideContinents) => !isHideContinents);
       } else if (payload === "AUTO_LOCATION_REPORT") {
-        setIsAutoLocationReport(isAutoLocationReport => !isAutoLocationReport);
+        setIsAutoLocationReport(
+          (isAutoLocationReport) => !isAutoLocationReport
+        );
       }
       await toggleSettingsFn({ variables: { payload } });
     } catch (e) {
@@ -564,7 +558,7 @@ export default ({ navigation }) => {
     }`;
     const phoneRegex = /(([+][(]?[0-9]{1,3}[)]?)|([(]?[0-9]{4}[)]?))\s*[)]?[-\s\.]?[(]?[0-9]{1,3}[)]?([-\s\.]?[0-9]{3})([-\s\.]?[0-9]{3,4})/;
     const {
-      data: { startEditPhoneVerification }
+      data: { startEditPhoneVerification },
     } = await startEditPhoneVerificationFn();
     if (startEditPhoneVerification.ok) {
       setIsEditPhoneMode(false);
@@ -587,7 +581,7 @@ export default ({ navigation }) => {
   };
   const handlePhoneVerification = async () => {
     const {
-      data: { completeEditPhoneVerification }
+      data: { completeEditPhoneVerification },
     } = await completeEditPhoneVerificationFn();
     setVerificationKey("");
     setEditPhoneModalOpen(false);
@@ -603,7 +597,7 @@ export default ({ navigation }) => {
       toast("Username could not be empty");
     } else {
       const {
-        data: { editProfile }
+        data: { editProfile },
       } = await editProfileFn();
       if (editProfile.ok) {
         logIn(editProfile);
@@ -621,7 +615,7 @@ export default ({ navigation }) => {
       );
       if (isValid) {
         const {
-          data: { startEditEmailVerification }
+          data: { startEditEmailVerification },
         } = await startEditEmailVerificationFn();
         if (startEditEmailVerification.ok) {
           setIsEditEmailMode(false);
@@ -649,16 +643,16 @@ export default ({ navigation }) => {
           borderRadius: 10,
           width: constants.width - 30,
           marginLeft: 15,
-          marginBottom: 10
+          marginBottom: 10,
         },
         textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
         titleTextStyle: {
           color: isDarkMode ? "#EFEFEF" : "#161616",
-          fontWeight: "400"
+          fontWeight: "400",
         },
-        separatorStyle: { opacity: 0.5 }
+        separatorStyle: { opacity: 0.5 },
       },
-      buttonIndex => {
+      (buttonIndex) => {
         if (buttonIndex === 0) {
           setGender("MALE");
         } else if (buttonIndex === 1) {
@@ -680,16 +674,15 @@ export default ({ navigation }) => {
     if (
       newUsername !== me.user.username ||
       nationalityCode !==
-        ((me.user.profile.nationality &&
-          me.user.profile.nationality.countryCode) ||
-          nationalityCode !== profile.currentCity.country.countryCode) ||
+        ((me.user.nationality && me.user.nationality.countryCode) ||
+          nationalityCode !== user.currentCity.country.countryCode) ||
       residenceCode !==
-        ((me.user.profile.residence && me.user.profile.residence.countryCode) ||
-          residenceCode !== profile.currentCity.country.countryCode) ||
-      gender !== me.user.profile.gender ||
+        ((me.user.residence && me.user.residence.countryCode) ||
+          residenceCode !== user.currentCity.country.countryCode) ||
+      gender !== me.user.gender ||
       firstName !== me.user.firstName ||
       lastName !== me.user.lastName ||
-      bio !== me.user.profile.bio
+      bio !== me.user.bio
     ) {
       setIsChanged(true);
     } else {
@@ -740,11 +733,11 @@ export default ({ navigation }) => {
                     color: theme ? "white" : "black",
                     marginLeft: 5,
                     fontSize: 32,
-                    fontWeight: "300"
+                    fontWeight: "300",
                   }}
                   keyboardType="phone-pad"
                   returnKeyType="done"
-                  onChangeText={number => setNewPhoneNumber(number)}
+                  onChangeText={(number) => setNewPhoneNumber(number)}
                 />
               </EditModalContainer>
               <ButtonContainer>
@@ -780,11 +773,11 @@ export default ({ navigation }) => {
                   marginLeft: 5,
                   fontSize: 32,
                   fontWeight: "300",
-                  textAlign: "center"
+                  textAlign: "center",
                 }}
                 keyboardType="phone-pad"
                 returnKeyType="done"
-                onChangeText={number => setVerificationKey(number)}
+                onChangeText={(number) => setVerificationKey(number)}
               />
               <ButtonContainer>
                 <Void />
@@ -832,13 +825,13 @@ export default ({ navigation }) => {
               marginLeft: 5,
               fontSize: 32,
               fontWeight: "300",
-              textAlign: "center"
+              textAlign: "center",
             }}
             value={deleteAccountUsername}
             placeholderTextColor="#999"
             placeholder={newUsername}
             returnKeyType="done"
-            onChangeText={text =>
+            onChangeText={(text) =>
               onInputTextChange(text, "deleteAccountUsername")
             }
             autoCorrect={false}
@@ -883,11 +876,11 @@ export default ({ navigation }) => {
                     borderBottomColor: "#999",
                     color: theme ? "white" : "black",
                     fontSize: 32,
-                    fontWeight: "300"
+                    fontWeight: "300",
                   }}
                   keyboardType="email-address"
                   returnKeyType="done"
-                  onChangeText={adress => setNewEmailAddress(adress)}
+                  onChangeText={(adress) => setNewEmailAddress(adress)}
                 />
               </EditModalContainer>
               <ButtonContainer>
@@ -935,11 +928,13 @@ export default ({ navigation }) => {
                     backgroundColor: "transparent",
                     borderBottomWidth: 1,
                     borderBottomColor: "#999",
-                    color: "#999"
+                    color: "#999",
                   }}
                   value={newUsername}
                   returnKeyType="done"
-                  onChangeText={text => onInputTextChange(text, "newUsername")}
+                  onChangeText={(text) =>
+                    onInputTextChange(text, "newUsername")
+                  }
                   autoCorrect={false}
                 />
               </Item>
@@ -964,7 +959,7 @@ export default ({ navigation }) => {
                     onSelect={onSelectNationality}
                   />
                   <FlagExplainText>
-                    {countries.find(i => i.code === nationalityCode).name}
+                    {countries.find((i) => i.code === nationalityCode).name}
                   </FlagExplainText>
                 </CountryView>
               </CountryContainer>
@@ -984,7 +979,7 @@ export default ({ navigation }) => {
                     onSelect={onSelectrRsidence}
                   />
                   <FlagExplainText>
-                    {countries.find(i => i.code === residenceCode).name}
+                    {countries.find((i) => i.code === residenceCode).name}
                   </FlagExplainText>
                 </CountryView>
               </CountryContainer>
@@ -1030,11 +1025,11 @@ export default ({ navigation }) => {
                     backgroundColor: "transparent",
                     borderBottomWidth: 1,
                     borderBottomColor: "#999",
-                    color: "#999"
+                    color: "#999",
                   }}
                   value={firstName}
                   returnKeyType="done"
-                  onChangeText={text => onInputTextChange(text, "firstName")}
+                  onChangeText={(text) => onInputTextChange(text, "firstName")}
                   autoCorrect={false}
                 />
               </Item>
@@ -1047,11 +1042,11 @@ export default ({ navigation }) => {
                     backgroundColor: "transparent",
                     borderBottomWidth: 1,
                     borderBottomColor: "#999",
-                    color: "#999"
+                    color: "#999",
                   }}
                   value={lastName}
                   returnKeyType="done"
-                  onChangeText={text => onInputTextChange(text, "lastName")}
+                  onChangeText={(text) => onInputTextChange(text, "lastName")}
                   autoCorrect={false}
                 />
               </Item>
@@ -1064,13 +1059,13 @@ export default ({ navigation }) => {
                     borderBottomWidth: 1,
                     borderBottomColor: "#999",
                     color: "#999",
-                    marginBottom: 10
+                    marginBottom: 10,
                   }}
                   placeholderTextColor="#999"
                   value={bio}
                   placeholder={"BIO"}
                   returnKeyType="done"
-                  onChangeText={text => setBio(text)}
+                  onChangeText={(text) => setBio(text)}
                   autoCorrect={false}
                 />
               </Item>
@@ -1106,20 +1101,17 @@ export default ({ navigation }) => {
                 {isChanged && "Your "}
                 {newUsername !== me.user.username && "USERNAME "}
                 {nationalityCode !==
-                  ((me.user.profile.nationality &&
-                    me.user.profile.nationality.countryCode) ||
-                    nationalityCode !==
-                      profile.currentCity.country.countryCode) &&
+                  ((me.user.nationality && me.user.nationality.countryCode) ||
+                    nationalityCode !== user.currentCity.country.countryCode) &&
                   "NATIONALITY "}
                 {residenceCode !==
-                  ((me.user.profile.residence &&
-                    me.user.profile.residence.countryCode) ||
-                    residenceCode !==
-                      profile.currentCity.country.countryCode) && "RESIDENCE "}
-                {gender !== me.user.profile.gender && "GENDER "}
+                  ((me.user.residence && me.user.residence.countryCode) ||
+                    residenceCode !== user.currentCity.country.countryCode) &&
+                  "RESIDENCE "}
+                {gender !== me.user.gender && "GENDER "}
                 {firstName !== me.user.firstName && "FIRSTNAME "}
                 {lastName !== me.user.lastName && "LASTNAME "}
-                {bio !== me.user.profile.bio && "BIO "}
+                {bio !== me.user.bio && "BIO "}
                 {isChanged && "is changed. Please press submit button to save."}
               </ExplainText>
               <Item>
@@ -1127,7 +1119,7 @@ export default ({ navigation }) => {
                 {countryPhoneCode && countryPhoneNumber ? (
                   <Touchable onPress={() => setEditPhoneModalOpen(true)}>
                     <ToggleText>
-                      {countries.find(i => i.code === countryPhoneCode).emoji}
+                      {countries.find((i) => i.code === countryPhoneCode).emoji}
                       &nbsp;
                       {countryPhoneNumber}&nbsp;
                       {phoneNumber}
@@ -1147,10 +1139,10 @@ export default ({ navigation }) => {
                   </ToggleIcon>
                 )}
               </Item>
-              {profile.isVerifiedPhoneNumber ? (
+              {user.isVerifiedPhoneNumber ? (
                 <ExplainText>
                   Your phone number is already verified in&nbsp;
-                  {countries.find(i => i.code === countryPhoneCode).name}.
+                  {countries.find((i) => i.code === countryPhoneCode).name}.
                 </ExplainText>
               ) : (
                 <ExplainText>Verify your phone number to login.</ExplainText>
@@ -1176,7 +1168,7 @@ export default ({ navigation }) => {
                 </ToggleIcon>
               )} */}
               </Item>
-              {profile.isVerifiedEmailAddress ? (
+              {user.isVerifiedEmailAddress ? (
                 <ExplainText>
                   Your email address is already verified.
                 </ExplainText>
@@ -1362,7 +1354,7 @@ export default ({ navigation }) => {
               </Item>
               <ExplainText>
                 If you set auto location report off, the app cannot find where
-                you are. Your lacation will be shown on your profile
+                you are. Your lacation will be shown on your profile.
               </ExplainText>
               <Void />
               <Bold>ACCOUNT</Bold>
