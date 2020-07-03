@@ -3,7 +3,6 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Image } from "react-native";
 import constants, { BACKEND_URL } from "../../constants";
 import CityLikeBtn from "./CityLikeBtn/CityLikeBtn";
-import moment from "moment";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import styled from "styled-components";
 import { useTheme } from "../context/ThemeContext";
@@ -131,7 +130,6 @@ interface IProps {
   continent?: any;
   match?: any;
   count?: number;
-  diff?: number;
   naturalTime?: string;
   type: string;
 }
@@ -144,7 +142,6 @@ const UserRow: React.FC<IProps> = ({
   continent,
   match,
   count,
-  diff,
   naturalTime,
   type,
 }) => {
@@ -320,27 +317,6 @@ const UserRow: React.FC<IProps> = ({
               </HeaderUserContainer>
             </Touchable>
           </Header>
-          <TripItems>
-            {trip.diffDays && (
-              <>
-                {trip.diffDays !== 1 ? (
-                  <GreyText>{trip.diffDays} days</GreyText>
-                ) : (
-                  <GreyText>{trip.diffDays} day</GreyText>
-                )}
-              </>
-            )}
-            <ColumnItems>
-              {trip.endDate && (
-                <GreyText>{moment(trip.endDate).format("MMM Do YY")}</GreyText>
-              )}
-              {trip.startDate && (
-                <GreyText>
-                  {moment(trip.startDate).format("MMM Do YY")}
-                </GreyText>
-              )}
-            </ColumnItems>
-          </TripItems>
         </Container>
       );
     case "city":
@@ -461,15 +437,6 @@ const UserRow: React.FC<IProps> = ({
                 )}
               </>
             )}
-            {diff && (
-              <>
-                {diff !== 1 ? (
-                  <GreyText>{diff} days</GreyText>
-                ) : (
-                  <GreyText>{diff} day</GreyText>
-                )}
-              </>
-            )}
           </Items>
         </Container>
       );
@@ -543,15 +510,6 @@ const UserRow: React.FC<IProps> = ({
                   <GreyText>{count} times</GreyText>
                 ) : (
                   <GreyText>{count} time</GreyText>
-                )}
-              </>
-            )}
-            {diff && (
-              <>
-                {diff !== 1 ? (
-                  <GreyText>{diff} days</GreyText>
-                ) : (
-                  <GreyText>{diff} day</GreyText>
                 )}
               </>
             )}
@@ -631,15 +589,6 @@ const UserRow: React.FC<IProps> = ({
                   <GreyText>{count} times</GreyText>
                 ) : (
                   <GreyText>{count} time</GreyText>
-                )}
-              </>
-            )}
-            {diff && (
-              <>
-                {diff !== 1 ? (
-                  <GreyText>{diff} days</GreyText>
-                ) : (
-                  <GreyText>{diff} day</GreyText>
                 )}
               </>
             )}

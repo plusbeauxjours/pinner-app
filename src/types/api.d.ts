@@ -376,7 +376,6 @@ export interface CityProfile_cityProfile_city {
   userCount: number | null;
   userLogCount: number | null;
   count: number | null;
-  diff: number | null;
 }
 
 export interface CityProfile_cityProfile {
@@ -1260,7 +1259,6 @@ export interface FrequentVisits_frequentVisits_cities_country {
 export interface FrequentVisits_frequentVisits_cities {
   __typename: "CityType";
   count: number | null;
-  diff: number | null;
   id: string;
   latitude: number | null;
   longitude: number | null;
@@ -1337,7 +1335,6 @@ export interface TopCountries_topCountries_countries_continent {
 export interface TopCountries_topCountries_countries {
   __typename: "CountryType";
   count: number | null;
-  diff: number | null;
   id: string;
   countryName: string | null;
   countryCode: string | null;
@@ -1773,10 +1770,7 @@ export interface GetTrips_getTrips_trip {
   __typename: "MoveNotificationType";
   id: string;
   city: GetTrips_getTrips_trip_city | null;
-  startDate: any | null;
-  endDate: any | null;
   naturalTime: string | null;
-  diffDays: number | null;
 }
 
 export interface GetTrips_getTrips {
@@ -1824,8 +1818,6 @@ export interface AddTrip_addTrip_moveNotification_city {
 
 export interface AddTrip_addTrip_moveNotification {
   __typename: "MoveNotificationType";
-  startDate: any | null;
-  endDate: any | null;
   city: AddTrip_addTrip_moveNotification_city | null;
 }
 
@@ -1842,8 +1834,6 @@ export interface AddTrip {
 
 export interface AddTripVariables {
   cityId: string;
-  startDate: any;
-  endDate: any;
 }
 
 /* tslint:disable */
@@ -1879,8 +1869,6 @@ export interface EditTrip_editTrip_moveNotification {
   __typename: "MoveNotificationType";
   id: string;
   city: EditTrip_editTrip_moveNotification_city | null;
-  startDate: any | null;
-  endDate: any | null;
   naturalTime: string | null;
 }
 
@@ -1898,8 +1886,6 @@ export interface EditTrip {
 export interface EditTripVariables {
   moveNotificationId: number;
   cityId?: string | null;
-  startDate?: any | null;
-  endDate?: any | null;
 }
 
 /* tslint:disable */
@@ -2292,6 +2278,106 @@ export interface DeleteBlockUser {
 
 export interface DeleteBlockUserVariables {
   uuid: string;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: Match
+// ====================================================
+
+export interface Match_match_match_city_country {
+  __typename: "CountryType";
+  countryName: string | null;
+  countryEmoji: string | null;
+}
+
+export interface Match_match_match_city {
+  __typename: "CityType";
+  cityId: string | null;
+  cityName: string | null;
+  country: Match_match_match_city_country;
+}
+
+export interface Match_match_match_host_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface Match_match_match_host_currentCity {
+  __typename: "CityType";
+  cityName: string | null;
+  country: Match_match_match_host_currentCity_country;
+}
+
+export interface Match_match_match_host {
+  __typename: "TokenType";
+  username: string | null;
+  id: string;
+  uuid: any | null;
+  pushToken: string | null;
+  avatarUrl: string | null;
+  appAvatarUrl: string | null;
+  isSelf: boolean | null;
+  currentCity: Match_match_match_host_currentCity | null;
+}
+
+export interface Match_match_match_guest_currentCity_country {
+  __typename: "CountryType";
+  countryName: string | null;
+}
+
+export interface Match_match_match_guest_currentCity {
+  __typename: "CityType";
+  cityName: string | null;
+  country: Match_match_match_guest_currentCity_country;
+}
+
+export interface Match_match_match_guest {
+  __typename: "TokenType";
+  username: string | null;
+  id: string;
+  uuid: any | null;
+  pushToken: string | null;
+  avatarUrl: string | null;
+  appAvatarUrl: string | null;
+  isSelf: boolean | null;
+  currentCity: Match_match_match_guest_currentCity | null;
+}
+
+export interface Match_match_match {
+  __typename: "MatchType";
+  id: string;
+  naturalTime: string | null;
+  isHost: boolean | null;
+  isGuest: boolean | null;
+  isMatching: boolean | null;
+  city: Match_match_match_city | null;
+  host: Match_match_match_host | null;
+  guest: Match_match_match_guest | null;
+  isReadByHost: boolean;
+  isReadByGuest: boolean;
+}
+
+export interface Match_match {
+  __typename: "MatchResponse";
+  ok: boolean | null;
+  cityId: string | null;
+  countryCode: string | null;
+  continentCode: string | null;
+  match: Match_match_match | null;
+}
+
+export interface Match {
+  match: Match_match;
+}
+
+export interface MatchVariables {
+  cityId: string;
+  hostUuid: string;
+  guestUuid: string;
 }
 
 /* tslint:disable */

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import uuid from "uuid/v4";
 import Constants from "expo-constants";
 import styled from "styled-components";
@@ -34,6 +34,7 @@ const Touchable = styled.TouchableOpacity`
 export default withNavigation(({ navigation }) => {
   const { me, loading: meLoading } = useMe();
   const isDarkMode = useTheme();
+  const [loading, setLoading] = useState<boolean>(false);
   const [uploadAvatarFn, { loading: uploadAvatarLoading }] = useMutation<
     UploadAvatar,
     UploadAvatarVariables
@@ -172,6 +173,7 @@ export default withNavigation(({ navigation }) => {
             name,
           });
           try {
+            setLoading(true);
             const {
               data: { uploadAvatar },
             } = await uploadAvatarFn({ variables: { file } });
@@ -181,6 +183,8 @@ export default withNavigation(({ navigation }) => {
             }
           } catch (e) {
             console.log(e);
+          } finally {
+            setLoading(false);
           }
         }
       } catch (e) {
@@ -224,10 +228,7 @@ export default withNavigation(({ navigation }) => {
   };
   if (!meLoading && me) {
     return (
-      <Touchable
-        onPress={() => pickFromGallery()}
-        disabled={uploadAvatarLoading}
-      >
+      <Touchable onPress={() => pickFromGallery()} disabled={loading}>
         <AntDesign
           name={"appstore-o"}
           size={22}

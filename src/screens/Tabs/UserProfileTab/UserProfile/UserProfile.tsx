@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import moment from "moment";
-import {
-  RefreshControl,
-  Platform,
-  Image,
-  KeyboardAvoidingView,
-  TextInput,
-} from "react-native";
+import { RefreshControl, Platform, Image, TextInput } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { SwipeListView } from "react-native-swipe-list-view";
@@ -14,17 +7,14 @@ import Toast from "react-native-root-toast";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import { Ionicons } from "@expo/vector-icons";
-import { range } from "lodash";
 import { useMe } from "../../../../context/MeContext";
 import {
   UserProfile,
   UserProfileVariables,
   GetTrips,
   GetTripsVariables,
-  EditTrip,
   AddTrip,
   AddTripVariables,
-  EditTripVariables,
   DeleteTrip,
   DeleteTripVariables,
   CalculateDistance,
@@ -39,7 +29,6 @@ import {
   GET_USER,
   GET_TRIPS,
   ADD_TRIP,
-  EDIT_TRIP,
   DELETE_TRIP,
   CALCULATE_DISTANCE,
   SLACK_REPORT_USERS,
@@ -50,15 +39,12 @@ import constants, { BACKEND_URL } from "../../../../../constants";
 import { GET_SAME_TRIPS } from "./UserProfileQueries";
 import Modal from "react-native-modal";
 import { useTheme } from "../../../../context/ThemeContext";
-import { CalendarList } from "react-native-calendars";
 import { CREATE_CITY } from "../../../../components/Search/SearchQueries";
 import useGoogleAutocomplete from "../../../../hooks/useGoogleAutocomplete";
 import keys from "../../../../../keys";
 import SearchCityPhoto from "../../../../components/SearchCityPhoto";
-import { countries } from "../../../../../countryData";
 import ImageZoom from "react-native-image-pan-zoom";
 
-const View = styled.View``;
 const Header = styled.View`
   height: 270;
   flex-direction: column;
@@ -188,16 +174,6 @@ const AddTripContainer = styled.View`
   border-radius: 5px;
 `;
 
-const TripSubmitBtn = styled.TouchableOpacity`
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-  height: 40px;
-  margin: 5px;
-  border: 0.5px solid #999;
-  border-radius: 5px;
-`;
-
 const CityBold = styled.Text`
   font-weight: 500;
   color: ${(props) => props.theme.color};
@@ -214,10 +190,6 @@ const SearchCityContainer = styled.View`
   justify-content: center;
   height: 45px;
   width: ${constants.width};
-`;
-const CalendarCityContainer = styled(SearchCityContainer)`
-  justify-content: center;
-  padding: 0;
 `;
 const SearchHeader = styled.View`
   flex: 2;
@@ -248,22 +220,13 @@ export default ({ navigation }) => {
       !navigation.getParam("uuid");
   const isDarkMode = useTheme();
   const [search, setSearch] = useState<string>("");
-  const [moveNotificationId, setMoveNotificationId] = useState<string>();
   const [addTripModalOpen, setAddTripModalOpen] = useState<boolean>(false);
-  const [editTripModalOpen, setEditTripModalOpen] = useState<boolean>(false);
-  const [isCalendarMode, setIsCalendarMode] = useState<boolean>(false);
   const [searchCityId, setSearchCityId] = useState<string>("");
-  const [searchCityName, setSearchCityName] = useState<string>("");
-  const [searchCountryCode, setSearchCountryCode] = useState<string>("");
-  const [searchCountryName, setSearchCountryName] = useState<string>("");
   const [avatarModalOpen, setAvatarModalOpen] = useState<boolean>(false);
   const [uuid, setUuid] = useState<string>(
     navigation.getParam("uuid") ? navigation.getParam("uuid") : me.user.uuid
   );
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [tripStartDate, setTripStartDate] = useState<moment.Moment>(null);
-  const [tripEndDate, setTripEndDate] = useState<moment.Moment>(null);
-  const [tripMarkedDates, setTripMarkedDates] = useState<any>({});
   const { showActionSheetWithOptions } = useActionSheet();
   const imageNumber = Math.round(Math.random() * 9);
   const randomAvatar = {
@@ -424,24 +387,8 @@ export default ({ navigation }) => {
   const [addTripFn, { loading: addTripLoading }] = useMutation<
     AddTrip,
     AddTripVariables
-  >(ADD_TRIP, {
-    variables: {
-      cityId: searchCityId,
-      startDate: moment(tripStartDate),
-      endDate: moment(tripEndDate),
-    },
-  });
-  const [editTripFn, { loading: editTripLoading }] = useMutation<
-    EditTrip,
-    EditTripVariables
-  >(EDIT_TRIP, {
-    variables: {
-      moveNotificationId: parseInt(moveNotificationId, 10),
-      cityId: searchCityId,
-      startDate: moment(tripStartDate),
-      endDate: moment(tripEndDate),
-    },
-  });
+  >(ADD_TRIP);
+  console.log("user", user);
   const [deleteTripFn, { loading: deleteTripLoading }] = useMutation<
     DeleteTrip,
     DeleteTripVariables
@@ -487,11 +434,7 @@ export default ({ navigation }) => {
       result = await createCityFn({
         variables: { cityId },
       });
-      setIsCalendarMode(true);
-      setSearchCityId(result.data.createCity.cityId);
-      setSearchCountryCode(result.data.createCity.countryCode);
-      setSearchCityName(cityName);
-      setSearchCountryName(countryName);
+      onAddTripPress(result.data.createCity.cityId);
     } catch (e) {
       console.log(e);
     }
@@ -519,15 +462,13 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
-  const onAddTripPress = async () => {
+  const onAddTripPress = async (cityId) => {
     setSearch("");
-    setIsCalendarMode(false);
     setAddTripModalOpen(false);
     try {
       const {
         data: { addTrip },
-      } = await addTripFn();
-      setTripMarkedDates({});
+      } = await addTripFn({ variables: { cityId } });
       if (addTrip.ok) {
         await calculateDistanceFn();
         await tripRefetch();
@@ -541,125 +482,6 @@ export default ({ navigation }) => {
       }
     } catch (e) {
       toast("Overlapping dates! Please check your trip dates.");
-    }
-  };
-  const onEditTripPress = async () => {
-    setSearch("");
-    setIsCalendarMode(false);
-    setEditTripModalOpen(false);
-    try {
-      const {
-        data: { editTrip },
-      } = await editTripFn();
-      setTripMarkedDates({});
-      if (editTrip.ok) {
-        await calculateDistanceFn();
-        await tripRefetch();
-        await toast("Trip edited");
-        navigation.push("CityProfileTabs", {
-          cityId: editTrip.moveNotification.city.cityId,
-          countryCode: editTrip.moveNotification.city.country.countryCode,
-          continentCode:
-            editTrip.moveNotification.city.country.continent.continentCode,
-        });
-      }
-    } catch (e) {
-      toast("Overlapping dates! Please check your trip dates.");
-    }
-  };
-  const onEditBtnPress = (id, trip, tripStartDate, tripEndDate) => {
-    setMoveNotificationId(id);
-    setEditTripModalOpen(true);
-    setIsCalendarMode(true);
-    setSearch(trip.city.cityName);
-    setSearchCityId(trip.city.cityId);
-    setSearchCityName(trip.city.cityName);
-    setSearchCountryCode(trip.city.country.countryCode);
-    setSearchCountryName(trip.city.country.countryName);
-    if (tripStartDate && tripEndDate) {
-      const daysInBetween = moment(tripEndDate).diff(tripStartDate, "day");
-      const daysInBetweenMarked = range(daysInBetween).reduce((acc, cur) => {
-        const nextDay = moment(tripStartDate)
-          .add(cur, "day")
-          .format("YYYY-MM-DD");
-        acc[nextDay] = {
-          color: "#C75454",
-          selected: true,
-          textColor: "white",
-        };
-        return acc;
-      }, {});
-      const markedDates = {
-        ...daysInBetweenMarked,
-        [tripStartDate.toString()]: {
-          color: "#C75454",
-          startingDay: true,
-          textColor: "white",
-        },
-        [tripEndDate.toString()]: {
-          color: "#C75454",
-          endingDay: true,
-          textColor: "white",
-        },
-      };
-      setTripStartDate(tripStartDate);
-      setTripEndDate(tripEndDate);
-      setTripMarkedDates(markedDates);
-    } else {
-      setTripMarkedDates({});
-      setTripStartDate(null);
-      setTripEndDate(null);
-    }
-  };
-  const onDayPress = (day) => {
-    if (
-      !tripStartDate ||
-      day.dateString < tripStartDate ||
-      (tripStartDate && tripEndDate)
-    ) {
-      const tripStartDate = day.dateString;
-      const markedDates = {
-        [tripStartDate.toString()]: {
-          color: "#C75454",
-          endingDay: true,
-          startingDay: true,
-          textColor: "white",
-        },
-      };
-      setTripStartDate(tripStartDate);
-      setTripEndDate(null);
-      setTripMarkedDates(markedDates);
-    } else {
-      if (day.dateString !== tripStartDate) {
-        const tripEndDate = day.dateString;
-        const daysInBetween = moment(tripEndDate).diff(tripStartDate, "day");
-        const daysInBetweenMarked = range(daysInBetween).reduce((acc, cur) => {
-          const nextDay = moment(tripStartDate)
-            .add(cur, "day")
-            .format("YYYY-MM-DD");
-          acc[nextDay] = {
-            color: "#C75454",
-            selected: true,
-            textColor: "white",
-          };
-          return acc;
-        }, {});
-        const markedDates = {
-          ...daysInBetweenMarked,
-          [tripStartDate.toString()]: {
-            color: "#C75454",
-            startingDay: true,
-            textColor: "white",
-          },
-          [tripEndDate.toString()]: {
-            color: "#C75454",
-            endingDay: true,
-            textColor: "white",
-          },
-        };
-        setTripEndDate(tripEndDate);
-        setTripMarkedDates(markedDates);
-      }
     }
   };
   const formatDistance = (distance: number) => {
@@ -739,15 +561,14 @@ export default ({ navigation }) => {
             isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
           }
           onBackdropPress={() => {
-            setSearch(""), setIsCalendarMode(false), setAddTripModalOpen(false);
+            setSearch(""), setAddTripModalOpen(false);
           }}
           onBackButtonPress={() => {
             setSearch(""),
-              setIsCalendarMode(false),
               Platform.OS === "android" && setAddTripModalOpen(false);
           }}
           onModalHide={() => {
-            setSearch(""), setIsCalendarMode(false), setAddTripModalOpen(false);
+            setSearch(""), setAddTripModalOpen(false);
           }}
           propagateSwipe={true}
           scrollHorizontal={true}
@@ -759,402 +580,101 @@ export default ({ navigation }) => {
           backdropTransitionInTiming={200}
           backdropTransitionOutTiming={200}
         >
-          {isCalendarMode ? (
-            <>
-              <View
-                style={
-                  Platform.OS === "ios"
-                    ? { height: constants.height - 120 }
-                    : { height: constants.height - 150 }
-                }
-              >
-                <CalendarList
-                  style={{ height: "auto", width: "100%" }}
-                  pastScrollRange={24}
-                  futureScrollRange={24}
-                  pagingEnabled={true}
-                  markedDates={tripMarkedDates}
-                  onDayPress={onDayPress}
-                  markingType={"period"}
-                  theme={{
-                    backgroundColor: "transparent",
-                    calendarBackground: "transparent",
-                    dayTextColor: "#999",
-                    selectedDayTextColor: "#ffffff",
-                    todayTextColor:
-                      isDarkMode && isDarkMode === true ? "white" : "black",
-                    monthTextColor: "#00adf5",
-                    textMonthFontWeight: "bold",
-                    selectedDayBackgroundColor: "#00adf5",
-                  }}
-                />
-              </View>
-              <Touchable onPress={() => setIsCalendarMode(false)}>
-                <CalendarCityContainer>
-                  <SearchCityPhoto cityId={searchCityId} />
-                  <SearchHeaderUserContainer>
-                    <CityBold>{searchCityName}</CityBold>
-                    <Location>
-                      {searchCountryName
-                        ? countries.find((i) => i.code === searchCountryCode)
-                            .name
-                        : searchCityName}
-                    </Location>
-                  </SearchHeaderUserContainer>
-                </CalendarCityContainer>
-              </Touchable>
-              <View
-                style={
-                  Platform.OS === "ios"
-                    ? {
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        width: constants.width,
-                        paddingRight: 10,
-                        paddingLeft: 10,
-                        marginBottom: 0,
-                      }
-                    : {
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        width: constants.width,
-                        paddingRight: 10,
-                        paddingLeft: 10,
-                        marginBottom: 30,
-                      }
-                }
-              >
-                <TripSubmitBtn
-                  onPress={() => {
-                    setSearch(""),
-                      setIsCalendarMode(false),
-                      setAddTripModalOpen(false);
-                  }}
-                >
-                  <TripText>CANCEL</TripText>
-                </TripSubmitBtn>
-                <TripSubmitBtn
-                  disabled={addTripLoading}
-                  onPress={() => onAddTripPress()}
-                >
-                  <TripText>ADD TRIP</TripText>
-                </TripSubmitBtn>
-              </View>
-            </>
-          ) : (
-            <>
-              <TextInput
-                style={{
-                  alignSelf: "center",
-                  width: constants.width - 30,
-                  top: 200,
-                  backgroundColor: "transparent",
-                  textAlign: "center",
-                  fontSize: 40,
-                  position: "absolute",
-                  borderBottomWidth: 1,
-                  borderBottomColor: "#999",
-                  color: isDarkMode && isDarkMode === true ? "white" : "black",
-                }}
-                autoFocus={true}
-                value={search}
-                placeholder={"Search"}
-                placeholderTextColor={"#999"}
-                returnKeyType="search"
-                onChangeText={onChange}
-                autoCorrect={false}
-              />
-              <Touchable
-                onPress={() => {
-                  setAddTripModalOpen(false);
-                }}
-              >
-                <ScrollView
-                  style={{
-                    marginTop: 249,
-                    marginBottom: 25,
-                    backgroundColor: "transparent",
-                  }}
-                  keyboardShouldPersistTaps="always"
-                  showsVerticalScrollIndicator={false}
-                >
-                  {createCityLoading || isLoading ? (
-                    <SearchLoaderContainer>
-                      <Loader />
-                    </SearchLoaderContainer>
-                  ) : (
-                    <>
-                      {search !== "" &&
-                        results.predictions &&
-                        results.predictions.length !== 0 && (
-                          <>
-                            {results.predictions.length === 1 ? (
-                              <TripSmallText>CITY</TripSmallText>
-                            ) : (
-                              <TripSmallText>CITIES</TripSmallText>
-                            )}
-                            {results.predictions.map((prediction) => (
-                              <Touchable
-                                key={prediction.id}
-                                onPress={() =>
-                                  onSearchPress(
-                                    prediction.place_id,
-                                    prediction.structured_formatting.main_text,
-                                    prediction.structured_formatting
-                                      .secondary_text
-                                  )
-                                }
-                              >
-                                <SearchCityContainer>
-                                  <SearchHeader>
-                                    <SearchCityPhoto
-                                      cityId={prediction.place_id}
-                                    />
-                                    <SearchHeaderUserContainer>
-                                      <CityBold>
-                                        {
-                                          prediction.structured_formatting
-                                            .main_text
-                                        }
-                                      </CityBold>
-                                      <Location>
-                                        {prediction.structured_formatting
-                                          .secondary_text
-                                          ? prediction.structured_formatting
-                                              .secondary_text
-                                          : prediction.structured_formatting
-                                              .main_text}
-                                      </Location>
-                                    </SearchHeaderUserContainer>
-                                  </SearchHeader>
-                                </SearchCityContainer>
-                              </Touchable>
-                            ))}
-                          </>
-                        )}
-                    </>
-                  )}
-                </ScrollView>
-              </Touchable>
-            </>
-          )}
-        </Modal>
-        <Modal
-          style={{ margin: 0, alignItems: "flex-start" }}
-          isVisible={editTripModalOpen}
-          backdropColor={
-            isDarkMode && isDarkMode === true ? "#161616" : "#EFEFEF"
-          }
-          onBackdropPress={() => {
-            setSearch(""),
-              setIsCalendarMode(false),
-              setEditTripModalOpen(false);
-          }}
-          onBackButtonPress={() => {
-            setSearch(""),
-              setIsCalendarMode(false),
-              Platform.OS === "android" && setEditTripModalOpen(false);
-          }}
-          onModalHide={() => {
-            setSearch(""),
-              setIsCalendarMode(false),
-              setEditTripModalOpen(false);
-          }}
-          propagateSwipe={true}
-          scrollHorizontal={true}
-          backdropOpacity={0.9}
-          animationIn="fadeIn"
-          animationOut="fadeOut"
-          animationInTiming={200}
-          animationOutTiming={200}
-          backdropTransitionInTiming={200}
-          backdropTransitionOutTiming={200}
-        >
-          {isCalendarMode ? (
-            <>
-              <View
-                style={
-                  Platform.OS === "ios"
-                    ? { height: constants.height - 120 }
-                    : { height: constants.height - 150 }
-                }
-              >
-                <CalendarList
-                  style={{ height: "auto", width: "100%" }}
-                  current={tripStartDate && tripStartDate}
-                  pastScrollRange={24}
-                  futureScrollRange={24}
-                  pagingEnabled={true}
-                  markedDates={tripMarkedDates}
-                  onDayPress={onDayPress}
-                  markingType={"period"}
-                  theme={{
-                    backgroundColor: "transparent",
-                    calendarBackground: "transparent",
-                    dayTextColor: "#999",
-                    selectedDayTextColor: "#ffffff",
-                    todayTextColor:
-                      isDarkMode && isDarkMode === true ? "white" : "black",
-                    monthTextColor: "#00adf5",
-                    textMonthFontWeight: "bold",
-                    selectedDayBackgroundColor: "#00adf5",
-                  }}
-                />
-              </View>
-              <Touchable onPress={() => setIsCalendarMode(false)}>
-                <CalendarCityContainer>
-                  <SearchCityPhoto cityId={searchCityId} />
-                  <SearchHeaderUserContainer>
-                    <CityBold>{searchCityName}</CityBold>
-                    <Location>
-                      {searchCountryName
-                        ? countries.find((i) => i.code === searchCountryCode)
-                            .name
-                        : searchCityName}
-                    </Location>
-                  </SearchHeaderUserContainer>
-                </CalendarCityContainer>
-              </Touchable>
-              <View
-                style={
-                  Platform.OS === "ios"
-                    ? {
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        width: constants.width,
-                        paddingRight: 10,
-                        paddingLeft: 10,
-                        marginBottom: 0,
-                      }
-                    : {
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        width: constants.width,
-                        paddingRight: 10,
-                        paddingLeft: 10,
-                        marginBottom: 30,
-                      }
-                }
-              >
-                <TripSubmitBtn
-                  onPress={() => {
-                    setSearch(""),
-                      setIsCalendarMode(false),
-                      setEditTripModalOpen(false);
-                  }}
-                >
-                  <TripText>CANCEL</TripText>
-                </TripSubmitBtn>
-                <TripSubmitBtn
-                  disabled={editTripLoading}
-                  onPress={() => onEditTripPress()}
-                >
-                  <TripText>EDIT TRIP</TripText>
-                </TripSubmitBtn>
-              </View>
-            </>
-          ) : (
-            <KeyboardAvoidingView
-              enabled
-              behavior={Platform.OS === "ios" ? "padding" : false}
+          <>
+            <TextInput
+              style={{
+                alignSelf: "center",
+                width: constants.width - 30,
+                top: 200,
+                backgroundColor: "transparent",
+                textAlign: "center",
+                fontSize: 40,
+                position: "absolute",
+                borderBottomWidth: 1,
+                borderBottomColor: "#999",
+                color: isDarkMode && isDarkMode === true ? "white" : "black",
+              }}
+              autoFocus={true}
+              value={search}
+              placeholder={"Search"}
+              placeholderTextColor={"#999"}
+              returnKeyType="search"
+              onChangeText={onChange}
+              autoCorrect={false}
+            />
+            <Touchable
+              onPress={() => {
+                setAddTripModalOpen(false);
+              }}
             >
-              <TextInput
+              <ScrollView
                 style={{
-                  alignSelf: "center",
-                  width: constants.width - 30,
-                  top: 200,
+                  marginTop: 249,
+                  marginBottom: 25,
                   backgroundColor: "transparent",
-                  textAlign: "center",
-                  fontSize: 40,
-                  position: "absolute",
-                  borderBottomWidth: 1,
-                  borderBottomColor: "#999",
-                  color: isDarkMode && isDarkMode === true ? "white" : "black",
                 }}
-                autoFocus={true}
-                value={search}
-                placeholder={"Search"}
-                placeholderTextColor={"#999"}
-                returnKeyType="search"
-                onChangeText={onChange}
-                autoCorrect={false}
-              />
-              <Touchable
-                onPress={() => {
-                  setEditTripModalOpen(false);
-                }}
+                keyboardShouldPersistTaps="always"
+                showsVerticalScrollIndicator={false}
               >
-                <ScrollView
-                  style={{
-                    marginTop: 237,
-                    marginBottom: 25,
-                    backgroundColor: "transparent",
-                  }}
-                  keyboardShouldPersistTaps="always"
-                  showsVerticalScrollIndicator={false}
-                >
-                  {createCityLoading || isLoading ? (
+                {createCityLoading || isLoading ? (
+                  <SearchLoaderContainer>
                     <Loader />
-                  ) : (
-                    <>
-                      {search !== "" &&
-                        results.predictions &&
-                        results.predictions.length !== 0 && (
-                          <>
-                            {results.predictions.length === 1 ? (
-                              <TripSmallText>CITY</TripSmallText>
-                            ) : (
-                              <TripSmallText>CITIES</TripSmallText>
-                            )}
-                            {results.predictions.map((prediction) => (
-                              <Touchable
-                                key={prediction.id}
-                                onPress={() =>
-                                  onSearchPress(
-                                    prediction.place_id,
-                                    prediction.structured_formatting.main_text,
-                                    prediction.structured_formatting
-                                      .secondary_text
-                                  )
-                                }
-                              >
-                                <SearchCityContainer>
-                                  <SearchHeader>
-                                    <SearchCityPhoto
-                                      cityId={prediction.place_id}
-                                    />
-                                    <SearchHeaderUserContainer>
-                                      <CityBold>
-                                        {
-                                          prediction.structured_formatting
-                                            .main_text
-                                        }
-                                      </CityBold>
-                                      <Location>
-                                        {prediction.structured_formatting
-                                          .secondary_text
-                                          ? prediction.structured_formatting
-                                              .secondary_text
-                                          : prediction.structured_formatting
-                                              .main_text}
-                                      </Location>
-                                    </SearchHeaderUserContainer>
-                                  </SearchHeader>
-                                </SearchCityContainer>
-                              </Touchable>
-                            ))}
-                          </>
-                        )}
-                    </>
-                  )}
-                </ScrollView>
-              </Touchable>
-            </KeyboardAvoidingView>
-          )}
+                  </SearchLoaderContainer>
+                ) : (
+                  <>
+                    {search !== "" &&
+                      results.predictions &&
+                      results.predictions.length !== 0 && (
+                        <>
+                          {results.predictions.length === 1 ? (
+                            <TripSmallText>CITY</TripSmallText>
+                          ) : (
+                            <TripSmallText>CITIES</TripSmallText>
+                          )}
+                          {results.predictions.map((prediction) => (
+                            <Touchable
+                              key={prediction.id}
+                              onPress={() =>
+                                onSearchPress(
+                                  prediction.place_id,
+                                  prediction.structured_formatting.main_text,
+                                  prediction.structured_formatting
+                                    .secondary_text
+                                )
+                              }
+                            >
+                              <SearchCityContainer>
+                                <SearchHeader>
+                                  <SearchCityPhoto
+                                    cityId={prediction.place_id}
+                                  />
+                                  <SearchHeaderUserContainer>
+                                    <CityBold>
+                                      {
+                                        prediction.structured_formatting
+                                          .main_text
+                                      }
+                                    </CityBold>
+                                    <Location>
+                                      {prediction.structured_formatting
+                                        .secondary_text
+                                        ? prediction.structured_formatting
+                                            .secondary_text
+                                        : prediction.structured_formatting
+                                            .main_text}
+                                    </Location>
+                                  </SearchHeaderUserContainer>
+                                </SearchHeader>
+                              </SearchCityContainer>
+                            </Touchable>
+                          ))}
+                        </>
+                      )}
+                  </>
+                )}
+              </ScrollView>
+            </Touchable>
+          </>
         </Modal>
         <ScrollView
           refreshControl={
@@ -1554,23 +1074,6 @@ export default ({ navigation }) => {
                       renderHiddenItem={(data) => (
                         <RowBack>
                           <BackLeftBtn
-                            onPress={() =>
-                              onEditBtnPress(
-                                data.item.id,
-                                data.item,
-                                data.item.startDate,
-                                data.item.endDate
-                              )
-                            }
-                          >
-                            <IconContainer>
-                              <IconTextContainer>
-                                <SmallText>EDIT</SmallText>
-                                <SmallText>TRIP</SmallText>
-                              </IconTextContainer>
-                            </IconContainer>
-                          </BackLeftBtn>
-                          <BackLeftBtn
                             disabled={deleteTripLoading}
                             onPress={() => deleteTrip(data.item.id)}
                           >
@@ -1580,7 +1083,7 @@ export default ({ navigation }) => {
                           </BackLeftBtn>
                         </RowBack>
                       )}
-                      leftOpenValue={91}
+                      leftOpenValue={46}
                       keyExtractor={(item) => item.id}
                     />
                   );

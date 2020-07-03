@@ -64,7 +64,7 @@ export default function App() {
       //     cityId: ""
       //   }
       // });
-      await AsyncStorage.clear();
+      // await AsyncStorage.clear();
       await persistCache({
         cache,
         storage: AsyncStorage,

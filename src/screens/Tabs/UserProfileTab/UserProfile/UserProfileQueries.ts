@@ -83,10 +83,7 @@ export const GET_TRIPS = gql`
             }
           }
         }
-        startDate
-        endDate
         naturalTime
-        diffDays
       }
     }
   }
@@ -95,15 +92,11 @@ export const GET_TRIPS = gql`
 export const ADD_TRIP = gql`
   mutation AddTrip(
     $cityId: String!
-    $startDate: DateTime!
-    $endDate: DateTime!
   ) {
-    addTrip(cityId: $cityId, startDate: $startDate, endDate: $endDate) {
+    addTrip(cityId: $cityId) {
       ok
       distance
       moveNotification {
-        startDate
-        endDate
         city {
           cityId
           cityName
@@ -126,14 +119,10 @@ export const EDIT_TRIP = gql`
   mutation EditTrip(
     $moveNotificationId: Int!
     $cityId: String
-    $startDate: DateTime
-    $endDate: DateTime
   ) {
     editTrip(
       moveNotificationId: $moveNotificationId
       cityId: $cityId
-      startDate: $startDate
-      endDate: $endDate
     ) {
       ok
       distance
@@ -152,8 +141,6 @@ export const EDIT_TRIP = gql`
             }
           }
         }
-        startDate
-        endDate
         naturalTime
       }
     }

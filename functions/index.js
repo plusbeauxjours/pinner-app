@@ -23,9 +23,12 @@ exports.sendNotification = functions.database
     } else {
       sendMsg = event._data.snsIdPlatform
     }
-    return axios.post("https://exp.host/--/api/v2/push/send", {
-      to: receiverPushToken,
-      title: "New message",
-      body: `${sendUserName}: ${sendMsg}`
-    });
+    console.log("receiverPushToken", receiverPushToken)
+    if (receiverPushToken) {
+      return axios.post("https://exp.host/--/api/v2/push/send", {
+        to: receiverPushToken,
+        title: "New message",
+        body: `${sendUserName}: ${sendMsg}`
+      });
+    }
   });

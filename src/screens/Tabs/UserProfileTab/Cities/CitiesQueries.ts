@@ -6,7 +6,6 @@ export const FREQUENT_VISITS = gql`
     frequentVisits(uuid: $uuid, page: $page) {
       cities {
         count
-        diff
         ...CityParts
       }
     }

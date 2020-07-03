@@ -11,20 +11,20 @@ const View = styled.View`
   justify-content: center;
   align-items: center;
   flex: 1;
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 const Text = styled.Text`
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
   font-size: 8px;
   margin-left: 5px;
 `;
 const Touchable = styled.TouchableOpacity``;
 const ScrollView = styled.ScrollView`
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 const LoaderContainer = styled.View`
   flex: 1;
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
   justify-content: center;
   align-items: center;
 `;
@@ -39,9 +39,9 @@ export default ({ navigation }) => {
   const {
     data: { topCountries: { countries = null } = {} } = {},
     loading,
-    refetch
+    refetch,
   } = useQuery<TopCountries, TopCountriesVariables>(TOP_COUNTRIES, {
-    variables: { uuid }
+    variables: { uuid },
   });
   const onRefresh = async () => {
     try {
@@ -63,7 +63,11 @@ export default ({ navigation }) => {
     return (
       <ScrollView
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={"#999"} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={"#999"}
+          />
         }
         showsVerticalScrollIndicator={false}
       >
@@ -75,14 +79,13 @@ export default ({ navigation }) => {
                 onPress={() =>
                   navigation.push("CountryProfileTabs", {
                     countryCode: country.countryCode,
-                    continentCode: country.continent.continentCode
+                    continentCode: country.continent.continentCode,
                   })
                 }
               >
                 <UserRow
                   country={country}
                   count={country.count}
-                  diff={country.diff}
                   type={"userProfileCountry"}
                 />
               </Touchable>

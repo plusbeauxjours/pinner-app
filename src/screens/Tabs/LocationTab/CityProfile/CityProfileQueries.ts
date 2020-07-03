@@ -57,7 +57,6 @@ export const CITY_PROFILE = gql`
         userCount
         userLogCount
         count
-        diff
       }
     }
   }
