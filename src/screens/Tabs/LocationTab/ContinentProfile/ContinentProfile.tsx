@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RefreshControl, Platform } from "react-native";
+import { RefreshControl } from "react-native";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
 import { useTheme } from "../../../../context/ThemeContext";
@@ -17,7 +17,7 @@ import { CONTINENT_PROFILE } from "./ContinentProfileQueries";
 import { countries as countryData } from "../../../../../countryData";
 import constants from "../../../../../constants";
 import Toast from "react-native-root-toast";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { withNavigation } from "react-navigation";
@@ -256,9 +256,9 @@ export default withNavigation(({ navigation }) => {
               <LocationNameContainer>
                 <Bold>{continent.continentName}</Bold>
                 <IconTouchable onPress={() => selectReportLocation()}>
-                  <Ionicons
-                    name={Platform.OS === "ios" ? "ios-list" : "md-list"}
-                    size={25}
+                  <FontAwesome
+                    name="exclamation-circle"
+                    size={18}
                     color={"#999"}
                   />
                 </IconTouchable>

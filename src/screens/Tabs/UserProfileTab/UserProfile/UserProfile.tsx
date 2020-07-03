@@ -6,7 +6,7 @@ import { SwipeListView } from "react-native-swipe-list-view";
 import Toast from "react-native-root-toast";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { useMe } from "../../../../context/MeContext";
 import {
   UserProfile,
@@ -84,8 +84,10 @@ const ItemContainer = styled.View`
   margin-bottom: 25px;
 `;
 const UserNameContainer = styled.View`
+  width: 100%;
+  display: flex;
   flex-direction: row;
-  align-self: flex-start;
+  align-items: center;
   justify-content: center;
 `;
 const Touchable = styled.TouchableOpacity`
@@ -122,11 +124,6 @@ const EditText = styled.Text`
   color: ${(props) => props.theme.color};
   font-size: 11px;
   font-weight: 100;
-`;
-const IconTextContainer = styled.View`
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 `;
 const IconContainer = styled.View`
   width: 40px;
@@ -212,6 +209,19 @@ const Footer = styled.View`
   justify-content: center;
   background-color: ${(props) => props.theme.bgColor};
 `;
+const MessageContainer = styled.TouchableOpacity`
+  width: 100px;
+  height: 20px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  border: 1px solid #999;
+  color: #999;
+  margin-bottom: 5px;
+`;
+const MessageText = styled.Text`
+  color: #999;
+`;
 export default ({ navigation }) => {
   const { me, loading: meLoading } = useMe();
   const isSelf = navigation.getParam("isSelf")
@@ -221,7 +231,6 @@ export default ({ navigation }) => {
   const isDarkMode = useTheme();
   const [search, setSearch] = useState<string>("");
   const [addTripModalOpen, setAddTripModalOpen] = useState<boolean>(false);
-  const [searchCityId, setSearchCityId] = useState<string>("");
   const [avatarModalOpen, setAvatarModalOpen] = useState<boolean>(false);
   const [uuid, setUuid] = useState<string>(
     navigation.getParam("uuid") ? navigation.getParam("uuid") : me.user.uuid
@@ -388,7 +397,6 @@ export default ({ navigation }) => {
     AddTrip,
     AddTripVariables
   >(ADD_TRIP);
-  console.log("user", user);
   const [deleteTripFn, { loading: deleteTripLoading }] = useMutation<
     DeleteTrip,
     DeleteTripVariables
@@ -507,7 +515,6 @@ export default ({ navigation }) => {
       </LoaderContainer>
     );
   } else {
-    console.log(trip);
     return (
       <>
         <Modal
@@ -712,6 +719,11 @@ export default ({ navigation }) => {
                 />
               )}
             </ImageTouchable>
+            {!user.isSelf && (
+              <MessageContainer onPress={() => selectReportUser()}>
+                <MessageText>MESSAGE</MessageText>
+              </MessageContainer>
+            )}
             <UserNameContainer>
               <UserName>
                 {user.username.length > 24
@@ -732,9 +744,9 @@ export default ({ navigation }) => {
                 </IconTouchable>
               ) : (
                 <IconTouchable onPress={() => selectReportUser()}>
-                  <Ionicons
-                    name={Platform.OS === "ios" ? "ios-list" : "md-list"}
-                    size={22}
+                  <FontAwesome
+                    name="exclamation-circle"
+                    size={18}
                     color={"#999"}
                   />
                 </IconTouchable>

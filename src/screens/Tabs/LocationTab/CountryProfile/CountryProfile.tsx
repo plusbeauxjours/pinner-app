@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RefreshControl, Platform } from "react-native";
+import { RefreshControl } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
@@ -21,7 +21,7 @@ import { countries as countryData } from "../../../../../countryData";
 import { useTheme } from "../../../../context/ThemeContext";
 import { darkMode, lightMode } from "../../../../styles/mapStyles";
 import Toast from "react-native-root-toast";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { withNavigation } from "react-navigation";
@@ -349,9 +349,9 @@ export default withNavigation(({ navigation }) => {
                   <Flag>{country.countryEmoji}</Flag>
                 </CountryNameContainer>
                 <IconTouchable onPress={() => selectReportLocation()}>
-                  <Ionicons
-                    name={Platform.OS === "ios" ? "ios-list" : "md-list"}
-                    size={25}
+                  <FontAwesome
+                    name="exclamation-circle"
+                    size={18}
                     color={"#999"}
                   />
                 </IconTouchable>
@@ -373,11 +373,11 @@ export default withNavigation(({ navigation }) => {
             <Item>
               {residenceUsers.length === 1 ? (
                 <TitleContainer>
-                  <Title>USER who is living in {country.countryName}</Title>
+                  <Title>USER who is staying in {country.countryName}</Title>
                 </TitleContainer>
               ) : (
                 <TitleContainer>
-                  <Title>USERS who are living in {country.countryName}</Title>
+                  <Title>USERS who are staying in {country.countryName}</Title>
                   {residenceUsers.length > 15 && (
                     <Touchable
                       onPress={() =>

@@ -1,16 +1,11 @@
 import React, { useState } from "react";
-import { RefreshControl, Platform, Alert, Linking } from "react-native";
+import { RefreshControl } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
-import Constants from "expo-constants";
-import * as Location from "expo-location";
-import * as Permissions from "expo-permissions";
-import * as IntentLauncher from "expo-intent-launcher";
 import Loader from "../../../../components/Loader";
 import UserRow from "../../../../components/UserRow";
 import {
-  Me,
   CityProfile,
   CityProfileVariables,
   GetSamenameCities,
@@ -31,23 +26,18 @@ import {
   SLACK_REPORT_LOCATIONS,
   REPORT_LOCATION,
 } from "../../../../sharedQueries";
-import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
 import CityLikeBtn from "../../../../components/CityLikeBtn";
 import constants from "../../../../../constants";
 import { darkMode, lightMode } from "../../../../styles/mapStyles";
 import { countries } from "../../../../../countryData";
 import Weather from "../../../../components/Weather";
 import { useTheme } from "../../../../context/ThemeContext";
-import Modal from "react-native-modal";
 import Toast from "react-native-root-toast";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import { withNavigation } from "react-navigation";
 import { useMe } from "../../../../context/MeContext";
-import axios from "axios";
-import { useReverseGeoCode } from "../../../../hooks/useReverseGeoCode";
-import { useReversePlaceId } from "../../../../hooks/useReversePlaceId";
 
 const Container = styled.View`
   background-color: ${(props) => props.theme.bgColor};
@@ -365,9 +355,9 @@ export default withNavigation(({ navigation }) => {
                 <LocationNameContainer>
                   <Bold>{city.cityName}</Bold>
                   <IconTouchable onPress={() => selectReportLocation()}>
-                    <Ionicons
-                      name={Platform.OS === "ios" ? "ios-list" : "md-list"}
-                      size={25}
+                    <FontAwesome
+                      name="exclamation-circle"
+                      size={18}
                       color={"#999"}
                     />
                   </IconTouchable>
