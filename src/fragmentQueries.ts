@@ -9,6 +9,7 @@ export const PROFILE_FRAGMENT = gql`
     appAvatarUrl
     isSelf
     currentCity {
+      cityId
       cityName
       country {
         countryName

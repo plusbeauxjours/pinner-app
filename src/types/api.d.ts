@@ -53,6 +53,7 @@ export interface SearchTerms_searchUsers_users_currentCity_country {
 
 export interface SearchTerms_searchUsers_users_currentCity {
   __typename: "CityType";
+  cityId: string | null;
   cityName: string | null;
   country: SearchTerms_searchUsers_users_currentCity_country;
 }
@@ -2364,9 +2365,6 @@ export interface Match_match_match {
 export interface Match_match {
   __typename: "MatchResponse";
   ok: boolean | null;
-  cityId: string | null;
-  countryCode: string | null;
-  continentCode: string | null;
   match: Match_match_match | null;
 }
 
@@ -2392,9 +2390,6 @@ export interface UnMatch_unMatch {
   __typename: "UnMatchResponse";
   ok: boolean | null;
   matchId: number | null;
-  cityId: string | null;
-  countryCode: string | null;
-  continentCode: string | null;
 }
 
 export interface UnMatch {
@@ -2420,6 +2415,7 @@ export interface ProfileParts_currentCity_country {
 
 export interface ProfileParts_currentCity {
   __typename: "CityType";
+  cityId: string | null;
   cityName: string | null;
   country: ProfileParts_currentCity_country;
 }

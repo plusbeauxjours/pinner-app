@@ -180,9 +180,6 @@ export const MATCH = gql`
   mutation Match($cityId: String!, $hostUuid: String!, $guestUuid: String!) {
     match(cityId: $cityId, hostUuid: $hostUuid, guestUuid: $guestUuid) {
       ok
-      cityId
-      countryCode
-      continentCode
       match {
         ...MatchParts
       }
@@ -196,9 +193,6 @@ export const UNMATCH = gql`
     unMatch(matchId: $matchId) {
       ok
       matchId
-      cityId
-      countryCode
-      continentCode
     }
   }
 `;

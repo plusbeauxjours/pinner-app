@@ -24,6 +24,10 @@ import {
   GetSameTripsVariables,
   CreateCity,
   CreateCityVariables,
+  Match,
+  MatchVariables,
+  GetMatches,
+  GetMatchesVariables,
 } from "../../../../types/api";
 import {
   GET_USER,
@@ -44,6 +48,8 @@ import useGoogleAutocomplete from "../../../../hooks/useGoogleAutocomplete";
 import keys from "../../../../../keys";
 import SearchCityPhoto from "../../../../components/SearchCityPhoto";
 import ImageZoom from "react-native-image-pan-zoom";
+import { MATCH } from "../../../../sharedQueries";
+import { GET_MATCHES } from "../../MatchTab/Match/MatchQueries";
 
 const Header = styled.View`
   height: 270;
@@ -233,7 +239,7 @@ export default ({ navigation }) => {
   const [addTripModalOpen, setAddTripModalOpen] = useState<boolean>(false);
   const [avatarModalOpen, setAvatarModalOpen] = useState<boolean>(false);
   const [uuid, setUuid] = useState<string>(
-    navigation.getParam("uuid") ? navigation.getParam("uuid") : me.user.uuid
+    navigation.getParam("isSelf") ? me.user.uuid : navigation.getParam("uuid")
   );
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const { showActionSheetWithOptions } = useActionSheet();
@@ -422,21 +428,64 @@ export default ({ navigation }) => {
       }
     },
   });
+
+  // mutations
+
   const [
     calculateDistanceFn,
     { loading: calculateDistanceLoading },
   ] = useMutation<CalculateDistance>(CALCULATE_DISTANCE);
+
   const [
     slackReportUsersFn,
     { loading: slackReportUsersLoading },
   ] = useMutation<SlackReportUsers, SlackReportUsersVariables>(
     SLACK_REPORT_USERS
   );
+
   const [createCityFn, { loading: createCityLoading }] = useMutation<
     CreateCity,
     CreateCityVariables
   >(CREATE_CITY);
-  const onSearchPress = async (cityId, cityName, countryName) => {
+
+  const [matchFn, { loading: matchLoading }] = useMutation<
+    Match,
+    MatchVariables
+  >(MATCH, {
+    variables: {
+      cityId: me.user.currentCity.cityId,
+      hostUuid: me.user.uuid,
+      guestUuid: uuid,
+    },
+    update(cache, { data: { match } }) {
+      if (match.match) {
+        try {
+          const matchData = cache.readQuery<GetMatches, GetMatchesVariables>({
+            query: GET_MATCHES,
+          });
+          if (matchData) {
+            if (
+              !matchData.getMatches.matches.find(
+                (matche) => matche.id == match.match.id
+              )
+            ) {
+              matchData.getMatches.matches.unshift(match.match);
+              cache.writeQuery({
+                query: GET_MATCHES,
+                data: matchData,
+              });
+            }
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    },
+  });
+
+  // onPressFunctions
+
+  const onSearchPress = async (cityId) => {
     let result;
     try {
       result = await createCityFn({
@@ -447,9 +496,46 @@ export default ({ navigation }) => {
       console.log(e);
     }
   };
+
   const onChange = (text: string) => {
     setSearch(text);
   };
+  const onMatch = async () => {
+    const {
+      data: { match },
+    } = await matchFn({
+      variables: {
+        cityId: me.user.currentCity.cityId,
+        hostUuid: me.user.uuid,
+        guestUuid: uuid,
+      },
+    });
+    if (match.match) {
+      navigation.navigate("Chat", {
+        chatId: match.match.id,
+        userId: me.user.uuid,
+        receiverId: match.match.isHost
+          ? match.match.guest.uuid
+          : match.match.host.uuid,
+        receiverAvatar: match.match.isHost
+          ? match.match.guest.appAvatarUrl
+          : match.match.host.appAvatarUrl,
+        receiverPushToken: match.match.isHost
+          ? match.match.guest.pushToken
+          : match.match.host.pushToken,
+        uuid: me.user.uuid,
+        userName: me.user.username,
+        userUrl: me.user.appAvatarUrl,
+        targetUuid: match.match.isHost
+          ? match.match.guest.uuid
+          : match.match.host.uuid,
+        isDarkMode: isDarkMode,
+        latitude: me.user.currentCity.latitude,
+        longitude: me.user.currentCity.longitude,
+      });
+    }
+  };
+
   const { results, isLoading } = useGoogleAutocomplete({
     apiKey: `${keys.REACT_APP_GOOGLE_PLACE_KEY}`,
     query: search,
@@ -641,14 +727,7 @@ export default ({ navigation }) => {
                           {results.predictions.map((prediction) => (
                             <Touchable
                               key={prediction.id}
-                              onPress={() =>
-                                onSearchPress(
-                                  prediction.place_id,
-                                  prediction.structured_formatting.main_text,
-                                  prediction.structured_formatting
-                                    .secondary_text
-                                )
-                              }
+                              onPress={() => onSearchPress(prediction.place_id)}
                             >
                               <SearchCityContainer>
                                 <SearchHeader>
@@ -720,7 +799,7 @@ export default ({ navigation }) => {
               )}
             </ImageTouchable>
             {!user.isSelf && (
-              <MessageContainer onPress={() => selectReportUser()}>
+              <MessageContainer onPress={() => onMatch()}>
                 <MessageText>MESSAGE</MessageText>
               </MessageContainer>
             )}
