@@ -24,7 +24,7 @@ import keys from "../../../keys";
 import useGoogleAutocomplete from "../../hooks/useGoogleAutocomplete";
 import SearchCityPhoto from "../SearchCityPhoto";
 import { useTheme } from "../../context/ThemeContext";
-import PhotoLink from "../PhotoLink";
+// import PhotoLink from "../PhotoLink";
 import { useMe } from "../../context/MeContext";
 
 const Text = styled.Text`
@@ -324,19 +324,19 @@ const Search = ({ navigation }) => {
           </Touchable>
         </KeyboardAvoidingView>
       </Modal>
-      {navigation.state.params &&
+      {/* {navigation.state.params &&
       navigation.state.params.uuid === me.user.uuid &&
       navigation.state.routeName === "AvatarList" ? (
         <PhotoLink />
-      ) : (
-        <TouchableIcon onPress={() => setModalOpen(true)}>
-          <Ionicons
-            name={Platform.OS === "ios" ? "ios-search" : "md-search"}
-            size={25}
-            color={isDarkMode ? "#EFEFEF" : "#161616"}
-          />
-        </TouchableIcon>
-      )}
+      ) : ( */}
+      <TouchableIcon onPress={() => setModalOpen(true)}>
+        <Ionicons
+          name={Platform.OS === "ios" ? "ios-search" : "md-search"}
+          size={25}
+          color={isDarkMode ? "#EFEFEF" : "#161616"}
+        />
+      </TouchableIcon>
+      {/* )} */}
     </>
   );
 };

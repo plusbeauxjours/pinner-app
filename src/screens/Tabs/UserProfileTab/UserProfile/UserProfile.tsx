@@ -52,7 +52,7 @@ import { MATCH } from "../../../../sharedQueries";
 import { GET_MATCHES } from "../../MatchTab/Match/MatchQueries";
 
 const Header = styled.View`
-  height: 270;
+  height: 290;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
@@ -867,7 +867,7 @@ export default ({ navigation }) => {
                   <Bold>KM</Bold>
                 </Item>
               )}
-              {user.isHidePhotos ? (
+              {/* {user.isHidePhotos ? (
                 user.isSelf ? (
                   <Touchable
                     onPress={() => navigation.push("AvatarList", { uuid })}
@@ -917,7 +917,7 @@ export default ({ navigation }) => {
                     )}
                   </Touchable>
                 </>
-              )}
+              )} */}
               {user.isHideTrips ? (
                 <>
                   {user.tripCount === 1 ? (
