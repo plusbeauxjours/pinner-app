@@ -69,8 +69,8 @@ export default function App() {
         cache,
         storage: AsyncStorage,
       });
-      // const API_SERVER = "https://pinner-backend.herokuapp.com/graphql";
-      const API_SERVER = "http://localhost:8000/graphql/";
+      const API_SERVER = "https://pinner-backend.herokuapp.com/graphql/";
+      // const API_SERVER = "http://localhost:8000/graphql/";
       let httpLink = createUploadLink({
         uri: API_SERVER as string,
       });
