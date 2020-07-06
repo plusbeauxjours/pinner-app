@@ -8,7 +8,7 @@ import {
 import { useQuery } from "react-apollo-hooks";
 import { CITY_USERS_BEFORE } from "./UsersBeforeQueries";
 import Loader from "../../../../components/Loader";
-import UserRow from "../../../../components/UserRow";
+import ItemRow from "../../../../components/ItemRow";
 
 const View = styled.View`
   justify-content: center;
@@ -79,7 +79,7 @@ export default ({ navigation }) => {
                   })
                 }
               >
-                <UserRow user={user.actor} type={"user"} />
+                <ItemRow user={user.actor} type={"user"} />
               </Touchable>
             ))}
         </View>

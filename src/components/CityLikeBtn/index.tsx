@@ -1,2 +1,2 @@
-import CityLikeBtn from "./CityLikeBtn";
-export default CityLikeBtn;
+import CityLikeBtnContainer from "./CityLikeBtnContainer";
+export default CityLikeBtnContainer;

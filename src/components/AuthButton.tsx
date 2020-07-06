@@ -1,12 +1,14 @@
 import React from "react";
-import styled from "styled-components";
-import constants from "../../constants";
 import { ActivityIndicator } from "react-native";
+
+import styled from "styled-components";
+
+import constants from "../../constants";
 
 const Touchable = styled.TouchableOpacity``;
 
 const Container = styled.View<ITheme>`
-  background-color: ${props =>
+  background-color: ${(props) =>
     props.bgColor ? props.bgColor : props.theme.blueColor};
   padding: 10px;
   justify-content: center;
@@ -22,6 +24,10 @@ const Text = styled.Text`
   font-weight: 600;
 `;
 
+interface ITheme {
+  bgColor?: string;
+}
+
 interface IProps {
   text: string;
   onPress: () => void;
@@ -29,15 +35,11 @@ interface IProps {
   bgColor?: string;
 }
 
-interface ITheme {
-  bgColor?: string;
-}
-
 const AuthButton: React.FC<IProps> = ({
   text,
   onPress,
   loading = false,
-  bgColor = null
+  bgColor = null,
 }) => (
   <Touchable disabled={loading} onPress={onPress}>
     <Container bgColor={bgColor}>

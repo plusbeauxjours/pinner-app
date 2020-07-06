@@ -1,5 +1,6 @@
 import React from "react";
 import { Ionicons, Entypo } from "@expo/vector-icons";
+
 import { useTheme } from "../context/ThemeContext";
 
 interface IProps {
@@ -13,9 +14,10 @@ const NavIcon: React.FC<IProps> = ({
   name,
   color,
   size = 26,
-  focused = true
+  focused = true,
 }) => {
   const isDarkMode = useTheme();
+
   if (name === "pin") {
     if (isDarkMode) {
       return (

@@ -1,43 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { useMutation } from "react-apollo-hooks";
+import React from "react";
+import { Platform, TextInput, ActivityIndicator } from "react-native";
+
 import styled from "styled-components";
 import Modal from "react-native-modal";
-import Toast from "react-native-root-toast";
+
 import { useTheme } from "../../../../hooks/useTheme";
-import {
-  Me,
-  EditProfile,
-  EditProfileVariables,
-  DeleteProfile,
-  StartEditPhoneVerification,
-  StartEditPhoneVerificationVariables,
-  CompleteEditPhoneVerification,
-  CompleteEditPhoneVerificationVariables,
-  ToggleSettings,
-  ToggleSettingsVariables,
-  UserProfile,
-  UserProfileVariables,
-  StartEditEmailVerification,
-  StartEditEmailVerificationVariables,
-} from "../../../../types/api";
-import {
-  EDIT_PROFILE,
-  DELETE_PROFILE,
-  START_EDIT_PHONE_VERIFICATION,
-  COMPLETE_EDIT_PHONE_VERIFICATION,
-  START_EDIT_EMAIL_VERIFICATION,
-  TOGGLE_SETTINGS,
-} from "./EditProfileQueries";
-import { GET_USER } from "../UserProfile/UserProfileQueries";
-import { Platform, TextInput, ActivityIndicator } from "react-native";
 import constants from "../../../../../constants";
 import { countries } from "../../../../../countryData";
-import { useLogOut, useLogIn } from "../../../../context/AuthContext";
-import { useActionSheet } from "@expo/react-native-action-sheet";
 import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
 import { Ionicons } from "@expo/vector-icons";
-import { ME } from "../../../../sharedQueries";
-import { useMe } from "../../../../context/MeContext";
 
 const View = styled.View`
   flex: 1;
@@ -46,6 +17,7 @@ const View = styled.View`
   padding: 15px;
   background-color: ${(props) => props.theme.bgColor};
 `;
+
 const EditModalContainer = styled.View`
   flex-direction: row;
   justify-content: center;
@@ -53,28 +25,34 @@ const EditModalContainer = styled.View`
 `;
 
 const ToggleContainer = styled.View``;
+
 const ToggleText = styled.Text`
   height: 20px;
   color: ${(props) => props.theme.color};
   font-weight: ${(props) => (props.isChanged ? "300" : "100")};
 `;
-const SubmitText = styled.Text<IProps>`
+
+const SubmitText = styled.Text<ITheme>`
   height: 20px;
   color: ${(props) => (props.isChanged ? "#d60000" : props.theme.color)};
   font-weight: ${(props) => (props.isChanged ? "300" : "100")};
 `;
+
 const CountryView = styled.View`
   margin-top: 4px;
   align-items: flex-end;
   flex-direction: column;
 `;
+
 const Text = styled.Text`
   color: ${(props) => props.theme.color};
 `;
+
 const Bigtext = styled(Text)`
   font-weight: 300;
   font-size: 30px;
 `;
+
 const Bold = styled.Text`
   font-weight: 500;
   font-size: 20px;
@@ -82,10 +60,12 @@ const Bold = styled.Text`
   margin-top: 10px;
   color: ${(props) => props.theme.color};
 `;
+
 const ConfirmBold = styled(Bold)`
   text-align: center;
   margin-bottom: 10px;
 `;
+
 const CountryContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
@@ -95,43 +75,54 @@ const CountryItem = styled.View`
   margin-top: 15px;
   flex-direction: column;
 `;
+
 const Item = styled.View`
   margin-top: 15px;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
 `;
+
 const EmptyView = styled.View`
   justify-content: center;
   align-items: center;
 `;
+
 const Void = styled.View`
   height: 40px;
 `;
+
 const ToggleIcon = styled.TouchableOpacity``;
+
 const Touchable = styled.TouchableOpacity``;
-const ExplainText = styled.Text<IProps>`
+
+const ExplainText = styled.Text<ITheme>`
   font-size: 11px;
   color: ${(props) => (props.isChanged ? "#d60000" : props.theme.color)};
   font-weight: ${(props) => (props.isChanged ? "300" : "100")};
 `;
+
 const FlagExplainText = styled(ExplainText)`
   top: -5px;
 `;
+
 const ScrollView = styled.ScrollView`
   background-color: ${(props) => props.theme.bgColor};
 `;
+
 const ButtonContainer = styled.View`
   justify-content: center;
   align-items: center;
   padding: 15px;
   max-width: 400px;
 `;
+
 const TextContainer = styled.View`
   width: ${constants.width - 30};
   justify-content: center;
   align-items: center;
 `;
+
 const SubmitButtonContainer = styled.View`
   width: ${constants.width - 80};
   max-width: 360px;
@@ -141,554 +132,157 @@ const SubmitButtonContainer = styled.View`
   border: 0.5px solid #999;
   border-radius: 5px;
 `;
+
 const SubmitButtonText = styled.Text`
   font-size: 16px;
   font-weight: 500;
   color: ${(props) => props.theme.color};
 `;
+
 const SubmitButton = styled.TouchableOpacity`
   justify-content: center;
   padding: 0 5px 5px 5px;
 `;
-interface IProps {
+
+interface ITheme {
   isChanged: boolean;
 }
-export default ({ navigation }) => {
-  const logIn = useLogIn();
-  const { me, loading: meLoading } = useMe();
-  const logOut = useLogOut();
-  const isDarkMode = useTheme();
+
+interface IProps {
+  navigation: any;
+  isDarkMode: boolean;
+  meLoading: boolean;
+  startEditPhoneVerificationLoading: boolean;
+  completeEditPhoneVerificationLoading: boolean;
+  startEditEmailVerificationLoading: boolean;
+  editProfileLoading: boolean;
+  toggleSettingsLoading: boolean;
+  deleteeLoading: boolean;
+  setNewPhoneNumber: (newPhoneNumber: string) => void;
+  setVerificationKey: (verificationKey: string) => void;
+  setNewEmailAddress: (newEmailAddress: string) => void;
+  setBio: (bio: string) => void;
+  setEditPhoneModalOpen: (editPhoneModalOpen: boolean) => void;
+  setDeleteModalOpen: (deleteModalOpen: boolean) => void;
+  isEditPhoneMode: boolean;
+  isEditEmailMode: boolean;
+  isChanged: boolean;
+  isHidePhotos: boolean;
+  isHideTrips: boolean;
+  isHideCities: boolean;
+  isHideCountries: boolean;
+  isHideContinents: boolean;
+  isAutoLocationReport: boolean;
+  newCountryPhoneCode: any;
+  newCountryPhoneNumber: string;
+  newUsername: string;
+  newEmailAddress: string;
+
+  onSelectrEditPhone: (country: any) => void;
+  onSelectNationality: (country: any) => void;
+  onSelectrRsidence: (country: any) => void;
+  onInputTextChange: (text: string, state: string) => void;
+  onOpenGenderActionSheet: () => void;
+  onPressToggleIcon: (payload: string) => void;
+  onLogout: () => void;
+  onPress: () => void;
+
+  editPhoneModalOpen: boolean;
+  closeEditPhoneModalOpen: () => void;
+  deleteModalOpen: boolean;
+  closeDeleteModalOpen: () => void;
+  editEmailModalOpen: boolean;
+  closeEditEmailModalOpen: () => void;
+  handlePhoneNumber: () => void;
+  handlePhoneVerification;
+  deleteAccountUsername: string;
+  handleEmailAddress;
+  nationalityCode: any;
+  residenceCode: any;
+  gender: string;
+  firstName: string;
+  lastName: string;
+  bio: string;
+  me: any;
+  user: any;
+  countryPhoneNumber: string;
+  phoneNumber: string;
+  countryPhoneCode: string;
+  emailAddress: string;
+
+  submitModal: boolean;
+  logoutModal: boolean;
+  deleteModal: boolean;
+}
+
+const EditProfilePresenter: React.FC<IProps> = ({
+  navigation,
+  isDarkMode,
+  meLoading,
+  startEditPhoneVerificationLoading,
+  completeEditPhoneVerificationLoading,
+  startEditEmailVerificationLoading,
+  editProfileLoading,
+  toggleSettingsLoading,
+  deleteeLoading,
+
+  setNewPhoneNumber,
+  setVerificationKey,
+  setNewEmailAddress,
+  setBio,
+  setEditPhoneModalOpen,
+  setDeleteModalOpen,
+
+  isEditPhoneMode,
+  isEditEmailMode,
+  isChanged,
+  isHidePhotos,
+  isHideTrips,
+  isHideCities,
+  isHideCountries,
+  isHideContinents,
+  isAutoLocationReport,
+
+  newCountryPhoneCode,
+  newCountryPhoneNumber,
+  newUsername,
+  newEmailAddress,
+
+  onSelectrEditPhone,
+  onInputTextChange,
+  onSelectNationality,
+  onOpenGenderActionSheet,
+  onSelectrRsidence,
+  onPressToggleIcon,
+  onLogout,
+  onPress,
+  editPhoneModalOpen,
+  closeEditPhoneModalOpen,
+  deleteModalOpen,
+  closeDeleteModalOpen,
+  editEmailModalOpen,
+  closeEditEmailModalOpen,
+  handlePhoneNumber,
+  handlePhoneVerification,
+  deleteAccountUsername,
+  handleEmailAddress,
+  nationalityCode,
+  residenceCode,
+  gender,
+  firstName,
+  lastName,
+  bio,
+  me,
+  user,
+  countryPhoneNumber,
+  phoneNumber,
+  countryPhoneCode,
+  emailAddress,
+  submitModal,
+  logoutModal,
+  deleteModal,
+}) => {
   const { theme, toggleTheme } = useTheme();
-  const { showActionSheetWithOptions } = useActionSheet();
-  const user = navigation.getParam("user");
-  const [newUsername, setNewUsername] = useState<string>(me.user.username);
-  const [bio, setBio] = useState<string>(user.bio);
-  const [gender, setGender] = useState<string>(user.gender);
-  const [firstName, setFirstName] = useState<string>(me.user.firstName);
-  const [lastName, setLastName] = useState<string>(me.user.lastName);
-  const [nationalityCode, setNationalityCode] = useState<any>(
-    user.nationality
-      ? user.nationality.countryCode
-      : user.currentCity.country.countryCode
-  );
-  const [residenceCode, setResidenceCode] = useState<any>(
-    user.residence
-      ? user.residence.countryCode
-      : user.currentCity.country.countryCode
-  );
-  const [isHidePhotos, setIsHidePhotos] = useState<boolean>(user.isHidePhotos);
-  const [isHideTrips, setIsHideTrips] = useState<boolean>(user.isHideTrips);
-  const [isHideCities, setIsHideCities] = useState<boolean>(user.isHideCities);
-  const [isHideCountries, setIsHideCountries] = useState<boolean>(
-    user.isHideCountries
-  );
-  const [isHideContinents, setIsHideContinents] = useState<boolean>(
-    user.isHideContinents
-  );
-  const [isAutoLocationReport, setIsAutoLocationReport] = useState<boolean>(
-    user.isAutoLocationReport
-  );
-  const phoneNumber = user.phoneNumber;
-  const countryPhoneNumber = user.countryPhoneNumber;
-  const countryPhoneCode = user.countryPhoneCode;
-  const [newPhoneNumber, setNewPhoneNumber] = useState<string>(
-    user.phoneNumber || ""
-  );
-  const [newCountryPhoneNumber, setNewCountryPhoneNumber] = useState<string>(
-    user.countryPhoneNumber
-      ? user.countryPhoneNumber
-      : countries.find((i) => i.code === user.currentCity.country.countryCode)
-          .phone
-  );
-  const [newCountryPhoneCode, setNewCountryPhoneCode] = useState<any>(
-    user.countryPhoneCode
-      ? user.countryPhoneCode
-      : user.currentCity.country.countryCode
-  );
-  const [editPhoneModalOpen, setEditPhoneModalOpen] = useState<boolean>(false);
-  const [isEditPhoneMode, setIsEditPhoneMode] = useState<boolean>(true);
-  const [verificationKey, setVerificationKey] = useState<string>("");
-  const emailAddress = user.emailAddress;
-  const [newEmailAddress, setNewEmailAddress] = useState<string>("");
-  const [editEmailModalOpen, setEditEmailModalOpen] = useState<boolean>(false);
-  const [isEditEmailMode, setIsEditEmailMode] = useState<boolean>(true);
-  const [submitModal, setSubmitModal] = useState<boolean>(false);
-  const [isChanged, setIsChanged] = useState<boolean>(false);
-  const [logoutModal, setLogoutModal] = useState<boolean>(false);
-  const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
-  const [deleteAccountUsername, setDeleteAccountUsername] = useState<string>(
-    ""
-  );
-  const [deleteModal, setDeleteModal] = useState<boolean>(false);
-
-  const [editProfileFn, { loading: editProfileLoading }] = useMutation<
-    EditProfile,
-    EditProfileVariables
-  >(EDIT_PROFILE, {
-    variables: {
-      username: newUsername,
-      bio,
-      gender,
-      firstName,
-      lastName,
-      nationalityCode,
-      residenceCode,
-    },
-    update(cache, { data: { editProfile } }) {
-      try {
-        const data = cache.readQuery<Me>({
-          query: ME,
-        });
-        if (data) {
-          data.me.user = editProfile.user;
-          cache.writeQuery({
-            query: ME,
-            data,
-          });
-        }
-      } catch (e) {
-        console.log(e);
-      }
-      try {
-        const data = cache.readQuery<UserProfile, UserProfileVariables>({
-          query: GET_USER,
-          variables: { uuid: user.uuid },
-        });
-        if (data) {
-          data.userProfile.user = editProfile.user;
-          cache.writeQuery({
-            query: GET_USER,
-            variables: { uuid: user.uuid },
-            data,
-          });
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    },
-  });
-
-  const onPress = () => {
-    setSubmitModal(true);
-    showActionSheetWithOptions(
-      {
-        options: ["Yes", "No"],
-        destructiveButtonIndex: 0,
-        cancelButtonIndex: 1,
-        showSeparators: true,
-        title: "Are you sure to edit this profile?",
-        containerStyle: {
-          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
-          borderRadius: 10,
-          width: constants.width - 30,
-          marginLeft: 15,
-          marginBottom: 10,
-        },
-        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
-        titleTextStyle: {
-          color: isDarkMode ? "#EFEFEF" : "#161616",
-          fontWeight: "400",
-        },
-        separatorStyle: { opacity: 0.5 },
-      },
-      (buttonIndex) => {
-        if (buttonIndex === 0) {
-          onSubmit();
-          setSubmitModal(false);
-        } else {
-          setSubmitModal(false);
-        }
-      }
-    );
-  };
-
-  const onLogout = () => {
-    setLogoutModal(true);
-    showActionSheetWithOptions(
-      {
-        options: ["Yes", "No"],
-        destructiveButtonIndex: 0,
-        cancelButtonIndex: 1,
-        showSeparators: true,
-        title: "Are you sure to logout?",
-        containerStyle: {
-          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
-          borderRadius: 10,
-          width: constants.width - 30,
-          marginLeft: 15,
-          marginBottom: 10,
-        },
-        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
-        titleTextStyle: {
-          color: isDarkMode ? "#EFEFEF" : "#161616",
-          fontWeight: "400",
-        },
-        separatorStyle: { opacity: 0.5 },
-      },
-      (buttonIndex) => {
-        if (buttonIndex === 0) {
-          logOut();
-          setLogoutModal(false);
-        } else {
-          setLogoutModal(false);
-        }
-      }
-    );
-  };
-  const onDelete = () => {
-    setDeleteModal(true);
-    showActionSheetWithOptions(
-      {
-        options: ["Yes", "No"],
-        destructiveButtonIndex: 0,
-        cancelButtonIndex: 1,
-        showSeparators: true,
-        title: "Are you sure to delete this account?",
-        containerStyle: {
-          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
-          borderRadius: 10,
-          width: constants.width - 30,
-          marginLeft: 15,
-          marginBottom: 10,
-        },
-        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
-        titleTextStyle: {
-          color: isDarkMode ? "#EFEFEF" : "#161616",
-          fontWeight: "400",
-        },
-        separatorStyle: { opacity: 0.5 },
-      },
-      (buttonIndex) => {
-        if (buttonIndex === 0) {
-          deleteProfileFn();
-          logOut();
-          setDeleteModal(false);
-          navigation.navigate("Home");
-        } else {
-          setDeleteModal(false);
-        }
-      }
-    );
-  };
-  const [deleteProfileFn, { loading: deleteeLoading }] = useMutation<
-    DeleteProfile
-  >(DELETE_PROFILE);
-  const [
-    startEditPhoneVerificationFn,
-    { loading: startEditPhoneVerificationLoading },
-  ] = useMutation<
-    StartEditPhoneVerification,
-    StartEditPhoneVerificationVariables
-  >(START_EDIT_PHONE_VERIFICATION, {
-    variables: {
-      countryPhoneNumber: newCountryPhoneNumber,
-      phoneNumber: newPhoneNumber.startsWith("0")
-        ? newPhoneNumber.substring(1)
-        : newPhoneNumber,
-    },
-  });
-  const [
-    completeEditPhoneVerificationFn,
-    { loading: completeEditPhoneVerificationLoading },
-  ] = useMutation<
-    CompleteEditPhoneVerification,
-    CompleteEditPhoneVerificationVariables
-  >(COMPLETE_EDIT_PHONE_VERIFICATION, {
-    variables: {
-      key: verificationKey,
-      phoneNumber: newPhoneNumber.startsWith("0")
-        ? newPhoneNumber.substring(1)
-        : newPhoneNumber,
-      countryPhoneNumber: newCountryPhoneNumber,
-      countryPhoneCode: newCountryPhoneCode,
-    },
-    update(cache, { data: { completeEditPhoneVerification } }) {
-      try {
-        const data = cache.readQuery<UserProfile, UserProfileVariables>({
-          query: GET_USER,
-          variables: { uuid: user.uuid },
-        });
-        if (data) {
-          data.userProfile.user.phoneNumber =
-            completeEditPhoneVerification.phoneNumber;
-          data.userProfile.user.countryPhoneNumber =
-            completeEditPhoneVerification.countryPhoneNumber;
-          data.userProfile.user.countryPhoneCode =
-            completeEditPhoneVerification.countryPhoneCode;
-          data.userProfile.user.isVerifiedPhoneNumber =
-            completeEditPhoneVerification.isVerifiedPhoneNumber;
-          cache.writeQuery({
-            query: GET_USER,
-            variables: { uuid: user.uuid },
-            data,
-          });
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    },
-  });
-  const [
-    startEditEmailVerificationFn,
-    { loading: startEditEmailVerificationLoading },
-  ] = useMutation<
-    StartEditEmailVerification,
-    StartEditEmailVerificationVariables
-  >(START_EDIT_EMAIL_VERIFICATION, {
-    variables: {
-      emailAddress: newEmailAddress,
-    },
-  });
-
-  const [toggleSettingsFn, { loading: toggleSettingsLoading }] = useMutation<
-    ToggleSettings,
-    ToggleSettingsVariables
-  >(TOGGLE_SETTINGS, {
-    update(cache, { data: { toggleSettings } }) {
-      try {
-        const data = cache.readQuery<UserProfile, UserProfileVariables>({
-          query: GET_USER,
-          variables: { uuid: user.uuid },
-        });
-        if (data) {
-          data.userProfile.user.isDarkMode = toggleSettings.user.isDarkMode;
-          data.userProfile.user.isHidePhotos = toggleSettings.user.isHidePhotos;
-          data.userProfile.user.isHideTrips = toggleSettings.user.isHideTrips;
-          data.userProfile.user.isHideCities = toggleSettings.user.isHideCities;
-          data.userProfile.user.isHideCountries =
-            toggleSettings.user.isHideCountries;
-          data.userProfile.user.isHideContinents =
-            toggleSettings.user.isHideContinents;
-          data.userProfile.user.isAutoLocationReport =
-            toggleSettings.user.isAutoLocationReport;
-          cache.writeQuery({
-            query: GET_USER,
-            variables: { uuid: user.uuid },
-            data,
-          });
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    },
-  });
-  const toast = (message: string) => {
-    Toast.show(message, {
-      duration: 1000,
-      position: Toast.positions.CENTER,
-      shadow: true,
-      animation: true,
-      hideOnPress: true,
-      delay: 0,
-    });
-  };
-  const onSelectNationality = (country: any) => {
-    setNationalityCode(country.cca2);
-  };
-  const onSelectrRsidence = (country: any) => {
-    setResidenceCode(country.cca2);
-  };
-  const onSelectrEditPhone = (country: any) => {
-    setNewCountryPhoneNumber(
-      countries.find((i) => i.code === country.cca2).phone
-    );
-    setNewCountryPhoneCode(country.cca2);
-  };
-  const closeEditPhoneModalOpen = () => {
-    setVerificationKey("");
-    setEditPhoneModalOpen(false);
-    setIsEditPhoneMode(true);
-  };
-  const closeEditEmailModalOpen = () => {
-    if (!startEditEmailVerificationLoading) {
-      setEditEmailModalOpen(false);
-      setIsEditEmailMode(true);
-    }
-  };
-  const closeDeleteModalOpen = () => {
-    setDeleteAccountUsername("");
-    setDeleteModalOpen(false);
-  };
-  const onPressToggleIcon = async (payload: string) => {
-    try {
-      if (payload === "HIDE_PHOTOS") {
-        setIsHidePhotos((isHidePhotos) => !isHidePhotos);
-      } else if (payload === "HIDE_TRIPS") {
-        setIsHideTrips((isHideTrips) => !isHideTrips);
-      } else if (payload === "HIDE_CITIES") {
-        setIsHideCities((isHideCities) => !isHideCities);
-      } else if (payload === "HIDE_COUNTRIES") {
-        setIsHideCountries((isHideCountries) => !isHideCountries);
-      } else if (payload === "HIDE_CONTINENTS") {
-        setIsHideContinents((isHideContinents) => !isHideContinents);
-      } else if (payload === "AUTO_LOCATION_REPORT") {
-        setIsAutoLocationReport(
-          (isAutoLocationReport) => !isAutoLocationReport
-        );
-      }
-      await toggleSettingsFn({ variables: { payload } });
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  const onInputTextChange = (text, state) => {
-    const replaceChar = /[~!@\#$%^&*\()\-=+_'\;<>0-9\/.\`:\"\\,\[\]?|{}]/gi;
-    const item = text
-      .replace(/^\s\s*/, "")
-      .replace(/\s\s*$/, "")
-      .replace(replaceChar, "")
-      .replace(/[^a-z|^A-Z|^0-9]/, "");
-    if (state === "newUsername") {
-      setNewUsername(item);
-    } else if (state === "firstName") {
-      setFirstName(item);
-    } else if (state === "lastName") {
-      setLastName(item);
-    } else if (state === "deleteAccountUsername") {
-      setDeleteAccountUsername(item);
-    } else {
-      return null;
-    }
-  };
-  const handlePhoneNumber = async () => {
-    const phone = `${newCountryPhoneNumber}${
-      newPhoneNumber.startsWith("0")
-        ? newPhoneNumber.substring(1)
-        : newPhoneNumber
-    }`;
-    const phoneRegex = /(([+][(]?[0-9]{1,3}[)]?)|([(]?[0-9]{4}[)]?))\s*[)]?[-\s\.]?[(]?[0-9]{1,3}[)]?([-\s\.]?[0-9]{3})([-\s\.]?[0-9]{3,4})/;
-    const {
-      data: { startEditPhoneVerification },
-    } = await startEditPhoneVerificationFn();
-    if (startEditPhoneVerification.ok) {
-      setIsEditPhoneMode(false);
-    } else if (newPhoneNumber === "") {
-      closeEditPhoneModalOpen();
-      toast("Phone number can't be empty");
-    } else if (newCountryPhoneNumber === "") {
-      closeEditPhoneModalOpen();
-      toast("Please choose a country");
-    } else if (!phoneRegex.test(phone)) {
-      closeEditPhoneModalOpen();
-      toast("This phone number is invalid");
-    } else if (!startEditPhoneVerification.ok) {
-      closeEditPhoneModalOpen();
-      toast("Could not send you a key");
-    } else {
-      closeEditPhoneModalOpen();
-      toast("Please write a valid phone number");
-    }
-  };
-  const handlePhoneVerification = async () => {
-    const {
-      data: { completeEditPhoneVerification },
-    } = await completeEditPhoneVerificationFn();
-    setVerificationKey("");
-    setEditPhoneModalOpen(false);
-    setIsEditPhoneMode(true);
-    if (completeEditPhoneVerification.ok) {
-      toast("Your phone number is verified");
-    } else {
-      toast("Could not be Verified your phone number");
-    }
-  };
-  const onSubmit = async () => {
-    if (!newUsername || newUsername === "") {
-      toast("Username could not be empty");
-    } else {
-      const {
-        data: { editProfile },
-      } = await editProfileFn();
-      if (editProfile.ok) {
-        logIn(editProfile);
-        setIsChanged(false);
-        toast("Profile edited");
-      } else {
-        toast("Username is already taken");
-      }
-    }
-  };
-  const handleEmailAddress = async () => {
-    if (newEmailAddress !== "") {
-      const isValid = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(
-        newEmailAddress
-      );
-      if (isValid) {
-        const {
-          data: { startEditEmailVerification },
-        } = await startEditEmailVerificationFn();
-        if (startEditEmailVerification.ok) {
-          setIsEditEmailMode(false);
-        } else {
-          setEditEmailModalOpen(false);
-          toast("Requested email address is already verified");
-        }
-      } else {
-        setEditEmailModalOpen(false);
-        toast("Please write a valid email");
-      }
-    } else {
-      setEditEmailModalOpen(false);
-      toast("Please write a email address");
-    }
-  };
-  const onOpenGenderActionSheet = () => {
-    showActionSheetWithOptions(
-      {
-        options: ["Male", "Female", "Other", "Cancel"],
-        cancelButtonIndex: 3,
-        showSeparators: true,
-        containerStyle: {
-          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
-          borderRadius: 10,
-          width: constants.width - 30,
-          marginLeft: 15,
-          marginBottom: 10,
-        },
-        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
-        titleTextStyle: {
-          color: isDarkMode ? "#EFEFEF" : "#161616",
-          fontWeight: "400",
-        },
-        separatorStyle: { opacity: 0.5 },
-      },
-      (buttonIndex) => {
-        if (buttonIndex === 0) {
-          setGender("MALE");
-        } else if (buttonIndex === 1) {
-          setGender("FEMALE");
-        } else if (buttonIndex === 2) {
-          setGender("OTHER");
-        } else {
-          null;
-        }
-      }
-    );
-  };
-  useEffect(() => {
-    if (deleteAccountUsername === me.user.username) {
-      onDelete();
-    }
-  }, [deleteAccountUsername]);
-  useEffect(() => {
-    if (
-      newUsername !== me.user.username ||
-      nationalityCode !==
-        ((me.user.nationality && me.user.nationality.countryCode) ||
-          nationalityCode !== user.currentCity.country.countryCode) ||
-      residenceCode !==
-        ((me.user.residence && me.user.residence.countryCode) ||
-          residenceCode !== user.currentCity.country.countryCode) ||
-      gender !== me.user.gender ||
-      firstName !== me.user.firstName ||
-      lastName !== me.user.lastName ||
-      bio !== me.user.bio
-    ) {
-      setIsChanged(true);
-    } else {
-      setIsChanged(false);
-    }
-  });
   if (!meLoading) {
     return (
       <>
@@ -1416,3 +1010,5 @@ export default ({ navigation }) => {
     return;
   }
 };
+
+export default EditProfilePresenter;

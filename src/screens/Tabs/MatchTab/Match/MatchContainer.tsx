@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import { Platform, Alert, Linking } from "react-native";
+
 import Constants from "expo-constants";
-import { RefreshControl, Platform, Alert, Linking } from "react-native";
-import { MARK_AS_READ_MATCH } from "./MatchQueries";
-import { SwipeListView } from "react-native-swipe-list-view";
+import { MARK_AS_READ_MATCH, GET_MATCHES } from "./MatchQueries";
 import * as Location from "expo-location";
 import * as IntentLauncher from "expo-intent-launcher";
 import { useActionSheet } from "@expo/react-native-action-sheet";
@@ -11,19 +10,22 @@ import Toast from "react-native-root-toast";
 import { useQuery, useMutation } from "react-apollo-hooks";
 import * as Permissions from "expo-permissions";
 import { Notifications } from "expo";
-import { GET_MATCHES } from "./MatchQueries";
-import { GET_BLOCkED_USER } from "../../UserProfileTab/BlockedUsers/BlockedUsersQueries";
+
 import { chat_leave, fb_db } from "../../../../../Fire";
+import { GET_BLOCkED_USER } from "../../UserProfileTab/BlockedUsers/BlockedUsersQueries";
 import {
   REGISTER_PUSH,
   ADD_BLOCK_USER,
   ME,
   REPORT_LOCATION,
 } from "../../../../sharedQueries";
-import Loader from "../../../../components/Loader";
-import UserRow from "../../../../components/UserRow";
+import { UNMATCH } from "../../../../sharedQueries";
 import { GET_USER } from "../../UserProfileTab/UserProfile/UserProfileQueries";
+
 import {
+  Me,
+  ReportLocation,
+  ReportLocationVariables,
   GetMatches,
   GetMatchesVariables,
   MarkAsReadMatch,
@@ -38,83 +40,21 @@ import {
   UserProfile,
   UserProfileVariables,
 } from "../../../../types/api";
+
 import constants from "../../../../../constants";
 import { useTheme } from "../../../../context/ThemeContext";
-import {
-  Me,
-  ReportLocation,
-  ReportLocationVariables,
-} from "../../../../types/api";
 import { useReverseGeoCode } from "../../../../hooks/useReverseGeoCode";
 import { useReversePlaceId } from "../../../../hooks/useReversePlaceId";
-import { UNMATCH } from "../../../../sharedQueries";
+import MatchPresenter from "./MatchPresenter";
 
-const TextContainer = styled.View`
-  margin-top: 15px;
-  justify-content: center;
-  align-items: center;
-`;
-const Container = styled.View`
-  background-color: ${(props) => props.theme.bgColor};
-  padding: 0 10px 0 10px;
-`;
-const Touchable = styled.TouchableOpacity``;
-const Text = styled.Text`
-  color: ${(props) => props.theme.color};
-  font-size: 8px;
-  margin-left: 5px;
-`;
-const UserContainer = styled.View`
-  padding: 0 5px 0 5px;
-`;
-const Item = styled.View`
-  flex: 1;
-  margin-bottom: 25px;
-`;
-const ScrollView = styled.ScrollView`
-  background-color: ${(props) => props.theme.bgColor};
-`;
-const LoaderContainer = styled.View`
-  flex: 1;
-  background-color: ${(props) => props.theme.bgColor};
-  justify-content: center;
-  align-items: center;
-`;
-const RowBack = styled.View`
-  align-items: center;
-  flex: 1;
-  flex-direction: row;
-  margin-left: 5px;
-  max-width: 85px;
-  width: 100%;
-  justify-content: space-between;
-`;
-const BackLeftBtn = styled.TouchableOpacity`
-  justify-content: center;
-`;
-const SmallText = styled.Text`
-  color: #999;
-  text-align: center;
-  font-size: 8px;
-`;
-const IconContainer = styled.View`
-  width: 40px;
-  height: 40px;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  border: 0.5px solid #999;
-  border-radius: 5px;
-  padding: 2px;
-`;
-const TouchableBackRow = styled.View`
-  background-color: ${(props) => props.theme.bgColor};
-`;
-export default ({ navigation }) => {
+export default () => {
   const { data, loading: meLoading } = useQuery<Me>(ME);
   const me = data ? data.me : null;
   const isDarkMode = useTheme();
-  const [refreshing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+
+  // MUTATION
+
   const [addBlockUserFn, { loading: addBlockUserLoading }] = useMutation<
     AddBlockUser,
     AddBlockUserVariables
@@ -174,10 +114,78 @@ export default ({ navigation }) => {
       }
     },
   });
+
   const [registerPushFn, { loading: registerPushLoading }] = useMutation<
     RegisterPush,
     RegisterPushVariables
   >(REGISTER_PUSH);
+
+  const [unMatchFn, { loading: unMatchLoading }] = useMutation<
+    UnMatch,
+    UnMatchVariables
+  >(UNMATCH, {
+    update(cache, { data: { unMatch } }) {
+      try {
+        const matchData = cache.readQuery<GetMatches, GetMatchesVariables>({
+          query: GET_MATCHES,
+        });
+        if (matchData) {
+          matchData.getMatches.matches = matchData.getMatches.matches.filter(
+            (i) => parseInt(i.id, 10) !== unMatch.matchId
+          );
+          cache.writeQuery({
+            query: GET_MATCHES,
+            data: matchData,
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+  });
+
+  const [reportLocationFn, { loading: reportLocationLoading }] = useMutation<
+    ReportLocation,
+    ReportLocationVariables
+  >(REPORT_LOCATION);
+
+  const [MarkAsReadMatchFn, { loading: MarkAsReadMatchLoading }] = useMutation<
+    MarkAsReadMatch,
+    MarkAsReadMatchVariables
+  >(MARK_AS_READ_MATCH, {
+    update(cache, { data: { markAsReadMatch } }) {
+      try {
+        const matchData = cache.readQuery<GetMatches, GetMatchesVariables>({
+          query: GET_MATCHES,
+        });
+        if (matchData) {
+          matchData.getMatches.matches.find(
+            (i) => i.id === markAsReadMatch.matchId
+          ).isReadByHost = markAsReadMatch.isReadByHost;
+          matchData.getMatches.matches.find(
+            (i) => i.id === markAsReadMatch.matchId
+          ).isReadByGuest = markAsReadMatch.isReadByGuest;
+          cache.writeQuery({
+            query: GET_MATCHES,
+            data: matchData,
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+  });
+
+  // QUERY
+
+  const {
+    data: { getMatches: { matches = null } = {} } = {},
+    loading: matchLoading,
+    refetch: matchRefetch,
+  } = useQuery<GetMatches, GetMatchesVariables>(GET_MATCHES);
+
+  // FUNC
+
   const askPermission = async () => {
     const { status: locationStatus } = await Permissions.askAsync(
       Permissions.LOCATION
@@ -287,12 +295,14 @@ export default ({ navigation }) => {
       return;
     }
   };
+
   const handleGeoSuccess = (position) => {
     const {
       coords: { latitude, longitude },
     } = position;
     getAddress(latitude, longitude);
   };
+
   const getAddress = async (latitude: number, longitude: number) => {
     try {
       const address = await useReverseGeoCode(latitude, longitude);
@@ -319,66 +329,7 @@ export default ({ navigation }) => {
       console.log(e);
     }
   };
-  const [reportLocationFn, { loading: reportLocationLoading }] = useMutation<
-    ReportLocation,
-    ReportLocationVariables
-  >(REPORT_LOCATION);
-  const [MarkAsReadMatchFn, { loading: MarkAsReadMatchLoading }] = useMutation<
-    MarkAsReadMatch,
-    MarkAsReadMatchVariables
-  >(MARK_AS_READ_MATCH, {
-    update(cache, { data: { markAsReadMatch } }) {
-      try {
-        const matchData = cache.readQuery<GetMatches, GetMatchesVariables>({
-          query: GET_MATCHES,
-        });
-        if (matchData) {
-          matchData.getMatches.matches.find(
-            (i) => i.id === markAsReadMatch.matchId
-          ).isReadByHost = markAsReadMatch.isReadByHost;
-          matchData.getMatches.matches.find(
-            (i) => i.id === markAsReadMatch.matchId
-          ).isReadByGuest = markAsReadMatch.isReadByGuest;
-          cache.writeQuery({
-            query: GET_MATCHES,
-            data: matchData,
-          });
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    },
-  });
 
-  const {
-    data: { getMatches: { matches = null } = {} } = {},
-    loading: matchLoading,
-    refetch: matchRefetch,
-  } = useQuery<GetMatches, GetMatchesVariables>(GET_MATCHES);
-
-  const [unMatchFn, { loading: unMatchLoading }] = useMutation<
-    UnMatch,
-    UnMatchVariables
-  >(UNMATCH, {
-    update(cache, { data: { unMatch } }) {
-      try {
-        const matchData = cache.readQuery<GetMatches, GetMatchesVariables>({
-          query: GET_MATCHES,
-        });
-        if (matchData) {
-          matchData.getMatches.matches = matchData.getMatches.matches.filter(
-            (i) => parseInt(i.id, 10) !== unMatch.matchId
-          );
-          cache.writeQuery({
-            query: GET_MATCHES,
-            data: matchData,
-          });
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    },
-  });
   const onRefresh = async () => {
     try {
       setRefreshing(true);
@@ -389,6 +340,7 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
+
   const toast = (message: string) => {
     Toast.show(message, {
       duration: 1000,
@@ -399,7 +351,9 @@ export default ({ navigation }) => {
       delay: 0,
     });
   };
+
   const { showActionSheetWithOptions } = useActionSheet();
+
   const unMatch = (matchId: string) => {
     showActionSheetWithOptions(
       {
@@ -441,6 +395,7 @@ export default ({ navigation }) => {
       }
     );
   };
+
   const blockedUser = (uuid: string, matchId: string) => {
     showActionSheetWithOptions(
       {
@@ -482,6 +437,7 @@ export default ({ navigation }) => {
       }
     );
   };
+
   fb_db.ref.child("chats").on("child_added", (child) => {
     if (child.val()) {
       if (child.val()["lastSender"] === "system") {
@@ -491,108 +447,24 @@ export default ({ navigation }) => {
       }
     }
   });
+
   useEffect(() => {
     askPermission();
   }, []);
-  if (matchLoading || meLoading || !me) {
-    return (
-      <LoaderContainer>
-        <Loader />
-      </LoaderContainer>
-    );
-  } else {
-    return (
-      <ScrollView
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor={"#999"}
-          />
-        }
-        showsVerticalScrollIndicator={false}
-      >
-        <Container>
-          {matches && matches.length !== 0 && me ? (
-            <Item>
-              <UserContainer>
-                <SwipeListView
-                  useFlatList={false}
-                  closeOnRowBeginSwipe={true}
-                  data={matches}
-                  previewOpenValue={1000}
-                  renderItem={(data) => (
-                    <TouchableBackRow key={data.index}>
-                      <Touchable
-                        disabled={unMatchLoading || addBlockUserLoading}
-                        onPress={() => {
-                          MarkAsReadMatchFn({
-                            variables: { matchId: parseInt(data.item.id, 10) },
-                          }),
-                            navigation.navigate("Chat", {
-                              chatId: data.item.id,
-                              userId: me.user.uuid,
-                              receiverId: data.item.isHost
-                                ? data.item.guest.uuid
-                                : data.item.host.uuid,
-                              receiverAvatar: data.item.isHost
-                                ? data.item.guest.appAvatarUrl
-                                : data.item.host.appAvatarUrl,
-                              receiverPushToken: data.item.isHost
-                                ? data.item.guest.pushToken
-                                : data.item.host.pushToken,
-                              uuid: me.user.uuid,
-                              userName: me.user.username,
-                              userUrl: me.user.appAvatarUrl,
-                              targetUuid: data.item.isHost
-                                ? data.item.guest.uuid
-                                : data.item.host.uuid,
-                              isDarkMode: isDarkMode,
-                              latitude: me.user.currentCity.latitude,
-                              longitude: me.user.currentCity.longitude,
-                            });
-                        }}
-                      >
-                        <UserRow match={data.item} type={"match"} />
-                      </Touchable>
-                    </TouchableBackRow>
-                  )}
-                  renderHiddenItem={(data) => (
-                    <RowBack>
-                      <BackLeftBtn
-                        disabled={unMatchLoading}
-                        onPress={() => unMatch(data.item.id)}
-                      >
-                        <IconContainer>
-                          <SmallText>UN MATCH</SmallText>
-                        </IconContainer>
-                      </BackLeftBtn>
-                      <BackLeftBtn
-                        disabled={addBlockUserLoading}
-                        onPress={() =>
-                          blockedUser(data.item.host.uuid, data.item.id)
-                        }
-                      >
-                        <IconContainer>
-                          <SmallText>BLOCK USER</SmallText>
-                        </IconContainer>
-                      </BackLeftBtn>
-                    </RowBack>
-                  )}
-                  leftOpenValue={91}
-                  keyExtractor={(item) => item.id}
-                />
-              </UserContainer>
-            </Item>
-          ) : (
-            <TextContainer>
-              <Text>
-                You don't have any matches. Please tab PIN to find someone.
-              </Text>
-            </TextContainer>
-          )}
-        </Container>
-      </ScrollView>
-    );
-  }
+
+  return (
+    <MatchPresenter
+      matchLoading={matchLoading}
+      meLoading={meLoading}
+      me={me}
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+      matches={matches}
+      unMatchLoading={unMatchLoading}
+      addBlockUserLoading={addBlockUserLoading}
+      MarkAsReadMatchFn={MarkAsReadMatchFn}
+      unMatch={unMatch}
+      blockedUser={blockedUser}
+    />
+  );
 };

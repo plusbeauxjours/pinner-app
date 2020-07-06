@@ -1,37 +1,28 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import Modal from "react-native-modal";
+import React from "react";
 import {
   Platform,
   TextInput,
   ScrollView,
   KeyboardAvoidingView,
 } from "react-native";
-import constants from "../../../constants";
+
+import styled from "styled-components";
+import Modal from "react-native-modal";
 import { Ionicons } from "@expo/vector-icons";
-import { useQuery, useMutation } from "react-apollo-hooks";
-import { SEARCH, CREATE_CITY } from "./SearchQueries";
+
+import ItemRow from "../ItemRow";
 import Loader from "../Loader";
-import { withNavigation } from "react-navigation";
-import UserRow from "../UserRow";
-import {
-  SearchTerms,
-  SearchTermsVariables,
-  CreateCity,
-  CreateCityVariables,
-} from "../../types/api";
-import keys from "../../../keys";
-import useGoogleAutocomplete from "../../hooks/useGoogleAutocomplete";
-import SearchCityPhoto from "../SearchCityPhoto";
+import constants from "../../../constants";
 import { useTheme } from "../../context/ThemeContext";
-// import PhotoLink from "../PhotoLink";
-import { useMe } from "../../context/MeContext";
+import SearchCityPhoto from "../SearchCityPhoto";
+import { withNavigation } from "react-navigation";
 
 const Text = styled.Text`
   color: ${(props) => props.theme.color};
   font-size: 8px;
   margin-left: 5px;
 `;
+
 const Container = styled.View`
   padding: 15px;
   margin-left: 10px;
@@ -73,71 +64,55 @@ const Header = styled.View`
   flex-direction: row;
   align-items: center;
 `;
+
 const LoaderContainer = styled.View`
   flex: 1;
   margin-top: 50;
   right: 15px;
 `;
+
 const ImageContainer = styled.View`
   justify-content: center;
   align-items: center;
   width: 40px;
   height: 45px;
 `;
-const Search = ({ navigation }) => {
+
+interface IProps {
+  modalOpen: boolean;
+  setModalOpen: (modalOpen: boolean) => void;
+  search: string;
+  setSearch: (search: string) => void;
+  onChange: (text: string) => void;
+  onPress: (cityId: string) => void;
+  isLoading: boolean;
+  loading: boolean;
+  createCityLoading: boolean;
+  users: any;
+  countries: any;
+  continents: any;
+  results: any;
+  navigation: any;
+}
+
+const SearchPresenter: React.FC<IProps> = ({
+  modalOpen,
+  setModalOpen,
+  search,
+  setSearch,
+  onChange,
+  onPress,
+  isLoading,
+  loading,
+  createCityLoading,
+  users,
+  countries,
+  continents,
+  results,
+  navigation,
+}) => {
   const isDarkMode = useTheme();
-  const { me, loading: meLoading } = useMe();
-  const [search, setSearch] = useState<string>("");
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [createCityFn, { loading: createCityLoading }] = useMutation<
-    CreateCity,
-    CreateCityVariables
-  >(CREATE_CITY);
-  const {
-    data: {
-      searchUsers: { users = null } = {},
-      searchCountries: { countries = null } = {},
-      searchContinents: { continents = null } = {},
-    } = {},
-    loading,
-  } = useQuery<SearchTerms, SearchTermsVariables>(SEARCH, {
-    variables: { search },
-    skip: search === "",
-    fetchPolicy: "network-only",
-  });
-  const onPress = async (cityId) => {
-    let result;
-    try {
-      result = await createCityFn({
-        variables: { cityId },
-      });
-      await setSearch("");
-      await setModalOpen(false);
-    } catch (e) {
-      setSearch("");
-      console.log(e);
-    } finally {
-      await navigation.push("CityProfileTabs", {
-        cityId: result.data.createCity.cityId,
-        countryCode: result.data.createCity.countryCode,
-        continentCode: result.data.createCity.continentCode,
-      });
-    }
-  };
-  const onChange = (text: string) => {
-    if (search !== "") {
-      setModalOpen(true);
-    }
-    setSearch(text);
-  };
-  const { results, isLoading } = useGoogleAutocomplete({
-    apiKey: `${keys.REACT_APP_GOOGLE_PLACE_KEY}`,
-    query: search,
-    options: {
-      types: "(cities)",
-      language: "en",
-    },
-  });
+
   return (
     <>
       <Modal
@@ -226,7 +201,7 @@ const Search = ({ navigation }) => {
                               });
                           }}
                         >
-                          <UserRow user={user} type={"user"} />
+                          <ItemRow user={user} type={"user"} />
                         </Touchable>
                       ))}
                     </>
@@ -290,7 +265,7 @@ const Search = ({ navigation }) => {
                               });
                           }}
                         >
-                          <UserRow country={country} type={"country"} />
+                          <ItemRow country={country} type={"country"} />
                         </Touchable>
                       ))}
                     </>
@@ -313,7 +288,7 @@ const Search = ({ navigation }) => {
                               });
                           }}
                         >
-                          <UserRow continent={continent} type={"continent"} />
+                          <ItemRow continent={continent} type={"continent"} />
                         </Touchable>
                       ))}
                     </>
@@ -324,11 +299,6 @@ const Search = ({ navigation }) => {
           </Touchable>
         </KeyboardAvoidingView>
       </Modal>
-      {/* {navigation.state.params &&
-      navigation.state.params.uuid === me.user.uuid &&
-      navigation.state.routeName === "AvatarList" ? (
-        <PhotoLink />
-      ) : ( */}
       <TouchableIcon onPress={() => setModalOpen(true)}>
         <Ionicons
           name={Platform.OS === "ios" ? "ios-search" : "md-search"}
@@ -336,9 +306,8 @@ const Search = ({ navigation }) => {
           color={isDarkMode ? "#EFEFEF" : "#161616"}
         />
       </TouchableIcon>
-      {/* )} */}
     </>
   );
 };
 
-export default withNavigation(Search);
+export default withNavigation(SearchPresenter);

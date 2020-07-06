@@ -1,2 +1,2 @@
-import BlockedUsers from "./BlockedUsers";
-export default BlockedUsers;
+import BlockedUsersContainer from "./BlockedUsersContainer";
+export default BlockedUsersContainer;

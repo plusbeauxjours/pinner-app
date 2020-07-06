@@ -1,2 +1,2 @@
-import AppleApproach from "./AppleApproach";
-export default AppleApproach;
+import AppleApproachContainer from "./AppleApproachContainer";
+export default AppleApproachContainer;

@@ -1,7 +1,9 @@
 import React from "react";
+
 import styled from "styled-components";
 import { withNavigation } from "react-navigation";
 import { FontAwesome } from "@expo/vector-icons";
+
 import { useTheme } from "../../context/ThemeContext";
 
 const View = styled.View`
@@ -10,8 +12,9 @@ const View = styled.View`
   width: 50px;
 `;
 
-const LocationCenterHeader = ({ navigation }) => {
+export default withNavigation(({ navigation }) => {
   const isDarkMode = useTheme();
+
   if (navigation && navigation.state.routeName === "CityProfileTabs") {
     if (navigation.state.index === 0) {
       return (
@@ -24,7 +27,7 @@ const LocationCenterHeader = ({ navigation }) => {
               marginLeft: 3,
               marginRight: 3,
               marginTop: 3,
-              marginBottom: 3
+              marginBottom: 3,
             }}
           />
           <FontAwesome
@@ -35,7 +38,7 @@ const LocationCenterHeader = ({ navigation }) => {
               marginLeft: 3,
               marginRight: 3,
               marginTop: 3,
-              marginBottom: 3
+              marginBottom: 3,
             }}
           />
           <FontAwesome
@@ -46,7 +49,7 @@ const LocationCenterHeader = ({ navigation }) => {
               marginLeft: 3,
               marginRight: 3,
               marginTop: 3,
-              marginBottom: 3
+              marginBottom: 3,
             }}
           />
         </View>
@@ -62,7 +65,7 @@ const LocationCenterHeader = ({ navigation }) => {
               marginLeft: 3,
               marginRight: 3,
               marginTop: 3,
-              marginBottom: 3
+              marginBottom: 3,
             }}
           />
           <FontAwesome
@@ -73,7 +76,7 @@ const LocationCenterHeader = ({ navigation }) => {
               marginLeft: 3,
               marginRight: 3,
               marginTop: 3,
-              marginBottom: 3
+              marginBottom: 3,
             }}
           />
           <FontAwesome
@@ -84,7 +87,7 @@ const LocationCenterHeader = ({ navigation }) => {
               marginLeft: 3,
               marginRight: 3,
               marginTop: 3,
-              marginBottom: 3
+              marginBottom: 3,
             }}
           />
         </View>
@@ -100,7 +103,7 @@ const LocationCenterHeader = ({ navigation }) => {
               marginLeft: 3,
               marginRight: 3,
               marginTop: 3,
-              marginBottom: 3
+              marginBottom: 3,
             }}
           />
           <FontAwesome
@@ -111,7 +114,7 @@ const LocationCenterHeader = ({ navigation }) => {
               marginLeft: 3,
               marginRight: 3,
               marginTop: 3,
-              marginBottom: 3
+              marginBottom: 3,
             }}
           />
           <FontAwesome
@@ -122,7 +125,7 @@ const LocationCenterHeader = ({ navigation }) => {
               marginLeft: 3,
               marginRight: 3,
               marginTop: 3,
-              marginBottom: 3
+              marginBottom: 3,
             }}
           />
         </View>
@@ -142,7 +145,7 @@ const LocationCenterHeader = ({ navigation }) => {
               marginLeft: 3,
               marginRight: 3,
               marginTop: 3,
-              marginBottom: 3
+              marginBottom: 3,
             }}
           />
           <FontAwesome
@@ -153,7 +156,7 @@ const LocationCenterHeader = ({ navigation }) => {
               marginLeft: 3,
               marginRight: 3,
               marginTop: 3,
-              marginBottom: 3
+              marginBottom: 3,
             }}
           />
         </View>
@@ -169,7 +172,7 @@ const LocationCenterHeader = ({ navigation }) => {
               marginLeft: 3,
               marginRight: 3,
               marginTop: 3,
-              marginBottom: 3
+              marginBottom: 3,
             }}
           />
           <FontAwesome
@@ -180,7 +183,7 @@ const LocationCenterHeader = ({ navigation }) => {
               marginLeft: 3,
               marginRight: 3,
               marginTop: 3,
-              marginBottom: 3
+              marginBottom: 3,
             }}
           />
         </View>
@@ -199,7 +202,7 @@ const LocationCenterHeader = ({ navigation }) => {
             marginLeft: 3,
             marginRight: 3,
             marginTop: 3,
-            marginBottom: 3
+            marginBottom: 3,
           }}
         />
       </View>
@@ -207,6 +210,4 @@ const LocationCenterHeader = ({ navigation }) => {
   } else {
     return null;
   }
-};
-
-export default withNavigation(LocationCenterHeader);
+});

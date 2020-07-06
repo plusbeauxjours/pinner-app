@@ -1,2 +1,2 @@
-import CityProfile from "./CityProfile";
-export default CityProfile;
+import CityProfileContainer from "./CityProfileContainer";
+export default CityProfileContainer;

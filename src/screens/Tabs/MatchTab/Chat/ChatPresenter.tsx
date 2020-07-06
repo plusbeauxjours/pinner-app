@@ -28,23 +28,29 @@ import { UpdateSns, UpdateSnsVariables, Me } from "../../../../types/api";
 import { ME } from "../../../../sharedQueries";
 
 const View = styled.View``;
+
 const EditView = styled.View``;
+
 const AddView = styled.View`
   margin-bottom: 65px;
 `;
+
 const ChatContainer = styled.View`
   flex: 1;
   background-color: ${(props) => props.theme.bgColor};
 `;
+
 const AddListContainer = styled.View`
   padding: 30px 20px 40px 20px;
 `;
+
 const Item = styled.View`
   flex-direction: row;
   align-items: flex-end;
   height: 40px;
   margin-top: 10px;
 `;
+
 const AddBtn = styled.TouchableOpacity`
   justify-content: center;
   width: ${(constants.width - 50) / 2};
@@ -55,6 +61,7 @@ const AddBtn = styled.TouchableOpacity`
   border-radius: 5px;
   background-color: ${(props) => props.theme.bgColor};
 `;
+
 const EditBtn = styled.TouchableOpacity`
   justify-content: center;
   width: ${constants.width - 40};
@@ -65,11 +72,13 @@ const EditBtn = styled.TouchableOpacity`
   border-radius: 5px;
   background-color: ${(props) => props.theme.bgColor};
 `;
+
 const AddText = styled.Text`
   font-size: 16px;
   font-weight: 500;
   color: ${(props) => props.theme.color};
 `;
+
 const Footer = styled.View`
   margin-left: 20px;
   position: absolute;
@@ -78,12 +87,14 @@ const Footer = styled.View`
   width: ${constants.width - 40};
   flex-direction: row;
 `;
+
 const AddBackBtn = styled.View`
   width: ${(constants.width - 50) / 2};
   height: 40px;
   border-radius: 5px;
   background-color: ${(props) => props.theme.bgColor};
 `;
+
 const EditBackBtn = styled.View`
   width: ${constants.width - 40};
   height: 40px;
@@ -92,6 +103,7 @@ const EditBackBtn = styled.View`
 `;
 
 const ItemTouchable = styled.TouchableOpacity``;
+
 const AddItemView = styled.View`
   width: 40px;
   height: 40px;
@@ -103,17 +115,21 @@ const AddItemView = styled.View`
   padding: 2px;
   margin-left: 10px;
 `;
+
 const AddItemText = styled.Text`
   color: ${(props) => props.theme.shadowColor};
   text-align: center;
   font-size: 10px;
 `;
+
 const EditItemText = styled(AddItemText)`
   color: #999;
 `;
+
 const EditItemView = styled(AddItemView)`
   border: 0.5px solid #999;
 `;
+
 const MarkerContainer = styled.View`
   position: absolute;
   top: 0;
@@ -124,18 +140,21 @@ const MarkerContainer = styled.View`
   justify-content: center;
   background-color: transparent;
 `;
+
 const LoadingContainer = styled.View`
   background-color: ${(props) => props.theme.modalBgColor};
   justify-content: center;
   align-items: center;
   flex: 1;
 `;
+
 const MapText = styled.Text`
   color: ${(props) => props.theme.color};
   font-size: 16px;
   font-weight: 500;
   opacity: 1;
 `;
+
 const MapBtn = styled.TouchableOpacity`
   justify-content: center;
   width: ${(constants.width - 50) / 2};
@@ -146,18 +165,22 @@ const MapBtn = styled.TouchableOpacity`
   border-radius: 5px;
   background-color: ${(props) => props.theme.bgColor};
 `;
+
 const MapBackBtn = styled.View`
   width: ${(constants.width - 50) / 2};
   height: 40px;
   border-radius: 5px;
   background-color: ${(props) => props.theme.bgColor};
 `;
+
 const ScrollView = styled.ScrollView``;
+
 const Image = styled.Image`
   width: 40px;
   height: 40px;
   margin-right: 10px;
 `;
+
 const SNSText = styled.Text`
   font-size: 22px;
   padding: 5px;
@@ -165,24 +188,29 @@ const SNSText = styled.Text`
 
   text-align: center;
 `;
+
 const SNSTextContainer = styled.View`
   width: ${constants.width - 140};
   border-bottom-width: 0.5px;
   border-bottom-color: #999;
 `;
+
 const EmptyContainer = styled.View`
   height: 20px;
 `;
+
 const TextContainer = styled.View`
   margin-top: 15px;
   justify-content: center;
   align-items: center;
 `;
+
 const Text = styled.Text`
   color: ${(props) => props.theme.color};
   font-size: 8px;
   margin-left: 5px;
 `;
+
 interface IProps {
   userId: string;
   mapModalOpen: boolean;
@@ -348,6 +376,9 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
   const [isChangedSendTumblr, setIsChangedSendTumblr] = useState<boolean>(
     false
   );
+
+  // MUTATION
+
   const [updateSnsFn, { loading: updateSnsLoading }] = useMutation<
     UpdateSns,
     UpdateSnsVariables
@@ -387,6 +418,9 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
       }
     },
   });
+
+  // FUNC
+
   const onInputTextChange = (text, state) => {
     const replaceChar = /[~!@\#$%^&*\()\-=+_'\;<>\/.\`:\"\\,\[\]?|{}]/gi;
     const item = text
@@ -473,6 +507,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
       return null;
     }
   };
+
   const snsList = [
     {
       value: sendInstagram,
@@ -645,12 +680,15 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
       console.log(e);
     }
   };
+
   const onMapReady = () => {
     if (!ready) {
       setReady(true);
     }
   };
+
   const renderComposer = (props) => <Composer {...props} />;
+
   const renderSend = (props) => (
     <Send {...props}>
       <View
@@ -667,6 +705,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
       </View>
     </Send>
   );
+
   const renderInputToolbar = (props) => {
     return (
       <InputToolbar
@@ -684,9 +723,11 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
       </InputToolbar>
     );
   };
+
   useEffect(() => {
     setSnsAddMode(false);
   }, []);
+
   useEffect(() => {
     setIsChangedSendInstagram(me.user.sendInstagram !== sendInstagram);
     setIsChangedSendPhone(me.user.sendPhone !== sendPhone);
@@ -728,6 +769,7 @@ const ChatPresenter: React.FunctionComponent<IProps> = ({
     sendVine,
     sendTumblr,
   ]);
+
   if (!meLoading) {
     return (
       <>

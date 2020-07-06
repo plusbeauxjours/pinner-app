@@ -1,2 +1,2 @@
-import ContinentProfile from "./ContinentProfile";
-export default ContinentProfile;
+import ContinentProfileContainer from "./ContinentProfileContainer";
+export default ContinentProfileContainer;

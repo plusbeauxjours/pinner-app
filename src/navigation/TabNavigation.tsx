@@ -8,17 +8,17 @@ import LocationNavigation from "./LocationNavigation";
 import UserProfileNavigation from "./UserProfileNavigation";
 import { useTheme } from "../context/ThemeContext";
 
-const stackFactory = initialRoute =>
+const stackFactory = (initialRoute) =>
   createStackNavigator({
     InitialRoute: {
       screen: initialRoute,
       navigationOptions: {
-        header: null
-      }
-    }
+        header: null,
+      },
+    },
   });
 
-const TabBarComponent = props => <BottomTabBar {...props} />;
+const TabBarComponent = (props) => <BottomTabBar {...props} />;
 
 export default createBottomTabNavigator(
   {
@@ -48,9 +48,9 @@ export default createBottomTabNavigator(
               focused={focused}
               name={Platform.OS === "ios" ? "ios-text" : "md-text"}
             />
-          )
+          ),
         };
-      }
+      },
     },
     Location: {
       screen: stackFactory(LocationNavigation),
@@ -60,8 +60,8 @@ export default createBottomTabNavigator(
             focused={focused}
             name={Platform.OS === "ios" ? "ios-map" : "md-map"}
           />
-        )
-      }
+        ),
+      },
     },
     Profile: {
       screen: stackFactory(UserProfileNavigation),
@@ -71,12 +71,12 @@ export default createBottomTabNavigator(
             focused={focused}
             name={Platform.OS === "ios" ? "ios-person" : "md-person"}
           />
-        )
-      }
-    }
+        ),
+      },
+    },
   },
   {
-    tabBarComponent: props => {
+    tabBarComponent: (props) => {
       const isDarkMode = useTheme();
       return (
         <TabBarComponent
@@ -97,7 +97,7 @@ export default createBottomTabNavigator(
         if (navigation.state.routes[0].index > 0 && isFocused) {
           navigation.popToTop();
         }
-      }
-    }
+      },
+    },
   }
 );

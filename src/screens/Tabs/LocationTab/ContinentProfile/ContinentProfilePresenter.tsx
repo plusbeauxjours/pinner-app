@@ -1,27 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { RefreshControl } from "react-native";
-import { useQuery, useMutation } from "react-apollo-hooks";
+
 import styled from "styled-components";
-import { useTheme } from "../../../../context/ThemeContext";
-import Loader from "../../../../components/Loader";
-import UserRow from "../../../../components/UserRow";
 import Swiper from "react-native-swiper";
-import {
-  SlackReportLocations,
-  SlackReportLocationsVariables,
-  ContinentProfile,
-  ContinentProfileVariables,
-} from "../../../../types/api";
-import { SLACK_REPORT_LOCATIONS } from "../../../../sharedQueries";
-import { CONTINENT_PROFILE } from "./ContinentProfileQueries";
-import { countries as countryData } from "../../../../../countryData";
-import constants from "../../../../../constants";
-import Toast from "react-native-root-toast";
 import { FontAwesome } from "@expo/vector-icons";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
-import { useActionSheet } from "@expo/react-native-action-sheet";
 import { withNavigation } from "react-navigation";
-import { useMe } from "../../../../context/MeContext";
+
+import Loader from "../../../../components/Loader";
+import ItemRow from "../../../../components/ItemRow";
+import constants from "../../../../../constants";
 
 const Container = styled.View`
   background-color: ${(props) => props.theme.bgColor};
@@ -31,6 +19,7 @@ const Container = styled.View`
 const Text = styled.Text`
   color: ${(props) => props.theme.color};
 `;
+
 const Bold = styled.Text`
   font-weight: 500;
   font-size: 34px;
@@ -41,6 +30,7 @@ const View = styled.View`
   justify-content: center;
   margin: 15px 0 15px 0;
 `;
+
 const UserContainer = styled.View``;
 
 const UserColumn = styled.View``;
@@ -49,28 +39,34 @@ const Item = styled.View`
   flex: 1;
   margin-bottom: 25px;
 `;
+
 const Title = styled.Text`
   font-weight: 500;
   font-size: 18px;
   margin-bottom: 5px;
   color: ${(props) => props.theme.color};
 `;
+
 const Touchable = styled.TouchableOpacity``;
+
 const ScrollView = styled.ScrollView`
   background-color: ${(props) => props.theme.bgColor};
 `;
+
 const LoaderContainer = styled.View`
   flex: 1;
   background-color: ${(props) => props.theme.bgColor};
   justify-content: center;
   align-items: center;
 `;
+
 const IconTouchable = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   margin-top: 5px;
   margin-left: 10px;
 `;
+
 const LocationNameContainer = styled.View`
   width: ${constants.width - 30};
   align-self: flex-start;
@@ -78,141 +74,44 @@ const LocationNameContainer = styled.View`
   justify-content: flex-start;
   align-items: center;
 `;
+
 const NoPhotoContainer = styled.View`
   justify-content: center;
   align-items: center;
   background-color: ${(props) => props.theme.bgColor};
 `;
-export default withNavigation(({ navigation }) => {
-  const { me, loading: meLoading } = useMe();
-  const isDarkMode = useTheme();
-  const [continentCode, setContinentCode] = useState<string>(
-    navigation.getParam("continentCode") ||
-      countryData.find(
-        (i) => i.code === me.user.currentCity.country.countryCode
-      ).continent
-  );
-  const [refreshing, setRefreshing] = useState<boolean>(false);
-  const { showActionSheetWithOptions } = useActionSheet();
-  const selectReportLocation = () => {
-    showActionSheetWithOptions(
-      {
-        options: ["Inappropriate Photoes", "Wrong Location", "Other", "Cancel"],
-        cancelButtonIndex: 3,
-        title: `Choose a reason for reporting this continent.`,
-        showSeparators: true,
-        containerStyle: {
-          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
-          borderRadius: 10,
-          width: constants.width - 30,
-          marginLeft: 15,
-          marginBottom: 10,
-        },
-        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
-        titleTextStyle: {
-          color: isDarkMode ? "#EFEFEF" : "#161616",
-          fontWeight: "400",
-        },
-        separatorStyle: { opacity: 0.5 },
-      },
-      async (buttonIndex) => {
-        if (buttonIndex === 0) {
-          reportLocation("PHOTO");
-        } else if (buttonIndex === 1) {
-          reportLocation("LOCATION");
-        } else if (buttonIndex === 2) {
-          reportLocation("OTHER");
-        } else {
-          null;
-        }
-      }
-    );
-  };
-  const reportLocation = (payload: string) => {
-    const toast = (message: string) => {
-      Toast.show(message, {
-        duration: 1000,
-        position: Toast.positions.CENTER,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-      });
-    };
-    showActionSheetWithOptions(
-      {
-        options: ["Yes", "No"],
-        destructiveButtonIndex: 0,
-        cancelButtonIndex: 1,
-        showSeparators: true,
-        title: `Are you sure to report this continent?`,
-        containerStyle: {
-          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
-          borderRadius: 10,
-          width: constants.width - 30,
-          marginLeft: 15,
-          marginBottom: 10,
-        },
-        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
-        titleTextStyle: {
-          color: isDarkMode ? "#EFEFEF" : "#161616",
-          fontWeight: "400",
-        },
-        separatorStyle: { opacity: 0.5 },
-      },
-      (buttonIndex) => {
-        if (buttonIndex === 0) {
-          slackReportLocationsFn({
-            variables: {
-              targetLocationId: continentCode,
-              targetLocationType: "continent",
-              payload,
-            },
-          });
-          toast("Reported");
-        }
-      }
-    );
-  };
-  const {
-    data: {
-      continentProfile: {
-        count = null,
-        continent = null,
-        continents = null,
-        countries = null,
-      } = {},
-    } = {},
-    loading: profileLoading,
-    refetch: profileRefetch,
-  } = useQuery<ContinentProfile, ContinentProfileVariables>(CONTINENT_PROFILE, {
-    variables: { continentCode, page: 1 },
-  });
-  const [
-    slackReportLocationsFn,
-    { loading: slackReportLocationsLoading },
-  ] = useMutation<SlackReportLocations, SlackReportLocationsVariables>(
-    SLACK_REPORT_LOCATIONS
-  );
-  const onRefresh = async () => {
-    try {
-      setRefreshing(true);
-      await profileRefetch();
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setRefreshing(false);
-    }
-  };
-  const chunk = (arr) => {
-    let chunks = [],
-      i = 0,
-      n = arr.length;
-    while (i < n) {
-      chunks.push(arr.slice(i, (i += 3)));
-    }
-    return chunks;
-  };
+
+interface IProps {
+  navigation: any;
+  profileLoading: boolean;
+  meLoading: boolean;
+  refreshing: boolean;
+  onRefresh: () => void;
+  isDarkMode: boolean;
+  selectReportLocation: () => void;
+  count: number;
+  chunk: (arr: any) => any[];
+  continent: any;
+  countries: any;
+  continents: any;
+  continentCode: string;
+}
+
+const ContinentProfilePresenter: React.FC<IProps> = ({
+  navigation,
+  profileLoading,
+  meLoading,
+  refreshing,
+  onRefresh,
+  isDarkMode,
+  selectReportLocation,
+  count,
+  chunk,
+  continent,
+  countries,
+  continents,
+  continentCode,
+}) => {
   if (profileLoading || meLoading) {
     return (
       <LoaderContainer>
@@ -307,7 +206,7 @@ export default withNavigation(({ navigation }) => {
                                 }
                               }}
                             >
-                              <UserRow
+                              <ItemRow
                                 continent={continent}
                                 type={"continent"}
                               />
@@ -345,7 +244,7 @@ export default withNavigation(({ navigation }) => {
                     }
                   }}
                 >
-                  <UserRow country={country} type={"country"} />
+                  <ItemRow country={country} type={"country"} />
                 </Touchable>
               ))}
             </Item>
@@ -354,4 +253,6 @@ export default withNavigation(({ navigation }) => {
       </ScrollView>
     );
   }
-});
+};
+
+export default withNavigation(ContinentProfilePresenter);

@@ -1,2 +1,2 @@
-import FacebookApproach from "./FacebookApproach";
-export default FacebookApproach;
+import FacebookApproachContainer from "./FacebookApproachContainer";
+export default FacebookApproachContainer;

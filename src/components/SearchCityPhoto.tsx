@@ -1,15 +1,18 @@
 import * as React from "react";
-import { GET_CITY_PHOTO } from "./Search/SearchQueries";
 import { Image } from "react-native";
-import { useQuery } from "react-apollo";
-import { GetCityPhoto, GetCityPhotoVariables } from "../types/api";
+
 import styled from "styled-components";
+import { useQuery } from "react-apollo";
+
+import { GET_CITY_PHOTO } from "./Search/SearchQueries";
+import { GetCityPhoto, GetCityPhotoVariables } from "../types/api";
 
 const SmallText = styled.Text`
   font-size: 8px;
   color: #999;
   text-align: center;
 `;
+
 const View = styled.View`
   justify-content: center;
   align-items: center;
@@ -20,17 +23,21 @@ const View = styled.View`
   padding: 2px;
   border-radius: 5px;
 `;
+
 interface IProps {
   cityId?: string;
 }
 
 const SearchCityPhoto: React.FC<IProps> = ({ cityId }) => {
+  // QUERY
+
   const {
     data: { getCityPhoto: { photo = null } = {} } = {},
-    loading
+    loading,
   } = useQuery<GetCityPhoto, GetCityPhotoVariables>(GET_CITY_PHOTO, {
-    variables: { cityId }
+    variables: { cityId },
   });
+
   if (!loading) {
     return (
       <>
@@ -39,7 +46,7 @@ const SearchCityPhoto: React.FC<IProps> = ({ cityId }) => {
             style={{ height: 40, width: 40, borderRadius: 5 }}
             source={
               photo && {
-                uri: photo
+                uri: photo,
               }
             }
           />

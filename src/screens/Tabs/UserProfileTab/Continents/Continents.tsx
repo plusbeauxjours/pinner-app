@@ -5,7 +5,7 @@ import { TopContinents, TopContinentsVariables } from "../../../../types/api";
 import { useQuery } from "react-apollo-hooks";
 import { TOP_CONTINENTS } from "./ContinentsQueries";
 import Loader from "../../../../components/Loader";
-import UserRow from "../../../../components/UserRow";
+import ItemRow from "../../../../components/ItemRow";
 
 const View = styled.View`
   justify-content: center;
@@ -13,30 +13,38 @@ const View = styled.View`
   flex: 1;
   background-color: ${(props) => props.theme.bgColor};
 `;
+
 const Text = styled.Text`
   color: ${(props) => props.theme.color};
   font-size: 8px;
   margin-left: 5px;
 `;
+
 const Touchable = styled.TouchableOpacity``;
+
 const ScrollView = styled.ScrollView`
   background-color: ${(props) => props.theme.bgColor};
 `;
+
 const LoaderContainer = styled.View`
   flex: 1;
   background-color: ${(props) => props.theme.bgColor};
   justify-content: center;
   align-items: center;
 `;
+
 const TextContainer = styled.View`
   margin-top: 15px;
   justify-content: center;
   align-items: center;
 `;
+
 export default ({ navigation }) => {
   const uuid = navigation.getParam("uuid");
-
   const [refreshing, setRefreshing] = useState<boolean>(false);
+
+  // QUERY
+
   const {
     data: { topContinents: { continents = null } = {} } = {},
     loading,
@@ -44,6 +52,9 @@ export default ({ navigation }) => {
   } = useQuery<TopContinents, TopContinentsVariables>(TOP_CONTINENTS, {
     variables: { uuid },
   });
+
+  // FUNC
+
   const onRefresh = async () => {
     try {
       setRefreshing(true);
@@ -54,6 +65,7 @@ export default ({ navigation }) => {
       setRefreshing(false);
     }
   };
+
   if (loading) {
     return (
       <LoaderContainer>
@@ -83,7 +95,7 @@ export default ({ navigation }) => {
                   })
                 }
               >
-                <UserRow
+                <ItemRow
                   continent={continent}
                   count={continent.count}
                   type={"userProfileContinent"}

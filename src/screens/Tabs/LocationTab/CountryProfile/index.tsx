@@ -1,2 +1,2 @@
-import CountryProfile from "./CountryProfile";
-export default CountryProfile;
+import CountryProfileContainer from "./CountryProfileContainer";
+export default CountryProfileContainer;

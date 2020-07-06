@@ -16,7 +16,7 @@ import {
   Text,
   Alert,
   Platform,
-  Linking
+  Linking,
 } from "react-native";
 import { BACKEND_URL } from "../../../../../constants";
 import ChatPresenter from "./ChatPresenter";
@@ -26,11 +26,11 @@ import {
   ChatMessage,
   get_old_chat_messages,
   update_message_info,
-  fb_db
+  fb_db,
 } from "../../../../../Fire";
 import * as moment from "moment-timezone";
 import Toast from "react-native-root-toast";
-import { Image, AsyncStorage } from "react-native";
+import { Image } from "react-native";
 import { useReverseGeoCode } from "../../../../hooks/useReverseGeoCode";
 import { useReversePlaceId } from "../../../../hooks/useReversePlaceId";
 import { REPORT_LOCATION } from "../../../../sharedQueries";
@@ -113,10 +113,10 @@ class ChatContainer extends React.Component<IProps, IState> {
         latitude: this.props.navigation.getParam("latitude"),
         longitude: this.props.navigation.getParam("longitude"),
         latitudeDelta: 0.01,
-        longitudeDelta: 0.01
+        longitudeDelta: 0.01,
       },
       mapLoading: false,
-      isDarkMode: this.props.navigation.getParam("isDarkMode")
+      isDarkMode: this.props.navigation.getParam("isDarkMode"),
     };
   }
   public toast = (message: string) => {
@@ -126,10 +126,10 @@ class ChatContainer extends React.Component<IProps, IState> {
       shadow: true,
       animation: true,
       hideOnPress: true,
-      delay: 0
+      delay: 0,
     });
   };
-  public onRegionChangeComplete = region => {
+  public onRegionChangeComplete = (region) => {
     this.setState({ region });
   };
   public onSend = (messages = []) => {
@@ -139,9 +139,9 @@ class ChatContainer extends React.Component<IProps, IState> {
       msg.user.name = this.state.userName;
       msg.receiverPushToken = this.state.receiverPushToken;
       msg.status = false;
-      chat_send(this.state.chatId, msg).catch(e => console.log(e));
-      this.setState(previousState => ({
-        messages: GiftedChat.append(previousState.messages, msg)
+      chat_send(this.state.chatId, msg).catch((e) => console.log(e));
+      this.setState((previousState) => ({
+        messages: GiftedChat.append(previousState.messages, msg),
       }));
     }
   };
@@ -154,7 +154,7 @@ class ChatContainer extends React.Component<IProps, IState> {
     let new_key = get_new_key("messages");
     let user: UserChatMessage = {
       _id: this.state.userId,
-      name: this.state.userName
+      name: this.state.userName,
     };
     let messageSnsId: ChatMessage = {
       _id: new_key,
@@ -163,22 +163,22 @@ class ChatContainer extends React.Component<IProps, IState> {
       user: user,
       snsId,
       snsIdPlatform,
-      receiverPushToken: this.state.receiverPushToken
+      receiverPushToken: this.state.receiverPushToken,
     };
     let messages = [];
     messages.push(messageSnsId);
-    this.setState(previousState => ({
+    this.setState((previousState) => ({
       messages: GiftedChat.append(previousState.messages, messages),
-      snsModalOpen: false
+      snsModalOpen: false,
     }));
-    chat_send(this.state.chatId, messageSnsId).catch(e => console.log(e));
+    chat_send(this.state.chatId, messageSnsId).catch((e) => console.log(e));
   };
 
   public onSendLocation = (latitude: string, longitude: string) => {
     let new_key = get_new_key("messages");
     let user: UserChatMessage = {
       _id: this.state.userId,
-      name: this.state.userName
+      name: this.state.userName,
     };
     let messageLocation: ChatMessage = {
       _id: new_key,
@@ -186,18 +186,18 @@ class ChatContainer extends React.Component<IProps, IState> {
       status: false,
       user: user,
       location: { latitude, longitude },
-      receiverPushToken: this.state.receiverPushToken
+      receiverPushToken: this.state.receiverPushToken,
     };
     let messages = [];
     messages.push(messageLocation);
-    this.setState(previousState => ({
+    this.setState((previousState) => ({
       messages: GiftedChat.append(previousState.messages, messages),
-      mapModalOpen: false
+      mapModalOpen: false,
     }));
-    chat_send(this.state.chatId, messageLocation).catch(e => console.log(e));
+    chat_send(this.state.chatId, messageLocation).catch((e) => console.log(e));
   };
 
-  public renderCustomView = props => {
+  public renderCustomView = (props) => {
     return <CustomView {...props} />;
   };
   public renderAvatar = () => {
@@ -212,7 +212,7 @@ class ChatContainer extends React.Component<IProps, IState> {
       6: require(`../../../../Images/thumbnails/earth6.png`),
       7: require(`../../../../Images/thumbnails/earth7.png`),
       8: require(`../../../../Images/thumbnails/earth8.png`),
-      9: require(`../../../../Images/thumbnails/earth9.png`)
+      9: require(`../../../../Images/thumbnails/earth9.png`),
     };
     return (
       <>
@@ -221,7 +221,7 @@ class ChatContainer extends React.Component<IProps, IState> {
             onPress={() =>
               this.props.navigation.push("UserProfile", {
                 uuid: targetUuid,
-                isSelf: false
+                isSelf: false,
               })
             }
           >
@@ -230,10 +230,10 @@ class ChatContainer extends React.Component<IProps, IState> {
               style={{
                 width: 36,
                 height: 36,
-                borderRadius: 18
+                borderRadius: 18,
               }}
               preview={{
-                uri: `${BACKEND_URL}/media/${this.state.receiverAvatar}`
+                uri: `${BACKEND_URL}/media/${this.state.receiverAvatar}`,
               }}
               uri={`${BACKEND_URL}/media/${this.state.receiverAvatar}`}
             />
@@ -243,7 +243,7 @@ class ChatContainer extends React.Component<IProps, IState> {
             onPress={() =>
               this.props.navigation.push("UserProfile", {
                 uuid: targetUuid,
-                isSelf: false
+                isSelf: false,
               })
             }
           >
@@ -251,7 +251,7 @@ class ChatContainer extends React.Component<IProps, IState> {
               style={{
                 height: 36,
                 width: 36,
-                borderRadius: 18
+                borderRadius: 18,
               }}
               source={randomAvatar[Math.round(Math.random() * 9)]}
             />
@@ -269,12 +269,12 @@ class ChatContainer extends React.Component<IProps, IState> {
         marginLeft: 5,
         maxWidth: 85,
         width: 100,
-        justifyContent: "space-between"
+        justifyContent: "space-between",
       }}
     >
       <TouchableOpacity
         style={{
-          justifyContent: "center"
+          justifyContent: "center",
         }}
         onPress={() => {
           this.askPermission();
@@ -291,7 +291,7 @@ class ChatContainer extends React.Component<IProps, IState> {
             borderStyle: "solid",
             borderWidth: 0.5,
             borderRadius: 5,
-            padding: 2
+            padding: 2,
           }}
         >
           <Text style={{ color: "#999", textAlign: "center", fontSize: 10 }}>
@@ -301,7 +301,7 @@ class ChatContainer extends React.Component<IProps, IState> {
       </TouchableOpacity>
       <TouchableOpacity
         style={{
-          justifyContent: "center"
+          justifyContent: "center",
         }}
         onPress={() => this.setState({ snsModalOpen: true })}
       >
@@ -316,7 +316,7 @@ class ChatContainer extends React.Component<IProps, IState> {
             borderStyle: "solid",
             borderWidth: 0.5,
             borderRadius: 5,
-            padding: 2
+            padding: 2,
           }}
         >
           <Text style={{ color: "#999", textAlign: "center", fontSize: 10 }}>
@@ -353,14 +353,14 @@ class ChatContainer extends React.Component<IProps, IState> {
       this.state.chatId,
       this.state.resolution,
       this.state.userId
-    ).then(messages => {
+    ).then((messages) => {
       if (messages) {
-        let promises = messages.map(m =>
+        let promises = messages.map((m) =>
           update_message_info(m, this.state.chatId, this.state.userId)
         );
-        Promise.all(promises).then(results => {
+        Promise.all(promises).then((results) => {
           this.setState({
-            messages: results.filter(r => r).sort(this.sortByDate)
+            messages: results.filter((r) => r).sort(this.sortByDate),
           });
         });
       }
@@ -371,15 +371,15 @@ class ChatContainer extends React.Component<IProps, IState> {
       .child(this.state.chatId)
       .orderByKey()
       .startAt(start_key)
-      .on("child_changed", child => {
+      .on("child_changed", (child) => {
         if (child && child.val()) {
           if (child.val()["status"] === true) {
             this.setState({
-              messages: this.state.messages.map(previousState =>
+              messages: this.state.messages.map((previousState) =>
                 previousState._id === child.val()["_id"]
                   ? { ...previousState, ...child.val() }
                   : previousState
-              )
+              ),
             });
           }
         }
@@ -389,7 +389,7 @@ class ChatContainer extends React.Component<IProps, IState> {
       .child(this.state.chatId)
       .orderByKey()
       .startAt(start_key)
-      .on("child_added", child => {
+      .on("child_added", (child) => {
         /* tslint:disable:no-string-literal */
         if (child && child.val()) {
           let message_container = [];
@@ -402,13 +402,13 @@ class ChatContainer extends React.Component<IProps, IState> {
               new_message,
               this.state.chatId,
               this.state.userId
-            ).then(updated_message => {
+            ).then((updated_message) => {
               message_container.push(new_message);
-              this.setState(previousState => ({
+              this.setState((previousState) => ({
                 messages: GiftedChat.append(
                   previousState.messages,
                   message_container
-                ).sort(this.sortByDate)
+                ).sort(this.sortByDate),
               }));
               // }
             });
@@ -418,7 +418,7 @@ class ChatContainer extends React.Component<IProps, IState> {
   }
   public didBlurSubscription = this.props.navigation.addListener(
     "didBlur",
-    payload => {
+    (payload) => {
       BackHandler.removeEventListener("hardwareBackPress", () => {
         return;
       });
@@ -428,7 +428,7 @@ class ChatContainer extends React.Component<IProps, IState> {
   public componentDidUnMount() {
     this.didBlurSubscription.remove();
   }
-  public messageFooter = timeProps => {
+  public messageFooter = (timeProps) => {
     const { currentMessage, position } = timeProps;
     const timeZone = moment.tz.guess();
     const time = moment.tz(currentMessage.createdAt, timeZone).format("LT");
@@ -441,7 +441,7 @@ class ChatContainer extends React.Component<IProps, IState> {
           style={{
             flexDirection: "row",
             justifyContent: "flex-start",
-            width: 50
+            width: 50,
           }}
         >
           {text}
@@ -453,7 +453,7 @@ class ChatContainer extends React.Component<IProps, IState> {
           style={{
             right: 10,
             fontSize: 8,
-            color: "white"
+            color: "white",
           }}
         >
           {time}
@@ -467,7 +467,7 @@ class ChatContainer extends React.Component<IProps, IState> {
                 flexDirection: "column",
                 justifyContent: "flex-end",
                 alignItems: "flex-end",
-                width: 50
+                width: 50,
               }}
             >
               {text}
@@ -480,7 +480,7 @@ class ChatContainer extends React.Component<IProps, IState> {
               style={{
                 flexDirection: "row",
                 justifyContent: "flex-end",
-                width: 50
+                width: 50,
               }}
             >
               {text}
@@ -506,15 +506,15 @@ class ChatContainer extends React.Component<IProps, IState> {
               style: "cancel",
               onPress: () => {
                 this.setState({ mapLoading: false, mapModalOpen: false });
-              }
+              },
             },
             {
               text: "Open Settings",
               onPress: () => {
                 Linking.openURL("app-settings:"),
                   this.setState({ mapLoading: false, mapModalOpen: false });
-              }
-            }
+              },
+            },
           ]
         );
       } else if (Platform.OS === "android" && status === "denied") {
@@ -527,7 +527,7 @@ class ChatContainer extends React.Component<IProps, IState> {
               style: "cancel",
               onPress: () => {
                 this.setState({ mapLoading: false, mapModalOpen: false });
-              }
+              },
             },
             {
               text: "Open Settings",
@@ -540,14 +540,14 @@ class ChatContainer extends React.Component<IProps, IState> {
                   { data: "package:" + pkg }
                 ),
                   this.setState({ mapLoading: false, mapModalOpen: false });
-              }
-            }
+              },
+            },
           ]
         );
       } else if (status === "granted") {
         this.setState({ mapLoading: true, mapModalOpen: true });
         const position = await Location.getCurrentPositionAsync({
-          timeout: 5000
+          timeout: 5000,
         });
         this.handleGeoSuccess(position);
       } else {
@@ -557,18 +557,18 @@ class ChatContainer extends React.Component<IProps, IState> {
       Alert.alert("Location permission required.");
     }
   };
-  public handleGeoSuccess = position => {
+  public handleGeoSuccess = (position) => {
     const {
-      coords: { latitude, longitude }
+      coords: { latitude, longitude },
     } = position;
     this.setState({
       region: {
         latitude,
         longitude,
         latitudeDelta: 0.01,
-        longitudeDelta: 0.01
+        longitudeDelta: 0.01,
       },
-      mapLoading: false
+      mapLoading: false,
     });
     this.getAddress(latitude, longitude);
   };
@@ -585,8 +585,8 @@ class ChatContainer extends React.Component<IProps, IState> {
             currentLng: cityInfo.storableLocation.longitude,
             currentCityId: address.storableLocation.cityId,
             currentCityName: address.storableLocation.cityName,
-            currentCountryCode: address.storableLocation.countryCode
-          }
+            currentCountryCode: address.storableLocation.countryCode,
+          },
         });
         // await AsyncStorage.setItem("cityId", address.storableLocation.cityId);
         // await AsyncStorage.setItem(
@@ -605,13 +605,13 @@ class ChatContainer extends React.Component<IProps, IState> {
       messages,
       userId,
       region,
-      mapLoading
+      mapLoading,
     } = this.state;
     return (
       <Mutation<ReportLocation, ReportLocationVariables>
         mutation={REPORT_LOCATION}
       >
-        {reportLocationFn => {
+        {(reportLocationFn) => {
           this.reportLocationFn = reportLocationFn;
           return (
             <ChatPresenter

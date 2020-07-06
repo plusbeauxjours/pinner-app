@@ -1,42 +1,28 @@
-import styled from "styled-components";
-import * as Facebook from "expo-facebook";
 import React, { useState } from "react";
-import { useMutation } from "react-apollo-hooks";
-import { FacebookConnect, FacebookConnectVariables } from "../../../types/api";
-import { FACEBOOK_CONNECT } from "./FacebookApproachQueries";
-import { useLogIn } from "../../../context/AuthContext";
+
+import * as Facebook from "expo-facebook";
 import Toast from "react-native-root-toast";
-import { ActivityIndicator } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
+import { useMutation } from "react-apollo-hooks";
 
-const Touchable = styled.TouchableOpacity``;
+import { FACEBOOK_CONNECT } from "./FacebookApproachQueries";
+import FacebookApproachPresenter from "./FacebookApproachPresenter";
+import { FacebookConnect, FacebookConnectVariables } from "../../../types/api";
+import { useLogIn } from "../../../context/AuthContext";
 
-const Container = styled.View`
-  background-color: #2d4da7;
-  width: 260px;
-  height: 40px;
-  border-radius: 5px;
-  align-items: center;
-  justify-content: center;
-  margin-top: 10px;
-`;
+interface IProps {
+  cityId: string;
+  countryCode: string;
+}
 
-const LoginTextContainer = styled.View`
-  width: 200px;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
-`;
-
-const Text = styled.Text`
-  color: white;
-  text-align: center;
-  font-weight: 600;
-`;
-
-export default ({ cityId, countryCode }) => {
+const FacebookApproachContainer: React.FC<IProps> = ({
+  cityId,
+  countryCode,
+}) => {
   const [loading, setLoading] = useState(false);
   const logIn = useLogIn();
+
+  // MUTATION
+
   const [facebookConnectFn, { loading: facebookConnectLoading }] = useMutation<
     FacebookConnect,
     FacebookConnectVariables
@@ -48,14 +34,17 @@ export default ({ cityId, countryCode }) => {
       shadow: true,
       animation: true,
       hideOnPress: true,
-      delay: 0
+      delay: 0,
     });
   };
+
+  // FUNC
+
   const fbLogin = async () => {
     try {
       await Facebook.initializeAsync("242663513281642", "Pinner");
       const authResult = await Facebook.logInWithReadPermissionsAsync({
-        permissions: ["public_profile", "email"]
+        permissions: ["public_profile", "email"],
       });
       if (authResult.type === "success") {
         const response = await fetch(
@@ -66,10 +55,10 @@ export default ({ cityId, countryCode }) => {
           email,
           first_name,
           last_name,
-          gender
+          gender,
         } = await response.json();
         const {
-          data: { facebookConnect }
+          data: { facebookConnect },
         } = await facebookConnectFn({
           variables: {
             firstName: first_name,
@@ -78,8 +67,8 @@ export default ({ cityId, countryCode }) => {
             gender,
             cityId,
             countryCode,
-            fbId: id
-          }
+            fbId: id,
+          },
         });
         await logIn(facebookConnect);
         await toast(`Welcome ${first_name}!`);
@@ -90,28 +79,14 @@ export default ({ cityId, countryCode }) => {
       setLoading(false);
     }
   };
+
   return (
-    <Touchable
-      disabled={loading}
-      onPress={() => {
-        setLoading(true), fbLogin();
-      }}
-    >
-      <Container>
-        {loading ? (
-          <ActivityIndicator color={"white"} />
-        ) : (
-          <LoginTextContainer>
-            <FontAwesome
-              name={"facebook"}
-              color={"white"}
-              size={25}
-              style={{ marginRight: 10 }}
-            />
-            <Text>Continue with Facebook</Text>
-          </LoginTextContainer>
-        )}
-      </Container>
-    </Touchable>
+    <FacebookApproachPresenter
+      loading={loading}
+      setLoading={setLoading}
+      fbLogin={fbLogin}
+    />
   );
 };
+
+export default FacebookApproachContainer;

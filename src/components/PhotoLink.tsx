@@ -1,13 +1,18 @@
 import React, { useState } from "react";
+import { Platform, Alert, Linking } from "react-native";
+
 import uuid from "uuid/v4";
 import Constants from "expo-constants";
 import styled from "styled-components";
-import { withNavigation } from "react-navigation";
+import { useMutation } from "react-apollo";
+import { ReactNativeFile } from "apollo-upload-client";
 import * as IntentLauncher from "expo-intent-launcher";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
+import Toast from "react-native-root-toast";
 import * as ImageManipulator from "expo-image-manipulator";
 import { AntDesign } from "@expo/vector-icons";
+
 import {
   Me,
   UploadAvatar,
@@ -18,14 +23,11 @@ import {
   UserProfileVariables,
 } from "../types/api";
 import { UPLOAD_AVATAR, ME } from "../sharedQueries";
-import { useMutation } from "react-apollo";
-import { ReactNativeFile } from "apollo-upload-client";
 import { useTheme } from "../context/ThemeContext";
-import Toast from "react-native-root-toast";
 import { useMe } from "../context/MeContext";
 import { GET_AVATARS } from "../screens/Tabs/UserProfileTab/AvatarList/AvatarListQueries";
 import { GET_USER } from "../screens/Tabs/UserProfileTab/UserProfile/UserProfileQueries";
-import { Platform, Alert, Linking } from "react-native";
+import { withNavigation } from "react-navigation";
 
 const Touchable = styled.TouchableOpacity`
   margin-right: 5px;
@@ -35,6 +37,9 @@ export default withNavigation(({ navigation }) => {
   const { me, loading: meLoading } = useMe();
   const isDarkMode = useTheme();
   const [loading, setLoading] = useState<boolean>(false);
+
+  // MUTATTION
+
   const [uploadAvatarFn, { loading: uploadAvatarLoading }] = useMutation<
     UploadAvatar,
     UploadAvatarVariables
@@ -94,6 +99,9 @@ export default withNavigation(({ navigation }) => {
       }
     },
   });
+
+  // FUNC
+
   const toast = (message: string) => {
     Toast.show(message, {
       duration: 1000,
@@ -104,6 +112,7 @@ export default withNavigation(({ navigation }) => {
       delay: 0,
     });
   };
+
   const image_resize = async (
     uri: string,
     orig_width: number,
@@ -125,6 +134,7 @@ export default withNavigation(({ navigation }) => {
       return uri;
     }
   };
+
   const pickFromGallery = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     if (status === "granted") {
@@ -226,6 +236,7 @@ export default withNavigation(({ navigation }) => {
       );
     }
   };
+
   if (!meLoading && me) {
     return (
       <Touchable onPress={() => pickFromGallery()} disabled={loading}>
@@ -237,6 +248,6 @@ export default withNavigation(({ navigation }) => {
       </Touchable>
     );
   } else {
-    return;
+    return null;
   }
 });

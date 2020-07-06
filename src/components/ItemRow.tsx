@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { Image } from "react-native";
 import constants, { BACKEND_URL } from "../../constants";
-import CityLikeBtn from "./CityLikeBtn/CityLikeBtn";
+import CityLikeBtn from "./CityLikeBtn";
 import { Image as ProgressiveImage } from "react-native-expo-image-cache";
 import styled from "styled-components";
 import { useTheme } from "../context/ThemeContext";
@@ -21,75 +21,77 @@ const Container = styled.View`
   height: 45px;
   width: ${constants.width - 30};
 `;
+
 const Touchable = styled.View`
   justify-content: center;
   align-items: center;
 `;
+
 const HeaderUserContainer = styled.View`
   margin-left: 10px;
 `;
+
 const MatchHeaderUserContainer = styled.View`
   height: 45px;
   flex-direction: column;
   margin-left: 10px;
   justify-content: center;
 `;
+
 const Bold = styled.Text`
   font-weight: 500;
   color: ${(props) => props.theme.color};
 `;
+
 const Location = styled.Text`
   font-size: 11px;
   color: ${(props) => props.theme.color};
 `;
+
 const Header = styled.View`
   flex: 2;
   flex-direction: row;
 `;
+
 const SmallText = styled.Text`
   font-size: 8px;
   color: #999;
   text-align: center;
 `;
+
 const IconContainer = styled.View`
   color: ${(props) => props.theme.color};
   position: absolute;
   left: 0;
   top: 0;
 `;
+
 const Text = styled.Text`
   color: ${(props) => props.theme.color};
 `;
+
 const GreyText = styled(Text)`
   margin-left: 15px;
   color: ${(props) => props.theme.greyColor};
 `;
+
 const Items = styled.View`
   flex: 1;
   flex-direction: row-reverse;
   justify-content: space-between;
   align-items: center;
 `;
-const TripItems = styled.View`
-  flex-wrap: wrap;
-  flex-direction: row-reverse;
-  width: 180px;
-  justify-content: space-between;
-  align-content: center;
-`;
-const ColumnItems = styled.View`
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
+
 const DistanceGreyText = styled(GreyText)`
   margin-right: 20;
 `;
+
 const ImageContainer = styled.View`
   justify-content: center;
   align-items: center;
   width: 40px;
 `;
+
 const GreyLocation = styled(Location)`
   font-size: 8px;
   height: 9px;
@@ -109,9 +111,11 @@ const CenterLine = styled.View`
   align-items: center;
   height: 9px;
 `;
+
 const LastMessageText = styled(Text)`
   color: ${(props) => props.theme.greyColor};
 `;
+
 const View = styled.View`
   justify-content: center;
   align-items: center;
@@ -122,6 +126,7 @@ const View = styled.View`
   padding: 2px;
   border-radius: 5px;
 `;
+
 interface IProps {
   user?: any;
   city?: any;
@@ -134,7 +139,7 @@ interface IProps {
   type: string;
 }
 
-const UserRow: React.FC<IProps> = ({
+const ItemRow: React.FC<IProps> = ({
   user,
   city,
   trip,
@@ -713,4 +718,4 @@ const UserRow: React.FC<IProps> = ({
   }
 };
 
-export default UserRow;
+export default ItemRow;

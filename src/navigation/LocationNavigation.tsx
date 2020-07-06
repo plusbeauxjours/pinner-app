@@ -12,7 +12,7 @@ import Continents from "../screens/Tabs/UserProfileTab/Continents";
 import UserProfile from "../screens/Tabs/UserProfileTab/UserProfile";
 import EditProfile from "../screens/Tabs/UserProfileTab/EditProfile";
 import AvatarList from "../screens/Tabs/UserProfileTab/AvatarList";
-import Search from "../components/Search/index";
+import Search from "../components/Search";
 import LocationLeftHeader from "../components/Header/LocationLeftHeader";
 import BackArrow from "../components/Header/BackArrow";
 import LocationCenterHeader from "../components/Header/LocationCenterHeader";
@@ -140,76 +140,76 @@ export default createStackNavigator({
       header: (props) => <LocationCustomHeader />,
     },
   },
-  ContinentProfile: {
-    screen: ContinentProfile,
-    navigationOptions: {
-      header: (props) => <LocationCustomHeader />,
-    },
-  },
-  CountryProfileTabs: {
-    screen: CountryProfileTabs,
-    navigationOptions: {
-      header: (props) => <LocationCustomHeader />,
-    },
-  },
-  UserProfile: {
-    screen: UserProfile,
-    navigationOptions: {
-      header: (props) => <UserProfileCustomHeader />,
-    },
-  },
-  AvatarList: {
-    screen: AvatarList,
-    navigationOptions: {
-      header: (props) => <UserProfileCustomHeader />,
-    },
-  },
-  EditProfile: {
-    screen: EditProfile,
-    navigationOptions: {
-      header: (props) => <BackCustomHeader />,
-    },
-  },
-  Cities: {
-    screen: Cities,
-    navigationOptions: {
-      header: (props) => <BackCustomHeader />,
-    },
-  },
-  UsersNationality: {
-    screen: UsersNationality,
-    navigationOptions: {
-      header: (props) => <BackCustomHeader />,
-    },
-  },
-  UsersResidence: {
-    screen: UsersResidence,
-    navigationOptions: {
-      header: (props) => <BackCustomHeader />,
-    },
-  },
-  UsersBefore: {
-    screen: UsersBefore,
-    navigationOptions: {
-      header: (props) => <BackCustomHeader />,
-    },
-  },
-  Countries: {
-    screen: Countries,
-    navigationOptions: {
-      header: (props) => <BackCustomHeader />,
-    },
-  },
-  Continents: {
-    screen: Continents,
-    navigationOptions: {
-      header: (props) => <BackCustomHeader />,
-    },
-  },
-  BlockedUsers: {
-    screen: BlockedUsers,
-    navigationOptions: {
-      header: (props) => <BackCustomHeader />,
-    },
-  },
+  // ContinentProfile: {
+  //   screen: ContinentProfile,
+  //   navigationOptions: {
+  //     header: (props) => <LocationCustomHeader />,
+  //   },
+  // },
+  // CountryProfileTabs: {
+  //   screen: CountryProfileTabs,
+  //   navigationOptions: {
+  //     header: (props) => <LocationCustomHeader />,
+  //   },
+  // },
+  // UserProfile: {
+  //   screen: UserProfile,
+  //   navigationOptions: {
+  //     header: (props) => <UserProfileCustomHeader />,
+  //   },
+  // },
+  // AvatarList: {
+  //   screen: AvatarList,
+  //   navigationOptions: {
+  //     header: (props) => <UserProfileCustomHeader />,
+  //   },
+  // },
+  // EditProfile: {
+  //   screen: EditProfile,
+  //   navigationOptions: {
+  //     header: (props) => <BackCustomHeader />,
+  //   },
+  // },
+  // Cities: {
+  //   screen: Cities,
+  //   navigationOptions: {
+  //     header: (props) => <BackCustomHeader />,
+  //   },
+  // },
+  // UsersNationality: {
+  //   screen: UsersNationality,
+  //   navigationOptions: {
+  //     header: (props) => <BackCustomHeader />,
+  //   },
+  // },
+  // UsersResidence: {
+  //   screen: UsersResidence,
+  //   navigationOptions: {
+  //     header: (props) => <BackCustomHeader />,
+  //   },
+  // },
+  // UsersBefore: {
+  //   screen: UsersBefore,
+  //   navigationOptions: {
+  //     header: (props) => <BackCustomHeader />,
+  //   },
+  // },
+  // Countries: {
+  //   screen: Countries,
+  //   navigationOptions: {
+  //     header: (props) => <BackCustomHeader />,
+  //   },
+  // },
+  // Continents: {
+  //   screen: Continents,
+  //   navigationOptions: {
+  //     header: (props) => <BackCustomHeader />,
+  //   },
+  // },
+  // BlockedUsers: {
+  //   screen: BlockedUsers,
+  //   navigationOptions: {
+  //     header: (props) => <BackCustomHeader />,
+  //   },
+  // },
 });

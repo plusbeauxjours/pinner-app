@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useWeatherAqi, useWeather } from "../hooks/weatherHelper";
+import { useWeatherAqi, useWeather } from "../hooks/useWeather";
 import Loader from "./Loader";
 import { useState } from "react";
 import styled from "styled-components";
@@ -31,7 +31,7 @@ const WeatherInfoRow = styled.View`
 const TempNumber = styled.Text<ITheme>`
   width: 70px;
   margin-right: 5px;
-  font-size: ${props => {
+  font-size: ${(props) => {
     if (props.size === "sm") {
       return "8px";
     } else if (props.size === "md") {
@@ -41,7 +41,7 @@ const TempNumber = styled.Text<ITheme>`
     }
   }};
   font-weight: 400;
-  color: ${props => {
+  color: ${(props) => {
     if (-10 <= props.chill && props.aqi <= -5) {
       return "#1E90FF";
     } else if (-20 <= props.chill && props.aqi < -10) {
@@ -61,7 +61,7 @@ const TempNumber = styled.Text<ITheme>`
 `;
 
 const AqiNumber = styled(TempNumber)`
-  color: ${props => {
+  color: ${(props) => {
     if (100 <= props.aqi && props.aqi < 150) {
       return colorMidium;
     } else if (150 <= props.aqi && props.aqi < 200) {
@@ -75,7 +75,7 @@ const AqiNumber = styled(TempNumber)`
 `;
 
 const HumidityNumber = styled(TempNumber)`
-  color: ${props => {
+  color: ${(props) => {
     if (40 <= props.humidity && props.humidity < 70) {
       return props.theme.color;
     } else {
@@ -135,7 +135,7 @@ export default ({ latitude, longitude }) => {
     "13d": "weather-snowy",
     "13n": "weather-snowy",
     "50d": "weather-fog",
-    "50n": "weather-fog"
+    "50n": "weather-fog",
   };
 
   return (

@@ -3,26 +3,26 @@ import styled from "styled-components";
 import { RefreshControl } from "react-native";
 import {
   GetNationalityUsers,
-  GetNationalityUsersVariables
+  GetNationalityUsersVariables,
 } from "../../../../types/api";
 import { useQuery } from "react-apollo-hooks";
 import { GET_NATIONALITY_USERS } from "./UsersNationalityQueries";
 import Loader from "../../../../components/Loader";
-import UserRow from "../../../../components/UserRow";
+import ItemRow from "../../../../components/ItemRow";
 
 const View = styled.View`
   justify-content: center;
   align-items: center;
   flex: 1;
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 const Touchable = styled.TouchableOpacity``;
 const ScrollView = styled.ScrollView`
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
 `;
 const LoaderContainer = styled.View`
   flex: 1;
-  background-color: ${props => props.theme.bgColor};
+  background-color: ${(props) => props.theme.bgColor};
   justify-content: center;
   align-items: center;
 `;
@@ -33,11 +33,11 @@ export default ({ navigation }) => {
   const {
     data: { getNationalityUsers: { users = null } = {} } = {},
     loading,
-    refetch
+    refetch,
   } = useQuery<GetNationalityUsers, GetNationalityUsersVariables>(
     GET_NATIONALITY_USERS,
     {
-      variables: { countryCode }
+      variables: { countryCode },
     }
   );
   const onRefresh = async () => {
@@ -77,11 +77,11 @@ export default ({ navigation }) => {
                 onPress={() =>
                   navigation.push("UserProfile", {
                     uuid: user.uuid,
-                    isSelf: user.isSelf
+                    isSelf: user.isSelf,
                   })
                 }
               >
-                <UserRow user={user} type={"user"} />
+                <ItemRow user={user} type={"user"} />
               </Touchable>
             ))}
         </View>

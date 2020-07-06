@@ -1,15 +1,17 @@
 import React from "react";
+
 import styled from "styled-components";
-import { withNavigation } from "react-navigation";
 import { AntDesign } from "@expo/vector-icons";
 import { useTheme } from "../../context/ThemeContext";
+import { withNavigation } from "react-navigation";
 
 const IconContainer = styled.TouchableOpacity`
   width: 50px;
 `;
 
-const BackArrow = ({ navigation }) => {
+export default withNavigation(({ navigation }) => {
   const isDarkMode = useTheme();
+
   return (
     <IconContainer onPress={() => navigation.goBack(null)}>
       <AntDesign
@@ -19,6 +21,4 @@ const BackArrow = ({ navigation }) => {
       />
     </IconContainer>
   );
-};
-
-export default withNavigation(BackArrow);
+});

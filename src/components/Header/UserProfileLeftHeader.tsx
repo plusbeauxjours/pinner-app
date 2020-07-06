@@ -1,13 +1,15 @@
 import React from "react";
+
 import styled from "styled-components";
-import { withNavigation } from "react-navigation";
 import { AntDesign } from "@expo/vector-icons";
+
 import { useTheme } from "../../context/ThemeContext";
+import { withNavigation } from "react-navigation";
 
 const Text = styled.Text`
   font-weight: 500;
   font-size: 18px;
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 
 const View = styled.View``;

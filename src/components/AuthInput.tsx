@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+
 import constants from "../../constants";
 
 const Container = styled.View`
@@ -9,8 +10,8 @@ const Container = styled.View`
 const TextInput = styled.TextInput`
   width: ${constants.width / 2};
   padding: 10px;
-  background-color: ${props => props.theme.greyColor};
-  border: 0.5px solid ${props => props.theme.darkGreyColor};
+  background-color: ${(props) => props.theme.greyColor};
+  border: 0.5px solid ${(props) => props.theme.darkGreyColor};
   border-radius: 4px;
 `;
 
@@ -33,7 +34,7 @@ const AuthInput: React.FC<IProps> = ({
   returnKeyType = "done",
   onChange,
   onSubmitEditing = () => null,
-  autoCorrect = true
+  autoCorrect = true,
 }) => (
   <Container>
     <TextInput

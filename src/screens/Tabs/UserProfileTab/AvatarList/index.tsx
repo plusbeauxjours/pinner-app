@@ -1,2 +1,2 @@
-import AvatarList from "./AvatarList";
-export default AvatarList;
+import AvatarListContainer from "./AvatarListContainer";
+export default AvatarListContainer;

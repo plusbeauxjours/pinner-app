@@ -1,43 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { RefreshControl } from "react-native";
+
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
-import { useQuery, useMutation } from "react-apollo-hooks";
 import styled from "styled-components";
-import Loader from "../../../../components/Loader";
-import UserRow from "../../../../components/UserRow";
-import {
-  CityProfile,
-  CityProfileVariables,
-  GetSamenameCities,
-  GetSamenameCitiesVariables,
-  SlackReportLocations,
-  SlackReportLocationsVariables,
-  ReportLocation,
-  ReportLocationVariables,
-} from "../../../../types/api";
-import {
-  CITY_PROFILE,
-  GET_SAMENAME_CITIES,
-  NEAR_CITIES,
-} from "./CityProfileQueries";
 import Swiper from "react-native-swiper";
-import { NearCities, NearCitiesVariables } from "../../../../types/api";
-import {
-  SLACK_REPORT_LOCATIONS,
-  REPORT_LOCATION,
-} from "../../../../sharedQueries";
+import { FontAwesome } from "@expo/vector-icons";
+import { Image as ProgressiveImage } from "react-native-expo-image-cache";
+import { withNavigation } from "react-navigation";
+
+import Loader from "../../../../components/Loader";
+import ItemRow from "../../../../components/ItemRow";
 import CityLikeBtn from "../../../../components/CityLikeBtn";
 import constants from "../../../../../constants";
 import { darkMode, lightMode } from "../../../../styles/mapStyles";
 import { countries } from "../../../../../countryData";
 import Weather from "../../../../components/Weather";
-import { useTheme } from "../../../../context/ThemeContext";
-import Toast from "react-native-root-toast";
-import { FontAwesome } from "@expo/vector-icons";
-import { useActionSheet } from "@expo/react-native-action-sheet";
-import { Image as ProgressiveImage } from "react-native-expo-image-cache";
-import { withNavigation } from "react-navigation";
-import { useMe } from "../../../../context/MeContext";
 
 const Container = styled.View`
   background-color: ${(props) => props.theme.bgColor};
@@ -49,6 +26,7 @@ const MapContainer = styled.View``;
 const Text = styled.Text`
   color: ${(props) => props.theme.color};
 `;
+
 const Bold = styled.Text`
   font-weight: 500;
   font-size: 34px;
@@ -68,6 +46,7 @@ const Item = styled.View`
   flex: 1;
   margin-bottom: 25px;
 `;
+
 const Title = styled.Text`
   font-weight: 500;
   margin-left: 5px;
@@ -75,37 +54,45 @@ const Title = styled.Text`
   margin-bottom: 5px;
   color: ${(props) => props.theme.color};
 `;
+
 const TitleContainer = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
 `;
+
 const More = styled.Text`
   margin-left: 20px;
   color: ${(props) => props.theme.greyColor};
 `;
+
 const Touchable = styled.TouchableOpacity``;
+
 const ScrollView = styled.ScrollView`
   background-color: ${(props) => props.theme.bgColor};
 `;
+
 const LoaderContainer = styled.View`
   flex: 1;
   background-color: ${(props) => props.theme.bgColor};
   justify-content: center;
   align-items: center;
 `;
+
 const InfoRow = styled.View`
   width: ${constants.width - 40};
   justify-content: space-between;
   flex-direction: row;
   align-items: center;
 `;
+
 const IconTouchable = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   margin-top: 5px;
   margin-left: 10px;
 `;
+
 const LocationNameContainer = styled.View`
   width: ${constants.width - 40};
   margin-left: 5px;
@@ -114,10 +101,12 @@ const LocationNameContainer = styled.View`
   justify-content: flex-start;
   align-items: center;
 `;
+
 const LocationInfoContainer = styled.View`
   width: ${constants.width - 40};
   margin-left: 5px;
 `;
+
 const NoPhotoContainer = styled.View`
   justify-content: center;
   align-items: center;
@@ -128,158 +117,47 @@ const NoPhotoContainer = styled.View`
   border: 0.5px solid #999;
 `;
 
-export default withNavigation(({ navigation }) => {
-  const { me, loading: meLoading } = useMe();
-  const isDarkMode = useTheme();
-  const [cityId, setCityId] = useState<string>(
-    navigation.getParam("cityId") || me.user.currentCity.cityId
-  );
-  const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [mapOpen, setMapOpen] = useState<boolean>(false);
-  const { showActionSheetWithOptions } = useActionSheet();
-  const selectReportLocation = () => {
-    showActionSheetWithOptions(
-      {
-        options: ["Inappropriate Photoes", "Wrong Location", "Other", "Cancel"],
-        cancelButtonIndex: 3,
-        title: `Choose a reason for reporting this city.`,
-        showSeparators: true,
-        containerStyle: {
-          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
-          borderRadius: 10,
-          width: constants.width - 30,
-          marginLeft: 15,
-          marginBottom: 10,
-        },
-        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
-        titleTextStyle: {
-          color: isDarkMode ? "#EFEFEF" : "#161616",
-          fontWeight: "400",
-        },
-        separatorStyle: { opacity: 0.5 },
-      },
-      (buttonIndex) => {
-        if (buttonIndex === 0) {
-          reportLocation("PHOTO");
-        } else if (buttonIndex === 1) {
-          reportLocation("LOCATION");
-        } else if (buttonIndex === 2) {
-          reportLocation("OTHER");
-        } else {
-          null;
-        }
-      }
-    );
-  };
-  const reportLocation = (payload: string) => {
-    const toast = (message: string) => {
-      Toast.show(message, {
-        duration: 1000,
-        position: Toast.positions.CENTER,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-      });
-    };
-    showActionSheetWithOptions(
-      {
-        options: ["Yes", "No"],
-        destructiveButtonIndex: 0,
-        cancelButtonIndex: 1,
-        showSeparators: true,
-        title: `Are you sure to report this city?`,
-        containerStyle: {
-          backgroundColor: isDarkMode ? "#212121" : "#e6e6e6",
-          borderRadius: 10,
-          width: constants.width - 30,
-          marginLeft: 15,
-          marginBottom: 10,
-        },
-        textStyle: { color: isDarkMode ? "#EFEFEF" : "#161616" },
-        titleTextStyle: {
-          color: isDarkMode ? "#EFEFEF" : "#161616",
-          fontWeight: "400",
-        },
-        separatorStyle: { opacity: 0.5 },
-      },
-      (buttonIndex) => {
-        if (buttonIndex === 0) {
-          slackReportLocationsFn({
-            variables: {
-              targetLocationId: cityId,
-              targetLocationType: "city",
-              payload,
-            },
-          });
-          toast("PIN Reported");
-        }
-      }
-    );
-  };
-  // 2020/02/25
-  // Footer from REQUEST screen
-  const {
-    data: { nearCities: { cities: nearCities = null } = {} } = {},
-    loading: nearCitiesLoading,
-    refetch: nearCitiesRefetch,
-  } = useQuery<NearCities, NearCitiesVariables>(NEAR_CITIES, {
-    variables: { cityId },
-  });
-  const [reportLocationFn, { loading: reportLocationLoading }] = useMutation<
-    ReportLocation,
-    ReportLocationVariables
-  >(REPORT_LOCATION);
-  const [
-    slackReportLocationsFn,
-    { loading: slackReportLocationsLoading },
-  ] = useMutation<SlackReportLocations, SlackReportLocationsVariables>(
-    SLACK_REPORT_LOCATIONS
-  );
-  const {
-    data: {
-      cityProfile: {
-        count = null,
-        city = null,
-        usersBefore = null,
-        usersNow = null,
-      } = {},
-    } = {},
-    loading: profileLoading,
-    refetch: profileRefetch,
-  } = useQuery<CityProfile, CityProfileVariables>(CITY_PROFILE, {
-    variables: { cityId, page: 1, payload: "BOX" },
-  });
-  const {
-    data: { getSamenameCities: { cities: samenameCities = null } = {} } = {},
-    loading: samenameCitiesLoading,
-    refetch: samenameCitiesRefetch,
-  } = useQuery<GetSamenameCities, GetSamenameCitiesVariables>(
-    GET_SAMENAME_CITIES,
-    { variables: { cityId } }
-  );
+interface IProps {
+  navigation: any;
+  profileLoading: boolean;
+  nearCitiesLoading: boolean;
+  samenameCitiesLoading: boolean;
+  meLoading: boolean;
+  refreshing: boolean;
+  onRefresh: () => void;
+  city: any;
+  isDarkMode: boolean;
+  mapOpen: boolean;
+  setMapOpen: (mapOpen: boolean) => void;
+  count: number;
+  nearCities: any;
+  chunk: (arr: any) => any[];
+  samenameCities: any;
+  usersBefore: any;
+  usersNow: any;
+  selectReportLocation: () => void;
+}
 
-  const onRefresh = async () => {
-    try {
-      setRefreshing(true);
-      await profileRefetch();
-      await nearCitiesRefetch();
-      await samenameCitiesRefetch();
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setRefreshing(false);
-    }
-  };
-  const chunk = (arr) => {
-    let chunks = [],
-      i = 0,
-      n = arr.length;
-    while (i < n) {
-      chunks.push(arr.slice(i, (i += 3)));
-    }
-    return chunks;
-  };
+const CityProfilePresenter: React.FC<IProps> = ({
+  navigation,
+  profileLoading,
+  nearCitiesLoading,
+  samenameCitiesLoading,
+  meLoading,
+  refreshing,
+  onRefresh,
+  city,
+  isDarkMode,
+  mapOpen,
+  setMapOpen,
+  count,
+  nearCities,
+  chunk,
+  samenameCities,
+  usersBefore,
+  usersNow,
+  selectReportLocation,
+}) => {
   if (
     profileLoading ||
     nearCitiesLoading ||
@@ -425,7 +303,7 @@ export default withNavigation(({ navigation }) => {
                                   })
                                 }
                               >
-                                <UserRow city={city} type={"nearCity"} />
+                                <ItemRow city={city} type={"nearCity"} />
                               </Touchable>
                             );
                           })}
@@ -478,7 +356,7 @@ export default withNavigation(({ navigation }) => {
                                   });
                                 }}
                               >
-                                <UserRow city={city} type={"nearCity"} />
+                                <ItemRow city={city} type={"nearCity"} />
                               </Touchable>
                             );
                           })}
@@ -544,7 +422,7 @@ export default withNavigation(({ navigation }) => {
                                   })
                                 }
                               >
-                                <UserRow
+                                <ItemRow
                                   user={user.actor}
                                   naturalTime={user.naturalTime}
                                   type={"userBefore"}
@@ -576,7 +454,7 @@ export default withNavigation(({ navigation }) => {
                       })
                     }
                   >
-                    <UserRow user={user} type={"user"} />
+                    <ItemRow user={user} type={"user"} />
                   </Touchable>
                 ))}
               </Item>
@@ -586,4 +464,6 @@ export default withNavigation(({ navigation }) => {
       </>
     );
   }
-});
+};
+
+export default withNavigation(CityProfilePresenter);

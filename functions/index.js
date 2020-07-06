@@ -23,7 +23,6 @@ exports.sendNotification = functions.database
     } else {
       sendMsg = event._data.snsIdPlatform
     }
-    console.log("receiverPushToken", receiverPushToken)
     if (receiverPushToken) {
       return axios.post("https://exp.host/--/api/v2/push/send", {
         to: receiverPushToken,
