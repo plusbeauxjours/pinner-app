@@ -67,12 +67,9 @@ const Body = styled.View`
   padding: 5px;
 `;
 
-const Text = styled.Text`
+const BioText = styled.Text`
+  padding: 10px;
   color: ${(props) => props.theme.color};
-`;
-const BioText = styled(Text)`
-  margin-top: 10px;
-  margin-bottom: 10px;
 `;
 const Bold = styled.Text`
   font-size: 11px;

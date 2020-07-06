@@ -841,7 +841,8 @@ export default ({ navigation }) => {
             <Void />
             <ConfirmBold>Are you absolutely sure?</ConfirmBold>
             <Text>
-              This action cannot be undone. This will permanently delete the{" "}
+              This action cannot be undone. This will permanently delete
+              the&nbsp;
               {newUsername} account, comments, trip history, and remove all
               photos. Please type in the name of your username to confirm.
             </Text>

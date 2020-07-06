@@ -232,7 +232,7 @@ const UserRow: React.FC<IProps> = ({
               <HeaderUserContainer>
                 <Bold>{user.username}</Bold>
                 <Location>
-                  {user.currentCity && user.currentCity.cityName},{" "}
+                  {user.currentCity && user.currentCity.cityName},&nbsp;
                   {user.currentCity && user.currentCity.country.countryName}
                 </Location>
               </HeaderUserContainer>
@@ -275,7 +275,7 @@ const UserRow: React.FC<IProps> = ({
               <HeaderUserContainer>
                 <Bold>{user.username}</Bold>
                 <Location>
-                  {user.currentCity.cityName},{" "}
+                  {user.currentCity.cityName},&nbsp;
                   {user.currentCity.country.countryName}
                 </Location>
               </HeaderUserContainer>
@@ -547,7 +547,7 @@ const UserRow: React.FC<IProps> = ({
             </Touchable>
           </Header>
           <GreyText>
-            {continent.countryCount}{" "}
+            {continent.countryCount}&nbsp;
             {continent.countryCount === 1 ? "country" : "countries"}
           </GreyText>
         </Container>
