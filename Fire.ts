@@ -134,6 +134,7 @@ export const update_message_info = async (
     resolve(updated_message);
   });
 };
+
 export const get_last_chat_messages = async (chatId: string) => {
   return new Promise<string>((resolve, reject) => {
     fb_db.ref
