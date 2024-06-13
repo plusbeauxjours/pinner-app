@@ -1,7 +1,7 @@
 # PINNER-APP
 
 <p align="center" >
-  <img src="https://www.plusbeauxjours.com/static/media/Pinner_app_video.c47d995b.gif" >
+  <img src="https://github.com/plusbeauxjours/web-plusbeauxjours/blob/master/src/Images/App/Pinner_app/Pinner_app_video.gif" >
   <br>
 </p>
 
