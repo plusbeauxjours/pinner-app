@@ -15,18 +15,18 @@
 
 ### Portfolio Link
 
-> https://www.plusbeauxjours.com/projects/app/pinner-app
+> https://www.plusbeauxjours.info/projects/app/pinner
 
 ### Download
 
 <span>
 <p align="center" >
-  <img src="https://www.plusbeauxjours.com/static/media/PinnerApp_Android.cc9852f3.jpg" width="200"height="200" >
+  <img src="https://github.com/plusbeauxjours/web-plusbeauxjours/blob/master/src/Images/App/Pinner_app/PinnerApp_Android.jpg" width="200"height="200" >
   <br>
   <em>Android</em>
   </p>
   <p align="center" >
-  <img src="https://www.plusbeauxjours.com/static/media/PinnerApp_IOS.ef41b4ce.jpg" width="200"height="200" >
+  <img src="https://github.com/plusbeauxjours/web-plusbeauxjours/blob/master/src/Images/App/Pinner_app/PinnerApp_IOS.jpg" width="200"height="200" >
   <br>
   <em>IOS</em>
 </p>
@@ -35,3 +35,4 @@
 ### Server
 
 > https://github.com/plusbeauxjours/pinner-backend
+
